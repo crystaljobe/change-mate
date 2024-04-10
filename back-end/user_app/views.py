@@ -12,8 +12,8 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .models import AppUser
 from profile_app.models import UserProfile
+from .serializers import AppUser, AppUserSerializer
 
 # Create your views here.
 
@@ -75,12 +75,32 @@ class Login(APIView):
         else:
             return Response("No client matching the credentials", status=HTTP_400_BAD_REQUEST) 
 
-class TokenReq(APIView): # create token required class to pass in other methods
+# create token required class to pass in other methods
+class TokenReq(APIView): 
     authentication_classes=[TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+# method to grab user data
+# method will check for user authentication
 class Info(TokenReq):
-    pass 
+    # if authenticated get user info (id, display name, email) and return it with status 200
+    def get(self, request):
+        user = AppUser.objects.get(user = request.user)
+        ser_user = AppUserSerializer(user)
+        return Response(ser_user.data, status=HTTP_200_OK)
 
+# method to grab user display name
+# method will check for user authentication
+class DisplayName(TokenReq):
+    # if authenticated get user info and return it with status 200
+    def get(self, request):
+        return Response({"display name": request.user.display_name}, status=HTTP_200_OK)
+
+
+# method to logout user checking for user authentication first
 class Logout(TokenReq):
-    pass
+    def post(self, request):
+        # if user authenticated delete user token upon signout to require user to sign back in to access views
+        request.user.auth_token.delete()
+        # return response 404 to show no content to confirm token deletion
+        return Response(status=HTTP_400_BAD_REQUEST)

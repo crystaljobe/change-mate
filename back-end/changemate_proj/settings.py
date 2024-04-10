@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheader',
+    #'corsheader',
     'user_app',
     'profile_app',
     'event_app',
