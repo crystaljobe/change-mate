@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'user_app',
     'profile_app',
     'event_app',
-]
+    'interest_app',
+] 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
