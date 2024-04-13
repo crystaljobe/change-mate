@@ -1,14 +1,13 @@
 from django.shortcuts import render
-from rest_framework.views import APIView
 from user_app.views import TokenReq
 from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_200_OK,
-    HTTP_204_NO_CONTENT,
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .serializers import UserProfile, UserProfileSerializer, DisplayNameSerializer, ProfileFieldSerializer
+from .serializers import UserProfile, UserProfileSerializer, DisplayNameSerializer, LocationFieldSerializer, ImgFieldSerializer
+from interest_app.serializers import InterestCategorySerializer
 
 # User Profile views
 class UserProfile(TokenReq):
@@ -42,14 +41,25 @@ class AProfileField(TokenReq):
     def put(self, request, profile_field):
         # create copy of data
         data = request.data.copy()
-        # grab profile instance
-        # profile = UserProfile.objects.get(user = request.user)
-        # match profile field to identify item to update
+        
+        # get user profile 
+        profile = UserProfile.objects.get(user = request.user)
+
+        # match case to determine profile field to update
         match profile_field:
-            case "display name":
-                ser_data = DisplayNameSerializer(data = data)
-            case _:
-                ser_data = ProfileFieldSerializer(data = data)
+            # if display name field use display name serializer and return updated data
+            case "display_name":
+                ser_data = DisplayNameSerializer(profile, data = data)
+            # if interest field use interest field serializer  
+            case "interest":
+                ser_data = InterestCategorySerializer(profile, data=data)
+                
+            # if location field use location field serializer  
+            case "location":
+                ser_data = LocationFieldSerializer(profile, data=data)
+            # if image field use img field serializer 
+            case "image":
+                ser_data = ImgFieldSerializer(profile, data=data)
         if ser_data.is_valid():
             ser_data.save()
             return Response(ser_data.data, status=HTTP_200_OK)

@@ -18,9 +18,14 @@ class DisplayNameSerializer(serializer.ModelSerializer):
         model = UserProfile
         fields = ['display_name']
 
-class ProfileFieldSerializer(serializer.ModelSerializer):
-    interest = InterestCategorySerializer()
+class LocationFieldSerializer(serializer.ModelSerializer):
 
     class Meta: 
         model = UserProfile
-        fields = ['location', 'image', 'interest']
+        fields = ['location']
+
+class ImgFieldSerializer(serializer.ModelSerializer):
+
+    class Meta: 
+        model = UserProfile
+        fields = ['image']

@@ -1,7 +1,11 @@
 from django.core.exceptions import ValidationError
+import re
 
-def validate_title_case(category):
-    if category != category.title():
-        raise ValidationError('Interest category must be in title format')
-    else:
-        return category
+def validate_category(category):
+    regex = r'^[A-Za-z\&\']*'
+    good_category = re.match(regex, category)
+    if good_category:
+        return category.title()
+    raise ValidationError("Please enter a valid category consisting of only letters, numbers, and special characters (&)(').")
+        
+
