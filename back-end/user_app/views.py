@@ -89,18 +89,11 @@ class Info(TokenReq):
         ser_user = AppUserSerializer(user)
         return Response(ser_user.data, status=HTTP_200_OK)
 
-# method to grab user display name
-# method will check for user authentication
-class DisplayName(TokenReq):
-    # if authenticated get user info and return it with status 200
-    def get(self, request):
-        return Response({"display name": request.user.display_name}, status=HTTP_200_OK)
-
-
 # method to logout user checking for user authentication first
 class Logout(TokenReq):
     def post(self, request):
         # if user authenticated delete user token upon signout to require user to sign back in to access views
         request.user.auth_token.delete()
+        logout(request)
         # return response 404 to show no content to confirm token deletion
         return Response(status=HTTP_400_BAD_REQUEST)
