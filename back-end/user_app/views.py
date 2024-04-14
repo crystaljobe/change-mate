@@ -25,6 +25,7 @@ class SignUp(APIView):
 
         # set user's email to username key so that username = user's email which ensures unique usernames since all emails are unique
         data["username"] = request.data.get("email") 
+        # data["username"] = request.data.get("username", data.get("email"))
 
         # create the user instance
         new_user = AppUser.objects.create_user(**data)
@@ -85,9 +86,7 @@ class TokenReq(APIView):
 class Info(TokenReq):
     # if authenticated get user info (id, display name, email) and return it with status 200
     def get(self, request):
-        user = AppUser.objects.get(user = request.user)
-        ser_user = AppUserSerializer(user)
-        return Response(ser_user.data, status=HTTP_200_OK)
+        return Response({"email": request.user.email, "user id": request.user.id}, status=HTTP_200_OK)
 
 # method to logout user checking for user authentication first
 class Logout(TokenReq):
@@ -97,3 +96,7 @@ class Logout(TokenReq):
         logout(request)
         # return response 404 to show no content to confirm token deletion
         return Response(status=HTTP_400_BAD_REQUEST)
+
+
+
+            

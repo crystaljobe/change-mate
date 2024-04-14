@@ -14,7 +14,7 @@ class UserProfile(TokenReq):
     # get a user's profile data 
     def get(self, request):
         # get user profile
-        user_profile = UserProfile.objects.get(user = request.user) 
+        user_profile = request.user
         # serialize user profile
         ser_profile = UserProfileSerializer(user_profile)
         # return serialized user profile data

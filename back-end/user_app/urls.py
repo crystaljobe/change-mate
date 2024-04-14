@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import SignUp, Login, Logout, Info
+from .views import SignUp, Login, Logout, Info 
+# MasterUser
 
 # Create your urls here.
 urlpatterns = [
@@ -7,4 +8,5 @@ urlpatterns = [
     path("login/", Login.as_view(), name="login"),
     path("logout/", Logout.as_view(), name="logout"),
     path("user_info/", Info.as_view(), name="user_info"),
+    # path('master/', MasterUser.as_view(), name='master'),
 ]

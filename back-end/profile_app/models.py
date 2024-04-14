@@ -1,5 +1,6 @@
 from django.db import models
 from user_app.models import AppUser
+from interest_app.models import Interest
 
 # Create your models here.
 
@@ -9,6 +10,12 @@ class UserProfile(models.Model):
         AppUser,
         on_delete=models.CASCADE,
         related_name="user_profile",
+        )
+    interest = models.ForeignKey(
+        Interest, 
+        on_delete=models.CASCADE,
+        related_name="user_interests",
+        null=True,
         )
     display_name = models.CharField(
         max_length=40,
@@ -20,5 +27,5 @@ class UserProfile(models.Model):
     location = models.TextField(
         null=True
         )
-    # interests = foreign key w/ interest_app.Interest related name = "user_interests"
+    
     

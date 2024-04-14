@@ -1,6 +1,6 @@
 from django.db import models
 from .validators import validate_category
-from profile_app.models import UserProfile
+
 
 # Create your models here.
 class Interest(models.Model):
@@ -8,10 +8,5 @@ class Interest(models.Model):
         max_length=50,
         unique=True,
         validators=[validate_category])
-    user_profile = models.ForeignKey(
-        UserProfile, 
-        on_delete=models.CASCADE,
-        related_name="user_interests",
-        null=True,
-        )
+# interests = foreign key w/ interest_app.Interest related name = "user_interests"
     
