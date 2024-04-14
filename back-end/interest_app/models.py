@@ -5,7 +5,7 @@ from profile_app.models import UserProfile
 # Create your models here.
 class Interest(models.Model):
     category = models.CharField(
-        max_length=40,
+        max_length=50,
         unique=True,
         validators=[validate_category])
     user_profile = models.ForeignKey(
