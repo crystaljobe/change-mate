@@ -5,6 +5,6 @@ from .models import InterestCategory
 class InterestCategorySerializer(ModelSerializer):
     class Meta:
         model = InterestCategory
-        fields = ["category"]
+        fields = ["id", "category"]
 
 

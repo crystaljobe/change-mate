@@ -1,4 +1,5 @@
 from django.db import models
+import json
 from user_app.models import AppUser
 from interest_app.models import InterestCategory
 
@@ -23,8 +24,14 @@ class UserProfile(models.Model):
         null=True,
         )
     location = models.TextField(
-        null=True
+        null=True,
         )
+
+    def set_location(self, list_data):
+        self.location = json.dumps(list_data)
+
+    def get_location(self):
+        return json.loads(self.location)
 
     def add_event_attending(self, event_id):
         self.events_attending.add(event_id)
