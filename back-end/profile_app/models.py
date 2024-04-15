@@ -1,6 +1,6 @@
 from django.db import models
 from user_app.models import AppUser
-from interest_app.models import Interest
+from interest_app.models import InterestCategory
 
 # Create your models here.
 
@@ -11,11 +11,9 @@ class UserProfile(models.Model):
         on_delete=models.CASCADE,
         related_name="user_profile",
         )
-    interest = models.ForeignKey(
-        Interest, 
-        on_delete=models.CASCADE,
-        related_name="user_interests",
-        null=True,
+    interests = models.ManyToManyField(
+        InterestCategory,
+        related_name="user_profiles",
         )
     display_name = models.CharField(
         max_length=40,
@@ -27,5 +25,17 @@ class UserProfile(models.Model):
     location = models.TextField(
         null=True
         )
-    
+
+    def add_event_attending(self, event_id):
+        self.events_attending.add(event_id)
+
+    def remove_event_attending(self, event_id):
+        self.events_attending.remove(event_id)
+
+    def add_user_events(self, event_id):
+        self.user_events.add(event_id)
+
+    def remove_user_events(self, event_id):
+        self.user_events.remove(event_id)
+
     

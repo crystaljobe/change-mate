@@ -35,5 +35,7 @@ class Event(models.Model):
         )
     users_attending = models.ManyToManyField(
         UserProfile,
-        related_name='event_attending'
+        related_name='events_attending'
         )
+
+ 

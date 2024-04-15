@@ -1,6 +1,6 @@
 [
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 1,
         "fields": {
             "category": "Advocacy"
@@ -8,161 +8,161 @@
         
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 2,
         "fields": {
             "category":"Animal Welfare"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 3,
         "fields": {
             "category": "Arts & Culture"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 4,
         "fields": {
             "category":"Children & Youth "
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 5,
         "fields": {
             "category":"Community Improvement"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 6,
         "fields": {
             "category":"Criminal Justice"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 7,
         "fields": {
             "category":"Disaster Release"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 8,
         "fields": {
             "category":"Economic Development"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 9,
         "fields": {
             "category":"Education & Learning"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 10,
         "fields": {
             "category":"Environment, Sustainability, & Climate Change"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 11,
         "fields": {
             "category":"Food & Hunger"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 12,
         "fields": {
             "category":"Government & Politics"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 13,
         "fields": {
             "category":"Health, Wellnes, & Care"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 14,
         "fields": {
             "category":"Homeless & Housing"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 15,
         "fields": {
             "category":"Immigration, Refugee, & Human Rights"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 16,
         "fields": {
             "category":"Labor Rights"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 17,
         "fields": {
             "category":"LGBTQIA"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 18,
         "fields": {
             "category":"People with Disabilities"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 19,
         "fields": {
             "category":"Poverty & Low-income"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 20,
         "fields": {
             "category":"Race, Identity, & Equality"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 21,
         "fields": {
             "category":"Science & Technology"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 22,
         "fields": {
             "category":"Seniors & Elderly"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 23,
         "fields": {
             "category":"Veterans & Military Families"
         }
     },
     {
-        "model": "interest_app.interest",
+        "model": "interest_app.InterestCategory",
         "pk": 24,
         "fields": {
             "category":"Women & Equality"

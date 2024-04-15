@@ -1,13 +1,10 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Interest
+from .models import InterestCategory
 
-# Interest categories serializer
+# InterestCategory categories serializer to return category 
 class InterestCategorySerializer(ModelSerializer):
     class Meta:
-        model = Interest
+        model = InterestCategory
         fields = ["category"]
 
-class InterestSerializer(ModelSerializer):
-    class Meta:
-        model = Interest
-        exclude = ["user_profile"]
+

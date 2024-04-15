@@ -1,23 +1,22 @@
 from rest_framework import serializers
 from .models import Event
-# from profile_app.serializers import DisplayNameSerializer
 
 class EventSerializer(serializers.ModelSerializer):
     users_attending = serializers.SerializerMethodField()
-    # collaborators = DisplayNameSerializer(many=True)
+    collaborators = serializers.SerializerMethodField()
 
     class Meta: 
         model = Event
-        fields = ['title', 'date', 'time', 'time_zone', 'event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'description', 'event_photo', 'category', 'users_attending']
-        # 'collaborators',
+        fields = "['id', 'title', 'date', 'time', 'time_zone', 'event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'description', 'event_photo', 'category', 'users_attending', 'collaborators']"
 
     def get_users_attending(self, obj):
         return obj.count()
 
-    # def get_collaborators(self, obj):
-    #     pass
+    def get_collaborators(self, obj):
+         collaborators = obj.collaborators.all()
+         return collaborators.display_name
 
-class EventProfileSerializer(serializers.ModelSerializer):
+class ProfileEventSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = Event

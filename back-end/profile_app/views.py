@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
-    HTTP_400_BAD_REQUEST
+    HTTP_400_BAD_REQUEST,
 )
 from .serializers import UserProfile, UserProfileSerializer, DisplayNameSerializer, LocationFieldSerializer, ImgFieldSerializer
 from interest_app.serializers import InterestCategorySerializer
@@ -20,7 +20,7 @@ class UserProfile(TokenReq):
         # return serialized user profile data
         return Response(ser_profile.data, status=HTTP_200_OK)
 
-    # update user profile data 
+    # add user profile data 
     def put(self, request): 
         # create a copy of data 
         data = request.data.copy()

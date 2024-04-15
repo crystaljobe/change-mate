@@ -13,7 +13,7 @@ from rest_framework.status import (
     HTTP_400_BAD_REQUEST
 )
 from profile_app.models import UserProfile
-from .serializers import AppUser, AppUserSerializer
+from .serializers import AppUser
 
 # Create your views here.
 

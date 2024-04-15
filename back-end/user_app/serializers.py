@@ -6,3 +6,7 @@ class AppUserSerializer(ModelSerializer):
         model = AppUser
         fields = ["email", "password"]
 
+class NewUserSerializer(ModelSerializer):
+    class Meta:
+        model = AppUser
+        fields = ["id"]

@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import Interest, InterestCategorySerializer, InterestSerializer
+from .serializers import InterestCategory, InterestCategorySerializer
+from user_app.views import TokenReq
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
@@ -14,7 +15,7 @@ class AllInterests(APIView):
     def get(self, request):
         try: 
             # if valid rquest get all interest categories, serialize data and return data & status 200
-            categories = Interest.objects.all()
+            categories = InterestCategory.objects.all()
             ser_categories = InterestCategorySerializer(categories, many=True)
             return Response(ser_categories.data, status=HTTP_200_OK)
         # if not valid return error message and response 400
@@ -27,8 +28,8 @@ class An_Interest(APIView):
     def get(self, request, interest):
         try: 
             # if valid interest category serialize data and return it with status 200
-            interest = Interest.objects.get(category = interest.title())
-            ser_interest = InterestSerializer(interest)
+            interest = InterestCategory.objects.get(category = interest.title())
+            ser_interest = InterestCategorySerializer(interest)
             return Response(ser_interest.data, status=HTTP_200_OK)
         except Exception as e:
             return Response(e, status=HTTP_400_BAD_REQUEST)
@@ -40,7 +41,7 @@ class An_Interest(APIView):
         # set interest to category key
         data['category'] = interest.title()
         # serialize data 
-        ser_data = InterestSerializer(data=data)
+        ser_data = InterestCategorySerializer(data=data)
         # validate serialized category is valid
         if ser_data.is_valid(): 
             # if valid save new cat and return data and status 201
@@ -50,6 +51,10 @@ class An_Interest(APIView):
         else: 
             print(ser_data.errors)
             return Response(status=HTTP_400_BAD_REQUEST)
+
+
+        
+        
 
     # def put(self, request, interest):
     #     try: 
