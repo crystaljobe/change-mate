@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    #'corsheader',
+    'corsheaders',
     'user_app',
     'profile_app',
     'event_app',
@@ -58,6 +58,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# We would do this when deploying to prod
+# CORS_ALLOWED_ORIGINS = [
+#     "https://example.com", # domain
+#     "https://sub.example.com", #subdomain
+#     "http://localhost:5173", #dev server
+# ]
+
+# Only do this during dev
 CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'changemate_proj.urls'

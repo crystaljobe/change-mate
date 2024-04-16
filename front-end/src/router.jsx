@@ -1,0 +1,68 @@
+import { createBrowserRouter } from 'react-router-dom';
+import App from './App';
+import Homepage from './pages/HomePage'
+import SignUp from './pages/SignUp'
+import LogIn from './pages/LogIn'
+import ErrorPage from './pages/ErrorPage'
+import CreateEvent from './pages/CreateEvent';
+import EditEventDetails from './pages/EditEventDetails';
+import EditUserProfile from './pages/EditUserProfile';
+import EventDetails from './pages/EventDetails';
+import SearchEvents from './pages/SearchEvents';
+import UserInterests from './pages/UserInterests';
+import UserProfile from './pages/UserProfile';
+import { userConfirmation } from './utilities';
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <App />,
+        loader: userConfirmation,
+        children: [
+            {
+                index: true,
+                element: <Homepage />
+            },
+            {
+                path: "signup/",
+                element: <SignUp />,
+
+            },
+            {
+                path:"login/",
+                element: <LogIn />
+            },
+            {
+                path:"profile/",
+                element: <UserProfile />
+            },
+            {
+                path:"editprofile/:profileField",
+                element: <EditUserProfile />
+            },
+            {
+                path:"userinterests/",
+                element: <UserInterests />
+            },
+            {
+                path:"event/:eventID",
+                element: <EventDetails />
+            },
+            {
+                path:"createevent/",
+                element: <CreateEvent />
+            },
+            {
+                path:"editevent/:eventID",
+                element: <EditEventDetails />
+            },
+            {
+                path:"events/",
+                element: <SearchEvents />
+            }
+        ],
+        errorElement: <ErrorPage />
+    }
+])
+
+export default router;
