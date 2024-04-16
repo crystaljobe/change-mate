@@ -13,6 +13,28 @@
             "description": "Palmer Park is in desperate need of clean-up! Let’s rally the troops and make our community park better. Plan to meet at the parking lot on the North side of the park. We will provide the trash bags, just make sure to bring you some gloves and plenty of water! Look forward to seeing everyone there. You are all amazing! Please RSVP so we know how many we can count on to be there",
             "category_id": 5 
           }
+    },
+    {
+        "model": "event_app.event",
+        "pk": 2,
+        "fields":{
+            "title" : "Colorado Springs ASPCA Fundraiser Event",
+            "date": "2024-06-06", 
+            "event_type": "In-person",
+            "virtual_event_link": null,
+            "event_venue": "Downtown Civic Center",
+            "event_venue_address": "456 Center St, Colorado Springs, CO 80911",
+            "time": "6:00pm - 8:00pm",
+            "time_zone": "MST",
+            "description": "Come help us raise money for the ASPCA of Colorado Springs. All proceeds will be utilized to help homeless animals in our area. There will be a silent auction, cash bar, and appetizers. See you all there!",
+            "event_photo": null,
+            "category_id": 2,
+            "collaborators": [
+                {
+                    "display_name": "Crystal Jobe"
+                }
+            ] 
+          }
     }
 ]
 

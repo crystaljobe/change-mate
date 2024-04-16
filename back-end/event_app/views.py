@@ -10,7 +10,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .serializers import Event, EventSerializer, ProfileEventSerializer
+from .serializers import Event, EventSerializer
 from profile_app.models import UserProfile
 from interest_app.models import InterestCategory
 
@@ -90,7 +90,7 @@ class AnEvent(TokenReq):
         updated_event = EventSerializer(event, data=data, partial=True)
         if updated_event.is_valid():
             updated_event.save()
-            return Response(updated_event, status=HTTP_200_OK)
+            return Response(updated_event.data, status=HTTP_200_OK)
         return Response(updated_event.error_messages, status=HTTP_400_BAD_REQUEST)
             
     # delete event 
@@ -99,7 +99,3 @@ class AnEvent(TokenReq):
         event.delete()
         return Response(status=HTTP_204_NO_CONTENT)
 
-class EventByCollaborators(TokenReq):
-    # get events filtered by user as collaborator
-    def get(self, request):
-        pass
