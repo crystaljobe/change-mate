@@ -1,0 +1,18 @@
+[
+    {
+        "model": "event_app.event",
+        "pk": 1,
+        "fields":{
+            "title" : "Palmer Park Clean Up",
+            "date": "2024-05-05", 
+            "event_type": "In-person",
+            "event_venue": "Palmer Park",
+            "event_venue_address": "123 Palmer Park, Colorado Springs, CO 80911",
+            "time": "1:00pm - 4:00pm",
+            "time_zone": "MST",
+            "description": "Palmer Park is in desperate need of clean-up! Let’s rally the troops and make our community park better. Plan to meet at the parking lot on the North side of the park. We will provide the trash bags, just make sure to bring you some gloves and plenty of water! Look forward to seeing everyone there. You are all amazing! Please RSVP so we know how many we can count on to be there",
+            "category_id": 5 
+          }
+    }
+]
+

@@ -1,6 +1,7 @@
 from django.db import models
-from .validators import validate_event_type, validate_virtual_event, validate_event_location
+from .validators import validate_event_type
 from profile_app.models import UserProfile
+from interest_app.models import InterestCategory
 
 # Create your models here.
 class Event(models.Model):
@@ -12,23 +13,30 @@ class Event(models.Model):
         validators=[validate_event_type]
         )
     virtual_event_link = models.URLField(
-        null=True, 
+        blank=True, 
         unique=True,
-        validators=[validate_virtual_event],
+        null=True,
         )
     event_venue = models.CharField(
+        blank=True,
         null=True, 
-        validators=[validate_event_location],
         )
     event_venue_address = models.CharField(
+        blank=True,
         null=True,
-        validators=[validate_event_location],
         )
     time = models.CharField()
-    time_zome = models.CharField()
+    time_zone = models.CharField()
     description = models.TextField()
-    event_photo = models.ImageField()
-    category = models.CharField()
+    event_photo = models.ImageField(
+        blank=True,
+        null=True,
+        )
+    category = models.ForeignKey(
+        InterestCategory,
+        on_delete=models.CASCADE,
+        related_name="events",
+        )
     collaborators = models.ManyToManyField(
         UserProfile,
         related_name='user_events'

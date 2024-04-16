@@ -21,7 +21,9 @@ class CurrentUserProfile(TokenReq):
         # return serialized user profile data
         return Response(ser_profile.data, status=HTTP_200_OK)
 
+class UserInterest(TokenReq):
     # set interest categories to user profile
+    # request should be sent as a list of interest category ids
     def post(self, request): 
         # create a copy of data 
         data = request.data.copy()
@@ -31,10 +33,12 @@ class CurrentUserProfile(TokenReq):
         user_profile = get_object_or_404(UserProfile, user=request.user)
         
         try:
-            interests = InterestCategory.objects.filter(id__in=interests_ids)
-            user_profile.interests.set(interests)
-            user_profile.save()
-            return Response(UserProfileSerializer(user_profile).data, status=HTTP_200_OK)
+            if interests_ids:
+                interests = InterestCategory.objects.filter(id__in=interests_ids)
+                user_profile.interests.set(interests)
+                user_profile.save()
+                ser_user_profile = UserProfileSerializer(user_profile)
+                return Response(ser_user_profile.data, status=HTTP_200_OK)
         except Exception as e: 
             return Response(e, status=HTTP_400_BAD_REQUEST)
         

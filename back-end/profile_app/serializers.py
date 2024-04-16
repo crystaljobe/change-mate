@@ -1,17 +1,24 @@
 from rest_framework import serializers
 from .models import UserProfile
-from event_app.serializers import ProfileEventSerializer, EventSerializer
 from interest_app.serializers import InterestCategorySerializer
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    user_events = EventSerializer(many=True)
-    events_attending =  ProfileEventSerializer(many=True)
+    user_events = serializers.SerializerMethodField()
+    events_attending = serializers.SerializerMethodField()
     interests = InterestCategorySerializer(many=True)
 
     class Meta: 
         model = UserProfile
         fields = ['id', 'display_name', 'location', 'image', 'interests', 'user_events', 'events_attending']
+
+    def get_events_attending(self, obj):
+        events_attending = obj.events_attending.all()
+        return events_attending
+
+    def get_user_events(self, obj):
+        user_events = obj.user_events.all()
+        return user_events
 
 
 class DisplayNameSerializer(serializers.ModelSerializer):
