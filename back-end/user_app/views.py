@@ -44,7 +44,7 @@ class SignUp(APIView):
 
             # log the new user in upon signup and return the users email, token, and 201 status
             login(request, new_user) 
-            return Response({"client":new_user.email, "token":token.key}, status=HTTP_201_CREATED)
+            return Response({"user":new_user.email, "token":token.key}, status=HTTP_201_CREATED)
         
         # if try doesn't work print error 
         except ValidationError as e:
@@ -84,9 +84,13 @@ class TokenReq(APIView):
 # method to grab user data
 # method will check for user authentication
 class Info(TokenReq):
-    # if authenticated get user info (id, display name, email) and return it with status 200
+    # if authenticated get user info (email) and return it with status 200
     def get(self, request):
-        return Response({"email": request.user.email, "user id": request.user.id}, status=HTTP_200_OK)
+        try: 
+            user = request.user
+            return Response({"email": user.email}, status=HTTP_200_OK)
+        except:
+            return Response("Error logging out", status=HTTP_400_BAD_REQUEST) 
 
 # method to logout user checking for user authentication first
 class Logout(TokenReq):
@@ -94,8 +98,8 @@ class Logout(TokenReq):
         # if user authenticated delete user token upon signout to require user to sign back in to access views
         request.user.auth_token.delete()
         logout(request)
-        # return response 404 to show no content to confirm token deletion
-        return Response(status=HTTP_400_BAD_REQUEST)
+        # return response 204 to show no content to confirm token deletion
+        return Response(status=HTTP_204_NO_CONTENT)
 
 
 

@@ -7,6 +7,7 @@ import { api } from './utilities'
 function App() {
   // const vars for user, navigate, and location
   const [user, setUser] = useState(useLoaderData());
+  // const [displayName, setDisplayName] = useState(null)
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -22,17 +23,15 @@ function App() {
 
   // use effect to run when user and location.pathname is updated 
   useEffect(() => {
-    let nullUserUrls = ["/login/", "/signup/"];
+    let nullUserUrls = ["/login", "/signup"];
 
     // check if current location is allowed
     let isAllowed = nullUserUrls.includes(location.pathname);
-    console.log('isallowed ', isAllowed)
 
     // redirect user to homepage if user is logged in and trying to go to signup/signin
     // redirect user to login/signup page if not logged in 
     if(user && isAllowed) {
-      console.log('redirect to homepage')
-      navigate("/");
+      navigate("/events");
     } else if (!user && !isAllowed) {
       navigate("/");
     }

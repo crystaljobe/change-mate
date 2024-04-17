@@ -24,40 +24,40 @@ const router = createBrowserRouter([
                 element: <Homepage />
             },
             {
-                path: "signup/",
+                path: "/signup",
                 element: <SignUp />,
 
             },
             {
-                path:"login/",
+                path:"/login",
                 element: <LogIn />
             },
             {
-                path:"profile/",
+                path:"/profile",
                 element: <UserProfile />
             },
             {
-                path:"editprofile/:profileField",
+                path:"/editprofile/:profileField",
                 element: <EditUserProfile />
             },
             {
-                path:"userinterests/",
+                path:"/userinterests",
                 element: <UserInterests />
             },
             {
-                path:"event/:eventID",
+                path:"/event/:eventID",
                 element: <EventDetails />
             },
             {
-                path:"createevent/",
+                path:"/createevent",
                 element: <CreateEvent />
             },
             {
-                path:"editevent/:eventID",
+                path:"/editevent/:eventID",
                 element: <EditEventDetails />
             },
             {
-                path:"events/",
+                path:"/events",
                 element: <SearchEvents />
             }
         ],

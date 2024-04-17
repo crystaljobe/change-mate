@@ -7,6 +7,6 @@ urlpatterns = [
     path("signup/", SignUp.as_view(), name="signup"),
     path("login/", Login.as_view(), name="login"),
     path("logout/", Logout.as_view(), name="logout"),
-    path("user_info/", Info.as_view(), name="user_info"),
+    path("", Info.as_view(), name="user_info"),
     # path('master/', MasterUser.as_view(), name='master'),
 ]

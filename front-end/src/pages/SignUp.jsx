@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -11,6 +11,14 @@ export default function SignUp() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
     const { setUser } = useOutletContext();
+	const navigate = useNavigate();
+
+	const handleSignUp = async(e) => {
+		e.preventDefault();
+        const userData = await userRegistration(email, password);
+		setUser(userData);
+		navigate("/userinterests")
+    }
 
 	return (
 		<>
@@ -24,10 +32,7 @@ export default function SignUp() {
 				</Row>
 			</Container>
 
-			<Form onSubmit={async(e) => [
-                e.preventDefault(),
-                setUser(await userRegistration(email, password)),
-            ]}>
+			<Form onSubmit={handleSignUp}>
 				<Container fluid>
 					<Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
 						<Col sm={2} />
@@ -63,9 +68,7 @@ export default function SignUp() {
 						</Col>
 						<Col sm={4} />
 					</Form.Group>
-				</Container>
-
-				<Container fluid>
+	
 					<Row>
 						<Col sm> </Col>
 						<Col sm style={{ textAlign: "center" }}>
@@ -75,6 +78,7 @@ export default function SignUp() {
 						</Col>
 						<Col sm> </Col>
 					</Row>
+					
 				</Container>
 			</Form>
 		</>
