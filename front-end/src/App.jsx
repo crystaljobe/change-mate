@@ -7,7 +7,8 @@ import { api } from './utilities'
 function App() {
   // const vars for user, navigate, and location
   const [user, setUser] = useState(useLoaderData());
-  // const [displayName, setDisplayName] = useState(null)
+  const [userProfileData, setUserProfileData] = useState([])
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -41,8 +42,8 @@ function App() {
 
   return (
     <>
-      <MyNavbar user={ user } setUser={ setUser }/>
-      <Outlet context={{ user, setUser }} />
+      <MyNavbar user={ user } setUser={ setUser } displayName={userProfileData.display_name}/>
+      <Outlet context={{ user, setUser, userProfileData, setUserProfileData }} />
     </>
   )
 }

@@ -54,7 +54,7 @@ export const userConfirmation = async() => {
         api.defaults.headers.common['Authorization'] = `Token ${token}`;
         const response = await api.get('users/');
         if (response.status === 200) {
-            console.log(api.defaults.headers.common['Authorization']);
+            // console.log(api.defaults.headers.common['Authorization']);
             return { user: response.data.email }
         } else {
             // console.log('userConfirmation error', response)

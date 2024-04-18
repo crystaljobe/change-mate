@@ -7,7 +7,7 @@ import Button from "react-bootstrap/esm/Button";
 import ChangeMateLogo from "/Users/crystaljobe/code_platoon/personal_project/change-mate/front-end/src/assets/changemate-logo.svg";
 import { userLogout } from "../utilities";
 
-export default function MyNavbar({ user, setUser }) {
+export default function MyNavbar({ user, setUser, displayName }) {
 	const handleUserLogout = async () => {
 		const loggedOut = await userLogout();
 		if (loggedOut) {
@@ -56,6 +56,10 @@ export default function MyNavbar({ user, setUser }) {
 			</Navbar.Collapse>
 
             <Nav className="justify-content-end">
+			{user ? (
+				<Nav.Link as={Link} to="/profile" style={{fontStyle:'italic', color:'#6840DF'}}> Keep up the great work, {displayName}!</Nav.Link>
+			) : null}
+
             <NavDropdown title="Menu" id="basic-nav-dropdown" align="end">
                 <NavDropdown.Item as={Link} to={"/profile"}>
                     Profile

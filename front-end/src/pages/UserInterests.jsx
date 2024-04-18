@@ -1,4 +1,4 @@
-import {Container, Row, Col, Card, Button, ListGroup} from 'react-bootstrap';
+import {Container, Col, Card, Button, Stack} from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { api } from '../utilities'
@@ -14,7 +14,7 @@ export default function UserInterests() {
 
     const [interestCategories, setInterestCategories] = useState([]);
     const [userInterests, setUserInterests] = useState([]);
-    const [userSubmittedInterestCategory, setUserSubmittedInterestCategory] = useState("");
+    // const [userSubmittedInterestCategory, setUserSubmittedInterestCategory] = useState("");
     const navigate = useNavigate();
 
     console.log('interestCats:', interestCategories)
@@ -50,35 +50,39 @@ export default function UserInterests() {
 
     return (
         
-        <div>
-            <br></br>
-            <h1 style={styles.header}>Please select your areas of interest:</h1>
-            <br></br>
-
-            <select 
-                multiple={true} 
-                value={userInterests}
-                onChange={e => {
-                    const options = [...e.target.selectedOptions];
-                    const values = options.map(option => option.value);
-                    setUserInterests(values);}}
-                >
-                {interestCategories && interestCategories.map(category => (
-                  <option key={category.id} value={category.id}>{category.category}</option>
-                ))}
-
-            </select>
-
-            <br></br>
+        <Container>
+            <Stack gap={2}>
+            <div className="p-2">
+                <h1 style={styles.header}>Please select your areas of interest:</h1>
+            </div>
+            <div className="p-2">
+                <select 
+                    multiple={true} 
+                    value={userInterests}
+                    onChange={e => {
+                        const options = [...e.target.selectedOptions];
+                        const values = options.map(option => option.value);
+                        setUserInterests(values);}}
+                    >
+                    {interestCategories && interestCategories.map(category => (
+                    <option key={category.id} value={category.id}>{category.category}</option>
+                    ))}
+                </select>
+            </div>
+            <div className="p-2">
+                <Button type="button" onClick={handleSubmit}>Update Interests</Button>
+            </div>
+            </Stack>
+            
+            {/* 
             <label>Other:
-                <textarea rows={1} cols={60} style={{borderWidth: 2}} name='userSubmittedInterestCategory' 
+                <textarea divs={1} cols={60} style={{borderWidth: 2}} name='userSubmittedInterestCategory' 
                 value={userSubmittedInterestCategory} 
                 onChange={e => setUserSubmittedInterestCategory(e.target.value)} />
             </label>
-            <br></br>
-
+            */}
             {/* <Button style={{margin:'1rem'}} type="reset" onClick={() => {useEffect}}>Reset Selection</Button> */}
-            <Button type="button" onClick={handleSubmit}>Update Interests</Button>
-        </div>
+
+        </Container>
     )
 }

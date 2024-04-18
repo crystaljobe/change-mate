@@ -1,4 +1,15 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+.map-container {
+    height: 400px;
+  }
+   
+  .sidebar {
+    background-color: rgb(35 55 75 / 90%);
+    color: #fff;
+    padding: 6px 12px;
+    font-family: monospace;
+    z-index: 1;
+    position: sticky;
+    top: 6px;
+    left: 0;
+    border-radius: 4px;
+  }

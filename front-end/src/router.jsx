@@ -9,7 +9,7 @@ import EditEventDetails from './pages/EditEventDetails';
 import EditUserProfile from './pages/EditUserProfile';
 import EventDetails from './pages/EventDetails';
 import SearchEvents from './pages/SearchEvents';
-import UserInterests from './pages/UserInterests';
+import EventDirections from './pages/EventDirections';
 import UserProfile from './pages/UserProfile';
 import { userConfirmation } from './utilities';
 
@@ -41,12 +41,12 @@ const router = createBrowserRouter([
                 element: <EditUserProfile />
             },
             {
-                path:"/userinterests",
-                element: <UserInterests />
-            },
-            {
                 path:"/event/:eventID",
                 element: <EventDetails />
+            },
+            {
+                path:"/eventdirections",
+                element: <EventDirections />
             },
             {
                 path:"/createevent",
