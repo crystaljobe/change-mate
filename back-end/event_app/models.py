@@ -31,6 +31,7 @@ class Event(models.Model):
     event_photo = models.ImageField(
         blank=True,
         null=True,
+        upload_to = 'images/',
         )
     category = models.ForeignKey(
         InterestCategory,

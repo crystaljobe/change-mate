@@ -1,3 +1,4 @@
+from PIL import Image, ImageOps
 from django.shortcuts import render
 from user_app.views import TokenReq
 from rest_framework.response import Response
@@ -7,8 +8,10 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST,
 )
-from .serializers import UserProfile, UserProfileSerializer, DisplayNameSerializer, LocationFieldSerializer, ImgFieldSerializer
+from .serializers import UserProfile, UserInterestSerializer, UserProfileSerializer, DisplayNameSerializer, LocationFieldSerializer, ImgFieldSerializer
 from interest_app.serializers import InterestCategory
+from user_app.serializers import AppUser
+from rest_framework.views import APIView
 
 # User Profile views
 class CurrentUserProfile(TokenReq):
@@ -21,61 +24,31 @@ class CurrentUserProfile(TokenReq):
         # return serialized user profile data
         return Response(ser_profile.data, status=HTTP_200_OK)
 
-class UserInterest(TokenReq):
+class EditUserProfile(APIView):
     # set interest categories to user profile
     # request should be sent as a list of interest category ids
-    def post(self, request): 
+    def put(self, request): 
         # create a copy of data 
-        data = request.data.copy()
-        # get interest categories using interests key, if key is not present use empty list as default
-        interests_ids = data.get('interests', [])
         # get user associated profile
-        user_profile = get_object_or_404(UserProfile, user=request.user)
+        user = get_object_or_404(AppUser, email = request.user)
+        user_profile = get_object_or_404(UserProfile, user=user)
+        data = request.data.copy()
         
+        # get interest categories using interests key
+        interests_ids = data.get('interests', [])
+
         try:
-            if interests_ids:
-                interests = InterestCategory.objects.filter(id__in=interests_ids)
-                user_profile.interests.set(interests)
-                user_profile.save()
-                ser_user_profile = UserProfileSerializer(user_profile)
-                return Response(ser_user_profile.data, status=HTTP_200_OK)
+            interests = InterestCategory.objects.filter(id__in=interests_ids)
+            user_profile.interests.set(interests)
+            user_profile.location = data['location']
+            user_profile.display_name = data['display_name']
+            user_profile.full_clean()
+            user_profile.save()
+            ser_user_profile = UserProfileSerializer(user_profile)
+            return Response(ser_user_profile.data, status=HTTP_200_OK)
         except Exception as e: 
             return Response(e, status=HTTP_400_BAD_REQUEST)
         
-
-# update user's profile data based on passed data field
-# update all criteria regardless if it's changed
-class AProfileField(TokenReq):
-    def put(self, request, field):
-        # create copy of data
-        data = request.data.copy()
-        
-        # get user profile 
-        profile = get_object_or_404(UserProfile, user=request.user)
-
-        # match case to determine profile field to update
-        # if display name field use display name serializer and return updated data
-        if field == "display_name":
-            profile.display_name = data['display_name']
-            ser_data = DisplayNameSerializer(profile, data=data)
-            
-        # if location field use location field serializer  
-        elif field == "location":
-            profile.set_location(data['location']) 
-            ser_data = LocationFieldSerializer(profile, data=data)
-            
-        # if image field use img field serializer 
-        elif field == "image":
-            profile.image = data['image']
-            ser_data = ImgFieldSerializer(profile, data=data)
-        else:
-            return Response("Invalid user profile field")
-            
-        if ser_data.is_valid():
-            ser_data.save()
-            return Response(ser_data.data, status=HTTP_200_OK)
-        else: 
-            return Response("Invalid data input", HTTP_400_BAD_REQUEST)
 
 # method to grab user display name 
 class DisplayName(TokenReq):
@@ -85,3 +58,16 @@ class DisplayName(TokenReq):
         display_name = DisplayNameSerializer(profile)
         return Response(display_name.data, status=HTTP_200_OK)
 
+class ProfilePic(TokenReq):
+    def post(self, request):
+        try:
+            with Image.open(request.data["file"]) as im:
+                im.thumbnail((200,200))
+                im.save(f'media/users/profile-pic-{request.user.id}.png')
+                request.user.profile_pic = f'users/profile-pic-{request.user.id}.png'
+                request.user.full_clean()
+                request.user.save()
+                return Response(status=HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response(e, status=HTTP_400_BAD_REQUEST)

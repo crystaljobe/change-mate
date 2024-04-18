@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static 
 
 # test connection 
 def connection_test(request):
@@ -30,3 +32,5 @@ urlpatterns = [
     path('api/v1/userprofile/', include('profile_app.urls')),
     path('api/v1/interests/', include('interest_app.urls')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

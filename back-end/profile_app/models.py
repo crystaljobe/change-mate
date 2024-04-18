@@ -22,6 +22,9 @@ class UserProfile(models.Model):
         )
     image = models.ImageField(
         null=True,
+        blank=True,
+        upload_to = 'images/',
+        default='users/default-profile-icon.jpg',
         )
     location = models.TextField(
         null=True,

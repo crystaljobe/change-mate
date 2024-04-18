@@ -39,8 +39,9 @@ class ImgFieldSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['image']
 
-# class NewUserProfileSerializer(serializers.ModelSerializer):
-#     user_profile = NewUserSerializer()
-#     class Meta: 
-#         model = UserProfile
-#         fields = ['id', 'user_profile']
+class UserInterestSerializer(serializers.ModelSerializer):
+    interests = InterestCategorySerializer(many=True) 
+    
+    class Meta: 
+        model = UserProfile
+        fields = ['interests']
