@@ -1,5 +1,5 @@
 import '../App.css'
-import { useNavigate, useOutletContext, Link } from "react-router-dom";
+import { useOutletContext, Link } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { api } from '../utilities'
 import {Container, Row, Col, Card, Button, CardGroup} from 'react-bootstrap';
@@ -37,7 +37,7 @@ export default function UserProfile({user}) {
 
     useEffect(() => {
         getUserProfile();
-    }, [user, userProfileData])
+    }, [])
 
     return (
         <Container id="profile page" fluid>

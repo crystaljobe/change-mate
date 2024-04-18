@@ -47,7 +47,7 @@ class EventsView(TokenReq):
         # create copy of request data
         data = request.data.copy()
 
-        category_id = request.data.get('category_id')
+        category_id = data["category"]
         category = InterestCategory.objects.get(id = category_id)
         try:
             new_event = Event.objects.create(
@@ -76,7 +76,7 @@ class EventsView(TokenReq):
             return e
     
 # views for a singular event
-class AnEvent(TokenReq):
+class AnEvent(APIView):
     # get event details
     def get(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
@@ -87,7 +87,14 @@ class AnEvent(TokenReq):
     def put(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
         data = request.data.copy()
+        category_id = data["category"]
+        category = InterestCategory.objects.get(id = category_id)
+        event.category = category
+        
+        print(event)
+        data.pop('category')
         updated_event = EventSerializer(event, data=data, partial=True)
+        print(updated_event)
         if updated_event.is_valid():
             updated_event.save()
             return Response(updated_event.data, status=HTTP_200_OK)
