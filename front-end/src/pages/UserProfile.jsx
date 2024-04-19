@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { api } from '../utilities'
 import {Container, Row, Col, Card, Button, CardGroup} from 'react-bootstrap';
 
-
 export default function UserProfile({user}) {
     const styles = {
         header: {
@@ -17,6 +16,7 @@ export default function UserProfile({user}) {
     const [eventsAttending, setEventsAttending] = useState([]);
     const [userEvents, setUserEvents] = useState([])
     const [userInterests, setUserInterests] = useState([])
+    const [icon, setIcon] = useState("")
     const userIntStr = userInterests.join(', ')
 
     // console.log(userProfileData)
@@ -37,9 +37,14 @@ export default function UserProfile({user}) {
         let interests = interestArr.map(cat => cat.category);
         setUserInterests(interests);
     };
-
+    const getIcon = async() => {
+        const response = await api.get("userprofile/get_icon/");
+        let data = response.data;
+        setIcon(data)
+    }
     useEffect(() => {
         getUserProfile();
+        getIcon();
     }, [])
 
     return (
@@ -50,10 +55,10 @@ export default function UserProfile({user}) {
                 <br/>
                 <h1 style={styles.header}>Profile Info</h1>
                 <br/>
-                <Card className="text-center">
+               <Card className="text-center">
                 {/* <Card.Img variant="top" src={`/media/${props.user.profile_pic}`} alt="profile pic"  /> */}
                     <Card.Body>
-                        <Card.Title as='h3'style={{fontWeight:'bold'}}>{userProfileData.display_name}</Card.Title>
+                        <Card.Title as='h3'style={{fontWeight:'bold'}}><img src={icon} style={{height: '50px'}} alt="user-icon" />{userProfileData.display_name}  </Card.Title>
                         <Card.Subtitle as='h4' style={{fontWeight:'bold'}}>Locations:</Card.Subtitle>
                         <Card.Text> {userProfileData.location} </Card.Text>
                         <Card.Subtitle as='h4' style={{fontWeight:'bold'}}>Interests:</Card.Subtitle>

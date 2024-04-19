@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from 'react';
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -8,6 +9,7 @@ import ChangeMateLogo from "/Users/crystaljobe/code_platoon/personal_project/cha
 import { userLogout } from "../utilities";
 
 export default function MyNavbar({ user, setUser, displayName }) {
+
 	const handleUserLogout = async () => {
 		const loggedOut = await userLogout();
 		if (loggedOut) {

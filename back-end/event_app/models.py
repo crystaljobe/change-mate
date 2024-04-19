@@ -8,8 +8,7 @@ class Event(models.Model):
     title = models.CharField(
         max_length=50
         )
-    start_date = models.DateField()
-    end_date = models.DateField()
+    date = models.DateField()
     event_type = models.CharField(
         validators=[validate_event_type]
         )
@@ -26,14 +25,13 @@ class Event(models.Model):
         blank=True,
         null=True,
         )
-    start_time = models.CharField()
-    end_time = models.CharField()
+    time = models.CharField()
     time_zone = models.CharField()
     description = models.TextField()
     event_photo = models.ImageField(
         blank=True,
         null=True,
-        upload_to = 'images/',
+        upload_to = 'images/'
         )
     category = models.ForeignKey(
         InterestCategory,
