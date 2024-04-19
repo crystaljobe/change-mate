@@ -22,6 +22,9 @@ export default function UserProfile({user}) {
     // console.log(userProfileData)
     // console.log('events:', userEvents)
     // console.log('attending', eventsAttending)
+    // const get_icon = async() => {
+
+    // }
 
     const getUserProfile = async() => {
         const response = await api.get("userprofile/");
@@ -87,7 +90,7 @@ export default function UserProfile({user}) {
                 </Row>
                 
                 <Row>
-                    <Button variant="secondary"  as={Link} to="/createevent">Create New Event</Button>
+                    <Button variant="primary"  as={Link} to="/createevent">Create New Event</Button>
                 </Row>
                 <br/>
                 
@@ -112,7 +115,7 @@ export default function UserProfile({user}) {
                         </CardGroup>))}
                 </Row>
                 <Row>
-                    <Button variant="secondary"  as={Link} to="/events">I&apos;m ready to make a difference!</Button>
+                    <Button variant="primary"  as={Link} to="/events">I&apos;m ready to make a difference!</Button>
                 </Row>
 
             </Col>

@@ -35,10 +35,10 @@ class EditUserProfile(APIView):
         data = request.data.copy()
         
         # get interest categories using interests key
-        interests_ids = data.get('interests', [])
+        interests_cats = data.get('interests', [])
 
         try:
-            interests = InterestCategory.objects.filter(id__in=interests_ids)
+            interests = InterestCategory.objects.filter(category__in=interests_cats)
             user_profile.interests.set(interests)
             user_profile.location = data['location']
             user_profile.display_name = data['display_name']

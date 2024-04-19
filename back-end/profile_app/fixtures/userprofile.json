@@ -1,0 +1,32 @@
+[
+{
+  "model": "profile_app.userprofile",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "display_name": "Crystal",
+    "image": "",
+    "location": "Colorado Springs",
+    "interests": [
+      5,
+      4,
+      6
+    ]
+  }
+},
+{
+  "model": "profile_app.userprofile",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "display_name": "Penelope",
+    "image": "",
+    "location": "Denver, Colorado",
+    "interests": [
+      10,
+      5,
+      6
+    ]
+  }
+}
+]

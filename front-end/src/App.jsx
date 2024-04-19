@@ -17,9 +17,16 @@ function App() {
     const response = await api.get("test/");
     console.log(response.data);
   }
+
+  const getUserProfile = async() => {
+    const response = await api.get("userprofile/");
+    let data = response.data;
+    setUserProfileData(data)
+  }
   // useEffect for test connection function
   useEffect(() => {
     testConnection();
+    getUserProfile()
   }, []);
 
   // use effect to run when user and location.pathname is updated 

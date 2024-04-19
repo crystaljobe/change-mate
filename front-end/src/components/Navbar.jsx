@@ -57,7 +57,7 @@ export default function MyNavbar({ user, setUser, displayName }) {
 
             <Nav className="justify-content-end">
 			{user ? (
-				<Nav.Link as={Link} to="/profile" style={{fontStyle:'italic', color:'#6840DF'}}> Keep up the great work, {displayName}!</Nav.Link>
+				<Nav.Link as={Link} to="/profile" style={{fontStyle:'italic', color:'#6840DF'}}> Hello, {displayName}!</Nav.Link>
 			) : null}
 
             <NavDropdown title="Menu" id="basic-nav-dropdown" align="end">

@@ -12,6 +12,7 @@
   "dependencies": {
     "@mapbox/mapbox-gl-geocoder": "^5.0.2",
     "@mapbox/search-js-react": "^1.0.0-beta.19",
+    "add-to-calendar-button": "^2.6.13",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "mapbox-gl": "^3.3.0",

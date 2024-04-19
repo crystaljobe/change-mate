@@ -4,50 +4,49 @@ import { api } from "../utilities";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { AddressAutofill } from "@mapbox/search-js-react";
 
+export default function EditEventDetails() {
+	let { eventID } = useParams();
+	const navigate = useNavigate();
+	const [event, setEvent] = useState(null);
+	const [interestCategories, setInterestCategories] = useState([]);
+	const [title, setTitle] = useState(null);
+	const [date, setDate] = useState(null);
+	const [time, setTime] = useState(null);
+	const [time_zone, setTimeZone] = useState(null);
+	const [eventType, setEventType] = useState(null);
+	const [eventVenue, setEventVenue] = useState(null);
+	const [eventVenueAddress, setEventVenueAddress] = useState(null);
+	const [description, setDescription] = useState(null);
+	const [category, setCategory] = useState(null);
 
-    export default function EditEventDetails() {
-        let { eventID } = useParams()
-        const navigate = useNavigate()
-        const [event, setEvent] = useState(null)
-        const [interestCategories, setInterestCategories] = useState([]);
-        const [title, setTitle] = useState(null)
-        const [date, setDate] = useState(null)
-        const [time, setTime] = useState(null)
-        const [time_zone, setTimeZone] = useState(null)
-        const [eventType, setEventType] = useState(null)
-        const [eventVenue, setEventVenue] = useState(null)
-        const [eventVenueAddress, setEventVenueAddress] = useState(null)
-        const [description, setDescription] = useState(null)
-        const [category, setCategory] = useState(null)
-
-    function handleSubmit(e) {
+	function handleSubmit(e) {
 		e.preventDefault();
-		console.log(
-			
-		);
+		console.log();
 		updateEvent();
 	}
 
 	const updateEvent = async () => {
-        console.log({"title" : title,
-        "date" : date,
-        "time" : time,
-        "time_zone" : time_zone,
-        "event_type" : eventType,
-        "event_venue" : eventVenue,
-        "event_venue_address" : eventVenueAddress,
-        "description" : description,
-        "category" : category})
+		// console.log({
+		// 	title: title,
+		// 	date: date,
+		// 	time: time,
+		// 	time_zone: time_zone,
+		// 	event_type: eventType,
+		// 	event_venue: eventVenue,
+		// 	event_venue_address: eventVenueAddress,
+		// 	description: description,
+		// 	category: category,
+		// });
 		let response = await api.put(`events/${eventID}/`, {
-			"title" : title,
-            "date" : date,
-            "time" : time,
-            "time_zone" : time_zone,
-            "event_type" : eventType,
-            "event_venue" : eventVenue,
-            "event_venue_address" : eventVenueAddress,
-            "description" : description,
-            "category" : category,
+			title: title,
+			date: date,
+			time: time,
+			time_zone: time_zone,
+			event_type: eventType,
+			event_venue: eventVenue,
+			event_venue_address: eventVenueAddress,
+			description: description,
+			category: category,
 		});
 		console.log(response.status);
 		if (response.status === 200) {
@@ -57,29 +56,39 @@ import { AddressAutofill } from "@mapbox/search-js-react";
 		}
 	};
 
-    const getEvent = async () =>{
-        const response = await api.get(`events/${eventID}`);
-        console.log(response.data)
-        setEvent(response.data)
-        setTitle(response.data.title)
-        setDate(response.data.date)
-        setTime(response.data.time)
-        setTimeZone(response.data.time_zone)
-        setEventType(response.data.event_type)
-        setEventVenue(response.data.event_venue)
-        setEventVenueAddress(response.data.event_venue_address)
-        setDescription(response.data.description)
-        setCategory(response.data.category.id)
-    }
-    const getInterestCategories = async() => {
-        const response = await api.get("interests/");
-        setInterestCategories(response.data)
-    };
+	const deleteEvent = async () => {
+		const response = await api.delete(`events/${eventID}/`, {
+			event
+		});
+		if (response.status === 204) {
+			navigate("/profile");
+		}
+	}
 
-    useEffect(() => {
-        getEvent().then(getInterestCategories())
-    }, []);
-    return (
+	const getEvent = async () => {
+		const response = await api.get(`events/${eventID}/`);
+		console.log(response.data);
+		setEvent(response.data);
+		setTitle(response.data.title);
+		setDate(response.data.date);
+		setTime(response.data.time);
+		setTimeZone(response.data.time_zone);
+		setEventType(response.data.event_type);
+		setEventVenue(response.data.event_venue);
+		setEventVenueAddress(response.data.event_venue_address);
+		setDescription(response.data.description);
+		setCategory(response.data.category.id);
+	};
+	const getInterestCategories = async () => {
+		const response = await api.get("interests/");
+		setInterestCategories(response.data);
+	};
+
+	useEffect(() => {
+		getEvent().then(getInterestCategories());
+	}, []);
+	
+	return (
 		<Container>
 			<br />
 			<Row className="space justify-content-md-center">
@@ -204,16 +213,19 @@ import { AddressAutofill } from "@mapbox/search-js-react";
 									size={6}
 									value={event && event.category.id}
 									onChange={(e) => setCategory(e.target.value)}>
-									{event && interestCategories &&
+									{event &&
+										interestCategories &&
 										interestCategories.map((category) => (
-											<option key={category.id} value={category.id} >
+											<option key={category.id} value={category.id}>
 												{category.category}
 											</option>
 										))}
 								</select>
 							</Form.Label>
 						</Form.Group>
-
+						<Button variant="danger" type="button" onClick={deleteEvent} style={{marginRight:"10px"}}>
+							Delete Event
+						</Button>					
 						<Button variant="info" type="submit">
 							Submit changes
 						</Button>

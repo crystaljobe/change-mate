@@ -5,7 +5,7 @@ import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { AddressAutofill } from '@mapbox/search-js-react';
 
 export default function EditUserProfile() {
-	const { userProfileData, setUserProfileData } = useOutletContext();
+	// const { userProfileData, setUserProfileData } = useOutletContext();
 	const [interestCategories, setInterestCategories] = useState([]);
 	const [userInterests, setUserInterests] = useState([]);
 	const [displayName, setDisplayName] = useState([]);
@@ -17,16 +17,20 @@ export default function EditUserProfile() {
 		setInterestCategories(response.data);
 	};
 
+	const getUserProfile = async() => {
+		const response = await api.get("userprofile/");
+		let data = response.data;
+		console.log(data)
+		setUserLocation(data.location);
+		setDisplayName(data.display_name)
+		let interestArr = response.data.interests;
+        let interests = interestArr.map(cat => cat.category);
+        setUserInterests(interests);
+	}
+
+
 	function handleSubmit(e) {
 		e.preventDefault();
-		console.log(
-			"interests",
-			userInterests,
-			"display_name",
-			displayName,
-			"location",
-			userLocation
-		);
 		updateUserProfile();
 	}
 
@@ -46,6 +50,7 @@ export default function EditUserProfile() {
 
 	useEffect(() => {
 		getInterestCategories();
+		getUserProfile();
 	}, []);
 
 	return (
@@ -70,7 +75,7 @@ export default function EditUserProfile() {
 										name="city"
 										placeholder="city"
 										autoComplete="address-level2"
-										value={userProfileData.location}
+										value={userLocation && userLocation}
 										type="text"
 										size={40}
 										onChange={(e) => setUserLocation(e.target.value)}
@@ -84,7 +89,7 @@ export default function EditUserProfile() {
 								<input
 									type="text"
 									size={40}
-									value={userProfileData.display_name}
+									value={displayName && displayName}
 									onChange={(e) => setDisplayName(e.target.value)}
 								/>
 							</Form.Label>
@@ -96,7 +101,7 @@ export default function EditUserProfile() {
 								<select
 									multiple={true}
 									size={6}
-									value={userProfileData.interests}
+									value={userInterests && userInterests}
 									onChange={(e) => {
 										const options = [...e.target.selectedOptions];
 										const values = options.map((option) => option.value);
