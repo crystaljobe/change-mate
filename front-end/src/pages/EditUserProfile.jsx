@@ -25,6 +25,7 @@ export default function EditUserProfile() {
 		setDisplayName(data.display_name)
 		let interestArr = response.data.interests;
         let interests = interestArr.map(cat => cat.category);
+		console.log(interests)
         setUserInterests(interests);
 	}
 
@@ -109,7 +110,7 @@ export default function EditUserProfile() {
 									}}>
 									{interestCategories &&
 										interestCategories.map((category) => (
-											<option key={category.id} value={category.id}>
+											<option key={category.id} value={category.category}>
 												{category.category}
 											</option>
 										))}

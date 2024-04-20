@@ -1,3 +1,7 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
 :root {
   --bodyColor:#FDF6EE;
   padding: 4px;

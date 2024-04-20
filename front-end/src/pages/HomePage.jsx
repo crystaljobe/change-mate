@@ -8,21 +8,26 @@ export default function Homepage() {
     const styles = {
         card: {
             background:'#DF355F', 
-            margin: '2',
+            margin: '20px',
         }
     }
 	return (
         <>
-        <Container >
+        <Container className="container mx-auto">
+            <br/>
             <Row className="justify-content-md-center" >
                 <Col className="d-flex" >
                 <Card className="text-center" style={styles.card} >
-                    <Card.Body>
-                        <br></br>
+                    <Card.Body className="text-center" >
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
                         <Card.Title as="h1" style={{color: '#40DFB8'}}>Join our vibrant platform to effortlessly organize impactful events, collaborate for social change, and secure donations—</Card.Title>
                         <Card.Title as="h1" style={{color:'#FDF6EE'}}>all in one place!</Card.Title>
                         <br></br>
-                        <Card.Text style={{fontStyle:'italic'}} as="h3">Sign up to make impactful connections today!</Card.Text>
+                        <Card.Text style={{fontStyle:'italic'}} as="h2">Sign up to make impactful connections today!</Card.Text>
                         <br></br>
                         <Button variant="light" size="lg" as={Link} to="/signup" style={{marginRight:'10px'}}>
                             Sign Up
@@ -35,7 +40,7 @@ export default function Homepage() {
                 </Col>
                 
                 <Col className="text-center" style={styles.main}>
-                <Card className="flex-fill">
+                <Card className="flex-fill" style={styles.card}>
                     <Card.Img variant="top" src={HomepageImg} alt="telephone pole with post-it note with the words You are Important written" />
                 </Card>
                 </Col>

@@ -84,7 +84,7 @@ class Profile_Icon(APIView):
         endpoint = f"https://api.thenounproject.com/v2/icon/4091300?thumbnail_size=200"
         response = requests.get(endpoint, auth=auth)
         json_response = response.json()
-        print(json_response)
+        # print(json_response)
         # pp.pprint(json_response)
         if json_response.get("icon"):
             icon_url = json_response.get('icon').get("thumbnail_url")

@@ -53,6 +53,10 @@ export default function UserProfile({user}) {
 
             <Col className="text-center">
                 <br/>
+                <br/>
+                <br/>
+                <br/>
+
                 <h1 style={styles.header}>Profile Info</h1>
                 <br/>
                <Card className="text-center">
@@ -69,7 +73,7 @@ export default function UserProfile({user}) {
             </Col>
 
 
-            <Col sm={8} className="text-center">
+            <Col sm={6} className="text-center">
                 <br/>
                 <h1 style={styles.header} >Your Events</h1 >
                 <br/>
@@ -122,8 +126,8 @@ export default function UserProfile({user}) {
                 <Row>
                     <Button variant="primary"  as={Link} to="/events">I&apos;m ready to make a difference!</Button>
                 </Row>
-
             </Col>
+            <Col sm={1}></Col>
         </Row>
         </Container>
     )
