@@ -75,6 +75,7 @@ export default function UserProfile({user}) {
 
             <Col sm={6} className="text-center">
                 <br/>
+                <br/>
                 <h1 style={styles.header} >Your Events</h1 >
                 <br/>
 
