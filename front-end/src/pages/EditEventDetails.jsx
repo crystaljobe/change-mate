@@ -1,91 +1,74 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { api } from "../utilities";
-import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { AddressAutofill } from "@mapbox/search-js-react";
+import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
+import { deleteEvent, getEventDetails, updateEventDetails } from "../utilities/EventUtilities";
 
 export default function EditEventDetails() {
 	let { eventID } = useParams();
 	const navigate = useNavigate();
-	const [event, setEvent] = useState(null);
+	// set interest categories for option selection
 	const [interestCategories, setInterestCategories] = useState([]);
-	const [title, setTitle] = useState(null);
-	const [date, setDate] = useState(null);
-	const [time, setTime] = useState(null);
-	const [time_zone, setTimeZone] = useState(null);
-	const [eventType, setEventType] = useState(null);
-	const [eventVenue, setEventVenue] = useState(null);
-	const [eventVenueAddress, setEventVenueAddress] = useState(null);
-	const [description, setDescription] = useState(null);
-	const [category, setCategory] = useState(null);
+	// set event and event details data
+	const [event, setEvent] = useState("");
+	const [title, setTitle] = useState("");
+	const [date, setDate] = useState("");
+	const [time, setTime] = useState("");
+	const [timeZone, setTimeZone] = useState("");
+	const [eventType, setEventType] = useState("");
+	const [eventVenue, setEventVenue] = useState("");
+	const [eventVenueAddress, setEventVenueAddress] = useState("");
+	const [description, setDescription] = useState("");
+	const [category, setCategory] = useState("");
 
+	// get interest cats and set them 
+	const eventInterestCategories = async () => {
+		const categories = await getInterestCategories();
+		setInterestCategories(categories);
+	};
+
+	// get event details using utility function and set all data
+	const getEvent = async () => {
+		const eventDetails = await getEventDetails(eventID);
+		console.log(eventDetails)
+		setEvent(eventDetails);
+		setTitle(eventDetails.title);
+		setDate(eventDetails.date);
+		setTime(eventDetails.time);
+		setTimeZone(eventDetails.time_zone);
+		setEventType(eventDetails.event_type);
+		setEventVenue(eventDetails.event_venue);
+		setEventVenueAddress(eventDetails.event_venue_address);
+		setDescription(eventDetails.description);
+		setCategory(eventDetails.category.id);
+	};
+
+	// update event details in BE using utility function
+	const updateEvent = async () => {
+		let responseStatus = await updateEventDetails(eventID, title, date, time, timeZone, eventType, eventVenue, eventVenueAddress, description, category);
+		if (responseStatus) {
+			navigate("/profile");
+		} 
+	};
+
+	// onclick event handler if user clicks "delete" button
+	const deleteEntireEvent = async () => {
+		const responseStatus = await deleteEvent(eventID, event);
+		if (responseStatus) {
+			navigate("/profile");
+		}
+	}
+
+	// upon submit prevent default and call on update event funct
 	function handleSubmit(e) {
 		e.preventDefault();
-		console.log();
 		updateEvent();
 	}
 
-	const updateEvent = async () => {
-		// console.log({
-		// 	title: title,
-		// 	date: date,
-		// 	time: time,
-		// 	time_zone: time_zone,
-		// 	event_type: eventType,
-		// 	event_venue: eventVenue,
-		// 	event_venue_address: eventVenueAddress,
-		// 	description: description,
-		// 	category: category,
-		// });
-		let response = await api.put(`events/${eventID}/`, {
-			title: title,
-			date: date,
-			time: time,
-			time_zone: time_zone,
-			event_type: eventType,
-			event_venue: eventVenue,
-			event_venue_address: eventVenueAddress,
-			description: description,
-			category: category,
-		});
-		console.log(response.status);
-		if (response.status === 200) {
-			navigate("/profile");
-		} else {
-			console.log("error:", response.data);
-		}
-	};
-
-	const deleteEvent = async () => {
-		const response = await api.delete(`events/${eventID}/`, {
-			event
-		});
-		if (response.status === 204) {
-			navigate("/profile");
-		}
-	}
-
-	const getEvent = async () => {
-		const response = await api.get(`events/${eventID}/`);
-		console.log(response.data);
-		setEvent(response.data);
-		setTitle(response.data.title);
-		setDate(response.data.date);
-		setTime(response.data.time);
-		setTimeZone(response.data.time_zone);
-		setEventType(response.data.event_type);
-		setEventVenue(response.data.event_venue);
-		setEventVenueAddress(response.data.event_venue_address);
-		setDescription(response.data.description);
-		setCategory(response.data.category.id);
-	};
-	const getInterestCategories = async () => {
-		const response = await api.get("interests/");
-		setInterestCategories(response.data);
-	};
-
+	// upon page render get event details then get interest cats
 	useEffect(() => {
-		getEvent().then(getInterestCategories());
+		getEvent().then(eventInterestCategories());
 	}, []);
 	
 	return (
@@ -211,7 +194,7 @@ export default function EditEventDetails() {
 								Select only one event category:
 								<select
 									size={6}
-									value={event && event.category.id}
+									value={event && category}
 									onChange={(e) => setCategory(e.target.value)}>
 									{event &&
 										interestCategories &&
@@ -223,7 +206,7 @@ export default function EditEventDetails() {
 								</select>
 							</Form.Label>
 						</Form.Group>
-						<Button variant="danger" type="button" onClick={deleteEvent} style={{marginRight:"10px"}}>
+						<Button variant="danger" type="button" onClick={deleteEntireEvent} style={{marginRight:"10px"}}>
 							Delete Event
 						</Button>					
 						<Button variant="info" type="submit">
