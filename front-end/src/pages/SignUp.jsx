@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
-import { userRegistration } from "../utilities";
+import { userRegistration } from "../utilities/UserUtilities";
 
 export default function SignUp() {
 	const [email, setEmail] = useState("");

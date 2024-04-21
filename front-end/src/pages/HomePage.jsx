@@ -2,7 +2,6 @@ import HomepageImg from "/Users/crystaljobe/code_platoon/personal_project/change
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/esm/Button";
-import setBodyColor from "../components/PageColor";
 
 export default function Homepage() {
     const styles = {

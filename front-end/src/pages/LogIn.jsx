@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
-import { userLogin } from "../utilities";
+import { userLogin } from "../utilities/UserUtilities";
 
 export default function LogIn() {
     const [email, setEmail] = useState("");
