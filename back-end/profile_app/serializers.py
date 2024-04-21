@@ -45,3 +45,8 @@ class UserInterestSerializer(serializers.ModelSerializer):
     class Meta: 
         model = UserProfile
         fields = ['interests']
+
+
+class ProfilePicSerializer(serializers.Serializer):
+    file = serializers.FileField()
+   
