@@ -1,4 +1,4 @@
-import HomepageImg from "/Users/crystaljobe/code_platoon/personal_project/change-mate/front-end/src/assets/Homepage image.jpg";
+import HomepageImg from '../assets/Homepage-image.jpg';
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/esm/Button";
@@ -18,11 +18,6 @@ export default function Homepage() {
                 <Col className="d-flex" >
                 <Card className="text-center" style={styles.card} >
                     <Card.Body className="text-center" >
-                        <br/>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <br/>
                         <Card.Title as="h1" style={{color: '#40DFB8'}}>Join our vibrant platform to effortlessly organize impactful events, collaborate for social change, and secure donations—</Card.Title>
                         <Card.Title as="h1" style={{color:'#FDF6EE'}}>all in one place!</Card.Title>
                         <br></br>
