@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { AddressAutofill } from '@mapbox/search-js-react';
@@ -12,6 +12,8 @@ export default function EditUserProfile({user}) {
 	const [userInterests, setUserInterests] = useState([]);
 	const [displayName, setDisplayName] = useState([]);
     const [userLocation, setUserLocation] = useState([])
+	const [profileImage, setProfileImage] = useState('');
+    const [imagePreview, setImagePreview] = useState('');
 	// create var navigate for navigating 
 	const navigate = useNavigate();
 
@@ -28,18 +30,33 @@ export default function EditUserProfile({user}) {
 		setUserLocation(userProfileData.location);
 		setDisplayName(userProfileData.display_name)
 		// map through interests to set the current interests
-		let interestArr = userProfileData.interests;
-        let interests = interestArr.map(cat => cat.category);
-        setUserInterests(interests);
-	}
+		setUserInterests(userProfileData.interests.map(cat => cat.category));
+		setImagePreview(userProfileData.profileImage || '');
+	};
 
 	// upon form submit call utility function to set new user data
 	const updateUserProfile = async () => {
-		let responseStatus = await putUserProfile(user, userInterests, displayName, userLocation);
+		const responseStatus = await putUserProfile(user, userInterests, displayName, userLocation, profileImage);
 		if (responseStatus) {
 			navigate("/profile");
 		} 
 	};
+
+	const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+			// FileReader is an API native to browsers, reader instantiates a new object which is used to read the contents of the selected file 
+            const reader = new FileReader();
+			// onloadend acts like an if statement and executes after the file is read
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+                setProfileImage(reader.result);
+            };
+			// triggers the reading of the file by calling the FileReader Obj
+			// converts the binary data of the file (in this case, an image) into a base64 encoded string
+            reader.readAsDataURL(file);
+        }
+    };
 
 	// on submit call updateProfile function to set new values
 	function handleSubmit(e) {
@@ -97,7 +114,7 @@ export default function EditUserProfile({user}) {
 
 						<Form.Group className="mb-3" controlId="interests">
 							<Form.Label>
-								Select your areas of interest:
+								Select your areas of interest (control click to select many):
 								<select
 									multiple={true}
 									size={6}
@@ -116,6 +133,17 @@ export default function EditUserProfile({user}) {
 								</select>
 							</Form.Label>
 						</Form.Group>
+
+						<Form.Group className="mb-3" controlId="profileImage">
+                            <Form.Label>Profile Image:</Form.Label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                            />
+							{/*  This sets the location of the image preview on the screen/form*/}
+                            {imagePreview && <img src={imagePreview} alt="Profile Preview" style={{ width: '100%', marginTop: '10px' }} />}
+                        </Form.Group>
 
 						<Button variant="info" type="submit">
 							Submit changes
