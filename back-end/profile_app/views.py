@@ -42,26 +42,25 @@ class EditUserProfile(APIView):
         responses={200: UserProfileSerializer()},
     )
     def put(self, request): 
-        # create a copy of data 
-        # get user associated profile
-        user = get_object_or_404(AppUser, email = request.user)
+        user = get_object_or_404(AppUser, email=request.user)
         user_profile = get_object_or_404(UserProfile, user=user)
         data = request.data.copy()
-        
-        # get interest categories using interests key
-        interests_cats = data.get('interests', []) #Interests should be submitted as list of ids
 
-        try:
-            interests = InterestCategory.objects.filter(category__in=interests_cats)
-            user_profile.interests.set(interests)
-            user_profile.location = data['location']
-            user_profile.display_name = data['display_name']
-            user_profile.full_clean()
-            user_profile.save()
-            ser_user_profile = UserProfileSerializer(user_profile)
-            return Response(ser_user_profile.data, status=HTTP_200_OK)
-        except Exception as e: 
-            return Response(e, status=HTTP_400_BAD_REQUEST)
+        # Assuming interests are submitted as a list of IDs, handle them separately
+        interests_ids = data.pop('interests', [])  
+
+        edit_profile = UserProfileSerializer(instance=user_profile, data=data, partial=True)
+        if edit_profile.is_valid():
+            # Save the user profile first
+            updated_profile = edit_profile.save()
+
+            # Then handle interests if present
+            if interests_ids:
+                updated_profile.interests.set(interests_ids)
+
+            return Response(edit_profile.data, status=HTTP_200_OK)
+        
+        return Response(edit_profile.errors, status=HTTP_400_BAD_REQUEST)
         
 
 @swagger_auto_schema(
