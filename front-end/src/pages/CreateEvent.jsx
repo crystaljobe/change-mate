@@ -9,14 +9,42 @@ export default function CreateEvent() {
     const navigate = useNavigate()
 	const [interestCategories, setInterestCategories] = useState([]);
     const [title, setTitle] = useState("")
-	const [date, setDate] = useState("")
-    const [time, setTime] = useState("")
+	const [eventStart, setEventStart] = useState("")
+    const [eventEnd	, setEventEnd] = useState("")
     const [timeZone, setTimeZone] = useState("")
     const [eventType, setEventType] = useState("")
     const [eventVenue, setEventVenue] = useState("")
     const [eventVenueAddress, setEventVenueAddress] = useState("")
     const [description, setDescription] = useState("")
     const [category, setCategory] = useState("")
+
+	//timezone abbreviations array:
+	const timeZoneAbbreviations = [
+    "AFT",
+    "AKST",
+    "AST",
+    "AZOT",
+    "BIT",
+    "BST",
+    "CET",
+    "CST",
+    "EET",
+    "EST",
+    "FNT",
+    "GMT",
+    "GST",
+    "HAST",
+    "ICT",
+    "IRST",
+    "IST",
+    "MST",
+    "MSK",
+    "NPT",
+    "NST",
+    "NUT",
+    "PKT",
+    "PST",
+  ];
 
     
 	// get interest cats and set them 
@@ -27,8 +55,19 @@ export default function CreateEvent() {
 
 	// on submit check all forms are field in and call post event
 	function handleSubmit(e) {
+		console.log("Create Event PAGE",  {
+        "title" : title,
+        "event_start" : eventStart,
+        "event_end" : eventEnd,
+        "time_zone" : timeZone,
+        "event_type" : eventType,
+        "event_venue" : eventVenue,
+        "event_venue_address" : eventVenueAddress,
+        "description" : description,
+        "category" : category,
+    });
+
         e.preventDefault();
-		console.log("CREATE EVENT page", date);
         for (let i = 0; i < 5; i++) {
             if (e.target[i].value == "") {
                 alert(`Must enter a ${e.target[i].type}!!`)
@@ -40,7 +79,19 @@ export default function CreateEvent() {
 
 	// use utility func to post new event if response true nav to profile
 	const postEvent = async () => {
-		let responseStatus = await postEventDetails(title, date, time, timeZone, eventType, eventVenue, eventVenueAddress, description, category)
+		//changed date to eventStart -->  changed time to eventEnd
+		let responseStatus = await postEventDetails(
+      title,
+      eventStart,
+      eventEnd,
+      timeZone,
+      eventType,
+      eventVenue,
+      eventVenueAddress,
+      description,
+      category
+    );
+
 		if (responseStatus) {
 			navigate("/profile");
 		} 
@@ -80,35 +131,38 @@ export default function CreateEvent() {
               <Form.Label>
                 Event Start time: {"	"}
                 <input
-                  type="date"
+                  type="datetime-local"
                   size={40}
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
+                  value={eventStart}
+                  onChange={(e) => setEventStart(e.target.value)}
                 />
               </Form.Label>
             </Form.Group>
-
-            <Form.Group className="mb-3" controlId="time">
+            <Form.Group className="mb-3" controlId="date">
               <Form.Label>
-                Enter your event&apos;s time frame:
+                Event End time: {"	"}
                 <input
-                  type="text"
+                  type="datetime-local"
                   size={40}
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
+                  value={eventEnd}
+                  onChange={(e) => setEventEnd(e.target.value)}
                 />
               </Form.Label>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="timeZone">
               <Form.Label>
-                Enter your event&apos;s timezone:
-                <input
-                  type="text"
-                  size={40}
+                Enter your event&apos;s timezone: {"	"}
+                <select
+                  size={2}
                   value={timeZone}
                   onChange={(e) => setTimeZone(e.target.value)}
-                />
+                >
+                  {timeZoneAbbreviations.map((timeZone, idx) => {
+					return <option key={idx}>{timeZone}</option>;
+				  })}
+                 
+                </select>
               </Form.Label>
             </Form.Group>
 
