@@ -6,11 +6,13 @@ export const getUserProfile = async(user) => {
     return userProfileData;
 }
 
-export const putUserProfile = async (user, userInterests, displayName, userLocation) => {
+export const putUserProfile = async (user, userInterests, displayName, userLocation, profileImage) => {
+    
+
     let response = await api.put("userprofile/edit_profile/", {
         interests: userInterests,
         display_name: displayName,
-        location: userLocation,
+        location: userLocation
     });
     console.log(response);
     if (response.status === 200) {
