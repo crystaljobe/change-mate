@@ -8,7 +8,7 @@ import { getUserProfile, putUserProfile } from "../utilities/UserProfileUtilitie
 export default function EditUserProfile({user}) {
 	// set interest cats for selection options
 	const [interestCategories, setInterestCategories] = useState([]);
-	// set userProfile interest cats, display name, and location
+	// set userProfile interests, display name, and location
 	const [userInterests, setUserInterests] = useState([]);
 	const [displayName, setDisplayName] = useState([]);
     const [userLocation, setUserLocation] = useState([])

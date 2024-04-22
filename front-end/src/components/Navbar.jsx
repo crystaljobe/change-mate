@@ -5,7 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Button from "react-bootstrap/esm/Button";
-import ChangeMateLogo from "../assets/changemate-logo.svg";
+import ChangeMateLogo from '../assets/changemate-logo.svg';
 import { userLogout } from "../utilities/UserUtilities";
 
 export default function MyNavbar({ user, setUser, displayName }) {
@@ -19,9 +19,7 @@ export default function MyNavbar({ user, setUser, displayName }) {
 
 	return (
 		<Navbar
-			bg="light"
-			data-bs-theme="light"
-			className="bg-body-tertiary"
+			className=".bg-body-secondary"
 			expand="lg">
 
 			<Navbar.Brand as={Link} to={"/"}>
@@ -68,9 +66,6 @@ export default function MyNavbar({ user, setUser, displayName }) {
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} to={"/editprofile"}>
                     Update Profile
-                </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to={"/userinterests"}>
-                    Update Interest
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} to={"/createevent"}>
                     Create an Event
