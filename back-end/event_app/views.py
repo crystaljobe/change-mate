@@ -1,3 +1,7 @@
+from PIL import Image, ImageOps
+from requests_oauthlib import OAuth1
+from changemate_proj.settings import env
+import requests
 from django.shortcuts import render
 from rest_framework.views import APIView
 from user_app.views import TokenReq 
@@ -145,3 +149,17 @@ class AnEvent(APIView):
         event.delete()
         return Response(status=HTTP_204_NO_CONTENT)
 
+class DefautlEventIcon(APIView):
+     def get(self, request):
+        api_key = env.get("API_KEY")
+        secret_key = env.get("SECRET_KEY")
+        auth = OAuth1(api_key, secret_key)
+        endpoint = f"https://api.thenounproject.com/v2/icon/5130800?thumbnail_size=200"
+        response = requests.get(endpoint, auth=auth)
+        json_response = response.json()
+        # print(json_response)
+        # pp.pprint(json_response)
+        if json_response.get("icon"):
+            icon_url = json_response.get('icon').get("thumbnail_url")
+            return Response(icon_url)
+        return Response("This parameter doesn't exist within the noun project")

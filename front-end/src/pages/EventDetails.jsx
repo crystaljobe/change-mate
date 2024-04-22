@@ -1,17 +1,9 @@
 import {
-	Container,
-	Col,
-	Row,
-	CardGroup,
-	ListGroup,
-	Card,
-	Button,
-} from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
-import { useOutletContext, Link } from "react-router-dom";
+	Container, Col, Row, ListGroup, Card, Button } from "react-bootstrap";
+import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { api } from "../utilities";
 import "add-to-calendar-button";
+import { getEventDetails } from "../utilities/EventUtilities";
 
 export default function EventDetails() {
 	let { eventID } = useParams();
@@ -20,22 +12,20 @@ export default function EventDetails() {
 	const [usersAttending, setUsersAttending] = useState([]);
 	const collaboratorsStr = collaborators.join(", ");
 
+	// get event details using event utilities and set the event details
 	const getEvent = async () => {
-		const response = await api.get(`events/${eventID}`);
-		let data = response.data;
-		setEventDetails(data);
-		setUsersAttending(data.users_attending);
-
-		let collabArr = data.collaborators;
+		const eventDetails = await getEventDetails(eventID);
+		setEventDetails(eventDetails);
+		setUsersAttending(eventDetails.users_attending);
+		// map through collaborators to get their display names
+		let collabArr = eventDetails.collaborators;
 		let collaborators = collabArr.map((collab) => collab.display_name);
 		setCollaborators(collaborators);
-		console.log(response.data);
+		console.log(eventDetails.data);
 	};
 
-	// let response = await api.put(`eventDetails/${eventID}/`, {
-	//     users_attending: usersAttending;
-	// });
-	//handle
+	// TODO: add user attending RSVP functionality with PUT method to API
+	// handleOnClick => await setUsersAttending(eventID, usersAttending), if True disable RSVP button
 
 	useEffect(() => {
 		getEvent();
@@ -95,7 +85,7 @@ export default function EventDetails() {
 									to="/eventdirections">
 									Get Event Directions
 								</Button>
-								{/* <add-to-calendar-button>
+								{/* TODO: <add-to-calendar-button>
 									name="Title" 
                                     options="'Apple','Google'" 
                                     location="World Wide

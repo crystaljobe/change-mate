@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { api } from "../utilities";
-import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { AddressAutofill } from "@mapbox/search-js-react";
+import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
+import { postEventDetails } from "../utilities/EventUtilities";
 
 export default function CreateEvent() {
     const navigate = useNavigate()
@@ -10,7 +11,7 @@ export default function CreateEvent() {
     const [title, setTitle] = useState("")
 	const [date, setDate] = useState("")
     const [time, setTime] = useState("")
-    const [time_zone, setTimeZone] = useState("")
+    const [timeZone, setTimeZone] = useState("")
     const [eventType, setEventType] = useState("")
     const [eventVenue, setEventVenue] = useState("")
     const [eventVenueAddress, setEventVenueAddress] = useState("")
@@ -18,15 +19,13 @@ export default function CreateEvent() {
     const [category, setCategory] = useState("")
 
     
-	const getInterestCategories = async () => {
-		const response = await api.get("interests/");
-		setInterestCategories(response.data);
+	// get interest cats and set them 
+	const eventInterestCategories = async () => {
+		const categories = await getInterestCategories();
+		setInterestCategories(categories);
 	};
-	useEffect(() => {
-		getInterestCategories();
-	}, []);
 
-
+	// on submit check all forms are field in and call post event
 	function handleSubmit(e) {
         e.preventDefault();
         for (let i = 0; i < 5; i++) {
@@ -38,25 +37,18 @@ export default function CreateEvent() {
         postEvent()
 	}
 
+	// use utility func to post new event if response true nav to profile
 	const postEvent = async () => {
-		let response = await api.post("events/", {
-            "title" : title,
-            "date" : date,
-            "time" : time,
-            "time_zone" : time_zone,
-            "event_type" : eventType,
-            "event_venue" : eventVenue,
-            "event_venue_address" : eventVenueAddress,
-            "description" : description,
-            "category" : category,
-		});
-		console.log(response);
-		if (response.status === 201) {
+		let responseStatus = await postEventDetails(title, date, time, timeZone, eventType, eventVenue, eventVenueAddress, description, category)
+		if (responseStatus) {
 			navigate("/profile");
-		} else {
-			console.log("error:", response.data);
-		}
+		} 
 	};
+
+	// use effect to call event interest cats funct upon render
+	useEffect(() => {
+		eventInterestCategories();
+	}, []);
 
 	return (
 		<Container>
@@ -107,13 +99,13 @@ export default function CreateEvent() {
 							</Form.Label>
 						</Form.Group>
 
-						<Form.Group className="mb-3" controlId="time_zone">
+						<Form.Group className="mb-3" controlId="timeZone">
 							<Form.Label>
 								Enter your event&apos;s timezone:
 								<input
 									type="text"
 									size={40}
-									value={time_zone}
+									value={timeZone}
 									onChange={(e) => setTimeZone(e.target.value)}
 								/>
 							</Form.Label>

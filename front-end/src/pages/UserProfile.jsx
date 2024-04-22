@@ -1,49 +1,46 @@
 import '../App.css'
 import { useOutletContext, Link } from "react-router-dom";
 import { useEffect, useState } from 'react';
-import { api } from '../utilities'
 import {Container, Row, Col, Card, Button, CardGroup} from 'react-bootstrap';
+import { getProfileIcon } from '../utilities/DefaultIconsUtilities';
+import { getUserProfile } from '../utilities/UserProfileUtilities';
 
-export default function UserProfile({user}) {
-    const styles = {
-        header: {
-            color:'#6840DF',
-            textDecoration: 'underline',
-        },
-    }
 
+export default function UserProfile( { user } ) {
+    // set user profile data, eventsAttending, userEvents, interests, and icon 
     const { userProfileData, setUserProfileData } = useOutletContext();
     const [eventsAttending, setEventsAttending] = useState([]);
     const [userEvents, setUserEvents] = useState([])
     const [userInterests, setUserInterests] = useState([])
     const [icon, setIcon] = useState("")
+
+    // join user interest as a string for display 
     const userIntStr = userInterests.join(', ')
 
-    // console.log(userProfileData)
-    // console.log('events:', userEvents)
-    // console.log('attending', eventsAttending)
-    // const get_icon = async() => {
+    // get user profile data using utility func
+    const getProfile = async() => {
+        const userProfileData = await getUserProfile(user);
 
-    // }
+        // set userProfile, events, events attending
+        setUserProfileData(userProfileData);
+        setUserEvents(userProfileData.user_events);
+        setEventsAttending(userProfileData.events_attending);
 
-    const getUserProfile = async() => {
-        const response = await api.get("userprofile/");
-        let data = response.data;
-        setUserProfileData(data);
-        setUserEvents(data.user_events);
-        setEventsAttending(data.events_attending);
-        
-        let interestArr = response.data.interests;
+        // get user interest by mapping through array and setting just the cat name
+        let interestArr = userProfileData.interests;
         let interests = interestArr.map(cat => cat.category);
         setUserInterests(interests);
     };
+
+    // get user icon using ProfileIcon utility
     const getIcon = async() => {
-        const response = await api.get("userprofile/get_icon/");
-        let data = response.data;
-        setIcon(data)
+        const icon = await getProfileIcon();
+        setIcon(icon);
     }
+
+    // upon page render get user data and icon
     useEffect(() => {
-        getUserProfile();
+        getProfile();
         getIcon();
     }, [])
 
@@ -51,31 +48,49 @@ export default function UserProfile({user}) {
         <Container id="profile page" fluid>
         <Row className="justify-content-md-center">
 
-            <Col className="text-center">
-                <br/>
-                <h1 style={styles.header}>Profile Info</h1>
-                <br/>
-               <Card className="text-center">
-                {/* <Card.Img variant="top" src={`/media/${props.user.profile_pic}`} alt="profile pic"  /> */}
+            <Col className="text-center" style={{marginBlock:'2rem'}}>
+               <Card className="text-center" style={{ width: '18rem' }}>
+
+               <Card.Header>Profile Info</Card.Header>
+
+               {/* TODO: import user profile image if no image display icon */}
+                <Card.Img variant="top" src={icon} style={{height: '250px'}} alt="user-icon"  /> 
+
                     <Card.Body>
-                        <Card.Title as='h3'style={{fontWeight:'bold'}}><img src={icon} style={{height: '50px'}} alt="user-icon" />{userProfileData.display_name}  </Card.Title>
-                        <Card.Subtitle as='h4' style={{fontWeight:'bold'}}>Locations:</Card.Subtitle>
-                        <Card.Text> {userProfileData.location} </Card.Text>
-                        <Card.Subtitle as='h4' style={{fontWeight:'bold'}}>Interests:</Card.Subtitle>
-                        <Card.Text> {userIntStr} </Card.Text>
-                        <Button variant="info" as={Link} to={'/editprofile'}>Edit Profile</Button>
+                        <Card.Title as='h3'style={{fontWeight:'bold', color:"#6840DF", textDecoration: 'underline'}}>
+                            {userProfileData.display_name}  
+                        </Card.Title>
+                        <br/>
+                        <Card.Subtitle as='h4' style={{fontWeight:'bold'}}>
+                            Locations:
+                        </Card.Subtitle>
+                        <Card.Text> 
+                            {userProfileData.location} 
+                        </Card.Text>
+                        <Card.Subtitle as='h4' style={{fontWeight:'bold'}}>
+                            Interests:
+                        </Card.Subtitle>
+                        <Card.Text> 
+                            {userIntStr} 
+                        </Card.Text>
+                        <Button variant="info" as={Link} to={'/editprofile'}>
+                            Edit Profile
+                        </Button>
                     </Card.Body>
                 </Card>
             </Col>
 
+            {/* Events user are collaborating on: */}
+            <Col sm={6} className="text-center">
 
-            <Col sm={8} className="text-center">
-                <br/>
-                <h1 style={styles.header} >Your Events</h1 >
-                <br/>
-
+                <h1 style={{color:'#6840DF'}} >Your Events</h1 >
                 <Row>
-                {!userEvents.length > 0 ? <h2 style={{fontStyle:'italic'}}>Doesn&apos;t look like you have any events you&apos;re collaborating on at this time.</h2> : userEvents.map(events => (
+                {/* if user events === 0 display txt no events else map through events to display */}
+                {userEvents.length === 0 ? 
+                    <h3 style={{fontStyle:'italic'}}>
+                        Doesn&apos;t look like you have any events you&apos;re collaborating on at this time
+                    </h3> : 
+                        userEvents.map(events => (
                     <CardGroup key={events.id} className='p-2'>
                         <Card key={events.id} style={{width:'18rem'}}>
                             <Card.Body>
@@ -99,10 +114,11 @@ export default function UserProfile({user}) {
                 </Row>
                 <br/>
                 
-                <h1 style={styles.header}>Upcoming Events</h1 >
+                {/* Events user is attending, if no events display text no events else map through events for details */}
+                <h1 style={{color:'#6840DF'}}>Upcoming Events</h1 >
                 <br/>
                 <Row>
-                {!eventsAttending.length > 0 ? <h2 style={{fontStyle:'italic'}}>Doesn&apos;t look like you&apos;ve RSVP&apos;d to any events yet. </h2> : eventsAttending.map(events => (
+                {!eventsAttending.length > 0 ? <h3 style={{fontStyle:'italic'}}>Doesn&apos;t look like you&apos;ve RSVP&apos;d to any events yet. </h3> : eventsAttending.map(events => (
                         <CardGroup key={events.id} className='p-2'>
                             <Card key={events.id} style={{width:'18rem'}}>
                                 <Card.Body>
@@ -122,8 +138,8 @@ export default function UserProfile({user}) {
                 <Row>
                     <Button variant="primary"  as={Link} to="/events">I&apos;m ready to make a difference!</Button>
                 </Row>
-
             </Col>
+            <Col sm={1}></Col>
         </Row>
         </Container>
     )

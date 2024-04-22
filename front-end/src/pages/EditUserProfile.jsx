@@ -1,56 +1,56 @@
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { api } from "../utilities";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { AddressAutofill } from '@mapbox/search-js-react';
+import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
+import { getUserProfile, putUserProfile } from "../utilities/UserProfileUtilities";
 
-export default function EditUserProfile() {
-	// const { userProfileData, setUserProfileData } = useOutletContext();
+export default function EditUserProfile({user}) {
+	// set interest cats for selection options
 	const [interestCategories, setInterestCategories] = useState([]);
+	// set userProfile interest cats, display name, and location
 	const [userInterests, setUserInterests] = useState([]);
 	const [displayName, setDisplayName] = useState([]);
     const [userLocation, setUserLocation] = useState([])
+	// create var navigate for navigating 
 	const navigate = useNavigate();
 
-	const getInterestCategories = async () => {
-		const response = await api.get("interests/");
-		setInterestCategories(response.data);
+	// get interest categories using utility funct to set options available
+	const userInterestCategories = async () => {
+		const categories = await getInterestCategories();
+		setInterestCategories(categories);
 	};
 
-	const getUserProfile = async() => {
-		const response = await api.get("userprofile/");
-		let data = response.data;
-		console.log(data)
-		setUserLocation(data.location);
-		setDisplayName(data.display_name)
-		let interestArr = response.data.interests;
+	// get user profile data for default values using utility funct
+	const userProfile = async() => {
+		const userProfileData = await getUserProfile(user);
+		// set data
+		setUserLocation(userProfileData.location);
+		setDisplayName(userProfileData.display_name)
+		// map through interests to set the current interests
+		let interestArr = userProfileData.interests;
         let interests = interestArr.map(cat => cat.category);
         setUserInterests(interests);
 	}
 
+	// upon form submit call utility function to set new user data
+	const updateUserProfile = async () => {
+		let responseStatus = await putUserProfile(user, userInterests, displayName, userLocation);
+		if (responseStatus) {
+			navigate("/profile");
+		} 
+	};
 
+	// on submit call updateProfile function to set new values
 	function handleSubmit(e) {
 		e.preventDefault();
 		updateUserProfile();
 	}
 
-	const updateUserProfile = async () => {
-		let response = await api.put("userprofile/edit_profile/", {
-			interests: userInterests,
-			display_name: displayName,
-			location: userLocation,
-		});
-		console.log(response);
-		if (response.status === 200) {
-			navigate("/profile");
-		} else {
-			console.log("error:", response.data);
-		}
-	};
-
+	// useEffect to call upon page render
 	useEffect(() => {
-		getInterestCategories();
-		getUserProfile();
+		userInterestCategories();
+		userProfile();
 	}, []);
 
 	return (
@@ -109,7 +109,7 @@ export default function EditUserProfile() {
 									}}>
 									{interestCategories &&
 										interestCategories.map((category) => (
-											<option key={category.id} value={category.id}>
+											<option key={category.id} value={category.category}>
 												{category.category}
 											</option>
 										))}
