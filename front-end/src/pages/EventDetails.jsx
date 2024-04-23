@@ -1,5 +1,4 @@
-import {
-	Container, Col, Row, ListGroup, Card, Button } from "react-bootstrap";
+import { Container, Col, Row, ListGroup, Card, Button } from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "add-to-calendar-button";
@@ -49,6 +48,12 @@ export default function EventDetails() {
 								className="text-center">
 								Hosted by: {collaboratorsStr}
 							</Card.Subtitle>
+
+							{eventDetails.event_photo && (
+								<div className="text-center">
+									<img src={eventDetails.event_photo} alt="Event" style={{ width: "100%", marginTop: "20px" }} />
+								</div>
+							)}
 
 							<ListGroup variant="flush">
 								<ListGroup.Item as="h5" className="text-center">
