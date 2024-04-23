@@ -14,7 +14,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .serializers import Event, EventSerializer, ICalSerializer
+from .serializers import Event, EventSerializer, ICalSerializer, EventDetailsSerializer
 from profile_app.models import UserProfile
 from interest_app.models import InterestCategory
 from rest_framework import viewsets
@@ -29,7 +29,7 @@ class EventsView(TokenReq):
     @swagger_auto_schema(
         operation_summary="Get events",
         operation_description="Retrieve events based on provided filters such as category, type, date, and location. If no filters provided, all events are returned.",
-        responses={200: EventSerializer(many=True)},
+        responses={200: EventDetailsSerializer(many=True)},
         manual_parameters=[
             openapi.Parameter(name='category', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Category of the event'),
             openapi.Parameter(name='type', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Type of the event (virtual/in-person)'),
@@ -58,7 +58,7 @@ class EventsView(TokenReq):
             queryset = queryset.filter(location__icontains=location) 
 
         # serialize data and return data and status 200
-        ser_queryset = EventSerializer(queryset, many=True)
+        ser_queryset = EventDetailsSerializer(queryset, many=True)
         return Response(ser_queryset.data, status=HTTP_200_OK)
 
 
@@ -109,11 +109,11 @@ class AnEvent(APIView):
     @swagger_auto_schema(
         operation_summary="Retrieve event details",
         operation_description="Retrieve details of a specific event by its ID.",
-        responses={200: EventSerializer()},
+        responses={200: EventDetailsSerializer()},
     )
     def get(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
-        ser_event = EventSerializer(event)
+        ser_event = EventDetailsSerializer(event)
         return Response(ser_event.data, status=HTTP_200_OK)
         
 
