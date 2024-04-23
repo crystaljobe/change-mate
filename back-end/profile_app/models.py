@@ -22,7 +22,7 @@ class UserProfile(models.Model):
         )
     image = models.TextField(
         null=True,
-        max_length=100000
+        max_length=10000000
         )
     location = models.TextField(
         null=True,
