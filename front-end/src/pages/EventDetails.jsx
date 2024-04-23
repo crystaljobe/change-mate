@@ -154,6 +154,7 @@ export default function EventDetails() {
                   startTime={eventDetails.startTime}
                   endTime={eventDetails.endTime}
                   timeZone={eventDetails.time_zone}
+				  description={eventDetails.description}
                 ></add-to-calendar-button>
               </Card.Body>
             </Card.Body>
