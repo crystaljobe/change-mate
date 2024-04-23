@@ -12,38 +12,42 @@ export default function CreateEvent() {
 	const [eventStart, setEventStart] = useState("")
     const [eventEnd	, setEventEnd] = useState("")
     const [timeZone, setTimeZone] = useState("")
-    const [eventType, setEventType] = useState("")
+    const [eventType, setEventType] = useState("In-Person")
     const [eventVenue, setEventVenue] = useState("")
     const [eventVenueAddress, setEventVenueAddress] = useState("")
     const [description, setDescription] = useState("")
     const [category, setCategory] = useState("")
+	const [virtualEventLink, setVirtualEventLink] = useState("")
 
 	//timezone abbreviations array:
 	const timeZoneAbbreviations = [
-    "AFT",
-    "AKST",
-    "AST",
-    "AZOT",
-    "BIT",
-    "BST",
-    "CET",
-    "CST",
-    "EET",
-    "EST",
-    "FNT",
+    "America/Adak",
+    "America/Anchorage",
+    "America/Chicago",
+    "America/Denver",
+    "America/Halifax",
+    "America/Los_Angeles",
+    "America/New_York",
+    "America/Noronha",
+    "America/St_Johns",
+    "Asia/Bangkok",
+    "Asia/Dhaka",
+    "Asia/Dubai",
+    "Asia/Istanbul",
+    "Asia/Kabul",
+    "Asia/Karachi",
+    "Asia/Kathmandu",
+    "Asia/Kolkata",
+    "Asia/Tehran",
+    "Atlantic/Azores",
+    "Europe/Kiev",
+    "Europe/Lisbon",
+    "Europe/London",
+    "Europe/Moscow",
+    "Europe/Paris",
     "GMT",
-    "GST",
-    "HAST",
-    "ICT",
-    "IRST",
-    "IST",
-    "MST",
-    "MSK",
-    "NPT",
-    "NST",
-    "NUT",
-    "PKT",
-    "PST",
+    "Pacific/Honolulu",
+    "Pacific/Niue",
   ];
 
     
@@ -65,6 +69,7 @@ export default function CreateEvent() {
         "event_venue_address" : eventVenueAddress,
         "description" : description,
         "category" : category,
+		"virtual_event_link": virtualEventLink
     });
 
         e.preventDefault();
@@ -79,7 +84,6 @@ export default function CreateEvent() {
 
 	// use utility func to post new event if response true nav to profile
 	const postEvent = async () => {
-		//changed date to eventStart -->  changed time to eventEnd
 		let responseStatus = await postEventDetails(
       title,
       eventStart,
@@ -89,7 +93,8 @@ export default function CreateEvent() {
       eventVenue,
       eventVenueAddress,
       description,
-      category
+      category,
+	  virtualEventLink
     );
 
 		if (responseStatus) {
@@ -117,7 +122,7 @@ export default function CreateEvent() {
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="title">
               <Form.Label>
-                Event Title:
+                Event Title:	
                 <input
                   type="text"
                   size={40}
@@ -138,6 +143,7 @@ export default function CreateEvent() {
                 />
               </Form.Label>
             </Form.Group>
+
             <Form.Group className="mb-3" controlId="date">
               <Form.Label>
                 Event End time: {"	"}
@@ -159,9 +165,8 @@ export default function CreateEvent() {
                   onChange={(e) => setTimeZone(e.target.value)}
                 >
                   {timeZoneAbbreviations.map((timeZone, idx) => {
-					return <option key={idx}>{timeZone}</option>;
-				  })}
-                 
+                    return <option key={idx}>{timeZone}</option>;
+                  })}
                 </select>
               </Form.Label>
             </Form.Group>
@@ -175,12 +180,25 @@ export default function CreateEvent() {
                   value={eventType}
                   onChange={(e) => setEventType(e.target.value)}
                 >
-                  <option>In-person</option>
+                  <option selected={true}>In-person</option>
                   <option>Virtual</option>
                 </select>
               </Form.Label>
             </Form.Group>
-            {eventType === "Virtual" ? null : (
+
+            {eventType === "Virtual" ? (
+              <Form.Group className="mb-3" controlId="virtual_event_link">
+                <Form.Label>
+                  Virtual Event Link: {" "}
+                  <input
+                    type="text"
+                    size={30}
+                    value={virtualEventLink}
+                    onChange={(e) => setVirtualEventLink(e.target.value)}
+                  />
+                </Form.Label>
+              </Form.Group>
+            ) : (
               <>
                 <Form.Group className="mb-3" controlId="event_venue">
                   <Form.Label>
@@ -215,10 +233,11 @@ export default function CreateEvent() {
 
             <Form.Group className="mb-3" controlId="description">
               <Form.Label>
-                Tell others about your event and why they should join:
+                Tell others about your event & why they should join: {"	"}
+                <br></br>
                 <textarea
                   type="text"
-                  rows={10}
+                  rows={8}
                   cols={40}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
