@@ -69,6 +69,12 @@ export default function EventDetails() {
 								Hosted by: {collaboratorsStr}
 							</Card.Subtitle>
 
+							{eventDetails.event_photo && (
+								<div className="text-center">
+									<img src={eventDetails.event_photo} alt="Event" style={{ width: "100%", marginTop: "20px" }} />
+								</div>
+							)}
+
 							<ListGroup variant="flush">
 								<ListGroup.Item as="h5" className="text-center">
 									{eventDetails && eventDetails.description}
