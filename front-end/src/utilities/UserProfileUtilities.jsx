@@ -12,7 +12,8 @@ export const putUserProfile = async (user, userInterests, displayName, userLocat
     let response = await api.put("userprofile/edit_profile/", {
         interests: userInterests,
         display_name: displayName,
-        location: userLocation
+        location: userLocation,
+        image: profileImage
     });
     console.log(response);
     if (response.status === 200) {
