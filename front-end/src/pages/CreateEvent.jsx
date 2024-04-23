@@ -17,6 +17,8 @@ export default function CreateEvent() {
     const [eventVenueAddress, setEventVenueAddress] = useState("")
     const [description, setDescription] = useState("")
     const [category, setCategory] = useState("")
+	const [eventPhoto, setEventPhoto] = useState("");
+ 	const [photoPreview, setPhotoPreview] = useState("");
 	const [virtualEventLink, setVirtualEventLink] = useState("")
 
 	//timezone abbreviations array:
@@ -57,8 +59,21 @@ export default function CreateEvent() {
 		setInterestCategories(categories);
 	};
 
+	const handleImageChange = (event) => {
+		const file = event.target.files[0];
+		if (file) {
+		  const reader = new FileReader();
+		  reader.onloadend = () => {
+			setPhotoPreview(reader.result);
+			setEventPhoto(reader.result);
+		  };
+		  reader.readAsDataURL(file);
+		}
+	  };
+
 	// on submit check all forms are field in and call post event
 	function handleSubmit(e) {
+
 		console.log("Create Event PAGE",  {
         "title" : title,
         "event_start" : eventStart,
@@ -69,7 +84,7 @@ export default function CreateEvent() {
         "event_venue_address" : eventVenueAddress,
         "description" : description,
         "category" : category,
-		"virtual_event_link": virtualEventLink
+		"event_photo" : eventPhoto,
     });
 
         e.preventDefault();
@@ -94,7 +109,7 @@ export default function CreateEvent() {
       eventVenueAddress,
       description,
       category,
-	  virtualEventLink
+	  eventPhoto
     );
 
 		if (responseStatus) {
@@ -255,12 +270,28 @@ export default function CreateEvent() {
                 >
                   {interestCategories &&
                     interestCategories.map((category) => (
-                      <option key={category.id} value={category.id}>
+                      <option key={category.id} value={parseInt(category.id)}>
                         {category.category}
                       </option>
                     ))}
                 </select>
               </Form.Label>
+            </Form.Group>
+
+			<Form.Group className="mb-3" controlId="eventImage">
+              <Form.Label>Event Image:</Form.Label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              {photoPreview && (
+                <img
+                  src={photoPreview}
+                  alt="Event Preview"
+                  style={{ width: "100%", marginTop: "10px" }}
+                />
+              )}
             </Form.Group>
 
             <Button variant="info" type="submit">

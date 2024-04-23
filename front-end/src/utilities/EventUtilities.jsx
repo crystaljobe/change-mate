@@ -6,7 +6,7 @@ export const getEventDetails = async (eventID) => {
     return eventDetails;
 };
 
-export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, virtualEventLink) => {
+export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink) => {
     let response = await api.post("events/", {
         "title" : title,
         "event_start" : eventStart,
@@ -17,7 +17,8 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
         "event_venue_address" : eventVenueAddress,
         "description" : description,
         "category" : category,
-		"virtual_event_link": virtualEventLink
+        "event_photo" : eventPhoto,  // Set up as a base64 for the backend 
+		"virtual_event_link": virtualEventLink,
     });
     console.log(response);
     if (response.status === 201) {
@@ -27,8 +28,7 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
     }
 };
 
-
-export const setUsersAttending = async (eventID, usersAttending) => {
+export const setUserAttending = async (eventID, usersAttending) => {
     let response = await api.put(`events/${eventID}/`, {
         users_attending : usersAttending
     });

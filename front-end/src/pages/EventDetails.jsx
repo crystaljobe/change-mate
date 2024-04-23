@@ -1,16 +1,32 @@
 import {
 	Container, Col, Row, ListGroup, Card, Button } from "react-bootstrap";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "add-to-calendar-button";
-import { getEventDetails } from "../utilities/EventUtilities";
+import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
+import { getUserProfile } from "../utilities/UserProfileUtilities";
 
 export default function EventDetails() {
 	let { eventID } = useParams();
 	const [eventDetails, setEventDetails] = useState([]);
 	const [collaborators, setCollaborators] = useState([]);
 	const [usersAttending, setUsersAttending] = useState([]);
+	const [userID, setUserID] = useState()
+	const myOutletContextObj = useOutletContext();
+    const { user } = myOutletContextObj;
 	const collaboratorsStr = collaborators.join(", ");
+
+	useEffect(() => {
+		const handleUserID = async () => {
+		  let userResponse = await getUserProfile(user);
+		  let id = userResponse.id
+		  setUserID(id);
+		};
+	  
+		if (!userID) {
+		  handleUserID();
+		}
+	  }, []);
 
 	// get event details using event utilities and set the event details
 	const getEvent = async () => {
@@ -24,8 +40,11 @@ export default function EventDetails() {
 		console.log(eventDetails.data);
 	};
 
-	// TODO: add user attending RSVP functionality with PUT method to API
-	// handleOnClick => await setUsersAttending(eventID, usersAttending), if True disable RSVP button
+	// TODO: disable button if rsvp is sucessful
+	// handle rsvp should work; backend needs fixing to test
+	const handleRSVP = async () => {
+		const rsvp = await setUserAttending(eventID, userID)
+	}
 
 	useEffect(() => {
 		getEvent();
@@ -49,6 +68,12 @@ export default function EventDetails() {
 								className="text-center">
 								Hosted by: {collaboratorsStr}
 							</Card.Subtitle>
+
+							{eventDetails.event_photo && (
+								<div className="text-center">
+									<img src={eventDetails.event_photo} alt="Event" style={{ width: "100%", marginTop: "20px" }} />
+								</div>
+							)}
 
 							<ListGroup variant="flush">
 								<ListGroup.Item as="h5" className="text-center">
@@ -84,6 +109,14 @@ export default function EventDetails() {
 									as={Link}
 									to="/eventdirections">
 									Get Event Directions
+								</Button>
+								<br />
+								<br />
+								<Button
+									className="text-center"
+									variant="info"
+									onClick={handleRSVP}>
+									RSVP
 								</Button>
 								{/* TODO: <add-to-calendar-button>
 									name="Title" 
