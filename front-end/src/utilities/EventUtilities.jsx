@@ -6,7 +6,7 @@ export const getEventDetails = async (eventID) => {
     return eventDetails;
 };
 
-export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category) => {
+export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto) => {
     let response = await api.post("events/", {
         "title" : title,
         "event_start" : eventStart,
@@ -17,6 +17,7 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
         "event_venue_address" : eventVenueAddress,
         "description" : description,
         "category" : category,
+        "event_photo" : eventPhoto  // Set up as a base64 for the backend 
     });
     console.log(response);
     if (response.status === 201) {
