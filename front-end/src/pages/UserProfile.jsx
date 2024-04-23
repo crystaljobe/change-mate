@@ -12,6 +12,7 @@ export default function UserProfile( { user } ) {
     const [eventsAttending, setEventsAttending] = useState([]);
     const [userEvents, setUserEvents] = useState([])
     const [userInterests, setUserInterests] = useState([])
+    const [userPhoto, setUserPhoto] = useState([])
     const [icon, setIcon] = useState("")
 
     // join user interest as a string for display 
@@ -25,6 +26,7 @@ export default function UserProfile( { user } ) {
         setUserProfileData(userProfileData);
         setUserEvents(userProfileData.user_events);
         setEventsAttending(userProfileData.events_attending);
+        setUserPhoto(userProfileData.image)
 
         // get user interest by mapping through array and setting just the cat name
         let interestArr = userProfileData.interests;
@@ -44,17 +46,19 @@ export default function UserProfile( { user } ) {
         getIcon();
     }, [])
 
-    return (
-        <Container id="profile page" fluid>
-        <Row className="justify-content-md-center">
+    // conditional rendering of the Profile Info
+    const renderProfileInfo = () => {
 
-            <Col className="text-center" style={{marginBlock:'2rem'}}>
-               <Card className="text-center" style={{ width: '18rem' }}>
+        // checks to see if user has a profile photo or not
+        if (userPhoto && userPhoto.length > 0) {
 
-               <Card.Header>Profile Info</Card.Header>
+            // if profile photo exists, render with the profile photo
+            return (
+                <Card className="text-center" style={{ width: '18rem' }}>
 
-               {/* TODO: import user profile image if no image display icon */}
-                <Card.Img variant="top" src={icon} style={{height: '250px'}} alt="user-icon"  /> 
+                    <Card.Header>Profile Info</Card.Header>
+
+                    <Card.Img variant="top" src={userPhoto} style={{height: '250px'}} alt="user-icon"  /> 
 
                     <Card.Body>
                         <Card.Title as='h3'style={{fontWeight:'bold', color:"#6840DF", textDecoration: 'underline'}}>
@@ -78,6 +82,48 @@ export default function UserProfile( { user } ) {
                         </Button>
                     </Card.Body>
                 </Card>
+            )
+        } else {
+            // if no profile photo, render with profile icon
+            return (
+                <Card className="text-center" style={{ width: '18rem' }}>
+
+                    <Card.Header>Profile Info</Card.Header>
+
+                    <Card.Img variant="top" src={icon} style={{height: '250px'}} alt="user-icon"  /> 
+
+                    <Card.Body>
+                        <Card.Title as='h3'style={{fontWeight:'bold', color:"#6840DF", textDecoration: 'underline'}}>
+                            {userProfileData.display_name}  
+                        </Card.Title>
+                        <br/>
+                        <Card.Subtitle as='h4' style={{fontWeight:'bold'}}>
+                            Locations:
+                        </Card.Subtitle>
+                        <Card.Text> 
+                            {userProfileData.location} 
+                        </Card.Text>
+                        <Card.Subtitle as='h4' style={{fontWeight:'bold'}}>
+                            Interests:
+                        </Card.Subtitle>
+                        <Card.Text> 
+                            {userIntStr} 
+                        </Card.Text>
+                        <Button variant="info" as={Link} to={'/editprofile'}>
+                            Edit Profile
+                        </Button>
+                    </Card.Body>
+                </Card>
+            )
+        }
+    }
+
+    return (
+        <Container id="profile page" fluid>
+        <Row className="justify-content-md-center">
+
+            <Col className="text-center" style={{marginBlock:'2rem'}}>
+               {renderProfileInfo()}
             </Col>
 
             {/* Events user are collaborating on: */}
