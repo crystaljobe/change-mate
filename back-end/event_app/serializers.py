@@ -14,7 +14,25 @@ class EventSerializer(serializers.ModelSerializer):
 
     def get_users_attending(self, obj):
         return obj.users_attending.count()
-
-
-
     
+class ICalSerializer(serializers.ModelSerializer):
+    startTime = serializers.SerializerMethodField()
+    startDate = serializers.SerializerMethodField()
+    endTime = serializers.SerializerMethodField()
+    endDate = serializers.SerializerMethodField()
+
+    class Meta: 
+        model = Event
+        fields = ['id', 'title', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone']
+
+    def get_startDate(self, obj):
+        return obj.event_start.date()
+
+    def get_endDate(self, obj):
+        return obj.event_end.date()
+
+    def get_startTime(self, obj):
+        return obj.event_start.strftime('%H:%M')
+
+    def get_endTime(self, obj):
+        return obj.event_end.strftime('%H:%M')

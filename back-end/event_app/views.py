@@ -14,7 +14,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .serializers import Event, EventSerializer
+from .serializers import Event, EventSerializer, ICalSerializer
 from profile_app.models import UserProfile
 from interest_app.models import InterestCategory
 from rest_framework import viewsets
@@ -149,6 +149,18 @@ class AnEvent(APIView):
         event = get_object_or_404(Event, id = event_id)
         event.delete()
         return Response(status=HTTP_204_NO_CONTENT)
+
+class ICalEvent(APIView):
+    '''View a single event by ID'''
+    @swagger_auto_schema(
+        operation_summary="Retrieve event details for iCal",
+        operation_description="Retrieve details of a specific event by its ID formatted for iCal.",
+        responses={200: ICalSerializer()},
+    )
+    def get(self, request, event_id):
+        event = get_object_or_404(Event, id = event_id)
+        ser_event = ICalSerializer(event)
+        return Response(ser_event.data, status=HTTP_200_OK)
 
 class DefautlEventIcon(APIView):
      def get(self, request):
