@@ -26,8 +26,7 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
     }
 };
 
-
-export const setUsersAttending = async (eventID, usersAttending) => {
+export const setUserAttending = async (eventID, usersAttending) => {
     let response = await api.put(`events/${eventID}/`, {
         users_attending : usersAttending
     });
