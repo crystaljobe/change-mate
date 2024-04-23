@@ -11,20 +11,14 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST,
 )
-from .serializers import UserProfile, UserInterestSerializer, UserProfileSerializer, DisplayNameSerializer, LocationFieldSerializer, ImgFieldSerializer, ProfilePicSerializer
+from .serializers import UserProfile, UserInterestSerializer, UserProfileSerializer, DisplayNameSerializer, LocationFieldSerializer, ImgFieldSerializer
 from interest_app.serializers import InterestCategory
 from user_app.serializers import AppUser
 from rest_framework.views import APIView
-from drf_yasg.utils import swagger_auto_schema
 
 # User Profile views
 class CurrentUserProfile(TokenReq):
-    '''Access user profile for currently logged in user'''
-    @swagger_auto_schema(
-        operation_summary="Get current user's profile",
-        operation_description="Retrieve the profile data of the currently authenticated user.",
-        responses={200: UserProfileSerializer()},
-    )
+    # get a user's profile data 
     def get(self, request):
         # get user profile 
         user_profile = get_object_or_404(UserProfile, user=request.user)
@@ -34,42 +28,32 @@ class CurrentUserProfile(TokenReq):
         return Response(ser_profile.data, status=HTTP_200_OK)
 
 class EditUserProfile(APIView):
-    
-    @swagger_auto_schema(
-        operation_summary="Edit user profile",
-        operation_description="Update the profile data of the currently authenticated user.",
-        request_body=UserProfileSerializer,
-        responses={200: UserProfileSerializer()},
-    )
+    # set interest categories to user profile
+    # request should be sent as a list of interest category ids
     def put(self, request): 
-        user = get_object_or_404(AppUser, email=request.user)
+        # create a copy of data 
+        # get user associated profile
+        user = get_object_or_404(AppUser, email = request.user)
         user_profile = get_object_or_404(UserProfile, user=user)
         data = request.data.copy()
         
-        # Assuming interests are submitted as a list of IDs, handle them separately
-        interests_ids = data.pop('interests', [])  
-        print(data)
+        # get interest categories using interests key
+        interests_cats = data.get('interests', [])
 
-        edit_profile = UserProfileSerializer(instance=user_profile, data=data, partial=True)
-        if edit_profile.is_valid():
-            # Save the user profile first
-            updated_profile = edit_profile.save()
-
-            # Then handle interests if present
-            if interests_ids:
-                updated_profile.interests.set(interests_ids)
-
-            return Response(edit_profile.data, status=HTTP_200_OK)
-        
-        return Response(edit_profile.error, status=HTTP_400_BAD_REQUEST)
-
+        try:
+            interests = InterestCategory.objects.filter(category__in=interests_cats)
+            user_profile.interests.set(interests)
+            user_profile.location = data['location']
+            user_profile.display_name = data['display_name']
+            user_profile.full_clean()
+            user_profile.save()
+            ser_user_profile = UserProfileSerializer(user_profile)
+            return Response(ser_user_profile.data, status=HTTP_200_OK)
+        except Exception as e: 
+            return Response(e, status=HTTP_400_BAD_REQUEST)
         
 
-@swagger_auto_schema(
-        operation_summary="Get user's display name",
-        operation_description="Retrieve the display name of the currently authenticated user.",
-        responses={200: DisplayNameSerializer()},
-    )
+# method to grab user display name 
 class DisplayName(TokenReq):
     # if authenticated get user info and return it with status 200
     def get(self, request):
@@ -77,16 +61,7 @@ class DisplayName(TokenReq):
         display_name = DisplayNameSerializer(profile)
         return Response(display_name.data, status=HTTP_200_OK)
 
-
-
 class ProfilePic(TokenReq):
-
-    @swagger_auto_schema(
-        operation_summary="Upload profile picture",
-        operation_description="Upload a profile picture for the currently authenticated user.",
-        request_body=ProfilePicSerializer,
-        responses={200: "Profile picture uploaded successfully."},
-    )
     def post(self, request):
         try:
             with Image.open(request.data["file"]) as im:
@@ -102,11 +77,6 @@ class ProfilePic(TokenReq):
 
 class Profile_Icon(APIView):
 
-    @swagger_auto_schema(
-        operation_summary="Get profile icon",
-        operation_description="Retrieve a profile icon for the currently authenticated user.",
-        responses={200: "Profile icon retrieved successfully."},
-    )
     def get(self, request):
         api_key = env.get("API_KEY")
         secret_key = env.get("SECRET_KEY")
