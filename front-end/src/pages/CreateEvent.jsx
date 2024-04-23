@@ -55,6 +55,7 @@ export default function CreateEvent() {
 
 	// on submit check all forms are field in and call post event
 	function handleSubmit(e) {
+
 		console.log("Create Event PAGE",  {
         "title" : title,
         "event_start" : eventStart,
@@ -236,7 +237,7 @@ export default function CreateEvent() {
                 >
                   {interestCategories &&
                     interestCategories.map((category) => (
-                      <option key={category.id} value={category.id}>
+                      <option key={category.id} value={parseInt(category.id)}>
                         {category.category}
                       </option>
                     ))}

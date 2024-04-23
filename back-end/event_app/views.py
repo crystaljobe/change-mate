@@ -77,12 +77,13 @@ class EventsView(TokenReq):
         try:
             new_event = Event.objects.create(
                 title = data['title'],
-                date = data['date'],
-                time = data['time'],
+                event_start = data['event_start'],
+                event_end = data['event_end'],
                 time_zone = data['time_zone'],
                 event_type = data['event_type'],
                 event_venue = data['event_venue'],
                 event_venue_address = data['event_venue_address'],
+                event_photo = data['event_photo'],
                 description = data['description'],
                 category = category,
                 )
@@ -98,7 +99,7 @@ class EventsView(TokenReq):
             return Response(ser_data.data, status=HTTP_201_CREATED)
         except ValidationError as e: 
             print(e.message_dict)
-            return e
+            return Response(e)
     
 
 
