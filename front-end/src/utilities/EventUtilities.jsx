@@ -6,7 +6,7 @@ export const getEventDetails = async (eventID) => {
     return eventDetails;
 };
 
-export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto) => {
+export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink) => {
     let response = await api.post("events/", {
         "title" : title,
         "event_start" : eventStart,
@@ -17,7 +17,8 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
         "event_venue_address" : eventVenueAddress,
         "description" : description,
         "category" : category,
-        "event_photo" : eventPhoto  // Set up as a base64 for the backend 
+        "event_photo" : eventPhoto,  // Set up as a base64 for the backend 
+		"virtual_event_link": virtualEventLink,
     });
     console.log(response);
     if (response.status === 201) {
@@ -38,17 +39,18 @@ export const setUserAttending = async (eventID, usersAttending) => {
     }
 };
 
-export const updateEventDetails = async (eventID, title, date, time, timeZone, eventType, eventVenue, eventVenueAddress, description, category) => {
+export const updateEventDetails = async (eventID, title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, virtualEventLink) => {
     let response = await api.put(`events/${eventID}/`, {
-        title: title,
-        date: date,
-        time: time,
-        time_zone: timeZone,
-        event_type: eventType,
-        event_venue: eventVenue,
-        event_venue_address: eventVenueAddress,
-        description: description,
-        category: category,
+        "title" : title,
+        "event_start" : eventStart,
+        "event_end" : eventEnd,
+        "time_zone" : timeZone,
+        "event_type" : eventType,
+        "event_venue" : eventVenue,
+        "event_venue_address" : eventVenueAddress,
+        "description" : description,
+        "category" : category,
+		"virtual_event_link": virtualEventLink
     });
     console.log(response.status);
     if (response.status === 200) {
