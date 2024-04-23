@@ -25,7 +25,7 @@ class Event(models.Model):
     )
     time_zone = models.CharField()
     description = models.TextField()
-    event_photo = models.TextField(null=True, blank=True)
+    event_photo = models.TextField(null=True, blank=True, max_length=10000000)
     category = models.ForeignKey(
         InterestCategory,
         on_delete=models.CASCADE,
