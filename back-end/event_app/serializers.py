@@ -10,7 +10,7 @@ class EventSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'date', 'time', 'time_zone', 'event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'description', 'event_photo', 'category', 'users_attending', 'collaborators']
+        fields = ['id', 'title', 'event_start', 'event_end', 'time_zone', 'event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'description', 'event_photo', 'category', 'users_attending', 'collaborators']
 
     def get_users_attending(self, obj):
         return obj.users_attending.count()
