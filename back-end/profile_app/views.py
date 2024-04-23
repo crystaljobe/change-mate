@@ -61,7 +61,7 @@ class EditUserProfile(APIView):
 
             return Response(edit_profile.data, status=HTTP_200_OK)
         
-        return Response("YOU GOT STUCK HERE", status=HTTP_400_BAD_REQUEST)
+        return Response(edit_profile.error, status=HTTP_400_BAD_REQUEST)
 
         
 
