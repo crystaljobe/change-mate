@@ -102,7 +102,7 @@ export default function EditUserProfile({ user }) {
                     name="city"
                     placeholder="city"
                     autoComplete="address-level2"
-                    value={userLocation && userLocation}
+                    value={userLocation}
                     type="text"
                     size={40}
                     onChange={(e) => setUserLocation(e.target.value)}
@@ -116,7 +116,7 @@ export default function EditUserProfile({ user }) {
                 <input
                   type="text"
                   size={40}
-                  value={displayName && displayName}
+                  value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                 />
               </Form.Label>
@@ -128,7 +128,7 @@ export default function EditUserProfile({ user }) {
                 <select
                   multiple={true}
                   size={6}
-                  value={userInterests && userInterests}
+                  value={userInterests}
                   onChange={(e) => {
                     const options = [...e.target.selectedOptions];
                     const values = options.map((option) => {
