@@ -3,21 +3,16 @@
 @tailwind utilities; */
 
 :root {
-  --bodyColor:#FDF6EE;
+  --bodyColor:#f9f1e9;
   padding: 4px;
 }
 body {
-  background: #A1FFCE;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #FAFFD1, #A1FFCE);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #FAFFD1, #A1FFCE); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: #f9f1e9;
 
 }
 
 nav {
-  background: #A1FFCE;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #FAFFD1, #A1FFCE);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #FAFFD1, #A1FFCE); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  display: flex;
+  background: #f9f1e9;  /* fallback for old browsers */
   flex-direction: row;
   gap: 40px;
 }

@@ -6,11 +6,11 @@ export const getEventDetails = async (eventID) => {
     return eventDetails;
 };
 
-export const postEventDetails = async (title, date, time, timeZone, eventType, eventVenue, eventVenueAddress, description, category) => {
+export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category) => {
     let response = await api.post("events/", {
         "title" : title,
-        "date" : date,
-        "time" : time,
+        "event_start" : eventStart,
+        "event_end" : eventEnd,
         "time_zone" : timeZone,
         "event_type" : eventType,
         "event_venue" : eventVenue,
