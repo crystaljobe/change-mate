@@ -6,6 +6,30 @@ export const getEventDetails = async (eventID) => {
     return eventDetails;
 };
 
+export const getEventDetailsByCategory = async (searchTerm) => {
+    const response = await api.get(`events/?category=${searchTerm}`);
+    let eventDetails = response.data;
+    return eventDetails;
+};
+
+export const getEventDetailsByType = async (searchTerm) => {
+    const response = await api.get(`events/?event_type=${searchTerm}`);
+    let eventDetails = response.data;
+    return eventDetails;
+};
+
+export const getEventDetailsByDate = async (searchTerm) => {
+    const response = await api.get(`events/?event_date=${searchTerm}`);
+    let eventDetails = response.data;
+    return eventDetails;
+};
+
+export const getEventDetailsByLocation = async (searchTerm) => {
+    const response = await api.get(`events/?location=${searchTerm}`);
+    let eventDetails = response.data;
+    return eventDetails;
+};
+
 export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink) => {
     let response = await api.post("events/", {
         "title" : title,
