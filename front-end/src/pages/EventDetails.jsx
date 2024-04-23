@@ -139,6 +139,13 @@ export default function EventDetails() {
 									startTime="10:15" {eventDetails.startTime}
                                     endTime="23:30" {eventDetails.endTime}
 									timeZone="America/Los_Angeles" {eventDetails.time_zone}
+
+									label="Hit me to save!"
+									size="5"
+									??multiple buttons:
+									buttonsList
+  									hideTextLabelButton
+  									buttonStyle="round"
 								</add-to-calendar-button> */}
                 <add-to-calendar-button
                   options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
@@ -154,7 +161,7 @@ export default function EventDetails() {
                   startTime={eventDetails.startTime}
                   endTime={eventDetails.endTime}
                   timeZone={eventDetails.time_zone}
-				  description={eventDetails.description}
+                  description={eventDetails.description}
                 ></add-to-calendar-button>
               </Card.Body>
             </Card.Body>
