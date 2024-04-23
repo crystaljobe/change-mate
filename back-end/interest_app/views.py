@@ -7,11 +7,18 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
+from drf_yasg.utils import swagger_auto_schema
 
 # Interest Category App Views: 
 
-# all interests view
+
 class AllInterests(APIView):
+    '''All interests'''
+    @swagger_auto_schema(
+        operation_summary="Get all interest categories",
+        operation_description="Retrieve all interest categories.",
+        responses={200: InterestCategorySerializer(many=True)},
+    )
     def get(self, request):
         try: 
             # if valid rquest get all interest categories, serialize data and return data & status 200
@@ -22,9 +29,13 @@ class AllInterests(APIView):
         except Exception as e: 
             return Response(e, status=HTTP_400_BAD_REQUEST)
 
-# singular interest view
 class An_Interest(APIView):
-    # grab a single interest 
+    '''A singular interest view'''
+    @swagger_auto_schema(
+        operation_summary="Get a single interest category",
+        operation_description="Retrieve a single interest category by its name.",
+        responses={200: InterestCategorySerializer()},
+    )
     def get(self, request, interest):
         try: 
             # if valid interest category serialize data and return it with status 200
@@ -34,7 +45,12 @@ class An_Interest(APIView):
         except Exception as e:
             return Response(e, status=HTTP_400_BAD_REQUEST)
         
-    # add new interest category 
+    @swagger_auto_schema(
+        operation_summary="Add a new interest category",
+        operation_description="Create a new interest category.",
+        request_body=InterestCategorySerializer,
+        responses={201: InterestCategorySerializer()},
+    ) 
     def post(self, request, interest):
         # make a copy of the data 
         data = request.data.copy()
