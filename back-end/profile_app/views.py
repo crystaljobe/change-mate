@@ -45,9 +45,10 @@ class EditUserProfile(APIView):
         user = get_object_or_404(AppUser, email=request.user)
         user_profile = get_object_or_404(UserProfile, user=user)
         data = request.data.copy()
-
+        
         # Assuming interests are submitted as a list of IDs, handle them separately
         interests_ids = data.pop('interests', [])  
+        print(data)
 
         edit_profile = UserProfileSerializer(instance=user_profile, data=data, partial=True)
         if edit_profile.is_valid():
@@ -60,7 +61,8 @@ class EditUserProfile(APIView):
 
             return Response(edit_profile.data, status=HTTP_200_OK)
         
-        return Response(edit_profile.errors, status=HTTP_400_BAD_REQUEST)
+        return Response(edit_profile.error, status=HTTP_400_BAD_REQUEST)
+
         
 
 @swagger_auto_schema(
