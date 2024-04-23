@@ -14,26 +14,11 @@ from rest_framework.status import (
 )
 from profile_app.models import UserProfile
 from .serializers import AppUser
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 
 # Create your views here.
 
-
+# Signup method for users to signup for the app
 class SignUp(APIView):
-    @swagger_auto_schema(
-        operation_summary="User sign-up",
-        operation_description="Register a new user.",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'email': openapi.Schema(type=openapi.TYPE_STRING, description='User email'),
-                'password': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_PASSWORD, description='User password'),
-            },
-            required=['email', 'password']
-        ),
-        responses={201: "User signed up successfully."},
-    )
     def post(self, request):
         # create a copy of data 
         data = request.data.copy() 
@@ -68,19 +53,6 @@ class SignUp(APIView):
     
 
 class Login(APIView):
-    @swagger_auto_schema(
-        operation_summary="User login",
-        operation_description="Log in an existing user.",
-         request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'email': openapi.Schema(type=openapi.TYPE_STRING, description='User email'),
-                'password': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_PASSWORD, description='User password'),
-            },
-            required=['email', 'password']
-        ),
-        responses={200: "User logged in successfully.", 400: "Invalid credentials."},
-    )
     def post(self, request):
         # create a copy of requested data 
         data = request.data.copy()
@@ -109,13 +81,10 @@ class TokenReq(APIView):
     authentication_classes=[TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-
+# method to grab user data
+# method will check for user authentication
 class Info(TokenReq):
-    @swagger_auto_schema(
-        operation_summary="Get user information",
-        operation_description="Retrieve information about the authenticated user.",
-        responses={200: "User information retrieved successfully."},
-    )
+    # if authenticated get user info (email) and return it with status 200
     def get(self, request):
         try: 
             user = request.user
@@ -123,13 +92,8 @@ class Info(TokenReq):
         except:
             return Response("Error logging out", status=HTTP_400_BAD_REQUEST) 
 
-
+# method to logout user checking for user authentication first
 class Logout(TokenReq):
-    @swagger_auto_schema(
-        operation_summary="User logout",
-        operation_description="Log out the authenticated user.",
-        responses={204: "User logged out successfully."},
-    )
     def post(self, request):
         # if user authenticated delete user token upon signout to require user to sign back in to access views
         request.user.auth_token.delete()

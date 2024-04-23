@@ -17,26 +17,11 @@ from rest_framework.status import (
 from .serializers import Event, EventSerializer
 from profile_app.models import UserProfile
 from interest_app.models import InterestCategory
-from rest_framework import viewsets
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 
 # views for all events
 class EventsView(TokenReq):
-    '''
-    Access all events
-    '''
-    @swagger_auto_schema(
-        operation_summary="Get events",
-        operation_description="Retrieve events based on provided filters such as category, type, date, and location. If no filters provided, all events are returned.",
-        responses={200: EventSerializer(many=True)},
-        manual_parameters=[
-            openapi.Parameter(name='category', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Category of the event'),
-            openapi.Parameter(name='type', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Type of the event (virtual/in-person)'),
-            openapi.Parameter(name='date', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Date of the event (format: YYYY-MM-DD)'),
-            openapi.Parameter(name='location', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Location of the event'),
-        ]
-    )
+    # get events based on passed queryset where filters include: Category, Type (virtual/in-person), Date, Location
+    # if no filters provided all events returned
     def get(self, request, *args, **kwargs):
         # get event object instances as baseline
         queryset = Event.objects.all()
@@ -61,13 +46,7 @@ class EventsView(TokenReq):
         ser_queryset = EventSerializer(queryset, many=True)
         return Response(ser_queryset.data, status=HTTP_200_OK)
 
-
-    @swagger_auto_schema(
-        operation_summary="Create event",
-        operation_description="Create a new event.",
-        request_body=EventSerializer,
-        responses={201: EventSerializer()},
-    )
+    # create new event
     def post(self, request):
         # create copy of request data
         data = request.data.copy()
@@ -100,27 +79,15 @@ class EventsView(TokenReq):
             print(e.message_dict)
             return e
     
-
-
-
+# views for a singular event
 class AnEvent(APIView):
-    '''View a single event by ID'''
-    @swagger_auto_schema(
-        operation_summary="Retrieve event details",
-        operation_description="Retrieve details of a specific event by its ID.",
-        responses={200: EventSerializer()},
-    )
+    # get event details
     def get(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
         ser_event = EventSerializer(event)
         return Response(ser_event.data, status=HTTP_200_OK)
-        
 
-    @swagger_auto_schema(
-        operation_summary="Update event details",
-        operation_description="Update details of a specific event by its ID.",
-        responses={200: EventSerializer(), 400: "Error: Bad Request"},
-    )
+    # edit event details
     def put(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
         data = request.data.copy()
@@ -136,14 +103,8 @@ class AnEvent(APIView):
             updated_event.save()
             return Response(updated_event.data, status=HTTP_200_OK)
         return Response(updated_event.error_messages, status=HTTP_400_BAD_REQUEST)
-
-
-
-    @swagger_auto_schema(
-        operation_summary="Delete event",
-        operation_description="Delete a specific event by its ID.",
-        responses={204: "Event deleted successfully"},
-    )       
+            
+    # delete event 
     def delete(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
         event.delete()

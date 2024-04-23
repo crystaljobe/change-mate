@@ -19,7 +19,9 @@ export default function MyNavbar({ user, setUser, displayName }) {
 
 	return (
 		<Navbar
-			className=".bg-body-secondary"
+			bg="light"
+			data-bs-theme="light"
+			className="bg-body-tertiary"
 			expand="lg">
 
 			<Navbar.Brand as={Link} to={"/"}>
