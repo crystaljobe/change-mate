@@ -33,7 +33,8 @@ class EventsView(TokenReq):
         manual_parameters=[
             openapi.Parameter(name='category', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Category of the event'),
             openapi.Parameter(name='type', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Type of the event (virtual/in-person)'),
-            openapi.Parameter(name='date', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Date of the event (format: YYYY-MM-DD)'),
+            openapi.Parameter(name='start_date', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Start of date range (format: YYYY-MM-DD)'),
+            openapi.Parameter(name='end_date', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='End of date range (format: YYYY-MM-DD)'),
             openapi.Parameter(name='location', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Location of the event'),
         ]
     )
@@ -44,7 +45,8 @@ class EventsView(TokenReq):
         # if key doesn't exist returns None
         category = request.query_params.get('category')
         event_type = request.query_params.get('type')
-        event_date = request.query_params.get('date')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
         location = request.query_params.get('location')
         
         # case-insensitive partial match for filtering for location
@@ -53,12 +55,14 @@ class EventsView(TokenReq):
         # event_type search will be exact match
         if event_type:
             queryset = events.filter(event_type=event_type)
-        if event_date:
-            queryset = events.filter(event_start=event_date)
+        if start_date and end_date:
+            queryset = events.filter(event_start__date__range=[start_date, end_date])
+        if start_date:
+            queryset = events.filter(event_start__date=start_date)
         # case-insensitive partial match for filtering for location
         if location:
             queryset = events.filter(location__icontains=location) 
-
+        print(queryset)
         # serialize data and return data and status 200
         ser_queryset = EventDetailsSerializer(queryset, many=True)
         return Response(ser_queryset.data, status=HTTP_200_OK)
