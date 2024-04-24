@@ -52,7 +52,12 @@ export default function LocationSearchMap( { setEventVenueAddress, setEventCoord
                         longitude: lng,
                         latitude: lat,
                     },
+                    // search parameters:
                     countries: "us",
+                    language: "en",
+                    autocomplete: false,
+                    // limit search to address, street, and secondary address for full addresses
+                    type: "address, street, secondary_address, region",
                     //limit to 6 search results in drop down
                     limit: 6,
                 });
@@ -61,9 +66,25 @@ export default function LocationSearchMap( { setEventVenueAddress, setEventCoord
                 // Listen for the `result` event from the Geocoder // `result` event is triggered when a user makes a selection
                 //  Add a marker at the result's coordinates
                 geocoder.on("result", (event) => {
+                    const data = event.result
+                    const contextArr = data.context
+                    let city = ""
+                    let state = ""
+                    contextArr.map((context) => { 
+                        if (context.id.startsWith('place')) {
+                            city = context.text_en;
+                        } else if (context.id.startsWith('region')) {
+                            state = context.text_en;
+                        }
+                    })
+
                     console.log(event.result)
-                    setEventVenueAddress(event.result.place_name)
-                    setEventCoords(event.result.geometry.coordinates)
+                    setEventVenueAddress(data.place_name)
+                    setEventCoords(data.geometry.coordinates)
+
+                    // console.log(`${city}, ${state}`)
+                    console.log('city:', city)
+                    console.log('state:', state)
                 });
             });
         }
