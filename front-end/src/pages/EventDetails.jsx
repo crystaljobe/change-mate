@@ -31,6 +31,9 @@ export default function EventDetails() {
   const getEvent = async () => {
     const eventDetails = await getEventDetails(eventID);
     setEventDetails(eventDetails);
+		console.log('EVENT DETAILS page--event details:', eventDetails)
+
+
     setUsersAttending(eventDetails.users_attending);
     // map through collaborators to get their display names
     let collabArr = eventDetails.collaborators;
@@ -125,17 +128,28 @@ export default function EventDetails() {
                 >
                   RSVP
                 </Button>
-                {/* TODO: <add-to-calendar-button>
-									name="Title" 
-                                    options="'Apple','Google'" 
-                                    location="World Wide
-									Web" 
-                                    startDate="2024-04-19" 
-                                    endDate="2024-04-19"
-									startTime="10:15" 
-                                    endTime="23:30"
-									timeZone="America/Los_Angeles"
-								</add-to-calendar-button> */}
+                
+                <add-to-calendar-button
+                  size="3"
+                  label="Add to personal calendar"
+                  // buttonsList
+                  // hideTextLabelButton
+                  // buttonStyle="round"
+                  options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+                  name={eventDetails.title}
+                  //   add a conditional rendering for event_type --> do we still need event link for inperson?
+                  location={
+                    eventDetails.event_type === "Virtual"
+                      ? eventDetails.virtual_event_link
+                      : `${eventDetails.event_venue} - ${eventDetails.event_venue_address}`
+                  }
+                  startDate={eventDetails.startDate}
+                  endDate={eventDetails.endDate}
+                  startTime={eventDetails.startTime}
+                  endTime={eventDetails.endTime}
+                  timeZone={eventDetails.time_zone}
+                  description={eventDetails.description}
+                ></add-to-calendar-button>
               </Card.Body>
             </Card.Body>
           </Card>
