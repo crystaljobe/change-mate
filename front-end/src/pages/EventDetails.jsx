@@ -128,25 +128,13 @@ export default function EventDetails() {
                 >
                   RSVP
                 </Button>
-                {/* TODO: <add-to-calendar-button>
-									name="Title" 
-                                    options="'Apple','Google'" 
-                                    location="World Wide
-									Web" --> if eventDetails.event_type === virtual ? can be a url || eventDetails.event_venue + .event_venue_address
-                                    startDate="2024-04-19"  {eventDetails.startDate}
-                                    endDate="2024-04-19" {eventDetails.endDate}
-									startTime="10:15" {eventDetails.startTime}
-                                    endTime="23:30" {eventDetails.endTime}
-									timeZone="America/Los_Angeles" {eventDetails.time_zone}
-
-									label="Hit me to save!"
-									size="5"
-									??multiple buttons:
-									buttonsList
-  									hideTextLabelButton
-  									buttonStyle="round"
-								</add-to-calendar-button> */}
+                
                 <add-to-calendar-button
+                  size="3"
+                  label="Add to personal calendar"
+                  // buttonsList
+                  // hideTextLabelButton
+                  // buttonStyle="round"
                   options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
                   name={eventDetails.title}
                   //   add a conditional rendering for event_type --> do we still need event link for inperson?
