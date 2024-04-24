@@ -6,23 +6,23 @@ import { getInterestCategories } from "../utilities/InterestCategoriesUtilities"
 import { postEventDetails } from "../utilities/EventUtilities";
 
 export default function CreateEvent() {
-    const navigate = useNavigate()
-	const [interestCategories, setInterestCategories] = useState([]);
-    const [title, setTitle] = useState("")
-	const [eventStart, setEventStart] = useState("")
-    const [eventEnd	, setEventEnd] = useState("")
-    const [timeZone, setTimeZone] = useState("")
-    const [eventType, setEventType] = useState("In-Person")
-    const [eventVenue, setEventVenue] = useState("")
-    const [eventVenueAddress, setEventVenueAddress] = useState("")
-    const [description, setDescription] = useState("")
-    const [category, setCategory] = useState("")
-	const [eventPhoto, setEventPhoto] = useState("");
- 	const [photoPreview, setPhotoPreview] = useState("");
-	const [virtualEventLink, setVirtualEventLink] = useState("")
+  const navigate = useNavigate()
+  const [interestCategories, setInterestCategories] = useState([]);
+  const [title, setTitle] = useState("")
+  const [eventStart, setEventStart] = useState("")
+  const [eventEnd, setEventEnd] = useState("")
+  const [timeZone, setTimeZone] = useState("")
+  const [eventType, setEventType] = useState("In-Person")
+  const [eventVenue, setEventVenue] = useState("")
+  const [eventVenueAddress, setEventVenueAddress] = useState("")
+  const [description, setDescription] = useState("")
+  const [category, setCategory] = useState("")
+  const [eventPhoto, setEventPhoto] = useState("");
+  const [photoPreview, setPhotoPreview] = useState("");
+  const [virtualEventLink, setVirtualEventLink] = useState("")
 
-	//timezone abbreviations array:
-	const timeZoneAbbreviations = [
+  //timezone abbreviations array:
+  const timeZoneAbbreviations = [
     "America/Adak",
     "America/Anchorage",
     "America/Chicago",
@@ -52,54 +52,56 @@ export default function CreateEvent() {
     "Pacific/Niue",
   ];
 
-    
-	// get interest cats and set them 
-	const eventInterestCategories = async () => {
-		const categories = await getInterestCategories();
-		setInterestCategories(categories);
-	};
 
-	const handleImageChange = (event) => {
-		const file = event.target.files[0];
-		if (file) {
-		  const reader = new FileReader();
-		  reader.onloadend = () => {
-			setPhotoPreview(reader.result);
-			setEventPhoto(reader.result);
-		  };
-		  reader.readAsDataURL(file);
-		}
-	  };
+  // get interest cats and set them 
+  const eventInterestCategories = async () => {
+    const categories = await getInterestCategories();
+    setInterestCategories(categories);
+  };
 
-	// on submit check all forms are field in and call post event
-	function handleSubmit(e) {
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // Ensures it is a valid base64 format for the image
+        const base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+        setPhotoPreview(reader.result);
+        setEventPhoto(base64String);  
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-		console.log("Create Event PAGE",  {
-        "title" : title,
-        "event_start" : eventStart,
-        "event_end" : eventEnd,
-        "time_zone" : timeZone,
-        "event_type" : eventType,
-        "event_venue" : eventVenue,
-        "event_venue_address" : eventVenueAddress,
-        "description" : description,
-        "category" : category,
-		"event_photo" : eventPhoto,
+  // on submit check all forms are field in and call post event
+  function handleSubmit(e) {
+
+    console.log("Create Event PAGE", {
+      "title": title,
+      "event_start": eventStart,
+      "event_end": eventEnd,
+      "time_zone": timeZone,
+      "event_type": eventType,
+      "event_venue": eventVenue,
+      "event_venue_address": eventVenueAddress,
+      "description": description,
+      "category": category,
+      "event_photo": eventPhoto,
     });
 
-        e.preventDefault();
-        for (let i = 0; i < 5; i++) {
-            if (e.target[i].value == "") {
-                alert(`Must enter a ${e.target[i].type}!!`)
-                return
-            }
-        }
-        postEvent()
-	}
+    e.preventDefault();
+    for (let i = 0; i < 5; i++) {
+      if (e.target[i].value == "") {
+        alert(`Must enter a ${e.target[i].type}!!`)
+        return
+      }
+    }
+    postEvent()
+  }
 
-	// use utility func to post new event if response true nav to profile
-	const postEvent = async () => {
-		let responseStatus = await postEventDetails(
+  // use utility func to post new event if response true nav to profile
+  const postEvent = async () => {
+    let responseStatus = await postEventDetails(
       title,
       eventStart,
       eventEnd,
@@ -109,20 +111,20 @@ export default function CreateEvent() {
       eventVenueAddress,
       description,
       category,
-	  eventPhoto
+      eventPhoto
     );
 
-		if (responseStatus) {
-			navigate("/profile");
-		} 
-	};
+    if (responseStatus) {
+      navigate("/profile");
+    }
+  };
 
-	// use effect to call event interest cats funct upon render
-	useEffect(() => {
-		eventInterestCategories();
-	}, []);
+  // use effect to call event interest cats funct upon render
+  useEffect(() => {
+    eventInterestCategories();
+  }, []);
 
-	return (
+  return (
     <Container>
       <br />
       <Row className="space justify-content-md-center">
@@ -137,7 +139,7 @@ export default function CreateEvent() {
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="title">
               <Form.Label>
-                Event Title:	
+                Event Title:
                 <input
                   type="text"
                   size={40}
@@ -206,7 +208,7 @@ export default function CreateEvent() {
                 <Form.Label>
                   Virtual Event Link: {" "}
                   <input
-                    type="text"
+                    type="url"
                     size={30}
                     value={virtualEventLink}
                     onChange={(e) => setVirtualEventLink(e.target.value)}
@@ -278,7 +280,7 @@ export default function CreateEvent() {
               </Form.Label>
             </Form.Group>
 
-			<Form.Group className="mb-3" controlId="eventImage">
+            <Form.Group className="mb-3" controlId="eventImage">
               <Form.Label>Event Image:</Form.Label>
               <input
                 type="file"
