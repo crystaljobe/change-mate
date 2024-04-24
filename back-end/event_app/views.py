@@ -36,23 +36,25 @@ class EventsView(TokenReq):
     )
     def get(self, request, *args, **kwargs):
         # get event object instances as baseline
-        queryset = Event.objects.all()
+        events = Event.objects.all()
         # get parameter values passed in request
         # if key doesn't exist returns None
         category = request.query_params.get('category')
         event_type = request.query_params.get('type')
         event_date = request.query_params.get('date')
         location = request.query_params.get('location')
-
+        
+        # case-insensitive partial match for filtering for location
         if category:
-            queryset = queryset.filter(category=category)
+            queryset = events.filter(category__category__icontains=category)
+        # event_type search will be exact match
         if event_type:
-            queryset = queryset.filter(type=event_type)
+            queryset = events.filter(event_type=event_type)
         if event_date:
-            queryset = queryset.filter(date=event_date)
+            queryset = events.filter(event_start=event_date)
         # case-insensitive partial match for filtering for location
         if location:
-            queryset = queryset.filter(location__icontains=location) 
+            queryset = events.filter(location__icontains=location) 
 
         # serialize data and return data and status 200
         ser_queryset = EventDetailsSerializer(queryset, many=True)
@@ -108,15 +110,24 @@ class AnEvent(APIView):
     # edit event details
     def put(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
+        # Pull user id from logged in user
+        user_id = request.user.id
         data = request.data.copy()
-        category_id = data["category"]
-        category = InterestCategory.objects.get(id = category_id)
-        event.category = category
+        # Checks if category is present in body
+        if 'category' in data:
+            data['category']
+            category_id = data["category"]
+            category = InterestCategory.objects.get(id = category_id)
+            event.category = category
+            data.pop('category')
+        #Pulls user data from data base
+        user_attending = get_object_or_404(UserProfile, user=user_id)
+        #Adds user profile to RSVP list
+        event.users_attending.add(user_attending)
+
         
-        print(event)
-        data.pop('category')
         updated_event = EventSerializer(event, data=data, partial=True)
-        print(updated_event)
+        # print(updated_event)
         if updated_event.is_valid():
             updated_event.save()
             return Response(updated_event.data, status=HTTP_200_OK)
