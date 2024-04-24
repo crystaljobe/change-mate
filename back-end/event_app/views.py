@@ -193,3 +193,6 @@ class DefautlEventIcon(APIView):
             icon_url = json_response.get('icon').get("thumbnail_url")
             return Response(icon_url)
         return Response("This parameter doesn't exist within the noun project")
+     
+
+     
