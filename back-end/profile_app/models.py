@@ -27,6 +27,8 @@ class UserProfile(models.Model):
     location = models.TextField(
         null=True,
         )
+    # events_attending - relation from events: users_attending
+    # user_events - relation from events: Collaborators
 
     def set_location(self, list_data):
         self.location = json.dumps(list_data)
@@ -34,16 +36,16 @@ class UserProfile(models.Model):
     def get_location(self):
         return json.loads(self.location)
 
-    def add_event_attending(self, event_id):
-        self.events_attending.add(event_id)
+    # def add_event_attending(self, event_id):
+    #     self.events_attending.add(event_id)
 
-    def remove_event_attending(self, event_id):
-        self.events_attending.remove(event_id)
+    # def remove_event_attending(self, event_id):
+    #     self.events_attending.remove(event_id)
 
-    def add_user_events(self, event_id):
-        self.user_events.add(event_id)
+    # def add_user_events(self, event_id):
+    #     self.user_events.add(event_id)
 
-    def remove_user_events(self, event_id):
-        self.user_events.remove(event_id)
+    # def remove_user_events(self, event_id):
+    #     self.user_events.remove(event_id)
 
     

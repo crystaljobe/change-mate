@@ -125,14 +125,21 @@ class AnEvent(APIView):
     def put(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
         data = request.data.copy()
-        category_id = data["category"]
-        category = InterestCategory.objects.get(id = category_id)
-        event.category = category
+        if 'category' in data:
+            data['category']
+            category_id = data["category"]
+            category = InterestCategory.objects.get(id = category_id)
+            event.category = category
+            data.pop('category')
+        if 'users_attending' in data:
+            data['users_attending']
+            user_ids = data["users_attending"]
+            users_attending = UserProfile.objects.filter(id=user_ids)
+            event.users_attending.set(users_attending)
+            data.pop('users_attending')
         
-        print(event)
-        data.pop('category')
         updated_event = EventSerializer(event, data=data, partial=True)
-        print(updated_event)
+        # print(updated_event)
         if updated_event.is_valid():
             updated_event.save()
             return Response(updated_event.data, status=HTTP_200_OK)
