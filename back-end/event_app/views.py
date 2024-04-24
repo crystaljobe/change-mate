@@ -124,19 +124,21 @@ class AnEvent(APIView):
     )
     def put(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
+        # Pull user id from logged in user
+        user_id = request.user.id
         data = request.data.copy()
+        # Checks if category is present in body
         if 'category' in data:
             data['category']
             category_id = data["category"]
             category = InterestCategory.objects.get(id = category_id)
             event.category = category
             data.pop('category')
-        if 'users_attending' in data:
-            data['users_attending']
-            user_ids = data["users_attending"]
-            users_attending = UserProfile.objects.filter(id=user_ids)
-            event.users_attending.set(users_attending)
-            data.pop('users_attending')
+        #Pulls user data from data base
+        user_attending = get_object_or_404(UserProfile, user=user_id)
+        #Adds user profile to RSVP list
+        event.users_attending.add(user_attending)
+
         
         updated_event = EventSerializer(event, data=data, partial=True)
         # print(updated_event)

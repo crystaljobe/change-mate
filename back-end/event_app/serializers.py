@@ -4,6 +4,7 @@ from interest_app.serializers import InterestCategorySerializer
 from profile_app.serializers import DisplayNameSerializer
 
 class EventSerializer(serializers.ModelSerializer):
+    '''provide correctly formatted data for database storage'''
     users_attending = serializers.SerializerMethodField()
     collaborators = DisplayNameSerializer(many=True)
     category = InterestCategorySerializer()
@@ -17,6 +18,7 @@ class EventSerializer(serializers.ModelSerializer):
     
 
 class EventDetailsSerializer(serializers.ModelSerializer):
+    '''provide data formatted for front end use'''
     startTime = serializers.SerializerMethodField()
     startDate = serializers.SerializerMethodField()
     endTime = serializers.SerializerMethodField()
