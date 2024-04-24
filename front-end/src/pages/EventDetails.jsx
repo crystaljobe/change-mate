@@ -1,5 +1,4 @@
-import {
-	Container, Col, Row, ListGroup, Card, Button } from "react-bootstrap";
+import { Container, Col, Row, ListGroup, Card, Button } from "react-bootstrap";
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "add-to-calendar-button";
@@ -7,118 +6,126 @@ import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
 import { getUserProfile } from "../utilities/UserProfileUtilities";
 
 export default function EventDetails() {
-	let { eventID } = useParams();
-	const [eventDetails, setEventDetails] = useState([]);
-	const [collaborators, setCollaborators] = useState([]);
-	const [usersAttending, setUsersAttending] = useState([]);
-	const [userID, setUserID] = useState()
-	const myOutletContextObj = useOutletContext();
-    const { user } = myOutletContextObj;
-	const collaboratorsStr = collaborators.join(", ");
+  let { eventID } = useParams();
+  const [eventDetails, setEventDetails] = useState([]);
+  const [collaborators, setCollaborators] = useState([]);
+  const [usersAttending, setUsersAttending] = useState([]);
+  const [userID, setUserID] = useState();
+  const myOutletContextObj = useOutletContext();
+  const { user } = myOutletContextObj;
+  const collaboratorsStr = collaborators.join(", ");
 
-	useEffect(() => {
-		const handleUserID = async () => {
-		  let userResponse = await getUserProfile(user);
-		  let id = userResponse.id
-		  setUserID(id);
-		};
-	  
-		if (!userID) {
-		  handleUserID();
-		}
-	  }, []);
+  useEffect(() => {
+    const handleUserID = async () => {
+      let userResponse = await getUserProfile(user);
+      let id = userResponse.id;
+      setUserID(id);
+    };
 
-	// get event details using event utilities and set the event details
-	const getEvent = async () => {
-		const eventDetails = await getEventDetails(eventID);
-		setEventDetails(eventDetails);
-		setUsersAttending(eventDetails.users_attending);
-		// map through collaborators to get their display names
-		let collabArr = eventDetails.collaborators;
-		let collaborators = collabArr.map((collab) => collab.display_name);
-		setCollaborators(collaborators);
-		console.log(eventDetails.data);
-	};
+    if (!userID) {
+      handleUserID();
+    }
+  }, []);
 
-	// TODO: disable button if rsvp is sucessful
-	// handle rsvp should work; backend needs fixing to test
-	const handleRSVP = async () => {
-		const rsvp = await setUserAttending(eventID, userID)
-	}
+  // get event details using event utilities and set the event details
+  const getEvent = async () => {
+    const eventDetails = await getEventDetails(eventID);
+    setEventDetails(eventDetails);
+    setUsersAttending(eventDetails.users_attending);
+    // map through collaborators to get their display names
+    let collabArr = eventDetails.collaborators;
+    let collaborators = collabArr.map((collab) => collab.display_name);
+    setCollaborators(collaborators);
+    console.log(eventDetails.data);
+  };
 
-	useEffect(() => {
-		getEvent();
-	}, []);
+  // TODO: disable button if rsvp is sucessful
+  // handle rsvp should work; backend needs fixing to test
+  const handleRSVP = async () => {
+    const rsvp = await setUserAttending(eventID, userID);
+  };
 
-	return (
-		<Container>
-			<Row className="ustify-content-md-center">
-				<Col className="justify-content-md-center">
-					<br />
-					<Card style={{ width: "35rem" }} border="light">
-						<Card.Body>
-							<Card.Title
-								as="h1"
-								style={{ fontWeight: "bold", color: "#6840DF" }}
-								className="text-center">
-								{eventDetails && eventDetails.title}
-							</Card.Title>
-							<Card.Subtitle
-								style={{ fontStyle: "italic" }}
-								className="text-center">
-								Hosted by: {collaboratorsStr}
-							</Card.Subtitle>
+  useEffect(() => {
+    getEvent();
+  }, []);
 
-							{eventDetails.event_photo && (
-								<div className="text-center">
-									<img src={eventDetails.event_photo} alt="Event" style={{ width: "100%", marginTop: "20px" }} />
-								</div>
-							)}
+  return (
+    <Container>
+      <Row className="ustify-content-md-center">
+        <Col className="justify-content-md-center">
+          <br />
+          <Card style={{ width: "35rem" }} border="light">
+            <Card.Body>
+              <Card.Title
+                as="h1"
+                style={{ fontWeight: "bold", color: "#6840DF" }}
+                className="text-center"
+              >
+                {eventDetails && eventDetails.title}
+              </Card.Title>
+              <Card.Subtitle
+                style={{ fontStyle: "italic" }}
+                className="text-center"
+              >
+                Hosted by: {collaboratorsStr}
+              </Card.Subtitle>
 
-							<ListGroup variant="flush">
-								<ListGroup.Item as="h5" className="text-center">
-									{eventDetails && eventDetails.description}
-								</ListGroup.Item>
+              {eventDetails.event_photo && (
+                <div className="text-center">
+                  <img
+                    src={eventDetails.event_photo}
+                    alt="Event"
+                    style={{ width: "100%", marginTop: "20px" }}
+                  />
+                </div>
+              )}
 
-								<ListGroup.Item>
-									<Card.Text style={{ fontWeight: "bold" }}>
-										Event Details:
-									</Card.Text>
-									<ul>
-										<li>Date: {eventDetails && eventDetails.date}</li>
-										<li>
-											Event Type: {eventDetails && eventDetails.event_type}
-										</li>
-										<li>Time: {eventDetails && eventDetails.time}</li>
-										<li>Time Zone: {eventDetails && eventDetails.time_zone}</li>
-										<li>
-											Event Venue: {eventDetails && eventDetails.event_venue}
-										</li>
-										<li>
-											Venue Address:{" "}
-											{eventDetails && eventDetails.event_venue_address}
-										</li>
-									</ul>
-								</ListGroup.Item>
-							</ListGroup>
-							<br />
-							<Card.Body className="text-center">
-								<Button
-									className="text-center"
-									variant="info"
-									as={Link}
-									to="/eventdirections">
-									Get Event Directions
-								</Button>
-								<br />
-								<br />
-								<Button
-									className="text-center"
-									variant="info"
-									onClick={handleRSVP}>
-									RSVP
-								</Button>
-								{/* TODO: <add-to-calendar-button>
+              <ListGroup variant="flush">
+                <ListGroup.Item as="h5" className="text-center">
+                  {eventDetails && eventDetails.description}
+                </ListGroup.Item>
+
+                <ListGroup.Item>
+                  <Card.Text style={{ fontWeight: "bold" }}>
+                    Event Details:
+                  </Card.Text>
+                  <ul>
+                    <li>Date: {eventDetails && eventDetails.date}</li>
+                    <li>
+                      Event Type: {eventDetails && eventDetails.event_type}
+                    </li>
+                    <li>Time: {eventDetails && eventDetails.time}</li>
+                    <li>Time Zone: {eventDetails && eventDetails.time_zone}</li>
+                    <li>
+                      Event Venue: {eventDetails && eventDetails.event_venue}
+                    </li>
+                    <li>
+                      Venue Address:{" "}
+                      {eventDetails && eventDetails.event_venue_address}
+                    </li>
+                  </ul>
+                </ListGroup.Item>
+              </ListGroup>
+              <br />
+              <Card.Body className="text-center">
+                <Button
+                  className="text-center"
+                  variant="info"
+                  as={Link}
+                  to="/eventdirections"
+                >
+                  Get Event Directions
+                </Button>
+                <br />
+                <br />
+                <Button
+                  className="text-center"
+                  variant="info"
+                  onClick={handleRSVP}
+                >
+                  RSVP
+                </Button>
+                {/* TODO: <add-to-calendar-button>
 									name="Title" 
                                     options="'Apple','Google'" 
                                     location="World Wide
@@ -129,11 +136,11 @@ export default function EventDetails() {
                                     endTime="23:30"
 									timeZone="America/Los_Angeles"
 								</add-to-calendar-button> */}
-							</Card.Body>
-						</Card.Body>
-					</Card>
-				</Col>
-			</Row>
-		</Container>
-	);
+              </Card.Body>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
 }
