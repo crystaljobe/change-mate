@@ -21,7 +21,7 @@ export default function EditEventDetails() {
   const [category, setCategory] = useState("");
   const [eventPhoto, setEventPhoto] = useState("");
   const [photoPreview, setPhotoPreview] = useState("");
-  const [virtualEventLink, setVirtualEventLink] = useState("");
+  const [virtualEventLink, setVirtualEventLink] = useState(null); //changed starting value from '' to null
 
   //timezone abbreviations array:
   const timeZoneAbbreviations = [
@@ -91,7 +91,8 @@ export default function EditEventDetails() {
 
   // update event details in BE using utility function
   const updateEvent = async () => {
-    //changed date --> eventStart & time --> eventEnd
+    // adding check to see if virtualEventLink is blank
+    
     let responseStatus = await updateEventDetails(
       eventID,
       title,
@@ -104,7 +105,7 @@ export default function EditEventDetails() {
       description || '',  // Ensure non-null
       category,
       eventPhoto,  // Already adjusted to send as base64 string
-      virtualEventLink || ''  // Ensure non-null and proper URL or empty
+      virtualEventLink 
     );
     if (responseStatus) {
       navigate("/profile");

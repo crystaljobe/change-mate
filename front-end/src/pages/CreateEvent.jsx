@@ -6,20 +6,20 @@ import { getInterestCategories } from "../utilities/InterestCategoriesUtilities"
 import { postEventDetails } from "../utilities/EventUtilities";
 
 export default function CreateEvent() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [interestCategories, setInterestCategories] = useState([]);
-  const [title, setTitle] = useState("")
-  const [eventStart, setEventStart] = useState("")
-  const [eventEnd, setEventEnd] = useState("")
-  const [timeZone, setTimeZone] = useState("")
-  const [eventType, setEventType] = useState("In-Person")
-  const [eventVenue, setEventVenue] = useState("")
-  const [eventVenueAddress, setEventVenueAddress] = useState("")
-  const [description, setDescription] = useState("")
-  const [category, setCategory] = useState("")
+  const [title, setTitle] = useState("");
+  const [eventStart, setEventStart] = useState("");
+  const [eventEnd, setEventEnd] = useState("");
+  const [timeZone, setTimeZone] = useState("");
+  const [eventType, setEventType] = useState("In-Person");
+  const [eventVenue, setEventVenue] = useState("");
+  const [eventVenueAddress, setEventVenueAddress] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
   const [eventPhoto, setEventPhoto] = useState("");
   const [photoPreview, setPhotoPreview] = useState("");
-  const [virtualEventLink, setVirtualEventLink] = useState("")
+  const [virtualEventLink, setVirtualEventLink] = useState(null); //changed starting value from '' to null
 
   //timezone abbreviations array:
   const timeZoneAbbreviations = [
@@ -52,8 +52,7 @@ export default function CreateEvent() {
     "Pacific/Niue",
   ];
 
-
-  // get interest cats and set them 
+  // get interest cats and set them
   const eventInterestCategories = async () => {
     const categories = await getInterestCategories();
     setInterestCategories(categories);
@@ -65,9 +64,11 @@ export default function CreateEvent() {
       const reader = new FileReader();
       reader.onloadend = () => {
         // Ensures it is a valid base64 format for the image
-        const base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+        const base64String = reader.result
+          .replace("data:", "")
+          .replace(/^.+,/, "");
         setPhotoPreview(reader.result);
-        setEventPhoto(base64String);  
+        setEventPhoto(base64String);
       };
       reader.readAsDataURL(file);
     }
@@ -75,28 +76,27 @@ export default function CreateEvent() {
 
   // on submit check all forms are field in and call post event
   function handleSubmit(e) {
-
     console.log("Create Event PAGE", {
-      "title": title,
-      "event_start": eventStart,
-      "event_end": eventEnd,
-      "time_zone": timeZone,
-      "event_type": eventType,
-      "event_venue": eventVenue,
-      "event_venue_address": eventVenueAddress,
-      "description": description,
-      "category": category,
-      "event_photo": eventPhoto,
+      title: title,
+      event_start: eventStart,
+      event_end: eventEnd,
+      time_zone: timeZone,
+      event_type: eventType,
+      event_venue: eventVenue,
+      event_venue_address: eventVenueAddress,
+      description: description,
+      category: category,
+      event_photo: eventPhoto,
     });
 
     e.preventDefault();
     for (let i = 0; i < 5; i++) {
       if (e.target[i].value == "") {
-        alert(`Must enter a ${e.target[i].type}!!`)
-        return
+        alert(`Must enter a ${e.target[i].type}!!`);
+        return;
       }
     }
-    postEvent()
+    postEvent();
   }
 
   // use utility func to post new event if response true nav to profile
@@ -206,7 +206,7 @@ export default function CreateEvent() {
             {eventType === "Virtual" ? (
               <Form.Group className="mb-3" controlId="virtual_event_link">
                 <Form.Label>
-                  Virtual Event Link: {" "}
+                  Virtual Event Link:{" "}
                   <input
                     type="url"
                     size={30}

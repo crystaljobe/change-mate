@@ -15,6 +15,13 @@ export default function EventDetails() {
   const { user } = myOutletContextObj;
   const collaboratorsStr = collaborators.join(", ");
 
+  //adding function to format date in more readable way
+  function switchDateFormat(dateStr){
+    const dateArr = dateStr.split("-");
+     var formattedDate = dateArr[1] + "-" + dateArr[2] + "-" + dateArr[0];
+     return formattedDate;
+  }
+
   useEffect(() => {
     const handleUserID = async () => {
       let userResponse = await getUserProfile(user);
@@ -66,6 +73,7 @@ export default function EventDetails() {
               >
                 {eventDetails && eventDetails.title}
               </Card.Title>
+
               <Card.Subtitle
                 style={{ fontStyle: "italic" }}
                 className="text-center"
@@ -73,6 +81,7 @@ export default function EventDetails() {
                 Hosted by: {collaboratorsStr}
               </Card.Subtitle>
 
+              {/* if there is an event photo, will show up here: */}
               {eventDetails.event_photo && (
                 <div className="text-center">
                   <img
@@ -93,7 +102,8 @@ export default function EventDetails() {
                     Event Details:
                   </Card.Text>
                   <ul>
-                    <li>Date: {eventDetails && eventDetails.date}</li>
+                    {/* updated this information to reflect current variable names */}
+                    <li>Date: {eventDetails && ()eventDetails.startDate}</li>
                     <li>
                       Event Type: {eventDetails && eventDetails.event_type}
                     </li>
