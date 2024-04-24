@@ -39,7 +39,7 @@ export const setUserAttending = async (eventID, usersAttending) => {
     }
 };
 
-export const updateEventDetails = async (eventID, title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, virtualEventLink) => {
+export const updateEventDetails = async (eventID, title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink) => {
     let response = await api.put(`events/${eventID}/`, {
         "title" : title,
         "event_start" : eventStart,
@@ -50,6 +50,7 @@ export const updateEventDetails = async (eventID, title, eventStart, eventEnd, t
         "event_venue_address" : eventVenueAddress,
         "description" : description,
         "category" : category,
+        "event_photo" : eventPhoto,
 		"virtual_event_link": virtualEventLink
     });
     console.log(response.status);
