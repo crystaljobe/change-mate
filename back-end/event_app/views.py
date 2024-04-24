@@ -39,23 +39,25 @@ class EventsView(TokenReq):
     )
     def get(self, request, *args, **kwargs):
         # get event object instances as baseline
-        queryset = Event.objects.all()
+        events = Event.objects.all()
         # get parameter values passed in request
         # if key doesn't exist returns None
         category = request.query_params.get('category')
         event_type = request.query_params.get('type')
         event_date = request.query_params.get('date')
         location = request.query_params.get('location')
-
+        
+        # case-insensitive partial match for filtering for location
         if category:
-            queryset = queryset.filter(category=category)
+            queryset = events.filter(category__category__icontains=category)
+        # event_type search will be exact match
         if event_type:
-            queryset = queryset.filter(type=event_type)
+            queryset = events.filter(event_type=event_type)
         if event_date:
-            queryset = queryset.filter(date=event_date)
+            queryset = events.filter(event_start=event_date)
         # case-insensitive partial match for filtering for location
         if location:
-            queryset = queryset.filter(location__icontains=location) 
+            queryset = events.filter(location__icontains=location) 
 
         # serialize data and return data and status 200
         ser_queryset = EventDetailsSerializer(queryset, many=True)
