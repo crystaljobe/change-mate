@@ -1,4 +1,4 @@
-import { Container, Col, Row, ListGroup, Card, Button } from "react-bootstrap";
+import { Container, Col, Row, ListGroup, Card, Button, ListGroupItem } from "react-bootstrap";
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "add-to-calendar-button";
@@ -101,10 +101,6 @@ export default function EventDetails() {
               )}
 
               <ListGroup variant="flush">
-                <ListGroup.Item as="h5" className="text-center">
-                  {eventDetails && eventDetails.description}
-                </ListGroup.Item>
-
                 {/* !!updated this information to reflect current variable names */}
                 <ListGroup.Item>
                   <Card.Text
@@ -159,6 +155,10 @@ export default function EventDetails() {
                       </>
                     )}
                   </ul>
+                </ListGroup.Item>
+                <ListGroup.Item as="h6" className="text-left">
+                  <h4 style={{ textDecoration: "underline"}}>About this event:</h4>
+                  {eventDetails && eventDetails.description}
                 </ListGroup.Item>
               </ListGroup>
               <br />
