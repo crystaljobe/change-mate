@@ -62,7 +62,7 @@ class EventsView(TokenReq):
         # case-insensitive partial match for filtering for location
         if location:
             queryset = events.filter(location__icontains=location) 
-        print(queryset)
+        
         # serialize data and return data and status 200
         ser_queryset = EventDetailsSerializer(queryset, many=True)
         return Response(ser_queryset.data, status=HTTP_200_OK)
