@@ -20,7 +20,6 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
         "event_photo" : eventPhoto,  // Set up as a base64 for the backend 
 		"virtual_event_link": virtualEventLink,
     });
-    console.log(response);
     if (response.status === 201) {
         return true;
     } else {
