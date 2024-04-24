@@ -1,5 +1,4 @@
-import {
-	Container, Col, Row, ListGroup, Card, Button } from "react-bootstrap";
+import { Container, Col, Row, ListGroup, Card, Button } from "react-bootstrap";
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "add-to-calendar-button";
@@ -7,53 +6,53 @@ import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
 import { getUserProfile } from "../utilities/UserProfileUtilities";
 
 export default function EventDetails() {
-	let { eventID } = useParams();
-	const [eventDetails, setEventDetails] = useState([]);
-	const [collaborators, setCollaborators] = useState([]);
-	const [usersAttending, setUsersAttending] = useState([]);
-	const [userID, setUserID] = useState()
-	const myOutletContextObj = useOutletContext();
-    const { user } = myOutletContextObj;
-	const collaboratorsStr = collaborators.join(", ");
+  let { eventID } = useParams();
+  const [eventDetails, setEventDetails] = useState([]);
+  const [collaborators, setCollaborators] = useState([]);
+  const [usersAttending, setUsersAttending] = useState([]);
+  const [userID, setUserID] = useState();
+  const myOutletContextObj = useOutletContext();
+  const { user } = myOutletContextObj;
+  const collaboratorsStr = collaborators.join(", ");
 
-	useEffect(() => {
-		const handleUserID = async () => {
-		  let userResponse = await getUserProfile(user);
-		  let id = userResponse.id
-		  setUserID(id);
-		};
-	  
-		if (!userID) {
-		  handleUserID();
-		}
-	  }, []);
+  useEffect(() => {
+    const handleUserID = async () => {
+      let userResponse = await getUserProfile(user);
+      let id = userResponse.id;
+      setUserID(id);
+    };
 
-	// get event details using event utilities and set the event details
-	const getEvent = async () => {
-		const eventDetails = await getEventDetails(eventID);
-		setEventDetails(eventDetails);
+    if (!userID) {
+      handleUserID();
+    }
+  }, []);
+
+  // get event details using event utilities and set the event details
+  const getEvent = async () => {
+    const eventDetails = await getEventDetails(eventID);
+    setEventDetails(eventDetails);
 		console.log('EVENT DETAILS page--event details:', eventDetails)
 
 
-		setUsersAttending(eventDetails.users_attending);
-		// map through collaborators to get their display names
-		let collabArr = eventDetails.collaborators;
-		let collaborators = collabArr.map((collab) => collab.display_name);
-		setCollaborators(collaborators);
-		console.log(eventDetails.data);
-	};
+    setUsersAttending(eventDetails.users_attending);
+    // map through collaborators to get their display names
+    let collabArr = eventDetails.collaborators;
+    let collaborators = collabArr.map((collab) => collab.display_name);
+    setCollaborators(collaborators);
+    console.log(eventDetails.data);
+  };
 
-	// TODO: disable button if rsvp is successful
-	// handle rsvp should work; backend needs fixing to test
-	const handleRSVP = async () => {
-		const rsvp = await setUserAttending(eventID, userID)
-	}
+  // TODO: disable button if rsvp is sucessful
+  // handle rsvp should work; backend needs fixing to test
+  const handleRSVP = async () => {
+    const rsvp = await setUserAttending(eventID, userID);
+  };
 
-	useEffect(() => {
-		getEvent();
-	}, []);
+  useEffect(() => {
+    getEvent();
+  }, []);
 
-	return (
+  return (
     <Container>
       <Row className="ustify-content-md-center">
         <Col className="justify-content-md-center">
@@ -130,7 +129,7 @@ export default function EventDetails() {
                   RSVP
                 </Button>
                 {/* TODO: <add-to-calendar-button>
-									name="Title"  --> {eventDetails.title}
+									name="Title" 
                                     options="'Apple','Google'" 
                                     location="World Wide
 									Web" --> if eventDetails.event_type === virtual ? can be a url || eventDetails.event_venue + .event_venue_address
