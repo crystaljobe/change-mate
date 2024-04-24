@@ -6,20 +6,35 @@ import { getInterestCategories } from "../utilities/InterestCategoriesUtilities"
 import { postEventDetails } from "../utilities/EventUtilities";
 
 export default function CreateEvent() {
+  // set const for useNavigate
   const navigate = useNavigate()
+  // set interest categories for users to select from 
   const [interestCategories, setInterestCategories] = useState([]);
-  const [title, setTitle] = useState("")
-  const [eventStart, setEventStart] = useState("")
-  const [eventEnd, setEventEnd] = useState("")
-  const [timeZone, setTimeZone] = useState("")
-  const [eventType, setEventType] = useState("In-Person")
-  const [eventVenue, setEventVenue] = useState("")
-  const [eventVenueAddress, setEventVenueAddress] = useState("")
-  const [description, setDescription] = useState("")
-  const [category, setCategory] = useState("")
+  // set all event details useState
+  // event title 
+  const [title, setTitle] = useState("");
+  // event start date/time
+  const [eventStart, setEventStart] = useState("");
+  // event end date/time
+  const [eventEnd, setEventEnd] = useState("");
+  // time zone options below in code
+  const [timeZone, setTimeZone] = useState("");
+  // event type = In-person or Virtual
+  const [eventType, setEventType] = useState("In-Person");
+  // event virtual link if a virtual event (ex. - user will input their zoom link)
+  const [virtualEventLink, setVirtualEventLink] = useState("");
+  // event in-person venue ex-"Downtown Park Center"
+  const [eventVenue, setEventVenue] = useState("");
+  // event details text
+  const [description, setDescription] = useState("");
+  // event category for search functionality (only one cat per event)
+  const [category, setCategory] = useState("");
   const [eventPhoto, setEventPhoto] = useState("");
   const [photoPreview, setPhotoPreview] = useState("");
-  const [virtualEventLink, setVirtualEventLink] = useState("")
+  // eventVenueAddress = full address "123 Example St, City, St Zip"
+  const [eventVenueAddress, setEventVenueAddress] = useState("");
+  // eventLocation format = "city, state"
+  const [location, setLocation] = useState("");
 
   //timezone abbreviations array:
   const timeZoneAbbreviations = [
