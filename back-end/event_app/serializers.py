@@ -54,7 +54,7 @@ class ICalSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone']
+        fields = ['id', 'title', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone', 'description']
 
     def get_startDate(self, obj):
         return obj.event_start.date()
