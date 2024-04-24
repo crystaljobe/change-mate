@@ -246,7 +246,7 @@ export default function EditEventDetails() {
                 <Form.Label>
                   Virtual Event Link:{" "}
                   <input
-                    type="text"
+                    type="url"
                     size={30}
                     value={virtualEventLink}
                     onChange={(e) => setVirtualEventLink(e.target.value)}
