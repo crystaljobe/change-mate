@@ -55,8 +55,10 @@ class EventsView(TokenReq):
         # event_type search will be exact match
         if event_type:
             queryset = events.filter(event_type=event_type)
+        # if start and end dates given search for events in date range
         if start_date and end_date:
             queryset = events.filter(event_start__date__range=[start_date, end_date])
+        #if no end date given search only for dates on start date
         if start_date:
             queryset = events.filter(event_start__date=start_date)
         # case-insensitive partial match for filtering for location
