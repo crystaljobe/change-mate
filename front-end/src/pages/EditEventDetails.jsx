@@ -8,26 +8,19 @@ import { deleteEvent, getEventDetails, updateEventDetails } from "../utilities/E
 export default function EditEventDetails() {
   let { eventID } = useParams();
   const navigate = useNavigate();
-  // set interest categories for option selection
   const [interestCategories, setInterestCategories] = useState([]);
-  // set event and event details data
-  const [event, setEvent] = useState("");
-
   const [title, setTitle] = useState("");
-
+  const [event, setEvent] = useState("");
   const [eventStart, setEventStart] = useState("");
   const [eventEnd, setEventEnd] = useState("");
-
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-
   const [timeZone, setTimeZone] = useState("");
   const [eventType, setEventType] = useState("");
   const [eventVenue, setEventVenue] = useState("");
   const [eventVenueAddress, setEventVenueAddress] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-
+  const [eventPhoto, setEventPhoto] = useState("");
+  const [photoPreview, setPhotoPreview] = useState("");
   const [virtualEventLink, setVirtualEventLink] = useState("");
 
   //timezone abbreviations array:
@@ -73,19 +66,32 @@ export default function EditEventDetails() {
     console.log(eventDetails);
     setEvent(eventDetails);
     setTitle(eventDetails.title);
-    setDate(eventDetails.date);
-    setTime(eventDetails.time);
+    setEventStart(eventDetails.eventStart);
+    setEventEnd(eventDetails.eventEnd);
     setTimeZone(eventDetails.time_zone);
     setEventType(eventDetails.event_type);
     setEventVenue(eventDetails.event_venue);
     setEventVenueAddress(eventDetails.event_venue_address);
     setDescription(eventDetails.description);
     setCategory(eventDetails.category.id);
+    setPhotoPreview(eventDetails.event_photo);
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result);
+        setEventPhoto(reader.result);  
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   // update event details in BE using utility function
   const updateEvent = async () => {
-	//changed date --> eventStart & time --> eventEnd
+    //changed date --> eventStart & time --> eventEnd
     let responseStatus = await updateEventDetails(
       eventID,
       title,
@@ -93,11 +99,12 @@ export default function EditEventDetails() {
       eventEnd,
       timeZone,
       eventType,
-      eventVenue,
-      eventVenueAddress,
-      description,
+      eventVenue || '',  // Ensure non-null
+      eventVenueAddress || '',  // Ensure non-null
+      description || '',  // Ensure non-null
       category,
-	  virtualEventLink
+      eventPhoto,  // Already adjusted to send as base64 string
+      virtualEventLink || ''  // Ensure non-null and proper URL or empty
     );
     if (responseStatus) {
       navigate("/profile");
@@ -111,20 +118,21 @@ export default function EditEventDetails() {
       navigate("/profile");
     }
   };
-
+  
   // upon submit prevent default and call on update event funct
   function handleSubmit(e) {
-	console.log("Edit Event PAGE", {
-        "title" : title,
-        "event_start" : eventStart,
-        "event_end" : eventEnd,
-        "time_zone" : timeZone,
-        "event_type" : eventType,
-        "event_venue" : eventVenue,
-        "event_venue_address" : eventVenueAddress,
-        "description" : description,
-        "category" : category,
-		"virtual_event_link": virtualEventLink
+    console.log("Edit Event PAGE", {
+      "title": title,
+      "event_start": eventStart,
+      "event_end": eventEnd,
+      "time_zone": timeZone,
+      "event_type": eventType,
+      "event_venue": eventVenue,
+      "event_venue_address": eventVenueAddress,
+      "description": description,
+      "category": category,
+      "event_photo": eventPhoto,
+      "virtual_event_link": virtualEventLink
     });
     e.preventDefault();
     updateEvent();
@@ -205,7 +213,7 @@ export default function EditEventDetails() {
                 <br />
                 <select
                   size={2}
-				//   changed this: event && event.event_type
+                  //   changed this: event && event.event_type
                   value={event && eventType}
                   onChange={(e) => setEventType(e.target.value)}
                 >
@@ -292,6 +300,23 @@ export default function EditEventDetails() {
                 </select>
               </Form.Label>
             </Form.Group>
+
+            <Form.Group className="mb-3" controlId="eventImage">
+              <Form.Label>Event Image:</Form.Label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              {photoPreview && (
+                <img
+                  src={photoPreview}
+                  alt="Event Preview"
+                  style={{ width: "100%", marginTop: "10px" }}
+                />
+              )}
+            </Form.Group>
+
             <Button
               variant="danger"
               type="button"
