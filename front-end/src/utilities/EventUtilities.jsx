@@ -20,7 +20,6 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
         "event_photo" : eventPhoto,  // Set up as a base64 for the backend 
 		"virtual_event_link": virtualEventLink,
     });
-    console.log(response);
     if (response.status === 201) {
         return true;
     } else {
@@ -30,7 +29,7 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
 
 export const setUserAttending = async (eventID, usersAttending) => {
     let response = await api.put(`events/${eventID}/`, {
-        users_attending : usersAttending
+        "users_attending" : usersAttending
     });
     if (response.status === 200) {
         return true;
