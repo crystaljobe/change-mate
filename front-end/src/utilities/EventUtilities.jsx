@@ -13,13 +13,13 @@ export const getEventDetailsByCategory = async (searchTerm) => {
 };
 
 export const getEventDetailsByType = async (searchTerm) => {
-    const response = await api.get(`events/?event_type=${searchTerm}`);
+    const response = await api.get(`events/?type=${searchTerm}`);
     let eventDetails = response.data;
     return eventDetails;
 };
 
-export const getEventDetailsByDate = async (searchTerm) => {
-    const response = await api.get(`events/?event_date=${searchTerm}`);
+export const getEventDetailsByDate = async (searchDateStart, searchDateEnd) => {
+    const response = await api.get(`events/?start_date=${searchDateStart}&end_date=${searchDateEnd}`);
     let eventDetails = response.data;
     return eventDetails;
 };

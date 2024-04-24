@@ -12,6 +12,8 @@ import EventCard from "../../components/EventCard";
 function SearchEvents() {
     const [searchType, setSearchType] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [searchDateStart, setSearchDateStart] = useState('');
+    const [searchDateEnd, setSearchDateEnd] = useState('');
     const [searchEvents, setSearchEvents] = useState([]);
     const [eventsPopular, setEventsPopular] = useState([]);
     // TODO: once we have a spot on our events to indicate whether volunteers are needed, we can add functionality to sort searchEvents into searchEventsVolNeed
@@ -32,7 +34,7 @@ function SearchEvents() {
             console.log('eventsByType', eventsByType)
             setSearchEvents(eventsByType)
         } else if (searchType == 'date') {
-            const eventsByDate = await getEventDetailsByDate(searchTerm)
+            const eventsByDate = await getEventDetailsByDate(searchDateStart, searchDateEnd)
             setSearchEvents(eventsByDate)
         } else if (searchType == 'location') {
             // TODO: neither event_venue nor event_venue_address work with the backend to return an event by location, but we probably don't want to search by something so specific anyways. Maybe backend can add a general location to the events model? For example the city.
@@ -61,6 +63,8 @@ function SearchEvents() {
 
     console.log('searchType', searchType)
     console.log('searchTerm', searchTerm)
+    console.log('searchDateStart', searchDateStart)
+    console.log('searchDateEnd', searchDateEnd)
     console.log('searchEvents', searchEvents)
     console.log('searchEventsPopular', eventsPopular)
 
@@ -88,6 +92,15 @@ function SearchEvents() {
                                         <option value="In-person">In-Person</option>
                                         <option value="Virtual">Virtual</option>
                                     </Form.Select>
+                                ) : searchType === 'date' ? (
+                                    <div className="d-flex justify-content-between">
+                                        <div>
+                                            <Form.Control type="date" onChange={(e) => setSearchDateStart(e.target.value)} />
+                                        </div>
+                                        <div>
+                                            <Form.Control type="date" onChange={(e) => setSearchDateEnd(e.target.value)} />
+                                        </div>
+                                    </div>
                                 ) : (
                                     <Form.Control aria-label="Text input with dropdown button" onChange={(e) => setSearchTerm(e.target.value)} />
                                 )}
