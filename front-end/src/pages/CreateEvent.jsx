@@ -74,6 +74,7 @@ export default function CreateEvent() {
     setInterestCategories(categories);
   };
 
+  // on change handle image upload
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -103,7 +104,6 @@ export default function CreateEvent() {
       "category": category,
       "event_photo": eventPhoto,
     });
-
     e.preventDefault();
     for (let i = 0; i < 5; i++) {
       if (e.target[i].value == "") {
@@ -243,6 +243,7 @@ export default function CreateEvent() {
                     />
                   </Form.Label>
                 </Form.Group>
+                
                 <Form.Group className="mb-3" controlId="event_venue_address">
                   <Form.Label>
                     Enter the venue address:

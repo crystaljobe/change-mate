@@ -88,12 +88,13 @@ export default function EditEventDetails() {
     setTimeZone(eventDetails.time_zone);
     setEventType(eventDetails.event_type);
     setEventVenue(eventDetails.event_venue);
-    setEventVenueAddress(eventDetails.event_venue_address);
     setDescription(eventDetails.description);
     setCategory(eventDetails.category.id);
     setPhotoPreview(eventDetails.event_photo);
+    setEventVenueAddress(eventDetails.event_venue_address);
   };
 
+  // on change handle image upload
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
