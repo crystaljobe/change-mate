@@ -4,6 +4,7 @@ import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { AddressAutofill } from "@mapbox/search-js-react";
 import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
 import { postEventDetails } from "../utilities/EventUtilities";
+import LocationSearchMap from "../components/LocationSearchMap";
 
 export default function CreateEvent() {
   // set const for useNavigate
@@ -35,6 +36,8 @@ export default function CreateEvent() {
   const [eventVenueAddress, setEventVenueAddress] = useState("");
   // eventLocation format = "city, state"
   const [location, setLocation] = useState("");
+  // eventCoordinates = "latitude, longitude"
+  const [eventCoordinates, setEventCoordinates] = useState("")
 
   //timezone abbreviations array:
   const timeZoneAbbreviations = [
@@ -192,7 +195,7 @@ export default function CreateEvent() {
               <Form.Label>
                 Enter your event&apos;s timezone: {"	"}
                 <select
-                  size={2}
+                  size={4}
                   value={timeZone}
                   onChange={(e) => setTimeZone(e.target.value)}
                 >
@@ -243,22 +246,23 @@ export default function CreateEvent() {
                     />
                   </Form.Label>
                 </Form.Group>
-                
+
                 <Form.Group className="mb-3" controlId="event_venue_address">
                   <Form.Label>
-                    Enter the venue address:
+                    Set Your Event&apos;s Location:
                     <br />
-                    <AddressAutofill accessToken="pk.eyJ1IjoibWNyZXlub2xkc2giLCJhIjoiY2x2MzFuNzN6MGhoOTJycnd5ZHQ3eWR4ayJ9.QKI5tsCAXhuzNb2XzhyjOg">
+                    <LocationSearchMap
+                      setEventCoords={setEventCoordinates}
+                      setEventVenueAddress={setEventVenueAddress}
+                    />
+                    <br />
                       <input
                         name="address"
-                        placeholder="Address"
                         type="text"
-                        autoComplete="address-line1"
                         size={40}
                         value={eventVenueAddress}
                         onChange={(e) => setEventVenueAddress(e.target.value)}
                       />
-                    </AddressAutofill>
                   </Form.Label>
                 </Form.Group>{" "}
               </>

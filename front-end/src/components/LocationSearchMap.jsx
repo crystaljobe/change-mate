@@ -61,6 +61,7 @@ export default function LocationSearchMap( { setEventVenueAddress, setEventCoord
                 // Listen for the `result` event from the Geocoder // `result` event is triggered when a user makes a selection
                 //  Add a marker at the result's coordinates
                 geocoder.on("result", (event) => {
+                    console.log(event.result)
                     setEventVenueAddress(event.result.place_name)
                     setEventCoords(event.result.geometry.coordinates)
                 });
@@ -70,7 +71,7 @@ export default function LocationSearchMap( { setEventVenueAddress, setEventCoord
     return (
         <div>
             {/* map container */}
-            <div ref={mapContainer} className="map-container"></div>
+            <div ref={mapContainer} className="location-search-map-container"></div>
         </div>
     );
 }
