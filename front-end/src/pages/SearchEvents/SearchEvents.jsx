@@ -19,12 +19,15 @@ function SearchEvents() {
     // TODO: once we have a spot on our events to indicate whether volunteers are needed, we can add functionality to sort searchEvents into searchEventsVolNeed
     const [eventsVolNeed, setEventsVolNeed] = useState([]);
 
+
+    // handles changing the searchType; searchType is needed so that when the form submits it knows which API call to do
     const handleSearchTypeChange = (selectedType) => {
         setSearchType(selectedType);
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // based on searchType call correct search API function
         if (searchType == 'category') {
             // TODO: for category, search term must be by the category id currently; Backend needs to be fixed to allow searching by category name
             const eventsByCat = await getEventDetailsByCategory(searchTerm)
@@ -46,6 +49,7 @@ function SearchEvents() {
         }
     }
 
+    // sorts the events returned from the search into eventsPopular and/or eventsVolNeed
     const sortSearchEvents = async (searchEvents) => {
         const popEvents = []
         for (const event of searchEvents) {

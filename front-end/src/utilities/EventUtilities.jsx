@@ -19,9 +19,17 @@ export const getEventDetailsByType = async (searchTerm) => {
 };
 
 export const getEventDetailsByDate = async (searchDateStart, searchDateEnd) => {
-    const response = await api.get(`events/?start_date=${searchDateStart}&end_date=${searchDateEnd}`);
-    let eventDetails = response.data;
-    return eventDetails;
+    if (searchDateStart && searchDateStart.length > 0 && searchDateEnd && searchDateEnd.length > 0) {
+        console.log('search date range')
+        const response = await api.get(`events/?start_date=${searchDateStart}&end_date=${searchDateEnd}`);
+        let eventDetails = response.data;
+        return eventDetails;
+    } else {
+        console.log('search exact date')
+        const response = await api.get(`events/?start_date=${searchDateStart}`);
+        let eventDetails = response.data;
+        return eventDetails;
+    }
 };
 
 export const getEventDetailsByLocation = async (searchTerm) => {
