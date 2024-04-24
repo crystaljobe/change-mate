@@ -8,7 +8,7 @@ import CreateEvent from './pages/CreateEvent';
 import EditEventDetails from './pages/EditEventDetails';
 import EditUserProfile from './pages/EditUserProfile';
 import EventDetails from './pages/EventDetails';
-import SearchEvents from './pages/SearchEvents';
+import SearchEvents from './pages/SearchEvents/SearchEvents';
 import EventDirections from './pages/EventDirections';
 import UserProfile from './pages/UserProfile';
 import { userConfirmation } from './utilities';

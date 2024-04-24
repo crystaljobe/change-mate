@@ -1,0 +1,28 @@
+.search-events {
+    background: var(--bodyColor); /* Using the global background color variable */
+    color: #333; /* A neutral color to fit the global theme */
+}
+
+.search-form input, .search-form button {
+    border: 1px solid #ccc; /* Slightly stand out against the form */
+    padding: 8px 16px;
+    background-color: #fff; /* for readability */
+}
+
+.card-hover:hover {
+    transform: scale(1.03); /* Subtle effect to not overpower global styles */
+    transition: transform 0.3s ease;
+}
+
+.card {
+    background-color: #fff; /* Should match global settings for consistency */
+    border-radius: 8px; /* Smooth edges to match modern aesthetics */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Soft shadow for depth */
+}
+
+.card img {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    object-fit: cover; /* Ensure images cover the card image area */
+}
+
