@@ -29,7 +29,9 @@ function SearchEvents() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Based on searchType call correct search API function
-        if (searchType == 'category') {
+        if (searchType == 'keyword') {
+            // TODO: functionality for keyword search
+        } else if (searchType == 'category') {
             const eventsByCat = await getEventDetailsByCategory(searchTerm)
             setSearchEvents(eventsByCat)
         } else if (searchType == 'type') {
@@ -49,7 +51,7 @@ function SearchEvents() {
         }
     }
 
-    // sorts the events returned from the search into eventsPopular and/or eventsVolNeed
+    // Sorts the events returned from the search into eventsPopular
     const sortPopularEvents = async (searchEvents) => {
         const popEvents = []
         const unpopEvents = []
@@ -72,12 +74,12 @@ function SearchEvents() {
         sortPopularEvents(searchEvents)
       }, [searchEvents]);
 
-    console.log('searchType', searchType)
-    console.log('searchTerm', searchTerm)
-    console.log('searchDateStart', searchDateStart)
-    console.log('searchDateEnd', searchDateEnd)
-    console.log('searchEvents', searchEvents)
-    console.log('searchEventsPopular', eventsPopular)
+    // console.log('searchType', searchType)
+    // console.log('searchTerm', searchTerm)
+    // console.log('searchDateStart', searchDateStart)
+    // console.log('searchDateEnd', searchDateEnd)
+    // console.log('searchEvents', searchEvents)
+    // console.log('searchEventsPopular', eventsPopular)
 
     return (
         <div className="search-events">
@@ -92,6 +94,7 @@ function SearchEvents() {
                                     title={searchType ? `Search by ${searchType}` : "Search Type"}
                                     id="input-group-dropdown-1"
                                 >
+                                    <Dropdown.Item onClick={() => handleSearchTypeChange('keyword')}>Keyword</Dropdown.Item>
                                     <Dropdown.Item onClick={() => handleSearchTypeChange('category')}>Category</Dropdown.Item>
                                     <Dropdown.Item onClick={() => handleSearchTypeChange('type')}>Type</Dropdown.Item>
                                     <Dropdown.Item onClick={() => handleSearchTypeChange('date')}>Date</Dropdown.Item>
