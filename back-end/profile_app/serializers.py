@@ -1,11 +1,12 @@
 from rest_framework import serializers
 from .models import UserProfile
 from interest_app.serializers import InterestCategorySerializer
+from event_app.serializers import EventDetailsSerializer
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    user_events = serializers.SerializerMethodField()
-    events_attending = serializers.SerializerMethodField()
+    user_events = EventDetailsSerializer(many=True)
+    events_attending = EventDetailsSerializer(many=True)
     interests = InterestCategorySerializer(many=True)
 
     class Meta: 
