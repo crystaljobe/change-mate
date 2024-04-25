@@ -33,30 +33,38 @@ class EventsView(TokenReq):
         manual_parameters=[
             openapi.Parameter(name='category', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Category of the event'),
             openapi.Parameter(name='type', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Type of the event (virtual/in-person)'),
-            openapi.Parameter(name='date', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Date of the event (format: YYYY-MM-DD)'),
+            openapi.Parameter(name='start_date', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Start of date range (format: YYYY-MM-DD)'),
+            openapi.Parameter(name='end_date', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='End of date range (format: YYYY-MM-DD)'),
             openapi.Parameter(name='location', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Location of the event'),
         ]
     )
     def get(self, request, *args, **kwargs):
         # get event object instances as baseline
-        queryset = Event.objects.all()
+        events = Event.objects.all()
         # get parameter values passed in request
         # if key doesn't exist returns None
         category = request.query_params.get('category')
         event_type = request.query_params.get('type')
-        event_date = request.query_params.get('date')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
         location = request.query_params.get('location')
-
+        
+        # case-insensitive partial match for filtering for location
         if category:
-            queryset = queryset.filter(category=category)
+            queryset = events.filter(category__category__icontains=category)
+        # event_type search will be exact match
         if event_type:
-            queryset = queryset.filter(type=event_type)
-        if event_date:
-            queryset = queryset.filter(date=event_date)
+            queryset = events.filter(event_type=event_type)
+        # if start and end dates given search for events in date range
+        if start_date and end_date:
+            queryset = events.filter(event_start__date__range=[start_date, end_date])
+        #if no end date given search only for dates on start date
+        if start_date and not end_date:
+            queryset = events.filter(event_start__date=start_date)
         # case-insensitive partial match for filtering for location
         if location:
-            queryset = queryset.filter(location__icontains=location) 
-
+            queryset = events.filter(location__icontains=location) 
+        
         # serialize data and return data and status 200
         ser_queryset = EventDetailsSerializer(queryset, many=True)
         return Response(ser_queryset.data, status=HTTP_200_OK)
@@ -185,3 +193,6 @@ class DefautlEventIcon(APIView):
             icon_url = json_response.get('icon').get("thumbnail_url")
             return Response(icon_url)
         return Response("This parameter doesn't exist within the noun project")
+     
+
+     
