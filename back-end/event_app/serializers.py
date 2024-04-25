@@ -31,7 +31,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'description', 'event_photo', 'category', 'users_attending', 'collaborators' 'location', 'lat', 'lon']
+        fields = ['id', 'title', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'description', 'event_photo', 'category', 'users_attending', 'collaborators', 'location', 'lat', 'lon']
 
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
