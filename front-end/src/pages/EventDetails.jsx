@@ -1,4 +1,4 @@
-import { Container, Col, Row, ListGroup, Card, Button } from "react-bootstrap";
+import { Container, Col, Row, ListGroup, Card, Button, ListGroupItem } from "react-bootstrap";
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "add-to-calendar-button";
@@ -23,6 +23,22 @@ export default function EventDetails() {
     setEventsAttending(events)
   };
 
+  // //adding function to format date in more readable way
+  // function switchDateFormat(dateStr) {
+  //   const dateArr = dateStr.split("-");
+  //   let formattedDate = dateArr[1] + "/" + dateArr[2] + "/" + dateArr[0];
+  //   return formattedDate;
+  // }
+  // //adding function to format time in 12-hr format
+  // function switchTimeFormat(timeStr){
+  //   const [hours, minutes, pmam] = timeStr.split(/[:\s]/)
+  //   //convert hours to 12hr if 00,  then returns 12
+  //   const hours12format = (parseInt(hours, 10) % 12 || 12)
+  //   const formattedTime = `${hours12format}:${minutes} ${pmam}`
+  //   return formattedTime
+  // }
+
+
   useEffect(() => {
     handleUserEventsAttending();
   }, []);
@@ -31,8 +47,7 @@ export default function EventDetails() {
   const getEvent = async () => {
     const eventDetails = await getEventDetails(eventID);
     setEventDetails(eventDetails);
-		console.log('EVENT DETAILS page--event details:', eventDetails)
-
+    console.log("EVENT DETAILS page--event details:", eventDetails);
 
     setUsersAttending(eventDetails.users_attending);
     // map through collaborators to get their display names
@@ -107,6 +122,7 @@ export default function EventDetails() {
               >
                 {eventDetails && eventDetails.title}
               </Card.Title>
+
               <Card.Subtitle
                 style={{ fontStyle: "italic" }}
                 className="text-center"
@@ -114,6 +130,7 @@ export default function EventDetails() {
                 Hosted by: {collaboratorsStr}
               </Card.Subtitle>
 
+              {/* if there is an event photo, will show up here: */}
               {eventDetails.event_photo && (
                 <div className="text-center">
                   <img
@@ -125,29 +142,64 @@ export default function EventDetails() {
               )}
 
               <ListGroup variant="flush">
-                <ListGroup.Item as="h5" className="text-center">
-                  {eventDetails && eventDetails.description}
-                </ListGroup.Item>
-
+                {/* !!updated this information to reflect current variable names */}
                 <ListGroup.Item>
-                  <Card.Text style={{ fontWeight: "bold" }}>
+                  <Card.Text
+                    style={{ textDecoration: "underline", fontSize: "larger" }}
+                  >
                     Event Details:
                   </Card.Text>
                   <ul>
-                    <li>Date: {eventDetails && eventDetails.date}</li>
                     <li>
-                      Event Type: {eventDetails && eventDetails.event_type}
+                      <strong> Start: </strong>
+                      {eventDetails &&
+                        eventDetails.startDate &&
+                        eventDetails.startTime &&
+                        `${
+                          eventDetails.startDate
+                        } at ${eventDetails.startTime}`}
                     </li>
-                    <li>Time: {eventDetails && eventDetails.time}</li>
-                    <li>Time Zone: {eventDetails && eventDetails.time_zone}</li>
                     <li>
-                      Event Venue: {eventDetails && eventDetails.event_venue}
+                      <strong> End: </strong>
+                      {eventDetails &&
+                        eventDetails.endDate &&
+                        eventDetails.endTime &&
+                        `${
+                          eventDetails.endDate
+                        } at ${eventDetails.endTime}`}
+                    </li>
+
+                    <li>
+                      {" "}
+                      <strong> Time Zone: </strong>{" "}
+                      {eventDetails && eventDetails.time_zone}
                     </li>
                     <li>
-                      Venue Address:{" "}
-                      {eventDetails && eventDetails.event_venue_address}
+                      <strong> Virtual or In-Person?: </strong>
+                      {eventDetails && eventDetails.event_type}
                     </li>
+                    {eventDetails.event_type === "Virtual" ? (
+                      <li>
+                        <strong> Event Link: </strong>
+                        {eventDetails && eventDetails.virtual_event_link}
+                      </li>
+                    ) : (
+                      <>
+                        <li>
+                          <strong> Event Venue: </strong>
+                          {eventDetails && eventDetails.event_venue}
+                        </li>
+                        <li>
+                          <strong>Venue Address: </strong>
+                          {eventDetails && eventDetails.event_venue_address}
+                        </li>
+                      </>
+                    )}
                   </ul>
+                </ListGroup.Item>
+                <ListGroup.Item as="h6" className="text-left">
+                  <h4 style={{ textDecoration: "underline"}}>About this event:</h4>
+                  {eventDetails && eventDetails.description}
                 </ListGroup.Item>
               </ListGroup>
               <br />
