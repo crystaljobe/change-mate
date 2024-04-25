@@ -2,7 +2,8 @@ from django.db import models
 from .validators import validate_event_type
 from profile_app.models import UserProfile
 from interest_app.models import InterestCategory
-
+from django.contrib.postgres.fields import ArrayField
+from decimal import Decimal
 
 # Create your models here.
 class Event(models.Model):
@@ -35,3 +36,6 @@ class Event(models.Model):
     users_attending = models.ManyToManyField(
         UserProfile, related_name="events_attending"
     )
+    location = models.CharField(max_length=100, blank=True, null=True)
+    
+    coordinates = ArrayField(models.DecimalField(default=Decimal('0.00'), max_digits=40, decimal_places=15), null=True, blank=True)
