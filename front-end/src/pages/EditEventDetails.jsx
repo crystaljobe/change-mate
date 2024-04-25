@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { AddressAutofill } from "@mapbox/search-js-react";
 import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
 import { deleteEvent, getEventDetails, updateEventDetails } from "../utilities/EventUtilities";
 import LocationSearchMap from "../components/LocationSearchMap";
@@ -42,7 +41,7 @@ export default function EditEventDetails() {
     const [location, setLocation] = useState("");
     // eventCoordinates = "latitude, longitude"
     const [eventCoordinates, setEventCoordinates] = useState("")
-  
+    
 
   //timezone abbreviations array:
   const timeZoneAbbreviations = [
@@ -84,7 +83,7 @@ export default function EditEventDetails() {
   // get event details using utility function and set all data
   const getEvent = async () => {
     const eventDetails = await getEventDetails(eventID);
-    console.log(eventDetails);
+    //console.log(eventDetails);
     setEvent(eventDetails);
     setTitle(eventDetails.title);
     setEventStart(eventDetails.eventStart);
@@ -126,7 +125,9 @@ export default function EditEventDetails() {
       description || '',  // Ensure non-null
       category,
       eventPhoto,  // Already adjusted to send as base64 string
-      virtualEventLink || ''  // Ensure non-null and proper URL or empty
+      virtualEventLink || '',  // Ensure non-null and proper URL or empty
+      location,
+      eventCoordinates
     );
     if (responseStatus) {
       navigate("/profile");
@@ -154,7 +155,9 @@ export default function EditEventDetails() {
       "description": description,
       "category": category,
       "event_photo": eventPhoto,
-      "virtual_event_link": virtualEventLink
+      "virtual_event_link": virtualEventLink,
+      "location": location,
+      "eventCoordinates": eventCoordinates
     });
     e.preventDefault();
     updateEvent();
@@ -278,13 +281,16 @@ export default function EditEventDetails() {
                     <LocationSearchMap
                       setEventCoords={setEventCoordinates}
                       setEventVenueAddress={setEventVenueAddress}
+                      setLocation={setLocation}
                     />
+                    </Form.Label>
                     <br />
+                    <Form.Label>Is this the correct address?
                       <input
                         name="address"
                         type="text"
                         size={40}
-                        defaultValue={eventVenueAddress}
+                        value={eventVenueAddress}
                         onChange={(e) => setEventVenueAddress(e.target.value)}
                       />
                   </Form.Label>

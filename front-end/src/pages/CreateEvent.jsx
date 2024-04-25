@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { AddressAutofill } from "@mapbox/search-js-react";
 import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
 import { postEventDetails } from "../utilities/EventUtilities";
 import LocationSearchMap from "../components/LocationSearchMap";
@@ -94,7 +93,6 @@ export default function CreateEvent() {
 
   // on submit check all forms are field in and call post event
   function handleSubmit(e) {
-
     console.log("Create Event PAGE", {
       "title": title,
       "event_start": eventStart,
@@ -129,7 +127,9 @@ export default function CreateEvent() {
       eventVenueAddress,
       description,
       category,
-      eventPhoto
+      eventPhoto,
+      location,
+      eventCoordinates
     );
 
     if (responseStatus) {
@@ -248,14 +248,17 @@ export default function CreateEvent() {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="event_venue_address">
-                  <Form.Label>
+                <Form.Label>
                     Set Your Event&apos;s Location:
                     <br />
                     <LocationSearchMap
                       setEventCoords={setEventCoordinates}
                       setEventVenueAddress={setEventVenueAddress}
+                      setLocation={setLocation}
                     />
+                    </Form.Label>
                     <br />
+                    <Form.Label>Is this the correct address?
                       <input
                         name="address"
                         type="text"

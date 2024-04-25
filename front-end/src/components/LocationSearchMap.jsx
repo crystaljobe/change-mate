@@ -7,7 +7,7 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 mapboxgl.accessToken =
     "pk.eyJ1IjoiY3J5c3RhbGpvYmUiLCJhIjoiY2x2Y3VkMzFxMG13ZzJrcGY5dDB0bGJvYyJ9.PV_ZgI2EhyhNfcRHmp2OPw";
 
-export default function LocationSearchMap( { setEventVenueAddress, setEventCoords }) {
+export default function LocationSearchMap( { setEventVenueAddress, setEventCoords, setLocation }) {
     const mapContainer = useRef(null);
     const map = useRef(null);
     //set default lat/lng once user renders page geocoder should retrieve user IP location
@@ -59,7 +59,7 @@ export default function LocationSearchMap( { setEventVenueAddress, setEventCoord
                     // limit search to address, street, and secondary address for full addresses
                     type: "address, street, secondary_address, region",
                     //limit to 6 search results in drop down
-                    limit: 6,
+                    limit: 3,
                 });
                 // Add the geocoder to the map
                 map.current.addControl(geocoder);
@@ -77,14 +77,12 @@ export default function LocationSearchMap( { setEventVenueAddress, setEventCoord
                             state = context.text_en;
                         }
                     })
-
-                    console.log(event.result)
+                    //console.log(event.result)
+                    
                     setEventVenueAddress(data.place_name)
                     setEventCoords(data.geometry.coordinates)
+                    setLocation(`${city}, ${state}`)
 
-                    // console.log(`${city}, ${state}`)
-                    console.log('city:', city)
-                    console.log('state:', state)
                 });
             });
         }
