@@ -18,18 +18,18 @@ function SearchEvents() {
     const [eventsPopular, setEventsPopular] = useState([]);
     // TODO: once we have a spot on our events to indicate whether volunteers are needed, we can add functionality to sort searchEvents into searchEventsVolNeed
     const [eventsVolNeed, setEventsVolNeed] = useState([]);
+    const [eventsAdditional, setEventsAdditional] = useState([]);
 
 
-    // handles changing the searchType; searchType is needed so that when the form submits it knows which API call to do
+    // Handles changing the searchType; SearchType is needed so that when the form submits it knows which API call to do
     const handleSearchTypeChange = (selectedType) => {
         setSearchType(selectedType);
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // based on searchType call correct search API function
+        // Based on searchType call correct search API function
         if (searchType == 'category') {
-            // TODO: for category, search term must be by the category id currently; Backend needs to be fixed to allow searching by category name
             const eventsByCat = await getEventDetailsByCategory(searchTerm)
             setSearchEvents(eventsByCat)
         } else if (searchType == 'type') {
@@ -50,19 +50,26 @@ function SearchEvents() {
     }
 
     // sorts the events returned from the search into eventsPopular and/or eventsVolNeed
-    const sortSearchEvents = async (searchEvents) => {
+    const sortPopularEvents = async (searchEvents) => {
         const popEvents = []
+        const unpopEvents = []
+        // Loops through the searchEvents to determine if event is popular or not and sorts them into their respective categories
         for (const event of searchEvents) {
-            if (event.users_attending == 0) {
+            // TODO: DEPLOYMENT - Currently for development purposes an event is popular if 1 user or more is attending; Before deployment we must chnage this to a more reasonable real-world threshhold
+            if (event.users_attending > 0) {
                 popEvents.push(event)
-            } 
-            // TODO: add another if statement for sorting events where volunteers are needed
+            } else {
+                unpopEvents.push(event)
+            }
+            
         }
+        // Sets popular events to eventsPopular and not popular events to eventsAdditional
         setEventsPopular(popEvents)
+        setEventsAdditional(unpopEvents)
     }
 
     useEffect(() => {
-        sortSearchEvents(searchEvents)
+        sortPopularEvents(searchEvents)
       }, [searchEvents]);
 
     console.log('searchType', searchType)
@@ -90,6 +97,7 @@ function SearchEvents() {
                                     <Dropdown.Item onClick={() => handleSearchTypeChange('date')}>Date</Dropdown.Item>
                                     <Dropdown.Item onClick={() => handleSearchTypeChange('location')}>Location</Dropdown.Item>
                                 </DropdownButton>
+                                {/* Conditional rendering of search box based on data type of search parameter */}
                                 {searchType === 'type' ? (
                                     <Form.Select aria-label="Search type select" onChange={(e) => setSearchTerm(e.target.value)}>
                                         <option>Select a type</option>
@@ -119,6 +127,7 @@ function SearchEvents() {
             <div className="container-fluid mt-5">
                 <h2 className="mb-3 text-center">Popular Events</h2>
                 <div className="row row-cols-1 row-cols-lg-4 g-4">
+                    {/* Renders no popular events message if no popular events returned; If popular events is returned, maps through eventsPopular rendering an EventCard for each*/}
                     {eventsPopular.length == 0 ?
                         <h5 style={{fontStyle:'italic'}}>No popular events found matching your search parameters</h5> :
                         eventsPopular.map(e => 
@@ -150,6 +159,25 @@ function SearchEvents() {
                             </div>
                         </div>
                     ))}
+                </div>
+            </div>
+
+            {/* Additional Events */}
+            <div className="container-fluid mt-5">
+                <h2 className="mb-3 text-center">Additional Events</h2>
+                <div className="row row-cols-1 row-cols-lg-4 g-4">
+                    {/* Renders no other events message if no additional events returned; If additional events is returned, maps through eventsAdditional rendering an EventCard for each*/}
+                    {eventsAdditional.length == 0 ?
+                        <h5 style={{fontStyle:'italic'}}>No other events found matching your search parameters</h5> :
+                        eventsAdditional.map(e => 
+                            <EventCard 
+                                key={e.id}
+                                id={e.id}
+                                title={e.title}
+                                image={e.event_photo}
+                                description={e.description}
+                            />
+                    )}
                 </div>
             </div>
         </div>
