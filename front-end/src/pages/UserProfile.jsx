@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, CardGroup } from 'react-bootstrap';
 import FullCalendar from '@fullcalendar/react'; // Import the FullCalendar component
 import dayGridPlugin from '@fullcalendar/daygrid'; // Plugin to display the calendar in a day grid view
-import { getProfileIcon } from '../utilities/DefaultIconsUtilities';
+import { getProfileIcon, getEventIcon } from '../utilities/DefaultIconsUtilities';
 import { getUserProfile } from '../utilities/UserProfileUtilities';
 
 
@@ -17,8 +17,19 @@ export default function UserProfile({ user }) {
     const [userEvents, setUserEvents] = useState([]);
     const [userInterests, setUserInterests] = useState([]);
     const [userPhoto, setUserPhoto] = useState(""); // Initialize userPhoto with an empty string
-    const [icon, setIcon] = useState("");
+    const [profileIcon, setProfileIcon] = useState("");
+    const [eventIcon, setEventIcon] = useState("");
     const [selectedDate, setSelectedDate] = useState(new Date()); // Holds the date selected in the calendar
+
+    // Fetches default event icon
+    const fetchEventIcon = async () => {
+        const icon = await getEventIcon()
+        setEventIcon(icon)
+    }
+
+    useEffect(() => {
+        fetchEventIcon()
+    }, []);
 
     // useEffect to fetch profile and icon data on component mount
     useEffect(() => {
@@ -26,7 +37,7 @@ export default function UserProfile({ user }) {
             try {
                 // Use Promise.all for parallel asynchronous calls to get profile and icon data
                 const [iconData, userProfile] = await Promise.all([getProfileIcon(), getUserProfile(user)]);
-                setIcon(iconData);
+                setProfileIcon(iconData);
                 setUserProfileData(userProfile);
                 setUserEvents(userProfile.user_events);
                 setEventsAttending(userProfile.events_attending);
@@ -61,7 +72,7 @@ export default function UserProfile({ user }) {
         <Card className="text-center" style={{ width: '18rem' }}>
             <Card.Header>Profile Info</Card.Header>
             {/* Display user photo or a default icon if photo is not available */}
-            <Card.Img variant="top" src={userPhoto || icon} style={{ height: '250px' }} alt={`${userProfileData.display_name}'s photo`} />
+            <Card.Img variant="top" src={userPhoto || profileIcon} style={{ height: '250px' }} alt={`${userProfileData.display_name}'s photo`} />
             <Card.Body>
                 <Card.Title as='h3' style={{ fontWeight: 'bold', color: "#6840DF", textDecoration: 'underline' }}>
                     {userProfileData.display_name}
@@ -82,6 +93,8 @@ export default function UserProfile({ user }) {
         </Card>
     );
 
+    console.log(userEvents)
+
     // Main component layout using Bootstrap's grid system
     return (
         <Container fluid>
@@ -99,6 +112,8 @@ export default function UserProfile({ user }) {
                                     <Card style={{ width: '18rem' }}>
                                         <Card.Body>
                                             <Card.Title>{event.title}</Card.Title>
+                                            {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
+                                            <Card.Img variant="top" src={event.event_photo || eventIcon} style={{ height: '500px' }} alt={`${event.title}'s photo`} />
                                             <Card.Text>
                                                 Date: {event.date}
                                                 <br />
@@ -125,6 +140,8 @@ export default function UserProfile({ user }) {
                                 <Card key={event.id} style={{ width: '18rem' }}>
                                     <Card.Body>
                                         <Card.Title>{event.title}</Card.Title>
+                                        {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
+                                        <Card.Img variant="top" src={event.event_photo || eventIcon} style={{ height: '500px' }} alt={`${event.title}'s photo`} />
                                         <Card.Text>
                                             Date: {event.date}
                                             <br />
