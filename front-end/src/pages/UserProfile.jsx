@@ -188,7 +188,7 @@ export default function UserProfile({ user }) {
                             (event.event_photo && event.event_photo) ||
                             eventIcon
                           }
-                          style={{ height: "500px" }}
+                          style={{ height: "200px", width: "200px" }}
                           alt={`${event.title}'s photo`}
                         />
 
