@@ -10,21 +10,21 @@ export default function EventDetails() {
   const [eventDetails, setEventDetails] = useState([]);
   const [collaborators, setCollaborators] = useState([]);
   const [usersAttending, setUsersAttending] = useState([]);
+  const [eventsAttending, setEventsAttending] = useState([]);
   const [userID, setUserID] = useState();
   const myOutletContextObj = useOutletContext();
   const { user } = myOutletContextObj;
   const collaboratorsStr = collaborators.join(", ");
 
-  useEffect(() => {
-    const handleUserID = async () => {
-      let userResponse = await getUserProfile(user);
-      let id = userResponse.id;
-      setUserID(id);
-    };
+  // Gets list of events user is attending; Used in isUserAttending function
+  const handleUserEventsAttending = async () => {
+    let userResponse = await getUserProfile(user);
+    let events = userResponse.events_attending
+    setEventsAttending(events)
+  };
 
-    if (!userID) {
-      handleUserID();
-    }
+  useEffect(() => {
+    handleUserEventsAttending();
   }, []);
 
   // get event details using event utilities and set the event details
@@ -42,15 +42,56 @@ export default function EventDetails() {
     console.log(eventDetails.data);
   };
 
-  // TODO: disable button if rsvp is sucessful
-  // handle rsvp should work; backend needs fixing to test
-  const handleRSVP = async () => {
-    const rsvp = await setUserAttending(eventID, userID);
-  };
-
   useEffect(() => {
     getEvent();
   }, []);
+
+  // onClick function for RSVP button to handle rsvp api call
+  const handleRSVP = async () => {
+    const rsvp = await setUserAttending(eventID);
+  };
+
+  // Checks the events that the user is attending for id match with the eventID for this page
+  const isUserAttending = () => {
+    // Checks if eventsAttending has data
+    if(eventsAttending && eventsAttending.length > 0) {
+      // Loops through the events
+      for (const event of eventsAttending) {
+        // Makes comparison between the page's eventID and the user's event.id
+        if (eventID == event.id) {
+          // If match user is RSVPed
+          return true
+        }
+      }
+    } else {
+      return false
+    }
+  }
+
+  // Renders button conditionally based on if user is RSVPed
+  const renderRSVPButton = () => {
+    // Sets attending to true or false based on function call
+    const attending = isUserAttending()
+    // If attending render disabled button that tells the user they've already RSVPed
+    if (attending) {
+      return <Button
+                className="text-center"
+                variant="info"
+                disabled
+              >
+                You're RSVPed
+              </Button>
+    } else {
+      // Else render functioning RSVP button
+      return <Button
+                className="text-center"
+                variant="info"
+                onClick={handleRSVP}
+              >
+                RSVP
+              </Button>
+    }
+  }
 
   return (
     <Container>
@@ -121,13 +162,7 @@ export default function EventDetails() {
                 </Button>
                 <br />
                 <br />
-                <Button
-                  className="text-center"
-                  variant="info"
-                  onClick={handleRSVP}
-                >
-                  RSVP
-                </Button>
+                {renderRSVPButton()}
                 
                 <add-to-calendar-button
                   size="3"
