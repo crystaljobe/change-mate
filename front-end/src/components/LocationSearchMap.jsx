@@ -1,5 +1,4 @@
 import { useRef, useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
 import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
