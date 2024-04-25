@@ -23,20 +23,20 @@ export default function EventDetails() {
     setEventsAttending(events)
   };
 
-  //adding function to format date in more readable way
-  function switchDateFormat(dateStr) {
-    const dateArr = dateStr.split("-");
-    let formattedDate = dateArr[1] + "/" + dateArr[2] + "/" + dateArr[0];
-    return formattedDate;
-  }
-  //adding function to format time in 12-hr format
-  function switchTimeFormat(timeStr){
-    const [hours, minutes, pmam] = timeStr.split(/[:\s]/)
-    //convert hours to 12hr if 00,  then returns 12
-    const hours12format = (parseInt(hours, 10) % 12 || 12)
-    const formattedTime = `${hours12format}:${minutes} ${pmam}`
-    return formattedTime
-  }
+  // //adding function to format date in more readable way
+  // function switchDateFormat(dateStr) {
+  //   const dateArr = dateStr.split("-");
+  //   let formattedDate = dateArr[1] + "/" + dateArr[2] + "/" + dateArr[0];
+  //   return formattedDate;
+  // }
+  // //adding function to format time in 12-hr format
+  // function switchTimeFormat(timeStr){
+  //   const [hours, minutes, pmam] = timeStr.split(/[:\s]/)
+  //   //convert hours to 12hr if 00,  then returns 12
+  //   const hours12format = (parseInt(hours, 10) % 12 || 12)
+  //   const formattedTime = `${hours12format}:${minutes} ${pmam}`
+  //   return formattedTime
+  // }
 
 
   useEffect(() => {
@@ -155,18 +155,18 @@ export default function EventDetails() {
                       {eventDetails &&
                         eventDetails.startDate &&
                         eventDetails.startTime &&
-                        `${switchDateFormat(
+                        `${
                           eventDetails.startDate
-                        )} at ${switchTimeFormat(eventDetails.startTime)}`}
+                        } at ${eventDetails.startTime}`}
                     </li>
                     <li>
                       <strong> End: </strong>
                       {eventDetails &&
                         eventDetails.endDate &&
                         eventDetails.endTime &&
-                        `${switchDateFormat(
+                        `${
                           eventDetails.endDate
-                        )} at ${switchTimeFormat(eventDetails.endTime)}`}
+                        } at ${eventDetails.endTime}`}
                     </li>
 
                     <li>
