@@ -17,6 +17,12 @@ nav {
   gap: 40px;
 }
 
+.location-search-map-container {
+  height: 250px;
+  width: 300px;
+  margin-left: 20px;
+}
+
 .map-container {
     height: 500px;
   }

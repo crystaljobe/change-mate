@@ -1,5 +1,5 @@
-import  { React, useRef, useEffect, useState } from "react";
-import mapboxgl from "mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
+import  { useRef, useEffect, useState } from "react";
+import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
@@ -50,17 +50,7 @@ export default function Map() {
 				map.current.addControl(directions, "bottom-right");
 			});
 		}
-		/*map.current.addControl(
-      new mapboxgl.GeolocateControl({
-          positionOptions: {
-              enableHighAccuracy: true
-          },
-          // When active the map will receive updates to the device's location as it changes.
-          trackUserLocation: true,
-          // Draw an arrow next to the location dot to indicate which direction the device is heading.
-          showUserHeading: true
-      })
-      );*/
+
 	});
 
 	return (

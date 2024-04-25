@@ -1,25 +1,42 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { AddressAutofill } from "@mapbox/search-js-react";
 import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
 import { postEventDetails } from "../utilities/EventUtilities";
+import LocationSearchMap from "../components/LocationSearchMap";
 
 export default function CreateEvent() {
-  const navigate = useNavigate();
+  // set const for useNavigate
+  const navigate = useNavigate()
+  // set interest categories for users to select from 
   const [interestCategories, setInterestCategories] = useState([]);
+  // set all event details useState
+  // event title 
   const [title, setTitle] = useState("");
+  // event start date/time
   const [eventStart, setEventStart] = useState("");
+  // event end date/time
   const [eventEnd, setEventEnd] = useState("");
+  // time zone options below in code
   const [timeZone, setTimeZone] = useState("");
+  // event type = In-person or Virtual
   const [eventType, setEventType] = useState("In-Person");
+  // event virtual link if a virtual event (ex. - user will input their zoom link)
+  const [virtualEventLink, setVirtualEventLink] = useState(null);
+  // event in-person venue ex-"Downtown Park Center"
   const [eventVenue, setEventVenue] = useState("");
-  const [eventVenueAddress, setEventVenueAddress] = useState("");
+  // event details text
   const [description, setDescription] = useState("");
+  // event category for search functionality (only one cat per event)
   const [category, setCategory] = useState("");
   const [eventPhoto, setEventPhoto] = useState("");
   const [photoPreview, setPhotoPreview] = useState("");
-  const [virtualEventLink, setVirtualEventLink] = useState(null); //changed starting value from '' to null
+  // eventVenueAddress = full address "123 Example St, City, St Zip"
+  const [eventVenueAddress, setEventVenueAddress] = useState("");
+  // eventLocation format = "city, state"
+  const [location, setLocation] = useState("");
+  // eventCoordinates = "latitude, longitude"
+  const [eventCoordinates, setEventCoordinates] = useState("")
 
   //timezone abbreviations array:
   const timeZoneAbbreviations = [
@@ -58,6 +75,7 @@ export default function CreateEvent() {
     setInterestCategories(categories);
   };
 
+  // on change handle image upload
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -88,7 +106,6 @@ export default function CreateEvent() {
       category: category,
       event_photo: eventPhoto,
     });
-
     e.preventDefault();
     for (let i = 0; i < 5; i++) {
       if (e.target[i].value == "") {
@@ -111,7 +128,9 @@ export default function CreateEvent() {
       eventVenueAddress,
       description,
       category,
-      eventPhoto
+      eventPhoto,
+      location,
+      eventCoordinates
     );
 
     if (responseStatus) {
@@ -177,7 +196,7 @@ export default function CreateEvent() {
               <Form.Label>
                 Enter your event&apos;s timezone: {"	"}
                 <select
-                  size={2}
+                  size={4}
                   value={timeZone}
                   onChange={(e) => setTimeZone(e.target.value)}
                 >
@@ -228,21 +247,26 @@ export default function CreateEvent() {
                     />
                   </Form.Label>
                 </Form.Group>
+
                 <Form.Group className="mb-3" controlId="event_venue_address">
-                  <Form.Label>
-                    Enter the venue address:
+                <Form.Label>
+                    Set Your Event&apos;s Location:
                     <br />
-                    <AddressAutofill accessToken="pk.eyJ1IjoibWNyZXlub2xkc2giLCJhIjoiY2x2MzFuNzN6MGhoOTJycnd5ZHQ3eWR4ayJ9.QKI5tsCAXhuzNb2XzhyjOg">
+                    <LocationSearchMap
+                      setEventCoords={setEventCoordinates}
+                      setEventVenueAddress={setEventVenueAddress}
+                      setLocation={setLocation}
+                    />
+                    </Form.Label>
+                    <br />
+                    <Form.Label>Is this the correct address?
                       <input
                         name="address"
-                        placeholder="Address"
                         type="text"
-                        autoComplete="address-line1"
                         size={40}
                         value={eventVenueAddress}
                         onChange={(e) => setEventVenueAddress(e.target.value)}
                       />
-                    </AddressAutofill>
                   </Form.Label>
                 </Form.Group>{" "}
               </>
