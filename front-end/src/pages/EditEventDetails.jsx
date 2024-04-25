@@ -85,8 +85,8 @@ export default function EditEventDetails() {
     console.log('EditEvent --getEvent function--eventDetails',eventDetails);
     setEvent(eventDetails);
     setTitle(eventDetails.title);
-    setEventStart(eventDetails.eventStart);
-    setEventEnd(eventDetails.eventEnd);
+    setEventStart(eventDetails.event_start.slice(0, -1)); //slice bc it's coming back with a 'Z' at the end
+    setEventEnd(eventDetails.event_end.slice(0, -1));
     setTimeZone(eventDetails.time_zone);
     setEventType(eventDetails.event_type);
     setEventVenue(eventDetails.event_venue);
@@ -157,7 +157,7 @@ export default function EditEventDetails() {
       event_photo: eventPhoto,
       virtual_event_link: virtualEventLink,
       location: location,
-      eventCoordinates: eventCoordinates,
+      coordinates: eventCoordinates,
     });
     e.preventDefault();
     updateEvent();

@@ -114,11 +114,15 @@ export default function UserProfile({ user }) {
                     <Card style={{ width: "18rem" }}>
                       <Card.Body>
                         <Card.Title>{event.title}</Card.Title>
+
                         {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
 
                         <Card.Img
                           variant="top"
-                          src={event.event_photo || eventIcon}
+                          src={
+                            (event.event_photo && event.event_photo) ||
+                            eventIcon
+                          }
                           style={{ height: "200px", width: "200px" }}
                           alt={`${event.title}'s photo`}
                         />
@@ -130,7 +134,10 @@ export default function UserProfile({ user }) {
                           <strong>Event Type: </strong> {event.event_type}
                           <br />
                           {event.event_type === "Virtual" ? null : (
-                            <><strong>Location: </strong>{event.location}</>
+                            <>
+                              <strong>Location: </strong>
+                              {event.event_venue}
+                            </>
                           )}
                         </Card.Text>
 
@@ -163,6 +170,7 @@ export default function UserProfile({ user }) {
               </Button>
             </Row>
             <br />
+
             <h1 style={{ color: "#6840DF" }}>Upcoming Events</h1>
             <br />
             <Row>
@@ -172,6 +180,7 @@ export default function UserProfile({ user }) {
                     <Card key={event.id} style={{ width: "18rem" }}>
                       <Card.Body>
                         <Card.Title>{event.title}</Card.Title>
+
                         {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
                         <Card.Img
                           variant="top"
@@ -182,13 +191,21 @@ export default function UserProfile({ user }) {
                           style={{ height: "500px" }}
                           alt={`${event.title}'s photo`}
                         />
+
                         <Card.Text>
-                          Date: {event.date}
+                          <strong> When: </strong>{" "}
+                          {` ${event.startDate} at ${event.startTime} -- ${event.endDate} at ${event.endTime}`}
                           <br />
-                          Time: {event.time}
+                          <strong>Event Type: </strong> {event.event_type}
                           <br />
-                          Event Type: {event.event_type}
+                          {event.event_type === "Virtual" ? null : (
+                            <>
+                              <strong>Location: </strong>
+                              {event.event_venue}
+                            </>
+                          )}
                         </Card.Text>
+
                         <Button
                           variant="info"
                           as={Link}

@@ -40,7 +40,6 @@ export default function EventDetails() {
   //gets iCal-specific format of event Details for add-to-personal-calendar button
   const getiCalInfo = async () => {
     const response = await getiCalEventDetails(eventID);
-    console.log("EVENT DETAILS page--iCal response:", response);
     setiCalDetails(response);
     console.log("EVENT DETAILS page--iCal details:", iCalDetails);
 
