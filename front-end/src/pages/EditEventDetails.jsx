@@ -125,7 +125,7 @@ export default function EditEventDetails() {
       description || "", // Ensure non-null
       category,
       eventPhoto, // Already adjusted to send as base64 string
-      virtualEventLink, // Ensure non-null and proper URL or empty
+      virtualEventLink, 
       location,
       eventCoordinates,
     );

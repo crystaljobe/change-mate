@@ -129,6 +129,7 @@ export default function CreateEvent() {
       description,
       category,
       eventPhoto,
+      virtualEventLink,
       location,
       eventCoordinates
     );
