@@ -5,9 +5,11 @@ import "add-to-calendar-button";
 import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
 import { getUserProfile } from "../utilities/UserProfileUtilities";
 import { getEventIcon } from '../utilities/DefaultIconsUtilities';
+import { getiCalEventDetails } from "../utilities/EventUtilities";
 
 export default function EventDetails() {
   let { eventID } = useParams();
+  const [iCalDetails, setiCalDetails] = useState([]);
   const [eventDetails, setEventDetails] = useState([]);
   const [collaborators, setCollaborators] = useState([]);
   const [usersAttending, setUsersAttending] = useState([]);
@@ -33,6 +35,14 @@ export default function EventDetails() {
     let userResponse = await getUserProfile(user);
     let events = userResponse.events_attending
     setEventsAttending(events)
+  };
+
+  //gets iCal-specific format of event Details for add-to-personal-calendar button
+  const getiCalInfo = async () => {
+    const response = await getiCalEventDetails(eventID);
+    setiCalDetails(response);
+    console.log("EVENT DETAILS page--iCal details:", iCalDetails);
+
   };
 
   // //adding function to format date in more readable way
@@ -71,6 +81,7 @@ export default function EventDetails() {
 
   useEffect(() => {
     getEvent();
+    getiCalInfo();
   }, []);
 
   // onClick function for RSVP button to handle rsvp api call
@@ -142,7 +153,12 @@ export default function EventDetails() {
                 Hosted by: {collaboratorsStr}
               </Card.Subtitle>
               {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
-              <Card.Img variant="top" src={eventDetails.event_photo || eventIcon} style={{ height: '500px' }} alt={`${eventDetails.title}'s photo`} />
+              <Card.Img
+                variant="top"
+                src={eventDetails.event_photo || eventIcon}
+                style={{ height: "500px" }}
+                alt={`${eventDetails.title}'s photo`}
+              />
 
               <ListGroup variant="flush">
                 {/* !!updated this information to reflect current variable names */}
@@ -151,6 +167,7 @@ export default function EventDetails() {
                     style={{ textDecoration: "underline", fontSize: "larger" }}
                   >
                     Event Details:
+                    
                   </Card.Text>
                   <ul>
                     <li>
@@ -158,18 +175,14 @@ export default function EventDetails() {
                       {eventDetails &&
                         eventDetails.startDate &&
                         eventDetails.startTime &&
-                        `${
-                          eventDetails.startDate
-                        } at ${eventDetails.startTime}`}
+                        `${eventDetails.startDate} at ${eventDetails.startTime}`}
                     </li>
                     <li>
                       <strong> End: </strong>
                       {eventDetails &&
                         eventDetails.endDate &&
                         eventDetails.endTime &&
-                        `${
-                          eventDetails.endDate
-                        } at ${eventDetails.endTime}`}
+                        `${eventDetails.endDate} at ${eventDetails.endTime}`}
                     </li>
 
                     <li>
@@ -201,7 +214,9 @@ export default function EventDetails() {
                   </ul>
                 </ListGroup.Item>
                 <ListGroup.Item as="h6" className="text-left">
-                  <h4 style={{ textDecoration: "underline"}}>About this event:</h4>
+                  <h4 style={{ textDecoration: "underline" }}>
+                    About this event:
+                  </h4>
                   {eventDetails && eventDetails.description}
                 </ListGroup.Item>
               </ListGroup>
@@ -218,28 +233,30 @@ export default function EventDetails() {
                 <br />
                 <br />
                 {renderRSVPButton()}
-                
-                <add-to-calendar-button
-                  size="3"
-                  label="Add to personal calendar"
-                  // buttonsList
-                  // hideTextLabelButton
-                  // buttonStyle="round"
-                  options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-                  name={eventDetails.title}
-                  //   add a conditional rendering for event_type --> do we still need event link for inperson?
-                  location={
-                    eventDetails.event_type === "Virtual"
-                      ? eventDetails.virtual_event_link
-                      : `${eventDetails.event_venue} - ${eventDetails.event_venue_address}`
-                  }
-                  startDate={eventDetails.startDate}
-                  endDate={eventDetails.endDate}
-                  startTime={eventDetails.startTime}
-                  endTime={eventDetails.endTime}
-                  timeZone={eventDetails.time_zone}
-                  description={eventDetails.description}
-                ></add-to-calendar-button>
+                <div style={{ height: "50px" }}>
+                  <add-to-calendar-button
+                    style={{ height: "50px" }}
+                    size="5"
+                    label="Add to personal calendar"
+                    // buttonsList
+                    // hideTextLabelButton
+                    // buttonStyle="round"
+                    options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+                    name={iCalDetails.title}
+                    //   add a conditional rendering for event_type --> do we still need event link for inperson?
+                    location={
+                      eventDetails.event_type === "Virtual"
+                        ? eventDetails.virtual_event_link
+                        : `${eventDetails.event_venue} - ${eventDetails.event_venue_address}`
+                    }
+                    startDate={iCalDetails.startDate}
+                    endDate={iCalDetails.endDate}
+                    startTime={iCalDetails.startTime}
+                    endTime={iCalDetails.endTime}
+                    timeZone={iCalDetails.time_zone}
+                    description={iCalDetails.description}
+                  ></add-to-calendar-button>
+                </div>
               </Card.Body>
             </Card.Body>
           </Card>
