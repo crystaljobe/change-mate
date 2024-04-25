@@ -35,8 +35,10 @@ export default function EditUserProfile({ user }) {
     setDisplayName(userProfileData.display_name);
     // map through interests to set the current interests
     setUserInterests(userProfileData.interests.map((cat) => cat.category));
-    setImagePreview(userProfileData.profileImage || "");
+    setImagePreview(userProfileData.profileImage); // Set the image preview to the current profile image
+    setProfileImage(userProfileData.profileImage); // Set the profile image data for possible re-upload
   };
+
   console.log(userInterestsIDs)
   // upon form submit call utility function to set new user data
   const updateUserProfile = async () => {
