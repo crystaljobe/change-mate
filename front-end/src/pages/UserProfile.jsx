@@ -93,82 +93,135 @@ export default function UserProfile({ user }) {
         </Card>
     );
 
-    console.log(userEvents)
+    console.log('USER PROFILE -- userEvents:', userEvents)
 
     // Main component layout using Bootstrap's grid system
     return (
-        <Container fluid>
-            <Row className="justify-content-md-center">
-                <Col md={3}>
-                    {renderProfileInfo()}
-                </Col>
-                <Col md={4}>
-                    <h1 style={{ color: '#6840DF' }}>Your Events</h1>
-                    <Row>
-                        {userEvents.length === 0 ?
-                            <h3 style={{ fontStyle: 'italic' }}>Doesn't look like you have any events you're collaborating on at this time</h3> :
-                            userEvents.map(event => (
-                                <CardGroup key={event.id} className='p-2'>
-                                    <Card style={{ width: '18rem' }}>
-                                        <Card.Body>
-                                            <Card.Title>{event.title}</Card.Title>
-                                            {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
-                                            <Card.Img variant="top" src={event.event_photo || eventIcon} style={{ height: '500px' }} alt={`${event.title}'s photo`} />
-                                            <Card.Text>
-                                                Date: {event.date}
-                                                <br />
-                                                Time: {event.time}
-                                                <br />
-                                                Event Type: {event.event_type}
-                                            </Card.Text>
-                                            <Button style={{ margin: 3 }} variant="info" as={Link} to={`/editevent/${event.id}`}>Edit Event Details</Button>
-                                            <Button style={{ margin: 3 }} variant="info" as={Link} to={`/event/${event.id}`}>View Event Details</Button>
-                                        </Card.Body>
-                                    </Card>
-                                </CardGroup>
-                            ))}
-                    </Row>
-                    <Row>
-                        <Button variant="primary" as={Link} to="/createevent">Create New Event</Button>
-                    </Row>
-                    <br />
-                    <h1 style={{ color: '#6840DF' }}>Upcoming Events</h1>
-                    <br />
-                    <Row>
-                        {eventsAttending.length > 0 ? eventsAttending.map(event => (
-                            <CardGroup key={event.id} className='p-2'>
-                                <Card key={event.id} style={{ width: '18rem' }}>
-                                    <Card.Body>
-                                        <Card.Title>{event.title}</Card.Title>
-                                        {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
-                                        <Card.Img variant="top" src={event.event_photo || eventIcon} style={{ height: '500px' }} alt={`${event.title}'s photo`} />
-                                        <Card.Text>
-                                            Date: {event.date}
-                                            <br />
-                                            Time: {event.time}
-                                            <br />
-                                            Event Type: {event.event_type}
-                                        </Card.Text>
-                                        <Button variant="info" as={Link} to={`/event/${event.id}`}>View Event Details</Button>
-                                    </Card.Body>
-                                </Card>
-                            </CardGroup>
-                        )) : <h3 style={{ fontStyle: 'italic' }}>Doesn't look like you've RSVP'd to any events yet.</h3>}
-                    </Row>
-                    <Row>
-                    <Button variant="primary" as={Link} to="/events">I'm ready to make a difference!</Button>
-                    </Row>
-                </Col>
-                <Col md={5}>
-                    {/* FullCalendar component for displaying events in a monthly grid */} 
-                    <FullCalendar
-                        plugins={[dayGridPlugin]}
-                        initialView="dayGridMonth"
-                        dateClick={handleDateClick}
-                        events={calendarEvents}
-                    />
-                </Col>
+      <Container fluid>
+        <Row className="justify-content-md-center">
+          <Col md={3}>{renderProfileInfo()}</Col>
+          <Col md={4}>
+            <h1 style={{ color: "#6840DF" }}>Your Events</h1>
+            <Row>
+              {userEvents.length === 0 ? (
+                <h3 style={{ fontStyle: "italic" }}>
+                  Doesn't look like you have any events you're collaborating on
+                  at this time
+                </h3>
+              ) : (
+                userEvents.map((event) => (
+                  <CardGroup key={event.id} className="p-2">
+                    <Card style={{ width: "18rem" }}>
+                      <Card.Body>
+                        <Card.Title>{event.title}</Card.Title>
+                        {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
+
+                        <Card.Img
+                          variant="top"
+                          src={event.event_photo || eventIcon}
+                          style={{ height: "200px", width: "200px" }}
+                          alt={`${event.title}'s photo`}
+                        />
+
+                        <Card.Text>
+                          <strong> When: </strong>{" "}
+                          {` ${event.startDate} at ${event.startTime} -- ${event.endDate} at ${event.endTime}`}
+                          <br />
+                          <strong>Event Type: </strong> {event.event_type}
+                          <br />
+                          {event.event_type === "Virtual" ? null : (
+                            <><strong>Location: </strong>{event.location}</>
+                          )}
+                        </Card.Text>
+
+                        <Button
+                          style={{ margin: 3 }}
+                          variant="info"
+                          as={Link}
+                          to={`/editevent/${event.id}`}
+                        >
+                          Edit Event Details
+                        </Button>
+
+                        <Button
+                          style={{ margin: 3 }}
+                          variant="info"
+                          as={Link}
+                          to={`/event/${event.id}`}
+                        >
+                          View Event Details
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  </CardGroup>
+                ))
+              )}
             </Row>
-        </Container>
+            <Row>
+              <Button variant="primary" as={Link} to="/createevent">
+                Create New Event
+              </Button>
+            </Row>
+            <br />
+            <h1 style={{ color: "#6840DF" }}>Upcoming Events</h1>
+            <br />
+            <Row>
+              {eventsAttending.length > 0 ? (
+                eventsAttending.map((event) => (
+                  <CardGroup key={event.id} className="p-2">
+                    <Card key={event.id} style={{ width: "18rem" }}>
+                      <Card.Body>
+                        <Card.Title>{event.title}</Card.Title>
+                        {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
+                        <Card.Img
+                          variant="top"
+                          src={
+                            (event.event_photo && event.event_photo) ||
+                            eventIcon
+                          }
+                          style={{ height: "500px" }}
+                          alt={`${event.title}'s photo`}
+                        />
+                        <Card.Text>
+                          Date: {event.date}
+                          <br />
+                          Time: {event.time}
+                          <br />
+                          Event Type: {event.event_type}
+                        </Card.Text>
+                        <Button
+                          variant="info"
+                          as={Link}
+                          to={`/event/${event.id}`}
+                        >
+                          View Event Details
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  </CardGroup>
+                ))
+              ) : (
+                <h3 style={{ fontStyle: "italic" }}>
+                  Doesn't look like you've RSVP'd to any events yet.
+                </h3>
+              )}
+            </Row>
+            <Row>
+              <Button variant="primary" as={Link} to="/events">
+                I'm ready to make a difference!
+              </Button>
+            </Row>
+          </Col>
+          <Col md={5}>
+            {/* FullCalendar component for displaying events in a monthly grid */}
+            <FullCalendar
+              plugins={[dayGridPlugin]}
+              initialView="dayGridMonth"
+              dateClick={handleDateClick}
+              events={calendarEvents}
+            />
+          </Col>
+        </Row>
+      </Container>
     );
 }
