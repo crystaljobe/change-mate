@@ -82,11 +82,8 @@ export default function CreateEvent() {
       const reader = new FileReader();
       reader.onloadend = () => {
         // Ensures it is a valid base64 format for the image
-        const base64String = reader.result
-          .replace("data:", "")
-          .replace(/^.+,/, "");
         setPhotoPreview(reader.result);
-        setEventPhoto(base64String);
+        setEventPhoto(reader.result);
       };
       reader.readAsDataURL(file);
     }
