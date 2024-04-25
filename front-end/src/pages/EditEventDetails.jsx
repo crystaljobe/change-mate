@@ -6,42 +6,41 @@ import { deleteEvent, getEventDetails, updateEventDetails } from "../utilities/E
 import LocationSearchMap from "../components/LocationSearchMap";
 
 export default function EditEventDetails() {
-  // use params to grab event id to get details 
+  // use params to grab event id to get details
   let { eventID } = useParams();
   // set const for useNavigate
   const navigate = useNavigate();
-  // set interest categories for users to select from 
+  // set interest categories for users to select from
   const [interestCategories, setInterestCategories] = useState([]);
   // set all event details useState
   // event object with all event details
   const [event, setEvent] = useState("");
-    // event title 
-    const [title, setTitle] = useState("");
-    // event start date/time
-    const [eventStart, setEventStart] = useState("");
-    // event end date/time
-    const [eventEnd, setEventEnd] = useState("");
-    // time zone options below in code
-    const [timeZone, setTimeZone] = useState("");
-    // event type = In-person or Virtual
-    const [eventType, setEventType] = useState("In-Person");
-    // event virtual link if a virtual event (ex. - user will input their zoom link)
-    const [virtualEventLink, setVirtualEventLink] = useState("");
-    // event in-person venue ex-"Downtown Park Center"
-    const [eventVenue, setEventVenue] = useState("");
-    // event details text
-    const [description, setDescription] = useState("");
-    // event category for search functionality (only one cat per event)
-    const [category, setCategory] = useState("");
-    const [eventPhoto, setEventPhoto] = useState("");
-    const [photoPreview, setPhotoPreview] = useState("");
-    // eventVenueAddress = full address "123 Example St, City, St Zip"
-    const [eventVenueAddress, setEventVenueAddress] = useState("");
-    // eventLocation format = "city, state"
-    const [location, setLocation] = useState("");
-    // eventCoordinates = "latitude, longitude"
-    const [eventCoordinates, setEventCoordinates] = useState("")
-    
+  // event title
+  const [title, setTitle] = useState("");
+  // event start date/time
+  const [eventStart, setEventStart] = useState("");
+  // event end date/time
+  const [eventEnd, setEventEnd] = useState("");
+  // time zone options below in code
+  const [timeZone, setTimeZone] = useState("");
+  // event type = In-person or Virtual
+  const [eventType, setEventType] = useState("In-Person");
+  // event virtual link if a virtual event (ex. - user will input their zoom link)
+  const [virtualEventLink, setVirtualEventLink] = useState(null); //changed starting value from '' to null
+  // event in-person venue ex-"Downtown Park Center"
+  const [eventVenue, setEventVenue] = useState("");
+  // event details text
+  const [description, setDescription] = useState("");
+  // event category for search functionality (only one cat per event)
+  const [category, setCategory] = useState("");
+  const [eventPhoto, setEventPhoto] = useState("");
+  const [photoPreview, setPhotoPreview] = useState("");
+  // eventVenueAddress = full address "123 Example St, City, St Zip"
+  const [eventVenueAddress, setEventVenueAddress] = useState("");
+  // eventLocation format = "city, state"
+  const [location, setLocation] = useState("");
+  // eventCoordinates = "latitude, longitude"
+  const [eventCoordinates, setEventCoordinates] = useState("");
 
   //timezone abbreviations array:
   const timeZoneAbbreviations = [
@@ -104,7 +103,7 @@ export default function EditEventDetails() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPhotoPreview(reader.result);
-        setEventPhoto(reader.result);  
+        setEventPhoto(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -112,7 +111,8 @@ export default function EditEventDetails() {
 
   // update event details in BE using utility function
   const updateEvent = async () => {
-    //changed date --> eventStart & time --> eventEnd
+    // adding check to see if virtualEventLink is blank
+
     let responseStatus = await updateEventDetails(
       eventID,
       title,
@@ -120,14 +120,14 @@ export default function EditEventDetails() {
       eventEnd,
       timeZone,
       eventType,
-      eventVenue || '',  // Ensure non-null
-      eventVenueAddress || '',  // Ensure non-null
-      description || '',  // Ensure non-null
+      eventVenue || "", // Ensure non-null
+      eventVenueAddress || "", // Ensure non-null
+      description || "", // Ensure non-null
       category,
-      eventPhoto,  // Already adjusted to send as base64 string
-      virtualEventLink || '',  // Ensure non-null and proper URL or empty
+      eventPhoto, // Already adjusted to send as base64 string
+      virtualEventLink, 
       location,
-      eventCoordinates
+      eventCoordinates,
     );
     if (responseStatus) {
       navigate("/profile");
@@ -141,23 +141,23 @@ export default function EditEventDetails() {
       navigate("/profile");
     }
   };
-  
+
   // upon submit prevent default and call on update event funct
   function handleSubmit(e) {
     console.log("Edit Event PAGE", {
-      "title": title,
-      "event_start": eventStart,
-      "event_end": eventEnd,
-      "time_zone": timeZone,
-      "event_type": eventType,
-      "event_venue": eventVenue,
-      "event_venue_address": eventVenueAddress,
-      "description": description,
-      "category": category,
-      "event_photo": eventPhoto,
-      "virtual_event_link": virtualEventLink,
-      "location": location,
-      "eventCoordinates": eventCoordinates
+      title: title,
+      event_start: eventStart,
+      event_end: eventEnd,
+      time_zone: timeZone,
+      event_type: eventType,
+      event_venue: eventVenue,
+      event_venue_address: eventVenueAddress,
+      description: description,
+      category: category,
+      event_photo: eventPhoto,
+      virtual_event_link: virtualEventLink,
+      location: location,
+      eventCoordinates: eventCoordinates,
     });
     e.preventDefault();
     updateEvent();
@@ -283,16 +283,17 @@ export default function EditEventDetails() {
                       setEventVenueAddress={setEventVenueAddress}
                       setLocation={setLocation}
                     />
-                    </Form.Label>
-                    <br />
-                    <Form.Label>Is this the correct address?
-                      <input
-                        name="address"
-                        type="text"
-                        size={40}
-                        value={eventVenueAddress}
-                        onChange={(e) => setEventVenueAddress(e.target.value)}
-                      />
+                  </Form.Label>
+                  <br />
+                  <Form.Label>
+                    Is this the correct address?
+                    <input
+                      name="address"
+                      type="text"
+                      size={40}
+                      value={eventVenueAddress}
+                      onChange={(e) => setEventVenueAddress(e.target.value)}
+                    />
                   </Form.Label>
                 </Form.Group>
               </>
