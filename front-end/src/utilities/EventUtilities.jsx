@@ -6,7 +6,7 @@ export const getEventDetails = async (eventID) => {
     return eventDetails;
 };
 
-export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink) => {
+export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink, location, eventCoordinates) => {
     let response = await api.post("events/", {
         "title" : title,
         "event_start" : eventStart,
@@ -19,6 +19,8 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
         "category" : category,
         "event_photo" : eventPhoto,  // Set up as a base64 for the backend 
 		"virtual_event_link": virtualEventLink,
+        "location": location,
+        "coordinates": eventCoordinates,
     });
     if (response.status === 201) {
         return true;
@@ -38,7 +40,7 @@ export const setUserAttending = async (eventID, usersAttending) => {
     }
 };
 
-export const updateEventDetails = async (eventID, title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink) => {
+export const updateEventDetails = async (eventID, title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink, location, eventCoordinates) => {
     let response = await api.put(`events/${eventID}/`, {
         "title" : title,
         "event_start" : eventStart,
@@ -50,7 +52,9 @@ export const updateEventDetails = async (eventID, title, eventStart, eventEnd, t
         "description" : description,
         "category" : category,
         "event_photo" : eventPhoto,
-		"virtual_event_link": virtualEventLink
+		"virtual_event_link": virtualEventLink,
+        "location": location,
+        "coordinates": eventCoordinates
     });
     console.log(response.status);
     if (response.status === 200) {
