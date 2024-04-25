@@ -82,7 +82,7 @@ export default function EditEventDetails() {
   // get event details using utility function and set all data
   const getEvent = async () => {
     const eventDetails = await getEventDetails(eventID);
-    //console.log(eventDetails);
+    console.log('EditEvent --getEvent function--eventDetails',eventDetails);
     setEvent(eventDetails);
     setTitle(eventDetails.title);
     setEventStart(eventDetails.eventStart);

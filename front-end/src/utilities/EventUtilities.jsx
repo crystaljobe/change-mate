@@ -104,3 +104,11 @@ export const deleteEvent = async (eventID, event) => {
         return true;
     }
 }
+
+
+export const getiCalEventDetails = async (eventID) => {
+  const response = await api.get(`events/${eventID}/iCal/`);
+  let eventDetails = response.data;
+  console.log('UTILITIES PAGE->', eventDetails)
+  return eventDetails;
+};

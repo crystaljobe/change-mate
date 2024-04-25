@@ -5,9 +5,11 @@ import "add-to-calendar-button";
 import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
 import { getUserProfile } from "../utilities/UserProfileUtilities";
 import { getEventIcon } from '../utilities/DefaultIconsUtilities';
+import { getiCalEventDetails } from "../utilities/EventUtilities";
 
 export default function EventDetails() {
   let { eventID } = useParams();
+  const [iCalDetails, setiCalDetails] = useState([]);
   const [eventDetails, setEventDetails] = useState([]);
   const [collaborators, setCollaborators] = useState([]);
   const [usersAttending, setUsersAttending] = useState([]);
@@ -33,6 +35,15 @@ export default function EventDetails() {
     let userResponse = await getUserProfile(user);
     let events = userResponse.events_attending
     setEventsAttending(events)
+  };
+
+  //gets iCal-specific format of event Details for add-to-personal-calendar button
+  const getiCalInfo = async () => {
+    const response = await getiCalEventDetails(eventID);
+    console.log("EVENT DETAILS page--iCal response:", response);
+
+    setiCalDetails(response);
+
   };
 
   // //adding function to format date in more readable way
@@ -71,6 +82,7 @@ export default function EventDetails() {
 
   useEffect(() => {
     getEvent();
+    getiCalInfo();
   }, []);
 
   // onClick function for RSVP button to handle rsvp api call
@@ -179,7 +191,9 @@ export default function EventDetails() {
                     </li>
                     <li>
                       <strong> Virtual or In-Person?: </strong>
-                      {eventDetails && eventDetails.event_type}
+                      {iCalDetails && iCalDetails.event_type}
+
+
                     </li>
                     {eventDetails.event_type === "Virtual" ? (
                       <li>
