@@ -59,7 +59,7 @@ class EventsView(TokenReq):
         if start_date and end_date:
             queryset = events.filter(event_start__date__range=[start_date, end_date])
         #if no end date given search only for dates on start date
-        if start_date:
+        if start_date and not end_date:
             queryset = events.filter(event_start__date=start_date)
         # case-insensitive partial match for filtering for location
         if location:
@@ -193,3 +193,6 @@ class DefautlEventIcon(APIView):
             icon_url = json_response.get('icon').get("thumbnail_url")
             return Response(icon_url)
         return Response("This parameter doesn't exist within the noun project")
+     
+
+     
