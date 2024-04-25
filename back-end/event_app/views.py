@@ -48,6 +48,7 @@ class EventsView(TokenReq):
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
         location = request.query_params.get('location')
+        general = request.query_params.get('keyword')
         
         # case-insensitive partial match for filtering for location
         if category:
@@ -64,10 +65,23 @@ class EventsView(TokenReq):
         # case-insensitive partial match for filtering for location
         if location:
             queryset = events.filter(location__icontains=location) 
+            
+        if general:
+            queryset = events.filter(
+                title__icontains=general,
+                description__icontains=general,
+                category__category__icontains=general,                
+                )
+        else:
+            queryset = events.all()        
+            
+    
         
         # serialize data and return data and status 200
         ser_queryset = EventDetailsSerializer(queryset, many=True)
         return Response(ser_queryset.data, status=HTTP_200_OK)
+
+    
 
 
     @swagger_auto_schema(
