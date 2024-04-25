@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import "add-to-calendar-button";
 import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
 import { getUserProfile } from "../utilities/UserProfileUtilities";
+import { getEventIcon } from '../utilities/DefaultIconsUtilities';
 
 export default function EventDetails() {
   let { eventID } = useParams();
@@ -11,10 +12,21 @@ export default function EventDetails() {
   const [collaborators, setCollaborators] = useState([]);
   const [usersAttending, setUsersAttending] = useState([]);
   const [eventsAttending, setEventsAttending] = useState([]);
+  const [eventIcon, setEventIcon] = useState("");
   const [userID, setUserID] = useState();
   const myOutletContextObj = useOutletContext();
   const { user } = myOutletContextObj;
   const collaboratorsStr = collaborators.join(", ");
+
+  // Fetches default event icon
+  const fetchEventIcon = async () => {
+    const icon = await getEventIcon()
+    setEventIcon(icon)
+}
+
+  useEffect(() => {
+    fetchEventIcon()
+  }, []);
 
   // Gets list of events user is attending; Used in isUserAttending function
   const handleUserEventsAttending = async () => {
@@ -129,17 +141,8 @@ export default function EventDetails() {
               >
                 Hosted by: {collaboratorsStr}
               </Card.Subtitle>
-
-              {/* if there is an event photo, will show up here: */}
-              {eventDetails.event_photo && (
-                <div className="text-center">
-                  <img
-                    src={eventDetails.event_photo}
-                    alt="Event"
-                    style={{ width: "100%", marginTop: "20px" }}
-                  />
-                </div>
-              )}
+              {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
+              <Card.Img variant="top" src={eventDetails.event_photo || eventIcon} style={{ height: '500px' }} alt={`${eventDetails.title}'s photo`} />
 
               <ListGroup variant="flush">
                 {/* !!updated this information to reflect current variable names */}
