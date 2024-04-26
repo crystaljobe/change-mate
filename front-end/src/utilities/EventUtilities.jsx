@@ -52,7 +52,7 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
         "event_photo" : eventPhoto,  // Set up as a base64 for the backend 
 		"virtual_event_link": virtualEventLink,
         "location": location,
-        "eventCoordinates": eventCoordinates,
+        "Coordinates": eventCoordinates,
     });
     if (response.status === 201) {
         return true;
@@ -88,7 +88,7 @@ export const updateEventDetails = async (eventID, title, eventStart, eventEnd, t
             "event_photo": eventPhoto,
             "virtual_event_link": virtualEventLink || null,  //to satisfy backend requirements 
             "location": location,
-            "eventCoordinates": eventCoordinates || "" //to satisfy backend requirements 
+            "Coordinates": eventCoordinates || "" //to satisfy backend requirements 
         });
         console.log(response.status);
         if (response.status === 200) {
