@@ -188,7 +188,7 @@ export const updateEventDetails = async (eventID, title, eventStart, eventEnd, t
             "event_photo": eventPhoto,
             "virtual_event_link": virtualEventLink || null,  //to satisfy backend requirements 
             "location": location,
-            "Coordinates": eventCoordinates || "" //to satisfy backend requirements 
+            "coordinates": eventCoordinates || "" //to satisfy backend requirements 
         });
         console.log(response.status);
         if (response.status === 200) {
