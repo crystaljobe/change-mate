@@ -115,8 +115,8 @@ class EventsView(TokenReq):
                 event_photo = data['event_photo'],
                 description = data['description'],
                 category = category,
-                location = data['location'],
-                coordinates = data['coordinates']
+                # location = data['location'], ## Commented out to allow post requests to go through until location and coordinates are set up in the front end
+                # coordinates = data['coordinates']
                 )
 
             # set request user as collaborator
