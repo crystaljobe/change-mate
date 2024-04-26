@@ -102,6 +102,8 @@ export default function CreateEvent() {
       description: description,
       category: category,
       event_photo: eventPhoto,
+      location: location,
+      coordinates: eventCoordinates
     });
     e.preventDefault();
     for (let i = 0; i < 5; i++) {
