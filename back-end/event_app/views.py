@@ -20,6 +20,8 @@ from interest_app.models import InterestCategory
 from rest_framework import viewsets
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.db.models import Q
+
 
 # views for all events
 class EventsView(TokenReq):
@@ -40,7 +42,7 @@ class EventsView(TokenReq):
     )
     def get(self, request, *args, **kwargs):
         # get event object instances as baseline
-        events = Event.objects.all()
+        queryset = Event.objects.all()
         # get parameter values passed in request
         # if key doesn't exist returns None
         category = request.query_params.get('category')
@@ -50,31 +52,36 @@ class EventsView(TokenReq):
         location = request.query_params.get('location')
         general = request.query_params.get('keyword')
         
+        
+        
         # case-insensitive partial match for filtering for location
-        if category:
-            queryset = events.filter(category__category__icontains=category)
         # event_type search will be exact match
         if event_type:
-            queryset = events.filter(event_type=event_type)
+            queryset = queryset.filter(event_type=event_type)
+          
+        if category:
+            queryset = queryset.filter(category__category__icontains=category)
+         
         # if start and end dates given search for events in date range
         if start_date and end_date:
-            queryset = events.filter(event_start__date__range=[start_date, end_date])
+            queryset = queryset.filter(event_start__date__range=[start_date, end_date])
+           
         #if no end date given search only for dates on start date
         if start_date and not end_date:
-            queryset = events.filter(event_start__date=start_date)
+            queryset = queryset.filter(event_start__date=start_date)
+         
         # case-insensitive partial match for filtering for location
         if location:
-            queryset = events.filter(location__icontains=location) 
-            
+            queryset = queryset.filter(location__icontains=location) 
+           
+        # case-insensitive partical match for filtering for keywords in title, description, and category    
         if general:
-            queryset = events.filter(
-                title__icontains=general,
-                description__icontains=general,
-                category__category__icontains=general,                
+            queryset = queryset.filter(
+                Q(title__icontains=general) |
+                Q(description__icontains=general) |
+                Q(category__category__icontains=general)
                 )
-        else:
-            queryset = events.all()        
-            
+        
     
         
         # serialize data and return data and status 200
@@ -108,6 +115,8 @@ class EventsView(TokenReq):
                 event_photo = data['event_photo'],
                 description = data['description'],
                 category = category,
+                location = data['location'], 
+                coordinates = data['coordinates']
                 )
 
             # set request user as collaborator
