@@ -93,6 +93,7 @@ export default function EditEventDetails() {
     setDescription(eventDetails.description);
     setCategory(eventDetails.category.id);
     setPhotoPreview(eventDetails.event_photo);
+    setEventPhoto(eventDetails.eventPhoto);
     setEventVenueAddress(eventDetails.event_venue_address);
   };
 
@@ -338,6 +339,7 @@ export default function EditEventDetails() {
                 accept="image/*"
                 onChange={handleImageChange}
               />
+              {/*  This sets the location of the image preview on the screen/form*/}
               {photoPreview && (
                 <img
                   src={photoPreview}
