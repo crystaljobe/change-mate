@@ -9,236 +9,235 @@ import { getUserProfile } from '../utilities/UserProfileUtilities';
 
 // Define the UserProfile component which accepts a user prop
 export default function UserProfile({ user }) {
-    // Use the OutletContext to get userProfileData and its setter function
-    const { userProfileData, setUserProfileData } = useOutletContext();
+  // Use the OutletContext to get userProfileData and its setter function
+  const { userProfileData, setUserProfileData } = useOutletContext();
 
-    // State variables to hold various user and events related data
-    const [eventsAttending, setEventsAttending] = useState([]);
-    const [userEvents, setUserEvents] = useState([]);
-    const [userInterests, setUserInterests] = useState([]);
-    const [userPhoto, setUserPhoto] = useState(""); // Initialize userPhoto with an empty string
-    const [profileIcon, setProfileIcon] = useState("");
-    const [eventIcon, setEventIcon] = useState("");
-    const [selectedDate, setSelectedDate] = useState(new Date()); // Holds the date selected in the calendar
+  // State variables to hold various user and events related data
+  const [eventsAttending, setEventsAttending] = useState([]);
+  const [userEvents, setUserEvents] = useState([]);
+  const [userInterests, setUserInterests] = useState([]);
+  const [userPhoto, setUserPhoto] = useState(""); // Initialize userPhoto with an empty string
+  const [profileIcon, setProfileIcon] = useState("");
+  const [eventIcon, setEventIcon] = useState("");
 
-    // Fetches default event icon
-    const fetchEventIcon = async () => {
-        const icon = await getEventIcon()
-        setEventIcon(icon)
-    }
+  // Fetches default event icon
+  const fetchEventIcon = async () => {
+    const icon = await getEventIcon()
+    setEventIcon(icon)
+  }
 
-    useEffect(() => {
-        fetchEventIcon()
-    }, []);
+  useEffect(() => {
+    fetchEventIcon()
+  }, []);
 
-    // useEffect to fetch profile and icon data on component mount
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Use Promise.all for parallel asynchronous calls to get profile and icon data
-                const [iconData, userProfile] = await Promise.all([getProfileIcon(), getUserProfile(user)]);
-                setProfileIcon(iconData);
-                setUserProfileData(userProfile);
-                setUserEvents(userProfile.user_events);
-                setEventsAttending(userProfile.events_attending);
-                setUserPhoto(userProfile.image);
-                let interests = userProfile.interests.map(cat => cat.category);
-                setUserInterests(interests);
-            } catch (error) {
-                console.error('Failed to fetch data:', error);
-                // Optionally, update the UI to show an error message here
-            }
-        };
-        fetchData();
-    }, [user, setUserProfileData]);
-
-    // Handler for date click event on the calendar
-    const handleDateClick = (arg) => {
-        setSelectedDate(arg.date);
+  // useEffect to fetch profile and icon data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Use Promise.all for parallel asynchronous calls to get profile and icon data
+        const [iconData, userProfile] = await Promise.all([getProfileIcon(), getUserProfile(user)]);
+        console.log('Profile data:', userProfile); // Log the entire profile data
+        console.log('User events:', userProfile.user_events); // Log user events
+        console.log('Events attending:', userProfile.events_attending); // Log events attending
+        setProfileIcon(iconData);
+        setUserProfileData(userProfile);
+        setUserEvents(userProfile.user_events);
+        setEventsAttending(userProfile.events_attending);
+        setUserPhoto(userProfile.image);
+        let interests = userProfile.interests.map(cat => cat.category);
+        setUserInterests(interests);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+        // Optionally, update the UI to show an error message here
+      }
     };
+    fetchData();
+  }, [user, setUserProfileData]);
 
-    // Map events attending to the format required by FullCalendar
-    const calendarEvents = eventsAttending.map(event => ({
-        title: event.title,
-        date: event.date,
-        id: event.id,
-    }));
+  // Map events attending to the format required by FullCalendar
+  const calendarEvents = eventsAttending.map(event => ({
+    title: event.title,
+    start: event.event_start, 
+    end: event.event_end,     
+    id: event.id,
+  }));
+  console.log('Formatted Calendar Events:', calendarEvents);
 
-    // Join user interests array into a string for display
-    const userIntStr = userInterests.join(', ');
 
-    // Function to render user's profile information using Card component
-    const renderProfileInfo = () => (
-        <Card className="text-center" style={{ width: '18rem' }}>
-            <Card.Header>Profile Info</Card.Header>
-            {/* Display user photo or a default icon if photo is not available */}
-            <Card.Img variant="top" src={userPhoto || profileIcon} style={{ height: '250px' }} alt={`${userProfileData.display_name}'s photo`} />
-            <Card.Body>
-                <Card.Title as='h3' style={{ fontWeight: 'bold', color: "#6840DF", textDecoration: 'underline' }}>
-                    {userProfileData.display_name}
-                </Card.Title>
-                <br />
-                <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Locations:</Card.Subtitle>
-                <Card.Text>
-                    {userProfileData.location}
-                </Card.Text>
-                <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Interests:</Card.Subtitle>
-                <Card.Text>
-                    {userIntStr}
-                </Card.Text>
-                <Button variant="info" as={Link} to={'/editprofile'}>
-                    Edit Profile
-                </Button>
-            </Card.Body>
-        </Card>
-    );
+  // Join user interests array into a string for display
+  const userIntStr = userInterests.join(', ');
 
-    console.log('USER PROFILE -- userEvents:', userEvents)
+  // Function to render user's profile information using Card component
+  const renderProfileInfo = () => (
+    <Card className="text-center" style={{ width: '18rem' }}>
+      <Card.Header>Profile Info</Card.Header>
+      {/* Display user photo or a default icon if photo is not available */}
+      <Card.Img variant="top" src={userPhoto || profileIcon} style={{ height: '250px' }} alt={`${userProfileData.display_name}'s photo`} />
+      <Card.Body>
+        <Card.Title as='h3' style={{ fontWeight: 'bold', color: "#6840DF", textDecoration: 'underline' }}>
+          {userProfileData.display_name}
+        </Card.Title>
+        <br />
+        <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Locations:</Card.Subtitle>
+        <Card.Text>
+          {userProfileData.location}
+        </Card.Text>
+        <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Interests:</Card.Subtitle>
+        <Card.Text>
+          {userIntStr}
+        </Card.Text>
+        <Button variant="info" as={Link} to={'/editprofile'}>
+          Edit Profile
+        </Button>
+      </Card.Body>
+    </Card>
+  );
 
-    // Main component layout using Bootstrap's grid system
-    return (
-      <Container fluid>
-        <Row className="justify-content-md-center">
-          <Col md={3}>{renderProfileInfo()}</Col>
-          <Col md={4}>
-            <h1 style={{ color: "#6840DF" }}>Your Events</h1>
-            <Row>
-              {userEvents.length === 0 ? (
-                <h3 style={{ fontStyle: "italic" }}>
-                  Doesn't look like you have any events you're collaborating on
-                  at this time
-                </h3>
-              ) : (
-                userEvents.map((event) => (
-                  <CardGroup key={event.id} className="p-2">
-                    <Card style={{ width: "18rem" }}>
-                      <Card.Body>
-                        <Card.Title>{event.title}</Card.Title>
+  console.log('USER PROFILE -- userEvents:', userEvents)
 
-                        {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
+  // Main component layout using Bootstrap's grid system
+  return (
+    <Container fluid>
+      <Row className="justify-content-md-center">
+        <Col md={3}>{renderProfileInfo()}</Col>
+        <Col md={4}>
+          <h1 style={{ color: "#6840DF" }}>Your Events</h1>
+          <Row>
+            {userEvents.length === 0 ? (
+              <h3 style={{ fontStyle: "italic" }}>
+                Doesn't look like you have any events you're collaborating on
+                at this time
+              </h3>
+            ) : (
+              userEvents.map((event) => (
+                <CardGroup key={event.id} className="p-2">
+                  <Card style={{ width: "18rem" }}>
+                    <Card.Body>
+                      <Card.Title>{event.title}</Card.Title>
 
-                        <Card.Img
-                          variant="top"
-                          src={
-                            (event.event_photo && event.event_photo) ||
-                            eventIcon
-                          }
-                          style={{ height: "200px", width: "200px" }}
-                          alt={`${event.title}'s photo`}
-                        />
+                      {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
 
-                        <Card.Text>
-                          <strong> When: </strong>{" "}
-                          {` ${event.startDate} at ${event.startTime} -- ${event.endDate} at ${event.endTime}`}
-                          <br />
-                          <strong>Event Type: </strong> {event.event_type}
-                          <br />
-                          {event.event_type === "Virtual" ? null : (
-                            <>
-                              <strong>Location: </strong>
-                              {event.event_venue}
-                            </>
-                          )}
-                        </Card.Text>
+                      <Card.Img
+                        variant="top"
+                        src={
+                          (event.event_photo && event.event_photo) ||
+                          eventIcon
+                        }
+                        style={{ height: "200px", width: "200px" }}
+                        alt={`${event.title}'s photo`}
+                      />
 
-                        <Button
-                          style={{ margin: 3 }}
-                          variant="info"
-                          as={Link}
-                          to={`/editevent/${event.id}`}
-                        >
-                          Edit Event Details
-                        </Button>
+                      <Card.Text>
+                        <strong> When: </strong>{" "}
+                        {` ${event.startDate} at ${event.startTime} -- ${event.endDate} at ${event.endTime}`}
+                        <br />
+                        <strong>Event Type: </strong> {event.event_type}
+                        <br />
+                        {event.event_type === "Virtual" ? null : (
+                          <>
+                            <strong>Location: </strong>
+                            {event.event_venue}
+                          </>
+                        )}
+                      </Card.Text>
 
-                        <Button
-                          style={{ margin: 3 }}
-                          variant="info"
-                          as={Link}
-                          to={`/event/${event.id}`}
-                        >
-                          View Event Details
-                        </Button>
-                      </Card.Body>
-                    </Card>
-                  </CardGroup>
-                ))
-              )}
-            </Row>
-            <Row>
-              <Button variant="primary" as={Link} to="/createevent">
-                Create New Event
-              </Button>
-            </Row>
-            <br />
+                      <Button
+                        style={{ margin: 3 }}
+                        variant="info"
+                        as={Link}
+                        to={`/editevent/${event.id}`}
+                      >
+                        Edit Event Details
+                      </Button>
 
-            <h1 style={{ color: "#6840DF" }}>Upcoming Events</h1>
-            <br />
-            <Row>
-              {eventsAttending.length > 0 ? (
-                eventsAttending.map((event) => (
-                  <CardGroup key={event.id} className="p-2">
-                    <Card key={event.id} style={{ width: "18rem" }}>
-                      <Card.Body>
-                        <Card.Title>{event.title}</Card.Title>
+                      <Button
+                        style={{ margin: 3 }}
+                        variant="info"
+                        as={Link}
+                        to={`/event/${event.id}`}
+                      >
+                        View Event Details
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                </CardGroup>
+              ))
+            )}
+          </Row>
+          <Row>
+            <Button variant="primary" as={Link} to="/createevent">
+              Create New Event
+            </Button>
+          </Row>
+          <br />
 
-                        {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
-                        <Card.Img
-                          variant="top"
-                          src={
-                            (event.event_photo && event.event_photo) ||
-                            eventIcon
-                          }
-                          style={{ height: "200px", width: "200px" }}
-                          alt={`${event.title}'s photo`}
-                        />
+          <h1 style={{ color: "#6840DF" }}>Upcoming Events</h1>
+          <br />
+          <Row>
+            {eventsAttending.length > 0 ? (
+              eventsAttending.map((event) => (
+                <CardGroup key={event.id} className="p-2">
+                  <Card key={event.id} style={{ width: "18rem" }}>
+                    <Card.Body>
+                      <Card.Title>{event.title}</Card.Title>
 
-                        <Card.Text>
-                          <strong> When: </strong>{" "}
-                          {` ${event.startDate} at ${event.startTime} -- ${event.endDate} at ${event.endTime}`}
-                          <br />
-                          <strong>Event Type: </strong> {event.event_type}
-                          <br />
-                          {event.event_type === "Virtual" ? null : (
-                            <>
-                              <strong>Location: </strong>
-                              {event.event_venue}
-                            </>
-                          )}
-                        </Card.Text>
+                      {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
+                      <Card.Img
+                        variant="top"
+                        src={
+                          (event.event_photo && event.event_photo) ||
+                          eventIcon
+                        }
+                        style={{ height: "200px", width: "200px" }}
+                        alt={`${event.title}'s photo`}
+                      />
 
-                        <Button
-                          variant="info"
-                          as={Link}
-                          to={`/event/${event.id}`}
-                        >
-                          View Event Details
-                        </Button>
-                      </Card.Body>
-                    </Card>
-                  </CardGroup>
-                ))
-              ) : (
-                <h3 style={{ fontStyle: "italic" }}>
-                  Doesn't look like you've RSVP'd to any events yet.
-                </h3>
-              )}
-            </Row>
-            <Row>
-              <Button variant="primary" as={Link} to="/events">
-                I'm ready to make a difference!
-              </Button>
-            </Row>
-          </Col>
-          <Col md={5}>
-            {/* FullCalendar component for displaying events in a monthly grid */}
-            <FullCalendar
-              plugins={[dayGridPlugin]}
-              initialView="dayGridMonth"
-              dateClick={handleDateClick}
-              events={calendarEvents}
-            />
-          </Col>
-        </Row>
-      </Container>
-    );
+                      <Card.Text>
+                        <strong> When: </strong>{" "}
+                        {` ${event.startDate} at ${event.startTime} -- ${event.endDate} at ${event.endTime}`}
+                        <br />
+                        <strong>Event Type: </strong> {event.event_type}
+                        <br />
+                        {event.event_type === "Virtual" ? null : (
+                          <>
+                            <strong>Location: </strong>
+                            {event.event_venue}
+                          </>
+                        )}
+                      </Card.Text>
+
+                      <Button
+                        variant="info"
+                        as={Link}
+                        to={`/event/${event.id}`}
+                      >
+                        View Event Details
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                </CardGroup>
+              ))
+            ) : (
+              <h3 style={{ fontStyle: "italic" }}>
+                Doesn't look like you've RSVP'd to any events yet.
+              </h3>
+            )}
+          </Row>
+          <Row>
+            <Button variant="primary" as={Link} to="/events">
+              I'm ready to make a difference!
+            </Button>
+          </Row>
+        </Col>
+        <Col md={5}>
+          {/* FullCalendar component for displaying events in a monthly grid */}
+          <FullCalendar
+            plugins={[dayGridPlugin]}
+            initialView="dayGridMonth"
+            events={calendarEvents}
+          />
+        </Col>
+      </Row>
+    </Container>
+  );
 }
