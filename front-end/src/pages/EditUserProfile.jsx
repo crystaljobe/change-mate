@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
-import { AddressAutofill } from "@mapbox/search-js-react";
 import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
 import {
   getUserProfile,
@@ -18,6 +17,12 @@ export default function EditUserProfile({ user }) {
   const [userLocation, setUserLocation] = useState([]);
   const [profileImage, setProfileImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
+  const [apiCountries, setApiCountries] = useState([]);
+  const [apiStates, setApiStates] = useState([]);
+  const [apiCities, setApiCities] = useState([]);
+  const [countryAdd, setCountryAdd] = useState("");
+  const [stateAdd, setStateAdd] = useState("");
+  const [cityAdd, setCityAdd] = useState("");
   // create var navigate for navigating
   const navigate = useNavigate();
 
@@ -53,6 +58,18 @@ export default function EditUserProfile({ user }) {
       navigate("/profile");
     }
   };
+
+  const handleAddLocation = (e) => {
+    console.log('Location to be added', countryAdd, stateAdd, cityAdd)
+    const locationAdd = {
+      country: countryAdd,
+      state: stateAdd,
+      city: cityAdd
+    }
+    const updatedLocation = [...userLocation, locationAdd]
+    setUserLocation([locationAdd]) //TODO: set fir st location to just locationAdd, then switch to using updatedLocation after the string "Colorado Springs" has been overwritten
+  }
+  console.log('userLocation', userLocation)
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -97,20 +114,41 @@ export default function EditUserProfile({ user }) {
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formLocationSearch">
               <Form.Label>
-                Enter your area:
+                Country
                 <br />
-                <AddressAutofill accessToken="pk.eyJ1IjoibWNyZXlub2xkc2giLCJhIjoiY2x2MzFuNzN6MGhoOTJycnd5ZHQ3eWR4ayJ9.QKI5tsCAXhuzNb2XzhyjOg">
-                  <input
-                    name="city"
-                    placeholder="city"
-                    autoComplete="address-level2"
-                    value={userLocation}
-                    type="text"
-                    size={40}
-                    onChange={(e) => setUserLocation(e.target.value)}
-                  />
-                </AddressAutofill>
+                <input
+                  name="country"
+                  placeholder="Country"
+                  type="text"
+                  size={40}
+                  onChange={(e) => setCountryAdd(e.target.value)}
+                />
               </Form.Label>
+              <Form.Label>
+                Region/State
+                <br />
+                <input
+                  name="state"
+                  placeholder=" Region/State"
+                  type="text"
+                  size={40}
+                  onChange={(e) => setStateAdd(e.target.value)}
+                />
+              </Form.Label>
+              <Form.Label>
+                City
+                <br />
+                <input
+                  name="city"
+                  placeholder="City"
+                  type="text"
+                  size={40}
+                  onChange={(e) => setCityAdd(e.target.value)}
+                />
+              </Form.Label>
+              <Button variant="info" onClick={(e) => handleAddLocation()}> 
+              Add Location
+            </Button>
             </Form.Group>
             <Form.Group className="mb-3" controlId="display_name">
               <Form.Label>
