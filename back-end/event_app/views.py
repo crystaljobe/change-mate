@@ -53,27 +53,27 @@ class EventsView(TokenReq):
         general = request.query_params.get('keyword')
         
         
-        print("START", len(queryset))
+        
         # case-insensitive partial match for filtering for location
         # event_type search will be exact match
         if event_type:
             queryset = queryset.filter(event_type=event_type)
-            print("type", len(queryset))
+          
         if category:
             queryset = queryset.filter(category__category__icontains=category)
-            print("category", len(queryset))
+         
         # if start and end dates given search for events in date range
         if start_date and end_date:
             queryset = queryset.filter(event_start__date__range=[start_date, end_date])
-            print("range", len(queryset))
+           
         #if no end date given search only for dates on start date
         if start_date and not end_date:
             queryset = queryset.filter(event_start__date=start_date)
-            print("date", len(queryset))
+         
         # case-insensitive partial match for filtering for location
         if location:
             queryset = queryset.filter(location__icontains=location) 
-            print("location", len(queryset))
+           
         # case-insensitive partical match for filtering for keywords in title, description, and category    
         if general:
             queryset = queryset.filter(
@@ -81,11 +81,7 @@ class EventsView(TokenReq):
                 Q(description__icontains=general) |
                 Q(category__category__icontains=general)
                 )
-            print("keyword", len(queryset))
-   
-            
-        # remove any duplicates from queryset
-        queryset = queryset.distinct()
+        
     
         
         # serialize data and return data and status 200
