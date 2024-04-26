@@ -34,7 +34,7 @@ export default function LocationSearchMap() {
     return (
         <div>
             {/* map container */}
-            <div ref={mapContainer} className="location-search-map-container"></div>
+            <div ref={mapContainer} className="static-map-container"></div>
         </div>
     )
 }

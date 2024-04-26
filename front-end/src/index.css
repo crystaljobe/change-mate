@@ -23,6 +23,11 @@ nav {
   margin-left: 20px;
 }
 
+.static-map-container {
+  height: 250px;
+  width: 300px;
+}
+
 .map-container {
     height: 500px;
   }
