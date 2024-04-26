@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -6,10 +7,13 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import './SearchEvents.css'; // Assuming you add a CSS file for extra styles
-import { getEventDetailsAllFilters, getEventDetailsNoEventType, getEventDetailsAllFiltersExactDate, getEventDetailsNoLocation, getEventDetailsNoSearchTermSearchType, getEventDetailsLocExactDateSearchTermSearchType, getEventDetailsLocEventTypeSearchTermSearchType, getEventDetailsDateRangeSearchTermSearchType, getEventDetailsLocDateRange, getEventDetailsLocExactDateEventType, getEventDetailsLocSearchTermSearchType, getEventDetailsDateRangeEventType, getEventDetailsExactDateSearchTermSearchType, getEventDetailsEventTypeSearchTermSearchType, getEventDetailsLocExactDate, getEventDetailsLocEventType, getEventDetailsDateRange, getEventDetailsExactDateEventType, getEventDetailsSearchTermSearchType, getEventDetailsLocation, getEventDetailsExactDate, getEventDetailsEventType } from "../../utilities/EventUtilities";
+import { getEventDetailsAllFilters, getEventDetailsNoEventType, getEventDetailsAllFiltersExactDate, getEventDetailsNoLocation, getEventDetailsNoSearchTermSearchType, getEventDetailsLocExactDateSearchTermSearchType, getEventDetailsLocEventTypeSearchTermSearchType, getEventDetailsDateRangeSearchTermSearchType, getEventDetailsLocDateRange, getEventDetailsLocExactDateEventType, getEventDetailsLocSearchTermSearchType, getEventDetailsDateRangeEventType, getEventDetailsExactDateSearchTermSearchType, getEventDetailsEventTypeSearchTermSearchType, getEventDetailsLocExactDate, getEventDetailsLocEventType, getEventDetailsDateRange, getEventDetailsExactDateEventType, getEventDetailsSearchTermSearchType, getEventDetailsLocation, getEventDetailsExactDate, getEventDetailsEventType, getLocalEventDetails } from "../../utilities/EventUtilities";
+import { getUserProfile } from "../../utilities/UserProfileUtilities";
 import EventCard from "../../components/EventCard";
 
 function SearchEvents() {
+    const [userLocations, setUserLocations] = useState([]);
+    const [localEvents, setLocalEvents] = useState([]);
     const [searchType, setSearchType] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [searchDateStart, setSearchDateStart] = useState('');
@@ -21,8 +25,25 @@ function SearchEvents() {
     // TODO: once we have a spot on our events to indicate whether volunteers are needed, we can add functionality to sort searchEvents into searchEventsVolNeed
     const [eventsVolNeed, setEventsVolNeed] = useState([]);
     const [eventsAdditional, setEventsAdditional] = useState([]);
-    console.log('searchEvents', searchEvents)
+    const myOutletContextObj = useOutletContext();
+    const { user } = myOutletContextObj;
 
+    const getUserLocations= async () => {
+        const userResponse = await getUserProfile(user);
+        const locations = userResponse.location
+        setUserLocations(locations)
+    };
+
+    useEffect(() => {
+        getUserLocations()
+      }, []);
+
+    console.log(userLocations)
+
+    const getLocalEvents = async () => {
+        const events = await getLocalEventDetails(userLocations)
+        setLocalEvents(events)
+    }
 
     // Handles changing the searchType; SearchType is needed so that when the form submits it knows which API call to do
     const handleSearchTypeChange = (selectedType) => {
@@ -208,6 +229,7 @@ function SearchEvents() {
 
             // Event type
             const events = await getEventDetailsEventType(searchEventType)
+            console.log(events)
             setSearchEvents(events)
         }
     }
@@ -219,7 +241,7 @@ function SearchEvents() {
         // Loops through the searchEvents to determine if event is popular or not and sorts them into their respective categories
         for (const event of searchEvents) {
             // TODO: DEPLOYMENT - Currently for development purposes an event is popular if 1 user or more is attending; Before deployment we must chnage this to a more reasonable real-world threshhold
-            if (event.users_attending > 0) {
+            if (event.num_users_attending > 0) {
                 popEvents.push(event)
             } else {
                 unpopEvents.push(event)
@@ -283,7 +305,7 @@ function SearchEvents() {
                                         label="In-Person"
                                         name="group1"
                                         type='radio'
-                                        value='In-Person'
+                                        value='In-person'
                                         onChange={(e) => setSearchEventType(e.target.value)}
                                     />
                                     <Form.Check

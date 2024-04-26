@@ -6,6 +6,12 @@ export const getEventDetails = async (eventID) => {
     return eventDetails;
 };
 
+export const getLocalEventDetails = async (userLocations) => {
+    const response = await api.get(`events/`); // TODO: add query params once backend is set up
+    let eventDetails = response.data;
+    return eventDetails;
+};
+
 export const getEventDetailsAllFilters = async (searchLocation, searchDateStart, searchDateEnd, searchEventType, searchType, searchTerm) => {
     const response = await api.get(`events/?location=${searchLocation}&start_date=${searchDateStart}&end_date=${searchDateEnd}&type=${searchEventType}&${searchType}=${searchTerm}`);
     let eventDetails = response.data;
