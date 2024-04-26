@@ -104,7 +104,6 @@ class EventsView(TokenReq):
         category_id = data["category"]
         category = InterestCategory.objects.get(id = category_id)
         try:
-            print(type(data['coordinates'][0]))
             new_event = Event.objects.create(
                 title = data['title'],
                 event_start = data['event_start'],
@@ -116,7 +115,7 @@ class EventsView(TokenReq):
                 event_photo = data['event_photo'],
                 description = data['description'],
                 category = category,
-                location = data['location'], ## Commented out to allow post requests to go through until location and coordinates are set up in the front end
+                location = data['location'], 
                 coordinates = data['coordinates']
                 )
 
