@@ -17,9 +17,6 @@ from rest_framework.status import (
 from .serializers import Event, EventSerializer, ICalSerializer, EventDetailsSerializer
 from profile_app.models import UserProfile
 from interest_app.models import InterestCategory
-from rest_framework import viewsets
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 
 # views for all events
 class EventsView(TokenReq):
@@ -81,6 +78,7 @@ class EventsView(TokenReq):
         ser_queryset = EventDetailsSerializer(queryset, many=True)
         return Response(ser_queryset.data, status=HTTP_200_OK)
 
+
     
 
 
@@ -90,6 +88,7 @@ class EventsView(TokenReq):
         request_body=EventSerializer,
         responses={201: EventSerializer()},
     )
+
     def post(self, request):
         # create copy of request data
         data = request.data.copy()
@@ -123,9 +122,7 @@ class EventsView(TokenReq):
             print(e.message_dict)
             return Response(e)
     
-
-
-
+# views for a singular event
 class AnEvent(APIView):
     '''View a single event by ID'''
     @swagger_auto_schema(
@@ -137,13 +134,8 @@ class AnEvent(APIView):
         event = get_object_or_404(Event, id = event_id)
         ser_event = EventDetailsSerializer(event)
         return Response(ser_event.data, status=HTTP_200_OK)
-        
 
-    @swagger_auto_schema(
-        operation_summary="Update event details",
-        operation_description="Update details of a specific event by its ID.",
-        responses={200: EventSerializer(), 400: "Error: Bad Request"},
-    )
+    # edit event details
     def put(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
         # Pull user id from logged in user
@@ -168,14 +160,8 @@ class AnEvent(APIView):
             updated_event.save()
             return Response(updated_event.data, status=HTTP_200_OK)
         return Response(updated_event.error_messages, status=HTTP_400_BAD_REQUEST)
-
-
-
-    @swagger_auto_schema(
-        operation_summary="Delete event",
-        operation_description="Delete a specific event by its ID.",
-        responses={204: "Event deleted successfully"},
-    )       
+            
+    # delete event 
     def delete(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
         event.delete()

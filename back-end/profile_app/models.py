@@ -20,9 +20,11 @@ class UserProfile(models.Model):
         max_length=40,
         null=True,
         )
-    image = models.TextField(
+    image = models.ImageField(
         null=True,
-        max_length=10000000
+        blank=True,
+        upload_to = 'images/',
+        default='users/default-profile-icon.jpg',
         )
     location = models.TextField(
         null=True,
