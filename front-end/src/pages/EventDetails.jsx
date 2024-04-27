@@ -16,9 +16,11 @@ export default function EventDetails() {
   const [eventsAttending, setEventsAttending] = useState([]);
   const [eventIcon, setEventIcon] = useState("");
   const [userID, setUserID] = useState();
-  const myOutletContextObj = useOutletContext();
-  const { user } = myOutletContextObj;
+  const { user } = useOutletContext();
   const collaboratorsStr = collaborators.join(", ");
+  const latitude = eventDetails.lat;
+  const longitude = eventDetails.lon;
+  console.log(latitude, longitude)
 
   // Fetches default event icon
   const fetchEventIcon = async () => {

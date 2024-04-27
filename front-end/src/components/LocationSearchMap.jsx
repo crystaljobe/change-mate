@@ -6,7 +6,7 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 mapboxgl.accessToken =
     "pk.eyJ1IjoiY3J5c3RhbGpvYmUiLCJhIjoiY2x2Y3VkMzFxMG13ZzJrcGY5dDB0bGJvYyJ9.PV_ZgI2EhyhNfcRHmp2OPw";
 
-export default function LocationSearchMap( { setEventVenueAddress, setEventCoords, setLocation }) {
+export default function LocationSearchMap( { setAddress, setEventCoords, setLocation }) {
     const mapContainer = useRef(null);
     const map = useRef(null);
     //set default lat/lng once user renders page geocoder should retrieve user IP location
@@ -76,9 +76,8 @@ export default function LocationSearchMap( { setEventVenueAddress, setEventCoord
                             state = context.text_en;
                         }
                     })
-                    //console.log(event.result)
                     
-                    setEventVenueAddress(data.place_name)
+                    setAddress(data.place_name)
                     setEventCoords(data.geometry.coordinates)
                     setLocation(`${city}, ${state}`)
 
@@ -93,7 +92,8 @@ export default function LocationSearchMap( { setEventVenueAddress, setEventCoord
     return (
         <div>
             {/* map container */}
-            <div ref={mapContainer} className="location-search-map-container"></div>
+            <div ref={mapContainer} className="location-search-map-container">
+            </div>
         </div>
     );
 }

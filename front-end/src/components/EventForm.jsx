@@ -9,12 +9,11 @@ function EventForm({
     onTitleChange, onEventStartChange, onEventEndChange, onTimeZoneChange,
     onEventTypeChange, onEventVenueChange, onEventVenueAddressChange,
     onVirtualLinkChange, onDescriptionChange, onCategoryChange,
-    onLocation, eventCoordinates, timeZoneAbbreviations, handleSubmit
+    setLocation, setEventCoordinates, timeZoneAbbreviations, handleSubmit, setEventVenueAddress
 }) {
     // Handler to update event venue address and synchronize it with the location search map
     const handleLocationChange = (newAddress) => {
         onEventVenueAddressChange({ target: { value: newAddress } });
-        onLocation({ target: { value: newAddress } });
     };
 
     return (
@@ -80,9 +79,10 @@ function EventForm({
                             <Col sm={12} md={4}>
                                 <p>Feel free to use the plug-in below to set event location</p>
                                 <LocationSearchMap
-                                    setEventCoords={eventCoordinates}
+                                    setEventCoords={setEventCoordinates}
                                     setEventVenueAddress={handleLocationChange}
-                                    setLocation={handleLocationChange}
+                                    setAddress={setEventVenueAddress}
+                                    setLocation={setLocation}
                                 />
                             </Col>
                         </Row>

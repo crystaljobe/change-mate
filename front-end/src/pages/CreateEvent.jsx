@@ -15,7 +15,7 @@ export default function CreateEvent() {
   // needs comment for date format & how it's saved
   const [eventEnd, setEventEnd] = useState('');
   // time zone imported from utilities 
-  const [timeZone, setTimeZone] = useState('');
+  const [timeZone, setTimeZone] = useState('America/Adak');
   // event type = In-person or Virtual
   const [eventType, setEventType] = useState('In-Person');
   // event virtual link if a virtual event (ex. - user will input their zoom link)
@@ -27,15 +27,16 @@ export default function CreateEvent() {
   // event details text
   const [description, setDescription] = useState('');
   // event category for search functionality (only one cat per event)
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState(1);
   // the actual photo 
   const [eventPhoto, setEventPhoto] = useState('');
   // to display a photo so the user can see what picture they have
   const [photoPreview, setPhotoPreview] = useState('');
   // eventLocation format = "city, state"
-  const [location, setlocation] = useState('');
+  const [location, setLocation] = useState('');
   // eventCoordinates = "latitude, longitude"
   const [eventCoordinates, setEventCoordinates] = useState('');
+
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -107,8 +108,9 @@ export default function CreateEvent() {
         onVirtualLinkChange={(e) => setVirtualEventLink(e.target.value)}
         onDescriptionChange={(e) => setDescription(e.target.value)}
         onCategoryChange={(e) => setCategory(e.target.value)}
-        onCoordinateChange={(e) => setEventCoordinates(e.target.value)}
-        onLocation={(e) => setlocation(e.target.value)}
+        setEventCoordinates= {setEventCoordinates}
+        setLocation = {setLocation}
+        setEventVenueAddress={setEventVenueAddress}
         timeZoneAbbreviations={timeZoneAbbreviations}
         handleSubmit={handleSubmit}
       />

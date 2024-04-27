@@ -35,10 +35,11 @@ export default function EditEventDetails() {
   // to display a photo so the user can see what picture they have
   const [photoPreview, setPhotoPreview] = useState('');
   // eventLocation format = "city, state"
-  const [location, setlocation] = useState('');
+  const [location, setLocation] = useState('');
   // eventCoordinates = "latitude, longitude"
   const [eventCoordinates, setEventCoordinates] = useState('');
 
+  
   useEffect(() => {
     const fetchEventAndCategories = async () => {
       const eventDetails = await getEventDetails(eventID);
@@ -56,8 +57,8 @@ export default function EditEventDetails() {
       setCategory(eventDetails.category.id);
       setEventPhoto(eventDetails.event_photo);
       setPhotoPreview(eventDetails.event_photo);
-      setEventCoordinates(eventDetails.event_coordinates);
-      setlocation(eventDetails.location);
+      setEventCoordinates([eventDetails.lat, eventDetails.lon]);
+      setLocation(eventDetails.location);
     };
     fetchEventAndCategories();
   }, [eventID]);
@@ -135,8 +136,9 @@ export default function EditEventDetails() {
         onVirtualLinkChange={(e) => setVirtualEventLink(e.target.value)}
         onDescriptionChange={(e) => setDescription(e.target.value)}
         onCategoryChange={(e) => setCategory(e.target.value)}
-        onCoordinateChange={(e) => setEventCoordinates(e.target.value)}
-        onLocation={(e) => setlocation(e.target.value)}
+        setEventCoordinates= {setEventCoordinates}
+        setLocation = {setLocation}
+        setEventVenueAddress={setEventVenueAddress}
         timeZoneAbbreviations={timeZoneAbbreviations}
         handleSubmit={handleSubmit}
         handleDelete={handleDelete}

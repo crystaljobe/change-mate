@@ -6,13 +6,11 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 mapboxgl.accessToken =
     "pk.eyJ1IjoiY3J5c3RhbGpvYmUiLCJhIjoiY2x2Y3VkMzFxMG13ZzJrcGY5dDB0bGJvYyJ9.PV_ZgI2EhyhNfcRHmp2OPw";
 
-export default function LocationSearchMap() {
+export default function LocationSearchMap({ latitude, longitude }) {
     const mapContainer = useRef(null);
     const map = useRef(null); //stores the initialize of map only once so it doesn't reload upon user interaction
     //sets center coords of map
-    const [lng, setLng] = useState(-70.9);
-    const [lat, setLat] = useState(42.35);
-    const [zoom, setZoom] = useState(9);
+
 
     useEffect(() => {
         if (map.current) return; // initialize map only once
@@ -20,7 +18,7 @@ export default function LocationSearchMap() {
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v12',
             center: [lng, lat],
-            zoom: zoom
+            zoom: 10
         });
 
         map.current.on('move', () => {
@@ -29,7 +27,7 @@ export default function LocationSearchMap() {
             setZoom(map.current.getZoom().toFixed(2));
         });
 
-      }, []);
+      }, [latitude, longitude]);
 
     return (
         <div>
