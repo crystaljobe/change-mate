@@ -3,16 +3,16 @@
 @tailwind utilities; */
 
 :root {
-  --bodyColor:#f9f1e9;
+  --bodyColor:#FDF6EE;
   padding: 4px;
 }
 body {
-  background: #f9f1e9;
+  background: #FDF6EE;
 
 }
 
 nav {
-  background: #f9f1e9;  /* fallback for old browsers */
+  background: #FDF6EE; 
   flex-direction: row;
   border-bottom: solid;
 }
