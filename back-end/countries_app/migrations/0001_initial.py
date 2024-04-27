@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.IntegerField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=255)),
-                ('acronym', models.CharField(max_length=3)),
+                ('country_code', models.CharField(max_length=3)),
                 ('latitude', models.FloatField(blank=True, null=True)),
                 ('longitude', models.FloatField(blank=True, null=True)),
                 ('flag_emoji', models.TextField(max_length=255)),

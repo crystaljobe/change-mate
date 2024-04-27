@@ -24,7 +24,7 @@ def import_sightings(file_path):
             Countries.objects.create(
                 id=row['id'],
                 name=row['name'],
-                acronym=row['iso3'],
+                country_code=row['iso3'],
                 latitude=lat,
                 longitude=lon,
                 flag_emoji=row['emoji'],
