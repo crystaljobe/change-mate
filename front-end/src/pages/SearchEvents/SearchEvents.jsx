@@ -6,7 +6,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import './SearchEvents.css'; // Assuming you add a CSS file for extra styles
-import { getEventDetailsAllFilters, getEventDetailsNoEventType, getEventDetailsAllFiltersExactDate, getEventDetailsNoLocation, getEventDetailsNoSearchTermSearchType, getEventDetailsLocExactDateSearchTermSearchType, getEventDetailsLocEventTypeSearchTermSearchType, getEventDetailsDateRangeSearchTermSearchType, getEventDetailsLocDateRange, getEventDetailsLocExactDateEventType, getEventDetailsLocSearchTermSearchType, getEventDetailsDateRangeEventType, getEventDetailsExactDateSearchTermSearchType, getEventDetailsEventTypeSearchTermSearchType, getEventDetailsLocExactDate, getEventDetailsLocEventType, getEventDetailsDateRange, getEventDetailsExactDateEventType, getEventDetailsSearchTermSearchType, getEventDetailsLocation, getEventDetailsExactDate, getEventDetailsEventType } from "../../utilities/EventUtilities";
+import { getEventDetailsSearch } from "../../utilities/EventUtilities";
 import EventCard from "../../components/EventCard";
 
 function SearchEvents() {
@@ -31,185 +31,20 @@ function SearchEvents() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (searchLocation && searchLocation.length > 0 && // Location
-            searchDateStart && searchDateStart.length > 0 && // Start date
-            searchDateEnd && searchDateEnd.length > 0 && // End date
-            searchEventType && searchEventType.length > 0 && // Event type
-            searchType && searchType.length > 0 && // Search type
-            searchTerm && searchTerm.length > 0) { // Search term
-
-            // All inputs
-            const events = await getEventDetailsAllFilters(searchLocation, searchDateStart, searchDateEnd, searchEventType, searchType, searchTerm)
-            setSearchEvents(events)
-
-        } else if (searchLocation && searchLocation.length > 0 && // Location
-            searchDateStart && searchDateStart.length > 0 && // Start date
-            searchDateEnd && searchDateEnd.length > 0 && // End date
-            searchType && searchType.length > 0 && // Search type
-            searchTerm && searchTerm.length > 0) { // Search term
-
-            //  All inputs except Event type
-            const events = await getEventDetailsNoEventType(searchLocation, searchDateStart, searchDateEnd, searchType, searchTerm)
-            setSearchEvents(events)
-
-        } else if (searchLocation && searchLocation.length > 0 && // Location
-            searchDateStart && searchDateStart.length > 0 && // Start date
-            searchEventType && searchEventType.length > 0 && // Event type
-            searchType && searchType.length > 0 && // Search type
-            searchTerm && searchTerm.length > 0) { // Search term
-
-            // All inputs exact date
-            const events = await getEventDetailsAllFiltersExactDate(searchLocation, searchDateStart, searchEventType, searchType, searchTerm)
-            setSearchEvents(events)
-
-        } else if (searchDateStart && searchDateStart.length > 0 && // Start date
-            searchDateEnd && searchDateEnd.length > 0 && // End date
-            searchEventType && searchEventType.length > 0 && // Event type
-            searchType && searchType.length > 0 && // Search type
-            searchTerm && searchTerm.length > 0) { // Search term
-
-            // All inputs except Location
-            const events = await getEventDetailsNoLocation(searchDateStart, searchDateEnd, searchEventType, searchType, searchTerm)
-            setSearchEvents(events)
-            
-        } else if (searchLocation && searchLocation.length > 0 && // Location
-            searchDateStart && searchDateStart.length > 0 && //Start Date
-            searchDateEnd && searchDateEnd.length > 0 && // End Date
-            searchEventType && searchEventType.length > 0 ) { // Event type
-
-            // All inputs except Search term and Search type
-            const events = await getEventDetailsNoSearchTermSearchType(searchLocation, searchDateStart, searchDateEnd, searchEventType)
-            setSearchEvents(events)
-
-        } else if (searchLocation && searchLocation.length > 0 && // Location
-            searchDateStart && searchDateStart.length > 0 && // Start date
-            searchType && searchType.length > 0 && // Search type
-            searchTerm && searchTerm.length > 0) { // Search term
-
-            // Location + Start date + Search type + Search term
-            const events = await getEventDetailsLocExactDateSearchTermSearchType(searchLocation, searchDateStart, searchType, searchTerm)
-            setSearchEvents(events)
-            
-        } else if (searchLocation && searchLocation.length > 0 && // Location
-            searchEventType && searchEventType.length > 0 && // Event type
-            searchType && searchType.length > 0 && // Search type
-            searchTerm && searchTerm.length > 0) { // Search term
-
-            // Location + Event type + Search type + Search term
-            const events = await getEventDetailsLocEventTypeSearchTermSearchType(searchLocation, searchEventType, searchType, searchTerm)
-            setSearchEvents(events)
-
-        } else if (searchDateStart && searchDateStart.length > 0 && // Start date
-            searchDateEnd && searchDateEnd.length > 0 && // End date
-            searchType && searchType.length > 0 && // Search type
-            searchTerm && searchTerm.length > 0) { // Search term
-
-            // Start date + End date + Search type + Search term
-            const events = await getEventDetailsDateRangeSearchTermSearchType(searchDateStart, searchDateEnd, searchType, searchTerm)
-            setSearchEvents(events)
-            
-        } else if (searchLocation && searchLocation.length > 0 && // Location
-            searchDateStart && searchDateStart.length > 0 && // Start date
-            searchDateEnd && searchDateEnd.length > 0) { // End date
-
-            // Location + Start date + End date
-            const events = await getEventDetailsLocDateRange(searchLocation, searchDateStart, searchDateEnd)
-            setSearchEvents(events)
-
-        } else if (searchLocation && searchLocation.length > 0 && // Location
-            searchDateStart && searchDateStart.length > 0 && // Start date
-            searchEventType && searchEventType.length > 0) { // Event type
-
-            // Location + Start date + Event type
-            const events = await getEventDetailsLocExactDateEventType(searchLocation, searchDateStart, searchEventType)
-            setSearchEvents(events)
-
-        } else if (searchLocation && searchLocation.length > 0 && // Location
-            searchType && searchType.length > 0 && // Search type
-            searchTerm && searchTerm.length > 0) { // Search term
-
-            // Location + Search type + Search term
-            const events = await getEventDetailsLocSearchTermSearchType(searchLocation, searchType, searchTerm)
-            setSearchEvents(events)
-
-        } else if (searchDateStart && searchDateStart.length > 0 && // Start date
-            searchDateEnd && searchDateEnd.length > 0 && // End date
-            searchEventType && searchEventType.length > 0) { // Event type
-
-            // Start date + End date + Event type
-            const events = await getEventDetailsDateRangeEventType(searchDateStart, searchDateEnd, searchEventType)
-            setSearchEvents(events)
-
-        } else if (searchDateStart && searchDateStart.length > 0 && // Start date
-            searchType && searchType.length > 0 && // Search type
-            searchTerm && searchTerm.length > 0) { // Search term
-
-            // Start date + Search type + Search term
-            const events = await getEventDetailsExactDateSearchTermSearchType(searchDateStart, searchType, searchTerm)
-            setSearchEvents(events)
-
-        } else if (searchEventType && searchEventType.length > 0 && // Event type
-            searchType && searchType.length > 0 && // Search type
-            searchTerm && searchTerm.length > 0) { // Search term
-
-            // Event type + Search type + Search term
-            const events = await getEventDetailsEventTypeSearchTermSearchType(searchEventType, searchType, searchTerm)
-            setSearchEvents(events)
-
-        } else if (searchLocation && searchLocation.length > 0 && // Location
-            searchDateStart && searchDateStart.length > 0) { // Start date
-
-            // Location + Start date
-            const events = await getEventDetailsLocExactDate(searchLocation, searchDateStart)
-            setSearchEvents(events)
-
-        } else if (searchLocation && searchLocation.length > 0 && // Location
-            searchEventType && searchEventType.length > 0) { // Event type
-
-            // Location + Event type
-            const events = await getEventDetailsLocEventType(searchLocation, searchEventType)
-            setSearchEvents(events)
-
-        } else if (searchDateStart && searchDateStart.length > 0 && // Start date
-            searchDateEnd && searchDateEnd.length > 0) { // End date
-
-            // Start date + End date
-            const events = await getEventDetailsDateRange(searchDateStart, searchDateEnd)
-            setSearchEvents(events)
-
-        } else if (searchDateStart && searchDateStart.length > 0 && // Start date
-            searchEventType && searchEventType.length > 0) { // Event type
-
-            // Start date + Event type
-            const events = await getEventDetailsExactDateEventType(searchDateStart, searchEventType)
-            setSearchEvents(events)
-
-
-        } else if (searchType && searchType.length > 0 && // Search type
-            searchTerm && searchTerm.length > 0) { // Search term
-
-            // Search type + Search term
-            const events = await getEventDetailsSearchTermSearchType(searchType, searchTerm)
-            setSearchEvents(events)
-
-        } else if (searchLocation && searchLocation.length > 0) { // Location
-
-            // Location 
-            const events = await getEventDetailsLocation(searchLocation)
-            setSearchEvents(events)
-
-        } else if (searchDateStart && searchDateStart.length > 0) { // Start date
-
-            // Start date
-            const events = await getEventDetailsExactDate(searchDateStart)
-            setSearchEvents(events)
-
-        } else if (searchEventType && searchEventType.length > 0) { // Event type
-
-            // Event type
-            const events = await getEventDetailsEventType(searchEventType)
-            setSearchEvents(events)
+        
+        const allData = {
+            "type": searchEventType, 
+            "start_date": searchDateStart, 
+            "end_date": searchDateEnd, 
+            "location": searchLocation,
+            searchType: searchTerm
         }
+        // Calls the getEventDetailsSearch function from EventUtilities to get the events that match the search parameters
+        getEventDetailsSearch(allData)
+            .then((response) => {
+                setSearchEvents(response)
+                console.log(response)
+            })
     }
 
     // Sorts the events returned from the search into eventsPopular
