@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import './SearchEvents.css'; // Assuming you add a CSS file for extra styles
 import { getEventDetailsSearch } from "../../utilities/EventUtilities";
+import { getUserProfile } from '../../utilities/UserProfileUtilities'
 import EventCard from "../../components/EventCard";
 
 function SearchEvents() {
@@ -26,23 +27,6 @@ function SearchEvents() {
     const [eventsAdditional, setEventsAdditional] = useState([]);
     const myOutletContextObj = useOutletContext();
     const { user } = myOutletContextObj;
-
-    const getUserLocations= async () => {
-        const userResponse = await getUserProfile(user);
-        const locations = userResponse.location
-        setUserLocations(locations)
-    };
-
-    useEffect(() => {
-        getUserLocations()
-      }, []);
-
-    console.log(userLocations)
-
-    const getLocalEvents = async () => {
-        const events = await getLocalEventDetails(userLocations)
-        setLocalEvents(events)
-    }
 
     // Handles changing the searchType; SearchType is needed so that when the form submits it knows which API call to do
     const handleSearchTypeChange = (selectedType) => {
@@ -66,6 +50,34 @@ function SearchEvents() {
                 setSearchEvents(response)
             })
     }
+
+    const getUserLocations= async () => {
+        const userResponse = await getUserProfile(user);
+        const locations = userResponse.location
+        setUserLocations(locations)
+    };
+
+    const getLocalEvents = async () => {
+        const allData = {
+            "type": undefined, 
+            "start_date": undefined, 
+            "end_date": undefined, 
+            "location": userLocations,
+            searchType: undefined
+        }
+        getEventDetailsSearch(allData)
+            .then((response) => {
+                setSearchEvents(response)
+            })
+    }
+
+    useEffect(() => {
+        getLocalEvents()
+        getUserLocations()
+      }, []);
+
+      console.log(userLocations)
+      console.log(localEvents)
 
     // Sorts the events returned from the search into eventsPopular
     const sortPopularEvents = async (searchEvents) => {
