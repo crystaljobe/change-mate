@@ -12,6 +12,7 @@ django.setup()
 # Now import Django models
 from cities_app.models import Cities 
 from states_app.models import States
+from countries_app.models import Countries
 
 
 def import_sightings(file_path):
@@ -24,8 +25,8 @@ def import_sightings(file_path):
             Cities.objects.create(
                 id = row['id'],
                 name = row['name'],
-                state = row['state_id'],
-                state_code = state,
+                state = state,
+                state_code = row['state_code'],
                 country_id = row['country_id'],
                 country_code = row['country_code'],
                 latitude = row['latitude'],
