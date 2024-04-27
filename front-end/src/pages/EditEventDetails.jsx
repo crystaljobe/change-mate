@@ -95,6 +95,8 @@ export default function EditEventDetails() {
     setPhotoPreview(eventDetails.event_photo);
     setEventPhoto(eventDetails.eventPhoto);
     setEventVenueAddress(eventDetails.event_venue_address);
+    setLocation(eventDetails.location);
+    setEventCoordinates([eventDetails.lat, eventDetails.lon]);
   };
 
   // on change handle image upload
