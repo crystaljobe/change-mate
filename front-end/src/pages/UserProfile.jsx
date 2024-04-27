@@ -55,14 +55,15 @@ export default function UserProfile({ user }) {
   }, [user, setUserProfileData]);
 
   // Map events attending to the format required by FullCalendar
-  const calendarEvents = eventsAttending.map(event => ({
+const calendarEvents = userEvents.map(event => {
+  console.log(`Event Start: ${event.event_start}, Event End: ${event.event_end}`);  // Add this line
+  return {
     title: event.title,
-    start: event.event_start, 
-    end: event.event_end,     
+    start: event.event_start,
+    end: event.event_end,
     id: event.id,
-  }));
-  console.log('Formatted Calendar Events:', calendarEvents);
-
+  };
+});
 
   // Join user interests array into a string for display
   const userIntStr = userInterests.join(', ');
@@ -174,8 +175,8 @@ export default function UserProfile({ user }) {
           <h1 style={{ color: "#6840DF" }}>Upcoming Events</h1>
           <br />
           <Row>
-            {eventsAttending.length > 0 ? (
-              eventsAttending.map((event) => (
+            {userEvents.length > 0 ? (
+              userEvents.map((event) => (
                 <CardGroup key={event.id} className="p-2">
                   <Card key={event.id} style={{ width: "18rem" }}>
                     <Card.Body>
