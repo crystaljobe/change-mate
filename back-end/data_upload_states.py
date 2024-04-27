@@ -10,7 +10,8 @@ django.setup()
 
 
 # Now import Django models
-from states_app.models import States  
+from states_app.models import States
+from countries_app.models import Countries
 
 
 def import_sightings(file_path):
@@ -20,12 +21,13 @@ def import_sightings(file_path):
 
             lat = row['latitude'] if row['latitude'] != '' else None
             lon  = row['longitude'] if row['longitude'] != '' else None
+            country = Countries.objects.get(id=row['country_id'])
 
             States.objects.create(
                 id=row['id'],
                 name=row['name'],
                 state_code=row['state_code'],
-                country_id=row['country_id'],
+                country=country,
                 country_code=row['country_code'],
                 type=row['type'],
                 latitude=lat,

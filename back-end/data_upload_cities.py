@@ -10,7 +10,8 @@ django.setup()
 
 
 # Now import Django models
-from cities_app.models import Cities  
+from cities_app.models import Cities 
+from states_app.models import States
 
 
 def import_sightings(file_path):
@@ -18,13 +19,13 @@ def import_sightings(file_path):
         reader = csv.DictReader(file)
         for row in reader:
 
-        
+            state = States.objects.get(id=row['state_id'])
 
             Cities.objects.create(
                 id = row['id'],
                 name = row['name'],
-                state_id = row['state_id'],
-                state_code = row['state_code'],
+                state = row['state_id'],
+                state_code = state,
                 country_id = row['country_id'],
                 country_code = row['country_code'],
                 latitude = row['latitude'],
