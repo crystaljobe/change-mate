@@ -16,4 +16,4 @@ class CitiesListSerializer(serializers.ModelSerializer):
     '''Serializer for Cities model retrieval'''
     class Meta:
         model = Cities
-        fields = ['name']
+        fields = ['id','name']

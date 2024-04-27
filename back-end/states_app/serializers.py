@@ -16,4 +16,4 @@ class StatesListSerializer(serializers.ModelSerializer):
     '''Serializer for States model retrieval'''
     class Meta:
         model = States
-        fields = ['name']
+        fields = ['id','name']

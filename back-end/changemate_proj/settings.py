@@ -156,7 +156,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user_app.AppUser'
 
-
-MIGRATION_MODULES = {
-    'cities_app': 'cities_app.migrations',
-}
