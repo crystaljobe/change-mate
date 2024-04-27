@@ -41,7 +41,7 @@ export default function EventDetails() {
   const getiCalInfo = async () => {
     const response = await getiCalEventDetails(eventID);
     setiCalDetails(response);
-    console.log("EVENT DETAILS page--iCal details:", iCalDetails);
+    // console.log("EVENT DETAILS page--iCal details:", iCalDetails);
 
   };
 
@@ -69,14 +69,14 @@ export default function EventDetails() {
   const getEvent = async () => {
     const eventDetails = await getEventDetails(eventID);
     setEventDetails(eventDetails);
-    console.log("EVENT DETAILS page--event details:", eventDetails);
+    // console.log("EVENT DETAILS page--event details:", eventDetails);
 
     setUsersAttending(eventDetails.users_attending);
     // map through collaborators to get their display names
     let collabArr = eventDetails.collaborators;
     let collaborators = collabArr.map((collab) => collab.display_name);
     setCollaborators(collaborators);
-    console.log(eventDetails.data);
+    // console.log(eventDetails.data);
   };
 
   useEffect(() => {

@@ -66,7 +66,6 @@ export default function LocationSearchMap( { setEventVenueAddress, setEventCoord
                 //  Add a marker at the result's coordinates
                 geocoder.on("result", (event) => {
                     const data = event.result
-                    console.log("rendering")
                     const contextArr = data.context
                     let city = ""
                     let state = ""
