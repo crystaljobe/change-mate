@@ -10,7 +10,7 @@ django.setup()
 
 
 # Now import Django models
-from cities_app.models import Cities  
+from states_app.models import States  
 
 
 def import_sightings(file_path):
@@ -18,22 +18,22 @@ def import_sightings(file_path):
         reader = csv.DictReader(file)
         for row in reader:
 
-        
+            lat = row['latitude'] if row['latitude'] != '' else None
+            lon  = row['longitude'] if row['longitude'] != '' else None
 
-            Cities.objects.create(
-                id = row['id'],
-                name = row['name'],
-                state_id = row['state_id'],
-                state_code = row['state_code'],
-                country_id = row['country_id'],
-                country_code = row['country_code'],
-                latitude = row['latitude'],
-                longitude = row['longitude'],
-                wikidataid = row['wikiDataId'],
+            States.objects.create(
+                id=row['id'],
+                name=row['name'],
+                state_code=row['state_code'],
+                country_id=row['country_id'],
+                country_code=row['country_code'],
+                type=row['type'],
+                latitude=lat,
+                longitude=lon,
             )
 
 if __name__ == '__main__':
-    csv_file_path = '../back-end/cities_app/data/cities.csv'  # Replace with your actual file path
+    csv_file_path = '../back-end/states_app/data/states.csv'  # Replace with your actual file path
     import_sightings(csv_file_path)
 
-    # Run this script by running `python cities_data_upload.py` in your terminal
+    # Run this script by running `python data_upload_states.py` in your terminal
