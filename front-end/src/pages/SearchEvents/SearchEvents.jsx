@@ -13,12 +13,14 @@ import EventCard from "../../components/EventCard";
 
 function SearchEvents() {
     const [userLocations, setUserLocations] = useState([]);
-    const [localEvents, setLocalEvents] = useState([]);
     const [searchType, setSearchType] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [searchDateStart, setSearchDateStart] = useState('');
     const [searchDateEnd, setSearchDateEnd] = useState('');
     const [searchLocation, setSearchLocation] = useState('');
+    const [searchCountry, setSearchCountry] = useState('');
+    const [searchState, setSearchState] = useState('');
+    const [searchCity, setSearchCity] = useState('');
     const [searchEventType, setSearchEventType] = useState('');
     const [searchEvents, setSearchEvents] = useState([]);
     const [eventsPopular, setEventsPopular] = useState([]);
@@ -74,10 +76,30 @@ function SearchEvents() {
     useEffect(() => {
         getLocalEvents()
         getUserLocations()
-      }, []);
+    }, []);
 
-      console.log(userLocations)
-      console.log(localEvents)
+    console.log('userLocations', userLocations)
+    console.log('searchEvents', searchEvents)
+    console.log('searchCountry', searchCountry)
+    console.log('searchState', searchState)
+    console.log('searchCity', searchCity)
+    // {country: 'United States', state: 'Colorado', city: 'Colorado Springs'}
+
+    const getSearchLocation =  () => {
+        const locationData = {
+            'country': searchCountry,
+            'state': searchState,
+            'city': searchCity
+        }
+
+        setSearchLocation(locationData)
+    }
+
+    useEffect(() => {
+        getSearchLocation()
+    }, [searchCountry, searchState, searchCity]);
+
+    console.log('searchLocation', searchLocation)
 
     // Sorts the events returned from the search into eventsPopular
     const sortPopularEvents = async (searchEvents) => {
@@ -98,6 +120,7 @@ function SearchEvents() {
         setEventsAdditional(unpopEvents)
     }
 
+    // Not funtional yet; Awaiting backend to add volunteers_needed to the model
     const sortVolunteerEvents = async (searchEvents) => {
         const needVol = []
         // Loops through the searchEvents to determine if event needs volunteers
@@ -125,12 +148,16 @@ function SearchEvents() {
                         <h2>Search Events</h2>
                         <Form onSubmit={handleSubmit}>
                             <Form.Group>
-                                <Form.Label>Location</Form.Label>
-                                <Form.Control type="text" placeholder="City, State" onChange={(e) => setSearchLocation(e.target.value)}/>
+                                <Form.Label>Country</Form.Label>
+                                <Form.Control type="text" placeholder="Country" onChange={(e) => setSearchCountry(e.target.value)}/>
+                                <Form.Label>State</Form.Label>
+                                <Form.Control type="text" placeholder="State" onChange={(e) => setSearchState(e.target.value)}/>
+                                <Form.Label>City</Form.Label>
+                                <Form.Control type="text" placeholder="City" onChange={(e) => setSearchCity(e.target.value)}/>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Date(s):</Form.Label>{' '}
-                                <Form.Text id="passwordHelpBlock" muted>
+                                <Form.Text  muted>
                                     Enter one date for exact match, or two dates for a range
                                 </Form.Text>
                                 <div className="d-flex">
