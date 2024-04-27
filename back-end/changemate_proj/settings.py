@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'profile_app',
     'event_app',
     'interest_app',
+    'cities_app',
+    'states_app',
+    'countries_app',
     'drf_yasg',
 ] 
 
@@ -152,3 +155,8 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user_app.AppUser'
+
+
+MIGRATION_MODULES = {
+    'cities_app': 'cities_app.migrations',
+}
