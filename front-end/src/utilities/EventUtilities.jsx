@@ -14,10 +14,7 @@ export const getEventDetailsSearch = async (allData) => {
         .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
         .join('&');
 
-    console.log('REQUEST', `events/?${requestData}`);
-
     const response = await api.get(`events/?${requestData}`);
-    console.log('RESPONSE', response.data);
     return response.data;
 };
 

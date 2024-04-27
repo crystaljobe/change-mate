@@ -32,6 +32,7 @@ function SearchEvents() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
+        // Creates an object with all the search parameters
         const allData = {
             "type": searchEventType, 
             "start_date": searchDateStart, 
@@ -43,7 +44,6 @@ function SearchEvents() {
         getEventDetailsSearch(allData)
             .then((response) => {
                 setSearchEvents(response)
-                console.log(response)
             })
     }
 
