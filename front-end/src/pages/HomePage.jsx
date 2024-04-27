@@ -38,7 +38,9 @@ export default function Homepage() {
 					{/* <br /> */}
 					<Row className="text-center">
 						<Col>
-							<Button
+							<Button 
+                                component={Link} 
+                                to="/signup"
                                 style={{
 									marginRight: "10px",
 									paddingLeft: "3rem",
@@ -59,6 +61,8 @@ export default function Homepage() {
 								Sign Up
 							</Button>
                             <Button
+                                component={Link} 
+                                to="/login"
                                 style={{
 									marginLeft: "10px",
 									paddingLeft: "3.5rem",

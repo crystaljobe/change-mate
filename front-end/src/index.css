@@ -14,7 +14,6 @@ body {
 nav {
   background: #f9f1e9;  /* fallback for old browsers */
   flex-direction: row;
-  gap: 10px;
   border-bottom: solid;
 }
 

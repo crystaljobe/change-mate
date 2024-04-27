@@ -1,6 +1,4 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from 'react';
-import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -22,7 +20,7 @@ export default function MyNavbar({ user, setUser, displayName }) {
 			className=".bg-body-secondary"
 			expand="lg">
 
-			<Navbar.Brand as={Link} to={"/"}>
+			<Navbar.Brand as={Link} to={"/"} style={{paddingLeft:"6px"}}>
 				<img
 					src={ChangeMateLogo}
 					width="80"
@@ -31,10 +29,18 @@ export default function MyNavbar({ user, setUser, displayName }) {
 					alt="ChangeMate Logo"
 				/>
 			</Navbar.Brand>
+			<Nav>
+			{user ? (
+				<Nav.Link as={Link} to="/profile" style={{fontStyle:'italic', color:'#6840DF'}}> Hello, {displayName}!</Nav.Link>
+			) : null}
+			</Nav>
 
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-				<Nav className="me-auto">
+            <Navbar.Toggle aria-controls="basic-navbar-nav"  />
+            <Navbar.Collapse id="basic-navbar-nav" >
+			</Navbar.Collapse>
+
+            <Nav className="justify-content-end">
+			<Nav className="me-auto" >
 					{user ? null : (
 						<Nav.Link as={Link} to="/signup">
 							Sign Up
@@ -48,19 +54,13 @@ export default function MyNavbar({ user, setUser, displayName }) {
 					) : null}
 
 					{user ? (
-						<Button onClick={() => handleUserLogout()} variant="outline-danger">
+						<Button onClick={() => handleUserLogout()} variant="underline">
 							Log Out
 						</Button>
 					) : null}
 				</Nav>
-			</Navbar.Collapse>
-
-            <Nav className="justify-content-end">
-			{user ? (
-				<Nav.Link as={Link} to="/profile" style={{fontStyle:'italic', color:'#6840DF'}}> Hello, {displayName}!</Nav.Link>
-			) : null}
-
-            <NavDropdown title="Menu" id="basic-nav-dropdown" align="end">
+				
+            <NavDropdown title="Menu" id="basic-nav-dropdown" align="end" style={{paddingRight:"10px"}}>
                 <NavDropdown.Item as={Link} to={"/profile"}>
                     Profile
                 </NavDropdown.Item>
