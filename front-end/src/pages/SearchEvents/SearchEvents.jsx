@@ -283,7 +283,7 @@ function SearchEvents() {
                                         label="In-Person"
                                         name="group1"
                                         type='radio'
-                                        value='In-person'
+                                        value='In-Person'
                                         onChange={(e) => setSearchEventType(e.target.value)}
                                     />
                                     <Form.Check
