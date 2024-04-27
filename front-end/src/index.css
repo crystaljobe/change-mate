@@ -14,7 +14,21 @@ body {
 nav {
   background: #f9f1e9;  /* fallback for old browsers */
   flex-direction: row;
-  gap: 40px;
+  gap: 10px;
+  border-bottom: solid;
+}
+
+.homepage-header-text {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.homepage-subtext {
+  font-family: "Slabo 27px", serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .location-search-map-container {
