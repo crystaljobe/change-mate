@@ -88,51 +88,65 @@ export default function EventDetails() {
     const attending = isUserAttending()
     // If attending render disabled button that tells the user they've already RSVPed
     if (attending) {
-      return <Button
-                className="text-center"
-                variant="info"
-                disabled
-              >
-                You're RSVPed
-              </Button>
+      return (
+        // <Button
+        //   size="sm"
+        //   variant="light"
+        //   className="text-center"
+        //   disabled
+        // >
+        // </Button>
+        <span>Attending</span>
+      );
     } else {
       // Else render functioning RSVP button
-      return <Button
-                className="text-center"
-                variant="info"
-                onClick={handleRSVP}
-              >
-                RSVP
-              </Button>
+      // return <Button
+      //           className="text-center"
+      //           variant="info"
+      //           onClick={handleRSVP}
+      //         >
+      //           RSVP
+      //         </Button>
+      return <span onClick={handleRSVP}>Attend</span>;
     }
   };
-  const cardCSS = {width: "35rem"}
+  const cardCSS = {width: "90vw", maxWidth: "500px"}
   return (
     <Container>
       <Row>
         <Col>
           <br />
           {eventDetails && (
-            <DetailedEventCard eventDetails={eventDetails} cardCSS={cardCSS}></DetailedEventCard>
+            <DetailedEventCard
+              eventDetails={eventDetails}
+              cardCSS={cardCSS}
+            ></DetailedEventCard>
           )}
           {renderRSVPButton()}
+          <div class="dropdown-container">
+            <button class="dropdown-button">Count me in!</button>
+            <div class="dropdown-content">
+              <a href="#">Volunteer</a>
+              <a href="#"> {renderRSVPButton()}</a>
+            </div>
+          </div>
         </Col>
 
         {/*LOCATION IMG &&&& DIRECTIONS BUTTON */}
         <Col>
-          <Card style={{ width: "20rem" }} sm={4}>
+          <br />
+          <Card style={{ width: "90vw", maxWidth: "300px" }} sm={4}>
             <Card.Img src={gps}></Card.Img>
-            <Card.Body className="text-center">
-              <Button
-                className="text-center"
-                variant="info"
-                as={Link}
-                to="/eventdirections"
-              >
-                Get Event Directions
-              </Button>
-            </Card.Body>
           </Card>
+          <Link to="/eventdirections">
+            <button
+              className="button-gradient text-center"
+              variant="info"
+              style={{ width: "90vw", maxWidth: "300px" }}
+            >
+              Get Event Directions
+            </button>
+          </Link>
           <add-to-calendar-button
             style={{ height: "50px" }}
             size="5"

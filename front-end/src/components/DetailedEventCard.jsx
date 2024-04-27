@@ -49,14 +49,14 @@ function DetailedEventCard({eventDetails, cardCSS}) {
                 <Card.Title
                   as="h1"
                   style={{ fontWeight: "bold", color: "#6840DF" }}
-                  className="text-center"
+                  className="text-left"
                 >
                   {eventDetails && eventDetails.title}
                 </Card.Title>
 
                 <Card.Subtitle
                   style={{ fontStyle: "italic" }}
-                  className="text-center"
+                  className="text-left"
                 >
                   Hosted by: {collabStr}
                 </Card.Subtitle>
@@ -64,21 +64,14 @@ function DetailedEventCard({eventDetails, cardCSS}) {
                 <Card.Img
                   variant="top"
                   src={eventDetails.event_photo || eventIcon}
-                  style={{ height: "500px" }}
+                  style={{ width: "80vw", maxWidth: "250px", margin: "0 auto", display: "block"}}
                   alt={`${eventDetails.title}'s photo`}
                 />
 
                 <ListGroup variant="flush">
                   {/* !!updated this information to reflect current variable names */}
                   <ListGroup.Item>
-                    <Card.Text
-                      style={{
-                        textDecoration: "underline",
-                        fontSize: "larger",
-                      }}
-                    >
-                      Event Details:
-                    </Card.Text>
+                  
                     <ul>
                       <li>
                         <strong> Start: </strong>
