@@ -87,31 +87,41 @@ export default function EventDetails() {
     // Sets attending to true or false based on function call
     const attending = isUserAttending()
     // If attending render disabled button that tells the user they've already RSVPed
-    if (attending) {
-      return (
-        // <Button
-        //   size="sm"
-        //   variant="light"
-        //   className="text-center"
-        //   disabled
-        // >
-        // </Button>
-        <span>Attending</span>
-      );
-    } else {
-      // Else render functioning RSVP button
-      // return <Button
-      //           className="text-center"
-      //           variant="info"
-      //           onClick={handleRSVP}
-      //         >
-      //           RSVP
-      //         </Button>
-      return <span onClick={handleRSVP}>Attend</span>;
-    }
+    
+    
+    //converted from button into a-tags for dropdown item
+     return (   
+    attending ? (
+      <a>Attending</a>
+    ) : (
+      <a onClick={handleRSVP}>Attend</a>
+    ))
+    //leaving old code commented out in case I missed something
+        // if (attending) {
+        //   return (
+        //     // <Button
+        //     //   size="sm"
+        //     //   variant="light"
+        //     //   className="text-center"
+        //     //   disabled
+        //     // >
+        //     // </Button>
+      
+        //   );
+        // } else {
+        //   // Else render functioning RSVP button
+        //   // return <Button
+        //   //           className="text-center"
+        //   //           variant="info"
+        //   //           onClick={handleRSVP}
+        //   //         >
+        //   //           RSVP
+        //   //         </Button>
+        // }
   };
   const cardCSS = {width: "90vw", maxWidth: "500px"}
   return (
+
     <Container>
       <Row>
         <Col>
@@ -122,12 +132,11 @@ export default function EventDetails() {
               cardCSS={cardCSS}
             ></DetailedEventCard>
           )}
-          {renderRSVPButton()}
           <div class="dropdown-container">
             <button class="dropdown-button">Count me in!</button>
             <div class="dropdown-content">
               <a href="#">Volunteer</a>
-              <a href="#"> {renderRSVPButton()}</a>
+              {renderRSVPButton()}
             </div>
           </div>
         </Col>

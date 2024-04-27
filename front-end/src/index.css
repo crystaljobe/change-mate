@@ -50,10 +50,15 @@ nav {
   font-weight: bold; /* Bold text */
 }
 
+
+
+
 /* DROPDOWN BUTTON - EVENTDETAILS  */
 .dropdown-container {
   position: relative;
   display: inline-block;
+  margin-bottom: 15vh;
+  margin-top: 1vh;
 }
 
 .dropdown-button {
@@ -61,7 +66,7 @@ nav {
   color: black;
   padding: 10px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 16px;
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
