@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Button } from 'react-bootstrap';
 import EventForm from '../components/EventForm';
@@ -8,19 +8,33 @@ import { getInterestCategories } from '../utilities/InterestCategoriesUtilities'
 export default function CreateEvent() {
   const navigate = useNavigate();
   const [interestCategories, setInterestCategories] = useState([]);
+  // title of the event
   const [title, setTitle] = useState('');
+  // needs comment for date format & how it's saved
   const [eventStart, setEventStart] = useState('');
+  // needs comment for date format & how it's saved
   const [eventEnd, setEventEnd] = useState('');
+  // time zone imported from utilities 
   const [timeZone, setTimeZone] = useState('');
+  // event type = In-person or Virtual
   const [eventType, setEventType] = useState('In-Person');
+  // event virtual link if a virtual event (ex. - user will input their zoom link)
   const [virtualEventLink, setVirtualEventLink] = useState('');
+  // event in-person venue ex-"Downtown Park Center"
   const [eventVenue, setEventVenue] = useState('');
+  // eventVenueAddress = full address "123 Example St, City, St Zip"
   const [eventVenueAddress, setEventVenueAddress] = useState('');
+  // event details text
   const [description, setDescription] = useState('');
+  // event category for search functionality (only one cat per event)
   const [category, setCategory] = useState('');
+  // the actual photo 
   const [eventPhoto, setEventPhoto] = useState('');
+  // to display a photo so the user can see what picture they have
   const [photoPreview, setPhotoPreview] = useState('');
+  // eventLocation format = "city, state"
   const [location, setlocation] = useState('');
+  // eventCoordinates = "latitude, longitude"
   const [eventCoordinates, setEventCoordinates] = useState('');
 
   useEffect(() => {

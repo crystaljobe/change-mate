@@ -9,8 +9,14 @@ function EventForm({
     onTitleChange, onEventStartChange, onEventEndChange, onTimeZoneChange,
     onEventTypeChange, onEventVenueChange, onEventVenueAddressChange,
     onVirtualLinkChange, onDescriptionChange, onCategoryChange,
-    timeZoneAbbreviations, handleSubmit
+    onLocation, eventCoordinates, timeZoneAbbreviations, handleSubmit
 }) {
+    // Handler to update event venue address and synchronize it with the location search map
+    const handleLocationChange = (newAddress) => {
+        onEventVenueAddressChange({ target: { value: newAddress } });
+        onLocation({ target: { value: newAddress } });
+    };
+
     return (
         <Form onSubmit={handleSubmit} className="p-3">
             <Card className="shadow-sm">
@@ -59,21 +65,25 @@ function EventForm({
                     </Row>
                     {!eventType.includes("Virtual") && (
                         <Row className="mb-3">
-                            <Col sm={12} md={6}>
+                            <Col sm={12} md={4}>
                                 <Form.Group controlId="event_venue">
                                     <Form.Label>Event Venue:</Form.Label>
                                     <Form.Control type="text" placeholder="Enter event venue" value={eventVenue} onChange={onEventVenueChange} />
                                 </Form.Group>
                             </Col>
-                            <Col sm={12} md={6}>
+                            <Col sm={12} md={4}>
                                 <Form.Group controlId="event_venue_address">
                                     <Form.Label>Event Location:</Form.Label>
-                                    <LocationSearchMap
-                                        setEventCoords={() => {}}
-                                        setEventVenueAddress={onEventVenueAddressChange}
-                                        setLocation={() => {}}
-                                    />
+                                    <Form.Control type="text" placeholder="Enter or select event location" value={eventVenueAddress} onChange={onEventVenueAddressChange} />
                                 </Form.Group>
+                            </Col>
+                            <Col sm={12} md={4}>
+                                <p>Feel free to use the plug-in below to set event location</p>
+                                <LocationSearchMap
+                                    setEventCoords={eventCoordinates}
+                                    setEventVenueAddress={handleLocationChange}
+                                    setLocation={handleLocationChange}
+                                />
                             </Col>
                         </Row>
                     )}
