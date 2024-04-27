@@ -220,3 +220,36 @@ export const getiCalEventDetails = async (eventID) => {
   let eventDetails = response.data;
   return eventDetails;
 };
+
+// the goal is make this into an API call to call the backend view get_timezone
+export const timeZoneAbbreviations = [
+    "America/Adak",
+    "America/Anchorage",
+    "America/Chicago",
+    "America/Denver",
+    "America/Halifax",
+    "America/Los_Angeles",
+    "America/New_York",
+    "America/Noronha",
+    "America/St_Johns",
+    "Asia/Bangkok",
+    "Asia/Dhaka",
+    "Asia/Dubai",
+    "Asia/Istanbul",
+    "Asia/Kabul",
+    "Asia/Karachi",
+    "Asia/Kathmandu",
+    "Asia/Kolkata",
+    "Asia/Tehran",
+    "Atlantic/Azores",
+    "Europe/Kiev",
+    "Europe/Lisbon",
+    "Europe/London",
+    "Europe/Moscow",
+    "Europe/Paris",
+    "GMT",
+    "Pacific/Honolulu",
+    "Pacific/Niue",
+  ];
+  
+  
