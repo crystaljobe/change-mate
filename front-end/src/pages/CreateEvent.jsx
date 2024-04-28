@@ -36,7 +36,10 @@ export default function CreateEvent() {
   const [location, setLocation] = useState('');
   // eventCoordinates = "latitude, longitude"
   const [eventCoordinates, setEventCoordinates] = useState('');
-
+  // boolean-volunteers needed? yes === true if no  === false 
+  const [volunteersNeeded, setVolunteersNeeded] = useState(false)
+  // boolean-attendees needed? yes === true if no  === false 
+  const [attendeesNeeded, setAttendeesNeeded] = useState(false)
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -74,7 +77,10 @@ export default function CreateEvent() {
         eventPhoto,
         virtualEventLink,
         location, 
-        eventCoordinates
+        eventCoordinates,
+        //will uncomment fields once view is updated
+        // volunteersNeeded,
+        // attendeesNeeded
       );
       navigate('/profile');
     } catch (error) {
@@ -108,13 +114,19 @@ export default function CreateEvent() {
         onVirtualLinkChange={(e) => setVirtualEventLink(e.target.value)}
         onDescriptionChange={(e) => setDescription(e.target.value)}
         onCategoryChange={(e) => setCategory(e.target.value)}
+
+        //added for volunteer and attendees on click change set the opposite
+        onVolunteersNeededChange={(e) => setVolunteersNeeded(!volunteersNeeded)}
+        onAttendeesNeededChange={(e) => setAttendeesNeeded(!attendeesNeeded)}
+        //added setLocation, setEventVenueAddress, and setEventCoords to pass to location search component to set the state
         setEventCoordinates= {setEventCoordinates}
         setLocation = {setLocation}
         setEventVenueAddress={setEventVenueAddress}
+
         timeZoneAbbreviations={timeZoneAbbreviations}
         handleSubmit={handleSubmit}
       />
-      <Button variant="primary" onClick={handleSubmit}>Create Event</Button>
+      <Button variant="primary" size="lg" style={{paddingLeft: "28px", paddingRight: "28px"}} onClick={handleSubmit}>Create Event</Button>
     </Container>
   );
 }

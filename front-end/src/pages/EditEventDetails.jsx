@@ -39,14 +39,20 @@ export default function EditEventDetails() {
   const [location, setLocation] = useState('');
   // eventCoordinates = "latitude, longitude" for static map functionality
   const [eventCoordinates, setEventCoordinates] = useState('');
-  
+  // boolean-volunteers needed? yes === true if no  === false 
+  const [volunteersNeeded, setVolunteersNeeded] = useState(false)
+  // boolean-attendees needed? yes === true if no  === false 
+  const [attendeesNeeded, setAttendeesNeeded] = useState(false)
+
   // use effect to grab event details and set all useStates  
   useEffect(() => {
     const fetchEventAndCategories = async () => {
-      const eventDetails = await getEventDetails(eventID);
-      console.log(eventDetails)
+      // get category list to set selection options and set useState
       const categories = await getInterestCategories();
       setInterestCategories(categories);
+      // get event details and set all useStates
+      const eventDetails = await getEventDetails(eventID);
+      // console.log(eventDetails)
       setTitle(eventDetails.title);
       setEventStart(formatDateForInput(eventDetails.event_start));
       setEventEnd(formatDateForInput(eventDetails.event_end));
@@ -61,6 +67,9 @@ export default function EditEventDetails() {
       setPhotoPreview(eventDetails.event_photo);
       setEventCoordinates([eventDetails.lat, eventDetails.lon]);
       setLocation(eventDetails.location);
+      //once be model updated uncomment below setStates:
+      //setVolunteersNeeded(eventDetails.volunteers_needed)
+      //setAttendeesNeeded(eventDetails.attendees_needed)
     };
     fetchEventAndCategories();
   }, [eventID]);
@@ -100,7 +109,9 @@ export default function EditEventDetails() {
       eventPhoto,
       virtualEventLink,
       location, 
-      eventCoordinates
+      eventCoordinates,
+      volunteersNeeded,
+      attendeesNeeded,
     );
     // if response status === true navigate user back to their profile
     if (responseStatus) {
@@ -143,9 +154,18 @@ export default function EditEventDetails() {
         onVirtualLinkChange={(e) => setVirtualEventLink(e.target.value)}
         onDescriptionChange={(e) => setDescription(e.target.value)}
         onCategoryChange={(e) => setCategory(e.target.value)}
+        //added setLocation, setEventVenueAddress, and setEventCoords to pass to location search component to set the state
         setEventCoordinates= {setEventCoordinates}
         setLocation = {setLocation}
         setEventVenueAddress={setEventVenueAddress}
+
+        //added passing curr state for volunteersNeeded and attendeesNeeded
+        volunteersNeeded={volunteersNeeded}
+        attendeesNeeded={attendeesNeeded}
+        //added for volunteer and attendees on click change set the opposite
+        onVolunteersNeededChange={(e) => setVolunteersNeeded(!volunteersNeeded)}
+        onAttendeesNeededChange={(e) => setAttendeesNeeded(!attendeesNeeded)}
+
         timeZoneAbbreviations={timeZoneAbbreviations}
         handleSubmit={handleSubmit}
         handleDelete={handleDelete}
