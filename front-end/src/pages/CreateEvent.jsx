@@ -116,6 +116,8 @@ export default function CreateEvent() {
         onCategoryChange={(e) => setCategory(e.target.value)}
 
         //added for volunteer and attendees on click change set the opposite
+        volunteersNeeded={volunteersNeeded}
+        attendeesNeeded={attendeesNeeded}
         onVolunteersNeededChange={(e) => setVolunteersNeeded(!volunteersNeeded)}
         onAttendeesNeededChange={(e) => setAttendeesNeeded(!attendeesNeeded)}
         //added setLocation, setEventVenueAddress, and setEventCoords to pass to location search component to set the state
