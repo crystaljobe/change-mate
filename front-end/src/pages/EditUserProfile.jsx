@@ -6,6 +6,7 @@ import {
   getUserProfile,
   putUserProfile,
 } from "../utilities/UserProfileUtilities";
+import { getCountries, getStates, getCities } from "../utilities/CountryStateCityUtilities";
 
 export default function EditUserProfile({ user }) {
   // set interest cats for selection options
@@ -14,7 +15,8 @@ export default function EditUserProfile({ user }) {
   const [userInterests, setUserInterests] = useState([]);
   const [userInterestsIDs, setUserInterestsIDs] = useState([]);
   const [displayName, setDisplayName] = useState([]);
-  const [userLocation, setUserLocation] = useState([]);
+  const [userLocation, setUserLocation] = useState('');
+  const [userLocationData, setUserLocationData] = useState([]);
   const [profileImage, setProfileImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
   const [apiCountries, setApiCountries] = useState([]);
@@ -26,11 +28,53 @@ export default function EditUserProfile({ user }) {
   // create var navigate for navigating
   const navigate = useNavigate();
 
+  // Fetches countries and sets them to apiCountries
+  const fetchCountries = async () => {
+    const countries = await getCountries()
+    setApiCountries(countries)
+  }
+
+  // Fetches states and sets them to apiStates
+  const fetchStates = async () => {
+    const states = await getStates(countryAdd)
+    setApiStates(states)
+  }
+
+  useEffect(() => {
+    if (countryAdd) {
+      fetchStates();
+    }
+  }, [countryAdd]);
+
+  // Fetches CITIES and sets them to apiCities
+  const fetchCities = async () => {
+    const cities = await getCities(stateAdd[0])
+    setApiCities(cities)
+  }
+
+  useEffect(() => {
+    if (stateAdd) {
+      fetchCities();
+    }
+  }, [stateAdd]);
+
   // get interest categories using utility funct to set options available
   const userInterestCategories = async () => {
     const categories = await getInterestCategories();
     setInterestCategories(categories);
   };
+
+  // Gets current user locations which are a json string and converts it back to an array of objects for manipulation
+  const getUserLocationData = () => {
+    if (userLocation && userLocation.length > 0) {
+      const locationsData = JSON.parse(userLocation)
+      setUserLocationData(locationsData)
+    }
+  }
+
+  useEffect(() => {
+    getUserLocationData();
+  }, [userLocation]);
 
   // get user profile data for default values using utility funct
   const userProfile = async () => {
@@ -59,17 +103,36 @@ export default function EditUserProfile({ user }) {
     }
   };
 
-  const handleAddLocation = (e) => {
-    console.log('Location to be added', countryAdd, stateAdd, cityAdd)
+  // Handles adding a location to the user's profile
+  const handleAddLocation = () => {
+    // Create a location object from form values
     const locationAdd = {
-      country: countryAdd,
-      state: stateAdd,
-      city: cityAdd
+      'country': countryAdd,
+      'state': stateAdd[1],
+      'city': cityAdd
     }
-    const updatedLocation = [...userLocation, locationAdd]
-    setUserLocation([locationAdd]) //TODO: set fir st location to just locationAdd, then switch to using updatedLocation after the string "Colorado Springs" has been overwritten
+
+    // New array with the objects from userLocationData and locationAdd
+    const newLocations = [...userLocationData, locationAdd]
+
+    // Converts newLocations to json string for backend transmission
+    const jsonStringLocations = JSON.stringify(newLocations)
+    
+    // Sets the userLocation to the new json string of locations
+    setUserLocation(jsonStringLocations) 
   }
-  console.log('userLocation', userLocation)
+
+  // Handles removing a location from the user's profile
+  const handleRemoveLocation = (key) => {
+    // Filter through userLocationData to remove the specified location
+    const filteredLocations = userLocationData.filter((_, index) => index !== key)
+
+    // Converts filteredLocations to json string for backend transmission
+    const jsonStringLocations = JSON.stringify(filteredLocations)
+
+    // Sets the userLocation to the new json string of locations
+    setUserLocation(jsonStringLocations) 
+  };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -95,6 +158,7 @@ export default function EditUserProfile({ user }) {
 
   // useEffect to call upon page render
   useEffect(() => {
+    fetchCountries()
     userInterestCategories();
     userProfile();
   }, []);
@@ -107,7 +171,7 @@ export default function EditUserProfile({ user }) {
           <h2>Edit Profile:</h2>
         </Col>
       </Row>
-
+      
       <Row className="space justify-content-md-center">
         <Col></Col>
         <Col className="text-center">
@@ -120,9 +184,16 @@ export default function EditUserProfile({ user }) {
                   name="country"
                   placeholder="Country"
                   type="text"
+                  list="countries-list" // Use the list attribute to associate with the datalist
                   size={40}
                   onChange={(e) => setCountryAdd(e.target.value)}
                 />
+                {/* Create a datalist with options from apiCountries */}
+                <datalist id="countries-list">
+                  {apiCountries.map((country, index) => (
+                    <option key={index} value={country.name} />
+                  ))}
+                </datalist>
               </Form.Label>
               <Form.Label>
                 Region/State
@@ -131,9 +202,20 @@ export default function EditUserProfile({ user }) {
                   name="state"
                   placeholder=" Region/State"
                   type="text"
+                  list="states-list" // Use the list attribute to associate with the datalist
                   size={40}
-                  onChange={(e) => setStateAdd(e.target.value)}
+                  value={stateAdd[1]} // Display only the state name
+                  onChange={(e) => {
+                    const selectedState = apiStates.find(state => state.name === e.target.value);
+                    setStateAdd(selectedState ? [selectedState.id, selectedState.name] : []);
+                  }}
                 />
+                {/* Create a datalist with options from apiStates */}
+                <datalist id="states-list">
+                  {apiStates.map((state, index) => (
+                    <option key={index} value={state.name} />
+                  ))}
+                </datalist>
               </Form.Label>
               <Form.Label>
                 City
@@ -142,11 +224,26 @@ export default function EditUserProfile({ user }) {
                   name="city"
                   placeholder="City"
                   type="text"
+                  list="cities-list" // Use the list attribute to associate with the datalist
                   size={40}
                   onChange={(e) => setCityAdd(e.target.value)}
                 />
+                {/* Create a datalist with options from apiCities */}
+                <datalist id="cities-list">
+                  {apiCities.map((city, index) => (
+                    <option key={index} value={city.name} />
+                  ))}
+                </datalist>
               </Form.Label>
-              <Button variant="info" onClick={(e) => handleAddLocation()}> 
+              {userLocationData.length == 0 ?
+                <p style={{fontStyle:'italic'}}>No locations set</p> :
+                  userLocationData.map((l, k)=> 
+                    <div>
+                      <Button id={k} size="sm" variant="danger" onClick={(e) => handleRemoveLocation(k)} >{`Remove ${l.city},  ${l.state}`}</Button>
+                    </div>
+              )}
+              <br />
+              <Button variant="info" onClick={() => handleAddLocation()}> 
               Add Location
             </Button>
             </Form.Group>
