@@ -1,12 +1,11 @@
 import { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
 mapboxgl.accessToken =
     "pk.eyJ1IjoiY3J5c3RhbGpvYmUiLCJhIjoiY2x2Y3VkMzFxMG13ZzJrcGY5dDB0bGJvYyJ9.PV_ZgI2EhyhNfcRHmp2OPw";
 
-export default function LocationSearchMap({ latitude, longitude }) {
+export default function StaticMap({ latitude, longitude }) {
     const mapContainer = useRef(null);
     const map = useRef(null); //stores the initialize of map only once so it doesn't reload upon user interaction
     //sets center coords of map
@@ -17,15 +16,14 @@ export default function LocationSearchMap({ latitude, longitude }) {
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v12',
-            center: [lng, lat],
-            zoom: 10
+            center: [longitude, latitude],
+            zoom: 12
         });
 
-        map.current.on('move', () => {
-            setLng(map.current.getCenter().lng.toFixed(4));
-            setLat(map.current.getCenter().lat.toFixed(4));
-            setZoom(map.current.getZoom().toFixed(2));
-        });
+        map.current.addLayer({
+            marker: new mapboxgl.Marker().setLngLat(longitude, latitude).addTo(map)
+        })
+
 
       }, [latitude, longitude]);
 

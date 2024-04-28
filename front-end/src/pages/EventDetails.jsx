@@ -6,6 +6,7 @@ import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
 import { getUserProfile } from "../utilities/UserProfileUtilities";
 import { getEventIcon } from '../utilities/DefaultIconsUtilities';
 import { getiCalEventDetails } from "../utilities/EventUtilities";
+import StaticMap from "../components/EventDetailsStaticMap";
 
 export default function EventDetails() {
   let { eventID } = useParams();
@@ -263,6 +264,10 @@ export default function EventDetails() {
             </Card.Body>
           </Card>
         </Col>
+        {/* added static map component */}
+        {/* <Col>
+        <StaticMap latitude={ latitude } longitude={ longitude } />
+        </Col> */}
       </Row>
     </Container>
   );
