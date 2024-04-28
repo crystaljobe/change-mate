@@ -39,6 +39,8 @@ nav {
   border-radius: 4px;
 }
 
+
+/* colorful button -eventdetails page- css */
 .button-gradient {
   background-image: linear-gradient(to right, rgb(167, 223, 242) 30%, rgb(178, 149, 237) 70%);
   color: black; /* Text color */
@@ -49,8 +51,6 @@ nav {
   font-size: 16px; /* Text size */
   font-weight: bold; /* Bold text */
 }
-
-
 
 
 /* DROPDOWN BUTTON - EVENTDETAILS  */

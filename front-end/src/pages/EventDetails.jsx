@@ -18,6 +18,10 @@ export default function EventDetails() {
   const [usersAttending, setUsersAttending] = useState([]);
   const [eventsAttending, setEventsAttending] = useState([]);
   const [userID, setUserID] = useState();
+  //application modal
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const myOutletContextObj = useOutletContext();
   const { user } = myOutletContextObj;
@@ -89,7 +93,6 @@ export default function EventDetails() {
     const attending = isUserAttending()
     // If attending render disabled button that tells the user they've already RSVPed
     
-    
     //converted from button into a-tags for dropdown item
      return (   
     attending ? (
@@ -99,13 +102,8 @@ export default function EventDetails() {
     ))
   
   };
-  const cardCSS = {width: "90vw", maxWidth: "500px"}
 
-
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const cardCSS = {width: "90vw", maxWidth: "800px"}
 
   return (
 
