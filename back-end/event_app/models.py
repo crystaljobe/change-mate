@@ -38,4 +38,4 @@ class Event(models.Model):
     )
     location = models.CharField(max_length=100, blank=True, null=True)
     
-    coordinates = ArrayField(models.DecimalField(default=Decimal('0.00'), max_digits=40, decimal_places=15), null=True, blank=True)
+    coordinates = ArrayField(models.FloatField(), null=True, blank=True)
