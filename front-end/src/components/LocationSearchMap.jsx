@@ -45,7 +45,7 @@ export default function LocationSearchMap( { setAddress, setEventCoords, setLoca
                     //set marker on user location search
                     marker: true,
                     // Placeholder text for the search bar
-                    placeholder: "     Start typing venue address",
+                    placeholder: "     Start typing event venue address",
                     //sort search based on user location
                     proximity: {
                         longitude: lng,
@@ -90,11 +90,10 @@ export default function LocationSearchMap( { setAddress, setEventCoords, setLoca
     }, []);
     
     return (
-        <div>
+        <>
             {/* map container */}
-            <div ref={mapContainer} className="location-search-map-container">
-            </div>
-        </div>
+            <div ref={mapContainer} className="location-search-map-container"></div>
+        </>
     );
 }
 // {/* button to show currently saved name and coords */}

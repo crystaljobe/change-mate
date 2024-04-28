@@ -31,9 +31,9 @@ nav {
 }
 
 .location-search-map-container {
-  height: 250px;
-  width: 300px;
-  margin-left: 20px;
+  height: 300px;
+  width: 500px;
+  margin-left: 18px;
 }
 
 .static-map-container {
@@ -45,14 +45,3 @@ nav {
     height: 500px;
   }
    
-.sidebar {
-  background-color: rgba(133, 154, 175, 0.9);
-  color: "#fff";
-  padding: 6px 12px;
-  font-family: monospace;
-  z-index: 1;
-  position: sticky;
-  top: 6px;
-  left: 0;
-  border-radius: 4px;
-}

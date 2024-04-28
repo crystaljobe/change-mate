@@ -9,6 +9,7 @@ export default function EditEventDetails() {
   // cucial for page to render the specific event 
   const { eventID } = useParams();
   const navigate = useNavigate();
+  // set Interest Category list for user selection
   const [interestCategories, setInterestCategories] = useState([]);
   // title of the event
   const [title, setTitle] = useState('');
@@ -34,15 +35,16 @@ export default function EditEventDetails() {
   const [eventPhoto, setEventPhoto] = useState('');
   // to display a photo so the user can see what picture they have
   const [photoPreview, setPhotoPreview] = useState('');
-  // eventLocation format = "city, state"
+  // eventLocation format = "city, state" for search functionality
   const [location, setLocation] = useState('');
-  // eventCoordinates = "latitude, longitude"
+  // eventCoordinates = "latitude, longitude" for static map functionality
   const [eventCoordinates, setEventCoordinates] = useState('');
-
   
+  // use effect to grab event details and set all useStates  
   useEffect(() => {
     const fetchEventAndCategories = async () => {
       const eventDetails = await getEventDetails(eventID);
+      console.log(eventDetails)
       const categories = await getInterestCategories();
       setInterestCategories(categories);
       setTitle(eventDetails.title);
@@ -63,9 +65,10 @@ export default function EditEventDetails() {
     fetchEventAndCategories();
   }, [eventID]);
 
+  // Converts to 'YYYY-MM-DDTHH:MM' to fit date field requirements for input
   const formatDateForInput = (dateTimeStr) => {
     const date = new Date(dateTimeStr);
-    return date.toISOString().slice(0, 16); // Converts to 'YYYY-MM-DDTHH:MM'
+    return date.toISOString().slice(0, 16); 
   };
 
   const handleImageChange = (event) => {
@@ -80,6 +83,7 @@ export default function EditEventDetails() {
     }
   };
 
+  // handle form submit to send put request 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const responseStatus = await updateEventDetails(
@@ -98,11 +102,13 @@ export default function EditEventDetails() {
       location, 
       eventCoordinates
     );
+    // if response status === true navigate user back to their profile
     if (responseStatus) {
       navigate('/profile');
     }
   };
 
+  // function to handle user deleting an event
   const handleDelete = async () => {
     const responseStatus = await deleteEvent(eventID);
     if (responseStatus) {
@@ -110,6 +116,7 @@ export default function EditEventDetails() {
     }
   };
 
+  // return event form 
   return (
     <Container>
       <EventForm
@@ -143,8 +150,10 @@ export default function EditEventDetails() {
         handleSubmit={handleSubmit}
         handleDelete={handleDelete}
       />
-    <Button variant="success" onClick={handleSubmit}>Save Changes</Button>
-    <Button variant="danger" onClick={handleDelete}>Delete Event</Button>
+    <div className='text-center' style={{marginTop: "8px", marginBottom: "20px"}}>
+    <Button variant="success" size="lg" style={{marginRight: "40px", paddingLeft: "28px", paddingRight: "28px"}} onClick={handleSubmit}>Save Changes</Button>
+    <Button variant="danger" size="lg" style={{marginLeft: "40px", paddingLeft: "31px", paddingRight: "31px"}}onClick={handleDelete}>Delete Event</Button>
+    </div>
     </Container>
   );
 }
