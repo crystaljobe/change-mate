@@ -8,6 +8,7 @@ import { getEventIcon } from '../utilities/DefaultIconsUtilities';
 import { getiCalEventDetails } from "../utilities/EventUtilities";
 import gps from "../assets/gps.jpg";
 import DetailedEventCard from "../components/DetailedEventCard";
+import VolunteerApplication from "../components/VolunteerApplication";
 
 
 export default function EventDetails() {
@@ -17,8 +18,8 @@ export default function EventDetails() {
   const [usersAttending, setUsersAttending] = useState([]);
   const [eventsAttending, setEventsAttending] = useState([]);
   const [userID, setUserID] = useState();
-  const myOutletContextObj = useOutletContext();
 
+  const myOutletContextObj = useOutletContext();
   const { user } = myOutletContextObj;
 
 
@@ -96,30 +97,16 @@ export default function EventDetails() {
     ) : (
       <a onClick={handleRSVP}>Attend</a>
     ))
-    //leaving old code commented out in case I missed something
-        // if (attending) {
-        //   return (
-        //     // <Button
-        //     //   size="sm"
-        //     //   variant="light"
-        //     //   className="text-center"
-        //     //   disabled
-        //     // >
-        //     // </Button>
-      
-        //   );
-        // } else {
-        //   // Else render functioning RSVP button
-        //   // return <Button
-        //   //           className="text-center"
-        //   //           variant="info"
-        //   //           onClick={handleRSVP}
-        //   //         >
-        //   //           RSVP
-        //   //         </Button>
-        // }
+  
   };
   const cardCSS = {width: "90vw", maxWidth: "500px"}
+
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
 
     <Container>
@@ -135,8 +122,11 @@ export default function EventDetails() {
           <div class="dropdown-container">
             <button class="dropdown-button">Count me in!</button>
             <div class="dropdown-content">
-              <a href="#">Volunteer</a>
-              {renderRSVPButton()}
+              {/* TODO: add conditonal rendering for volunteer option if event is accepting volunteers */}
+              {/* added volunteer application modal as a component */}
+              <a onClick={handleShow}>Volunteer</a>
+              <VolunteerApplication show={show} handleClose={handleClose}  />
+              {renderRSVPButton()} 
             </div>
           </div>
         </Col>
@@ -179,85 +169,3 @@ export default function EventDetails() {
     </Container>
   );
 }
-
-//  <Card.Body>
-//    <Card.Title
-//      as="h1"
-//      style={{ fontWeight: "bold", color: "#6840DF" }}
-//      className="text-center"
-//    >
-//      {eventDetails && eventDetails.title}
-//    </Card.Title>
-
-//    <Card.Subtitle style={{ fontStyle: "italic" }} className="text-center">
-//      Hosted by: {collaboratorsStr}
-//    </Card.Subtitle>
-//    {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
-//    <Card.Img
-//      variant="top"
-//      src={eventDetails.event_photo || eventIcon}
-//      style={{ height: "500px" }}
-//      alt={`${eventDetails.title}'s photo`}
-//    />
-
-//    <ListGroup variant="flush">
-//      {/* !!updated this information to reflect current variable names */}
-//      <ListGroup.Item>
-//        <Card.Text style={{ textDecoration: "underline", fontSize: "larger" }}>
-//          Event Details:
-//        </Card.Text>
-//        <ul>
-//          <li>
-//            <strong> Start: </strong>
-//            {eventDetails &&
-//              eventDetails.startDate &&
-//              eventDetails.startTime &&
-//              `${eventDetails.startDate} at ${eventDetails.startTime}`}
-//          </li>
-//          <li>
-//            <strong> End: </strong>
-//            {eventDetails &&
-//              eventDetails.endDate &&
-//              eventDetails.endTime &&
-//              `${eventDetails.endDate} at ${eventDetails.endTime}`}
-//          </li>
-
-//          <li>
-//            {" "}
-//            <strong> Time Zone: </strong>{" "}
-//            {eventDetails && eventDetails.time_zone}
-//          </li>
-//          <li>
-//            <strong> Virtual or In-Person?: </strong>
-//            {eventDetails && eventDetails.event_type}
-//          </li>
-//          {eventDetails.event_type === "Virtual" ? (
-//            <li>
-//              <strong> Event Link: </strong>
-//              {eventDetails && eventDetails.virtual_event_link}
-//            </li>
-//          ) : (
-//            <>
-//              <li>
-//                <strong> Event Venue: </strong>
-//                {eventDetails && eventDetails.event_venue}
-//              </li>
-//              <li>
-//                <strong>Venue Address: </strong>
-//                {eventDetails && eventDetails.event_venue_address}
-//              </li>
-//            </>
-//          )}
-//        </ul>
-//      </ListGroup.Item>
-//      <ListGroup.Item className="text-left">
-//        <h4 style={{ textDecoration: "underline" }}>About this event:</h4>
-//        {eventDetails && eventDetails.description}
-//      </ListGroup.Item>
-//    </ListGroup>
-//    <br />
-//    <Card.Body className="text-center">
-//      <br />
-//      <br />
-//    </Card.Body>
-//  </Card.Body>;
