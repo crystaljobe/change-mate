@@ -56,7 +56,7 @@ export default function LocationSearchMap({
 						latitude: lat,
 					},
 					// search parameters:
-					countries: "us",
+					// countries: "us",
 					language: "en",
 					autocomplete: false,
 					// limit search to address, street, and secondary address for full addresses
@@ -70,24 +70,29 @@ export default function LocationSearchMap({
 				//  Add a marker at the result's coordinates
 				geocoder.on("result", (event) => {
 					const data = event.result;
+					console.log(data)
 					const contextArr = data.context;
 					let city = "";
 					let state = "";
+					let country = "";
 					contextArr.map((context) => {
 						if (context.id.startsWith("place")) {
 							city = context.text_en;
 						} else if (context.id.startsWith("region")) {
 							state = context.text_en;
+						} else if (context.id.startsWith("country")) {
+							country = context.text_en;
 						}
 					});
 
 					setAddress(data.place_name);
 					setEventCoords(data.geometry.coordinates);
 					setLocation(`${city}, ${state}`);
+
 				});
 			});
 		} else {
-			console.log("hello");
+			console.log("error retrieving location data");
 		}
 	}, []);
 
