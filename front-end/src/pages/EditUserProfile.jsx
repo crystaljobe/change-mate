@@ -15,13 +15,17 @@ export default function EditUserProfile({ user }) {
   const [userInterests, setUserInterests] = useState([]);
   const [userInterestsIDs, setUserInterestsIDs] = useState([]);
   const [displayName, setDisplayName] = useState([]);
+  // Set userLocation to/from backend; data format is a json string object
   const [userLocation, setUserLocation] = useState('');
+  // Set userLocationData reformatted from userLocation as an array of objects for data manipulation
   const [userLocationData, setUserLocationData] = useState([]);
   const [profileImage, setProfileImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
+  // Next three set api data for auto-populated suggestions
   const [apiCountries, setApiCountries] = useState([]);
   const [apiStates, setApiStates] = useState([]);
   const [apiCities, setApiCities] = useState([]);
+  // Next three set location data from form to be used in formatting and setting the userLocation
   const [countryAdd, setCountryAdd] = useState("");
   const [stateAdd, setStateAdd] = useState("");
   const [cityAdd, setCityAdd] = useState("");
