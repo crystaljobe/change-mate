@@ -16,6 +16,7 @@ export default function UserProfile({ user }) {
   const [eventsAttending, setEventsAttending] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [userInterests, setUserInterests] = useState([]);
+  const [userLocationData, setUserLocationData] = useState([]);
   const [userPhoto, setUserPhoto] = useState(""); // Initialize userPhoto with an empty string
   const [profileIcon, setProfileIcon] = useState("");
   const [eventIcon, setEventIcon] = useState("");
@@ -29,6 +30,19 @@ export default function UserProfile({ user }) {
   useEffect(() => {
     fetchEventIcon()
   }, []);
+
+  // Takes  userProfileData.location which is a json string and turns it back into an array of objects for data manipulation
+  const getUserLocationData = () => {
+    if (userProfileData.location && userProfileData.location.length > 0) {
+      const locations = userProfileData.location
+      const locationsData = JSON.parse(locations)
+      setUserLocationData(locationsData)
+    }
+  }
+
+  useEffect(() => {
+    getUserLocationData();
+  }, [userProfileData]);
 
   // useEffect to fetch profile and icon data on component mount
   useEffect(() => {
@@ -81,7 +95,10 @@ const calendarEvents = userEvents.map(event => {
         <br />
         <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Locations:</Card.Subtitle>
         <Card.Text>
-          {userProfileData.location}
+          {/* Maps through the userLocationData to render in proper format */}
+          {userLocationData.map(l => 
+              <p style={{ margin: '0px' }}>{`${l.city}, ${l.state}`}</p>
+            )}
         </Card.Text>
         <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Interests:</Card.Subtitle>
         <Card.Text>
