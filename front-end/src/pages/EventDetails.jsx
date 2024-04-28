@@ -9,23 +9,23 @@ import { getiCalEventDetails } from "../utilities/EventUtilities";
 import gps from "../assets/gps.jpg";
 import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerApplication from "../components/VolunteerApplication";
-
+// import StaticMap from "../components/EventDetailsStaticMap";
 
 export default function EventDetails() {
   let { eventID } = useParams();
+  const { user } = useOutletContext();
   const [iCalDetails, setiCalDetails] = useState([]);
   const [eventDetails, setEventDetails] = useState([]);
   const [usersAttending, setUsersAttending] = useState([]);
   const [eventsAttending, setEventsAttending] = useState([]);
-  const [userID, setUserID] = useState();
+  // event latitude and long for passing to static map component
+  const latitude = eventDetails.lat;
+  const longitude = eventDetails.lon;
+
   //application modal
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const myOutletContextObj = useOutletContext();
-  const { user } = myOutletContextObj;
-
 
   // Gets list of events user is attending; Used in isUserAttending function
   const handleUserEventsAttending = async () => {
@@ -47,7 +47,7 @@ export default function EventDetails() {
   const getEvent = async () => {
     const eventDetails = await getEventDetails(eventID);
     setEventDetails(eventDetails);
-    console.log("EVENT DETAILS page--event details:", eventDetails);
+    // console.log("EVENT DETAILS page--event details:", eventDetails);
 
     setUsersAttending(eventDetails.users_attending);
     //---this is being handled on DetailedEventCard, leaving commented out in case we need it on this page later
@@ -163,6 +163,10 @@ export default function EventDetails() {
             description={iCalDetails.description}
           ></add-to-calendar-button>
         </Col>
+        {/* added static map component */}
+        {/* <Col>
+        <StaticMap latitude={ latitude } longitude={ longitude } />
+        </Col> */}
       </Row>
     </Container>
   );

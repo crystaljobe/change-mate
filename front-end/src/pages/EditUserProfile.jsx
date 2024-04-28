@@ -92,7 +92,7 @@ export default function EditUserProfile({ user }) {
     setProfileImage(userProfileData.profileImage); // Set the profile image data for possible re-upload
   };
 
-  console.log(userInterestsIDs)
+  // console.log(userInterestsIDs)
   // upon form submit call utility function to set new user data
   const updateUserProfile = async () => {
     const responseStatus = await putUserProfile(

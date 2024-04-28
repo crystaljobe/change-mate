@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getEventIcon } from "../utilities/DefaultIconsUtilities";
-import gps from "../assets/gps.jpg";
 
 import {
   Container,
