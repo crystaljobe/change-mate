@@ -9,6 +9,7 @@ export default function EditEventDetails() {
   // cucial for page to render the specific event 
   const { eventID } = useParams();
   const navigate = useNavigate();
+  // set Interest Category list for user selection
   const [interestCategories, setInterestCategories] = useState([]);
   // title of the event
   const [title, setTitle] = useState('');
@@ -34,16 +35,24 @@ export default function EditEventDetails() {
   const [eventPhoto, setEventPhoto] = useState('');
   // to display a photo so the user can see what picture they have
   const [photoPreview, setPhotoPreview] = useState('');
-  // eventLocation format = "city, state"
-  const [location, setlocation] = useState('');
-  // eventCoordinates = "latitude, longitude"
+  // eventLocation format = "city, state" for search functionality
+  const [location, setLocation] = useState('');
+  // eventCoordinates = "latitude, longitude" for static map functionality
   const [eventCoordinates, setEventCoordinates] = useState('');
+  // boolean-volunteers needed? yes === true if no  === false 
+  const [volunteersNeeded, setVolunteersNeeded] = useState(false)
+  // boolean-attendees needed? yes === true if no  === false 
+  const [attendeesNeeded, setAttendeesNeeded] = useState(false)
 
+  // use effect to grab event details and set all useStates  
   useEffect(() => {
     const fetchEventAndCategories = async () => {
-      const eventDetails = await getEventDetails(eventID);
+      // get category list to set selection options and set useState
       const categories = await getInterestCategories();
       setInterestCategories(categories);
+      // get event details and set all useStates
+      const eventDetails = await getEventDetails(eventID);
+      // console.log(eventDetails)
       setTitle(eventDetails.title);
       setEventStart(formatDateForInput(eventDetails.event_start));
       setEventEnd(formatDateForInput(eventDetails.event_end));
@@ -56,15 +65,19 @@ export default function EditEventDetails() {
       setCategory(eventDetails.category.id);
       setEventPhoto(eventDetails.event_photo);
       setPhotoPreview(eventDetails.event_photo);
-      setEventCoordinates(eventDetails.event_coordinates);
-      setlocation(eventDetails.location);
+      setEventCoordinates([eventDetails.lat, eventDetails.lon]);
+      setLocation(eventDetails.location);
+      //once be model updated uncomment below setStates:
+      //setVolunteersNeeded(eventDetails.volunteers_needed)
+      //setAttendeesNeeded(eventDetails.attendees_needed)
     };
     fetchEventAndCategories();
   }, [eventID]);
 
+  // Converts to 'YYYY-MM-DDTHH:MM' to fit date field requirements for input
   const formatDateForInput = (dateTimeStr) => {
     const date = new Date(dateTimeStr);
-    return date.toISOString().slice(0, 16); // Converts to 'YYYY-MM-DDTHH:MM'
+    return date.toISOString().slice(0, 16); 
   };
 
   const handleImageChange = (event) => {
@@ -79,6 +92,7 @@ export default function EditEventDetails() {
     }
   };
 
+  // handle form submit to send put request 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const responseStatus = await updateEventDetails(
@@ -95,13 +109,17 @@ export default function EditEventDetails() {
       eventPhoto,
       virtualEventLink,
       location, 
-      eventCoordinates
+      eventCoordinates,
+      volunteersNeeded,
+      attendeesNeeded,
     );
+    // if response status === true navigate user back to their profile
     if (responseStatus) {
       navigate('/profile');
     }
   };
 
+  // function to handle user deleting an event
   const handleDelete = async () => {
     const responseStatus = await deleteEvent(eventID);
     if (responseStatus) {
@@ -109,6 +127,7 @@ export default function EditEventDetails() {
     }
   };
 
+  // return event form 
   return (
     <Container>
       <EventForm
@@ -135,14 +154,26 @@ export default function EditEventDetails() {
         onVirtualLinkChange={(e) => setVirtualEventLink(e.target.value)}
         onDescriptionChange={(e) => setDescription(e.target.value)}
         onCategoryChange={(e) => setCategory(e.target.value)}
-        onCoordinateChange={(e) => setEventCoordinates(e.target.value)}
-        onLocation={(e) => setlocation(e.target.value)}
+        //added setLocation, setEventVenueAddress, and setEventCoords to pass to location search component to set the state
+        setEventCoordinates= {setEventCoordinates}
+        setLocation = {setLocation}
+        setEventVenueAddress={setEventVenueAddress}
+
+        //added passing curr state for volunteersNeeded and attendeesNeeded
+        volunteersNeeded={volunteersNeeded}
+        attendeesNeeded={attendeesNeeded}
+        //added for volunteer and attendees on click change set the opposite
+        onVolunteersNeededChange={(e) => setVolunteersNeeded(!volunteersNeeded)}
+        onAttendeesNeededChange={(e) => setAttendeesNeeded(!attendeesNeeded)}
+
         timeZoneAbbreviations={timeZoneAbbreviations}
         handleSubmit={handleSubmit}
         handleDelete={handleDelete}
       />
-    <Button variant="success" onClick={handleSubmit}>Save Changes</Button>
-    <Button variant="danger" onClick={handleDelete}>Delete Event</Button>
+    <div className='text-center' style={{marginTop: "8px", marginBottom: "20px"}}>
+    <Button variant="success" size="lg" style={{marginRight: "40px", paddingLeft: "28px", paddingRight: "28px"}} onClick={handleSubmit}>Save Changes</Button>
+    <Button variant="danger" size="lg" style={{marginLeft: "40px", paddingLeft: "31px", paddingRight: "31px"}}onClick={handleDelete}>Delete Event</Button>
+    </div>
     </Container>
   );
 }

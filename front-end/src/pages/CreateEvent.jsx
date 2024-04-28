@@ -15,7 +15,7 @@ export default function CreateEvent() {
   // needs comment for date format & how it's saved
   const [eventEnd, setEventEnd] = useState('');
   // time zone imported from utilities 
-  const [timeZone, setTimeZone] = useState('');
+  const [timeZone, setTimeZone] = useState('America/Adak');
   // event type = In-person or Virtual
   const [eventType, setEventType] = useState('In-Person');
   // event virtual link if a virtual event (ex. - user will input their zoom link)
@@ -27,16 +27,20 @@ export default function CreateEvent() {
   // event details text
   const [description, setDescription] = useState('');
   // event category for search functionality (only one cat per event)
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState(1);
   // the actual photo 
   const [eventPhoto, setEventPhoto] = useState('');
   // to display a photo so the user can see what picture they have
   const [photoPreview, setPhotoPreview] = useState('');
   // eventLocation format = "city, state"
-  const [location, setlocation] = useState('');
+  const [location, setLocation] = useState('');
   // eventCoordinates = "latitude, longitude"
   const [eventCoordinates, setEventCoordinates] = useState('');
-
+  // boolean-volunteers needed? yes === true if no  === false 
+  const [volunteersNeeded, setVolunteersNeeded] = useState(false)
+  // boolean-attendees needed? yes === true if no  === false 
+  const [attendeesNeeded, setAttendeesNeeded] = useState(false)
+  
   useEffect(() => {
     const fetchCategories = async () => {
       const categories = await getInterestCategories();
@@ -73,7 +77,10 @@ export default function CreateEvent() {
         eventPhoto,
         virtualEventLink,
         location, 
-        eventCoordinates
+        eventCoordinates,
+        //will uncomment fields once view is updated
+        // volunteersNeeded,
+        // attendeesNeeded
       );
       navigate('/profile');
     } catch (error) {
@@ -107,12 +114,21 @@ export default function CreateEvent() {
         onVirtualLinkChange={(e) => setVirtualEventLink(e.target.value)}
         onDescriptionChange={(e) => setDescription(e.target.value)}
         onCategoryChange={(e) => setCategory(e.target.value)}
-        onCoordinateChange={(e) => setEventCoordinates(e.target.value)}
-        onLocation={(e) => setlocation(e.target.value)}
+
+        //added for volunteer and attendees on click change set the opposite
+        volunteersNeeded={volunteersNeeded}
+        attendeesNeeded={attendeesNeeded}
+        onVolunteersNeededChange={(e) => setVolunteersNeeded(!volunteersNeeded)}
+        onAttendeesNeededChange={(e) => setAttendeesNeeded(!attendeesNeeded)}
+        //added setLocation, setEventVenueAddress, and setEventCoords to pass to location search component to set the state
+        setEventCoordinates= {setEventCoordinates}
+        setLocation = {setLocation}
+        setEventVenueAddress={setEventVenueAddress}
+
         timeZoneAbbreviations={timeZoneAbbreviations}
         handleSubmit={handleSubmit}
       />
-      <Button variant="primary" onClick={handleSubmit}>Create Event</Button>
+      <Button variant="primary" size="lg" style={{paddingLeft: "28px", paddingRight: "28px"}} onClick={handleSubmit}>Create Event</Button>
     </Container>
   );
 }

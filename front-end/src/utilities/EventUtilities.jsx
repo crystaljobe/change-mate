@@ -53,7 +53,7 @@ export const setUserAttending = async (eventID, usersAttending) => {
     }
 };
 
-//wrapped in a try catch and additional console.logs for better error handling
+// wrapped in a try catch and additional console.logs for better error handling
 export const updateEventDetails = async (eventID, title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink, location, eventCoordinates) => {
     try {
         let response = await api.put(`events/${eventID}/`, {
