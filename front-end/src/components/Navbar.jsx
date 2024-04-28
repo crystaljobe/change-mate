@@ -20,7 +20,7 @@ export default function MyNavbar({ user, setUser, displayName }) {
 			className=".bg-body-secondary"
 			expand="lg">
 
-			<Navbar.Brand as={Link} to={"/"} style={{paddingLeft:"6px"}}>
+			<Navbar.Brand as={Link} to={"/events"} style={{paddingLeft:"6px"}}>
 				<img
 					src={ChangeMateLogo}
 					width="80"
