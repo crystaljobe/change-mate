@@ -40,7 +40,7 @@ export default function CreateEvent() {
   const [volunteersNeeded, setVolunteersNeeded] = useState(false)
   // boolean-attendees needed? yes === true if no  === false 
   const [attendeesNeeded, setAttendeesNeeded] = useState(false)
-
+  
   useEffect(() => {
     const fetchCategories = async () => {
       const categories = await getInterestCategories();
