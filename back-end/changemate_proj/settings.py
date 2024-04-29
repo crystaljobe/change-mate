@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'event_app',
     'interest_app',
     'drf_yasg',
+    'post_app'
 ] 
 
 MIDDLEWARE = [
