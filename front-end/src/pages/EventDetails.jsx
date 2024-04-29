@@ -47,7 +47,7 @@ export default function EventDetails() {
   const getEvent = async () => {
     const eventDetails = await getEventDetails(eventID);
     setEventDetails(eventDetails);
-    // console.log("EVENT DETAILS page--event details:", eventDetails);
+    console.log("EVENT DETAILS page--event details:", eventDetails);
 
     setUsersAttending(eventDetails.users_attending);
     //---this is being handled on DetailedEventCard, leaving commented out in case we need it on this page later
@@ -87,8 +87,8 @@ export default function EventDetails() {
     }
   };
 
-  // Renders button conditionally based on if user is RSVPed
-  const renderRSVPButton = () => {
+  // Renders button conditionally based on if user is attending event
+  const renderAttendingButton = () => {
     // Sets attending to true or false based on function call
     const attending = isUserAttending()
     // If attending render disabled button that tells the user they've already RSVPed
@@ -124,7 +124,7 @@ export default function EventDetails() {
               {/* added volunteer application modal as a component */}
               <a onClick={handleShow}>Volunteer</a>
               <VolunteerApplication show={show} handleClose={handleClose}  />
-              {renderRSVPButton()} 
+              {renderAttendingButton()} 
             </div>
           </div>
         </Col>
