@@ -112,7 +112,8 @@ class EventsView(TokenReq):
                 description = data['description'],
                 category = category,
                 location = data['location'], 
-                coordinates = data['coordinates']
+                coordinates = data['coordinates'],
+                attendees_needed = data['attendees_needed'],
                 )
 
             # set request user as collaborator

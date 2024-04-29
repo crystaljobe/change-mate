@@ -110,7 +110,6 @@ export default function EditEventDetails() {
       virtualEventLink,
       location, 
       eventCoordinates,
-      volunteersNeeded,
       attendeesNeeded,
     );
     // if response status === true navigate user back to their profile

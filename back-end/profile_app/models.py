@@ -25,14 +25,10 @@ class UserProfile(models.Model):
         )
     location = models.TextField(
         null=True,
+        blank=True,
         )
-
-
-    def set_location(self, list_data):
-        self.location = json.dumps(list_data)
-
-    def get_location(self):
-        return json.loads(self.location)
+    # events_attending - relation from events: users_attending
+    # user_events - relation from events: collaborators
 
 
 
