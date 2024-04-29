@@ -117,7 +117,7 @@ export default function EditEventDetails() {
       setEventEnd(formatDateForInput(eventDetails.event_end));
       setTimeZone(eventDetails.time_zone);
       setEventType(eventDetails.event_type);
-      setVirtualEventLink(eventDetails.virtualEventLink || '');
+      setVirtualEventLink(eventDetails.virtual_event_link);
       setEventVenue(eventDetails.event_venue);
       setEventVenueAddress(eventDetails.event_venue_address);
       setDescription(eventDetails.description);
@@ -128,7 +128,7 @@ export default function EditEventDetails() {
       setLocation(eventDetails.location);
       //once be model updated uncomment below setStates:
       //setVolunteersNeeded(eventDetails.volunteers_needed)
-      //setAttendeesNeeded(eventDetails.attendees_needed)
+      setAttendeesNeeded(eventDetails.attendees_needed)
     };
     fetchEventAndCategories();
   }, [eventID]);
@@ -201,7 +201,6 @@ export default function EditEventDetails() {
       virtualEventLink,
       location, 
       eventCoordinates,
-      volunteersNeeded,
       attendeesNeeded,
     );
     // if response status === true navigate user back to their profile

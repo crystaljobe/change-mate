@@ -164,9 +164,7 @@ export default function CreateEvent() {
         virtualEventLink,
         location, 
         eventCoordinates,
-        //will uncomment fields once view is updated
-        // volunteersNeeded,
-        // attendeesNeeded
+        attendeesNeeded
       );
       navigate('/profile');
     } catch (error) {
