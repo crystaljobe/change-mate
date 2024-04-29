@@ -63,6 +63,10 @@ export default function EditEventDetails() {
     setApiCountries(countries)
   }
 
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
   // Fetches states and sets them to apiStates
   const fetchStates = async () => {
     const states = await getStates(countryAdd)
@@ -107,7 +111,7 @@ export default function EditEventDetails() {
       setInterestCategories(categories);
       // get event details and set all useStates
       const eventDetails = await getEventDetails(eventID);
-      // console.log(eventDetails)
+      console.log('eventDetails', eventDetails)
       setTitle(eventDetails.title);
       setEventStart(formatDateForInput(eventDetails.event_start));
       setEventEnd(formatDateForInput(eventDetails.event_end));
@@ -145,6 +149,38 @@ export default function EditEventDetails() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleAddLocation = () => {
+    // Create a location object from form values
+    const locationAdd = {
+      'country': null,
+      'state': null,
+      'city': null
+    }
+
+    // Sets location values to set either city, state or country
+    if (cityAdd && cityAdd.length > 0) {
+      locationAdd['city'] = cityAdd
+    } else if (stateAdd && stateAdd.length > 0) {
+      locationAdd['state'] = stateAdd[1]
+    } else if (countryAdd && countryAdd.length > 0) {
+      locationAdd['country'] = countryAdd
+    }
+
+    // Converts newLocations to json string for backend transmission
+    const jsonStringLocation = JSON.stringify(locationAdd)
+    console.log(locationAdd)
+    
+    // Sets the userLocation to the new json string of locations
+    setLocation(jsonStringLocation) 
+  }
+
+  // Handles removing a location from the user's profile
+  const handleRemoveLocation = () => {
+    // Sets the userLocation to an empty string
+    setLocation('') 
+    setLocationData([])
   };
 
   // handle form submit to send put request 
@@ -224,6 +260,18 @@ export default function EditEventDetails() {
         timeZoneAbbreviations={timeZoneAbbreviations}
         handleSubmit={handleSubmit}
         handleDelete={handleDelete}
+
+        // Added passing these values and functions for location features
+        apiCountries={apiCountries}
+        apiStates={apiStates}
+        apiCities={apiCities}
+        stateAdd={stateAdd}
+        locationData={locationData}
+        setCountryAdd={setCountryAdd}
+        setStateAdd={setStateAdd}
+        setCityAdd={setCityAdd}
+        handleAddLocation={handleAddLocation}
+        handleRemoveLocation={handleRemoveLocation}
       />
     <div className='text-center' style={{marginTop: "8px", marginBottom: "20px"}}>
     <Button variant="success" size="lg" style={{marginRight: "40px", paddingLeft: "28px", paddingRight: "28px"}} onClick={handleSubmit}>Save Changes</Button>

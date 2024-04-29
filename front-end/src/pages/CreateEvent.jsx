@@ -120,9 +120,18 @@ export default function CreateEvent() {
   const handleAddLocation = () => {
     // Create a location object from form values
     const locationAdd = {
-      'country': countryAdd,
-      'state': stateAdd[1],
-      'city': cityAdd
+      'country': null,
+      'state': null,
+      'city': null
+    }
+
+     // Sets location values to set either city, state or country
+    if (cityAdd && cityAdd.length > 0) {
+      locationAdd['city'] = cityAdd
+    } else if (stateAdd && stateAdd.length > 0) {
+      locationAdd['state'] = stateAdd[1]
+    } else if (countryAdd && countryAdd.length > 0) {
+      locationAdd['country'] = countryAdd
     }
 
     // Converts newLocations to json string for backend transmission
@@ -205,6 +214,7 @@ export default function CreateEvent() {
         timeZoneAbbreviations={timeZoneAbbreviations}
         handleSubmit={handleSubmit}
 
+        // Added passing these values and functions for location features
         apiCountries={apiCountries}
         apiStates={apiStates}
         apiCities={apiCities}
