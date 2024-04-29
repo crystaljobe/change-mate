@@ -3,38 +3,110 @@
 @tailwind utilities; */
 
 :root {
-  --bodyColor:#f9f1e9;
+  --bodyColor:#FDF6EE;
   padding: 4px;
 }
 body {
-  background: #f9f1e9;
+  background: #FDF6EE;
 
 }
 
 nav {
-  background: #f9f1e9;  /* fallback for old browsers */
+  background: #FDF6EE; 
   flex-direction: row;
-  gap: 40px;
+  border-bottom: solid;
+}
+
+.homepage-header-text {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.homepage-subtext {
+  font-family: "Slabo 27px", serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .location-search-map-container {
-  height: 250px;
+  height: 300px;
+  width: 500px;
+  margin-left: 18px;
+}
+
+.static-map-container {
+  height: 300px;
   width: 300px;
-  margin-left: 20px;
 }
 
 .map-container {
     height: 500px;
   }
    
-.sidebar {
-  background-color: rgba(133, 154, 175, 0.9);
-  color: "#fff";
-  padding: 6px 12px;
-  font-family: monospace;
-  z-index: 1;
-  position: sticky;
-  top: 6px;
-  left: 0;
-  border-radius: 4px;
+
+
+
+/* colorful button -eventdetails page- css */
+.button-gradient {
+  background-image: linear-gradient(to right, rgb(167, 223, 242) 30%, rgb(178, 149, 237) 70%);
+  color: black; /* Text color */
+  padding: 10px 20px; /* Padding around the text */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 16px; /* Text size */
+  font-weight: bold; /* Bold text */
 }
+
+
+/* DROPDOWN BUTTON - EVENTDETAILS  */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 15vh;
+  margin-top: 1vh;
+}
+
+.dropdown-button {
+  background-image: linear-gradient(to right, rgb(167, 223, 242) 30%, rgb(178, 149, 237) 70%);
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 5px;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+.dropdown-content a:hover {
+  background-color: #bce0fc34;
+}
+
+.dropdown-container:hover .dropdown-content {
+  display: block;
+}
+
+
+
+

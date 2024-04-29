@@ -19,7 +19,7 @@ export const getEventDetailsSearch = async (allData) => {
 };
 
 
-export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink, location, eventCoordinates) => {
+export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink, location, eventCoordinates, attendeesNeeded) => {
     let response = await api.post("events/", {
         "title" : title,
         "event_start" : eventStart,
@@ -34,6 +34,7 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
 		"virtual_event_link": virtualEventLink,
         "location": location || null,
         "coordinates": eventCoordinates || null,
+        "attendees_needed": attendeesNeeded
     });
     if (response.status === 201) {
         return true;
@@ -53,8 +54,8 @@ export const setUserAttending = async (eventID, usersAttending) => {
     }
 };
 
-//wrapped in a try catch and additional console.logs for better error handling
-export const updateEventDetails = async (eventID, title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink, location, eventCoordinates) => {
+// wrapped in a try catch and additional console.logs for better error handling
+export const updateEventDetails = async (eventID, title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink, location, eventCoordinates, attendeesNeeded) => {
     try {
         let response = await api.put(`events/${eventID}/`, {
             "title": title,
@@ -69,7 +70,8 @@ export const updateEventDetails = async (eventID, title, eventStart, eventEnd, t
             "event_photo": eventPhoto,
             "virtual_event_link": virtualEventLink || null,  //to satisfy backend requirements 
             "location": location || null,
-            "coordinates": eventCoordinates || null //to satisfy backend requirements 
+            "coordinates": eventCoordinates || null, //to satisfy backend requirements
+            "attendees_needed": attendeesNeeded,
         });
         console.log(response.status);
         if (response.status === 200) {

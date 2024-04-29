@@ -16,6 +16,7 @@ export default function UserProfile({ user }) {
   const [eventsAttending, setEventsAttending] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   const [userInterests, setUserInterests] = useState([]);
+  const [userLocationData, setUserLocationData] = useState([]);
   const [userPhoto, setUserPhoto] = useState(""); // Initialize userPhoto with an empty string
   const [profileIcon, setProfileIcon] = useState("");
   const [eventIcon, setEventIcon] = useState("");
@@ -30,15 +31,28 @@ export default function UserProfile({ user }) {
     fetchEventIcon()
   }, []);
 
+  // Takes  userProfileData.location which is a json string and turns it back into an array of objects for data manipulation
+  const getUserLocationData = () => {
+    if (userProfileData.location && userProfileData.location.length > 0) {
+      const locations = userProfileData.location
+      const locationsData = JSON.parse(locations)
+      setUserLocationData(locationsData)
+    }
+  }
+
+  useEffect(() => {
+    getUserLocationData();
+  }, [userProfileData]);
+
   // useEffect to fetch profile and icon data on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Use Promise.all for parallel asynchronous calls to get profile and icon data
         const [iconData, userProfile] = await Promise.all([getProfileIcon(), getUserProfile(user)]);
-        console.log('Profile data:', userProfile); // Log the entire profile data
-        console.log('User events:', userProfile.user_events); // Log user events
-        console.log('Events attending:', userProfile.events_attending); // Log events attending
+        // console.log('Profile data:', userProfile); // Log the entire profile data
+        // console.log('User events:', userProfile.user_events); // Log user events
+        // console.log('Events attending:', userProfile.events_attending); // Log events attending
         setProfileIcon(iconData);
         setUserProfileData(userProfile);
         setUserEvents(userProfile.user_events);
@@ -56,7 +70,7 @@ export default function UserProfile({ user }) {
 
   // Map events attending to the format required by FullCalendar
 const calendarEvents = userEvents.map(event => {
-  console.log(`Event Start: ${event.event_start}, Event End: ${event.event_end}`);  // Add this line
+  // console.log(`Event Start: ${event.event_start}, Event End: ${event.event_end}`);  // Add this line
   return {
     title: event.title,
     start: event.event_start,
@@ -81,7 +95,10 @@ const calendarEvents = userEvents.map(event => {
         <br />
         <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Locations:</Card.Subtitle>
         <Card.Text>
-          {userProfileData.location}
+          {/* Maps through the userLocationData to render in proper format */}
+          {userLocationData.map(l => 
+              <p style={{ margin: '0px' }}>{`${l.city}, ${l.state}`}</p>
+            )}
         </Card.Text>
         <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Interests:</Card.Subtitle>
         <Card.Text>
@@ -94,7 +111,7 @@ const calendarEvents = userEvents.map(event => {
     </Card>
   );
 
-  console.log('USER PROFILE -- userEvents:', userEvents)
+  // console.log('USER PROFILE -- userEvents:', userEvents)
 
   // Main component layout using Bootstrap's grid system
   return (
