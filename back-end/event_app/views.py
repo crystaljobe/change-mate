@@ -111,8 +111,10 @@ class EventsView(TokenReq):
                 event_photo = data['event_photo'],
                 description = data['description'],
                 category = category,
+                virtual_event_link = data['virtual_event_link'],
                 location = data['location'], 
-                coordinates = data['coordinates']
+                coordinates = data['coordinates'],
+                attendees_needed = data['attendees_needed'],
                 )
 
             # set request user as collaborator
@@ -172,9 +174,10 @@ class AnEvent(APIView):
         if updated_event.is_valid():
             updated_event.save()
             return Response(updated_event.data, status=HTTP_200_OK)
-        return Response(updated_event.error_messages, status=HTTP_400_BAD_REQUEST)
-
-
+        else:
+            print("Validation errors:", updated_event.errors)
+            return Response({'errors': updated_event.errors}, status=HTTP_400_BAD_REQUEST)
+    
 
     @swagger_auto_schema(
         operation_summary="Delete event",
@@ -185,6 +188,7 @@ class AnEvent(APIView):
         event = get_object_or_404(Event, id = event_id)
         event.delete()
         return Response(status=HTTP_204_NO_CONTENT)
+
 
 class ICalEvent(APIView):
     '''View a single event by ID'''
