@@ -11,6 +11,8 @@ import EventDetails from './pages/EventDetails';
 import SearchEvents from './pages/SearchEvents/SearchEvents';
 import EventDirections from './pages/EventDirections';
 import UserProfile from './pages/UserProfile';
+import AdminPage from './pages/AdminPage';
+
 import { userConfirmation } from './utilities';
 
 const router = createBrowserRouter([
@@ -59,7 +61,11 @@ const router = createBrowserRouter([
             {
                 path:"/events",
                 element: <SearchEvents />
-            }
+            },
+            {
+                path:"/admin",
+                element: <AdminPage />
+            },
         ],
         errorElement: <ErrorPage />
     }
