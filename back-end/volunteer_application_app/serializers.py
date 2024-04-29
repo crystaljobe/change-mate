@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from .models import VolunteerApplication
+from profile_app.serializers import BasicUserDataSerializer
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    applicant = serialzer.
+    applicant = 
 
     class Meta:
         model = VolunteerApplication

@@ -18,7 +18,7 @@ class DisplayNameSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['display_name']
 
-class BasicUserData(serializers.ModelSerializer):
+class BasicUserDataSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
 
     class Meta: 
