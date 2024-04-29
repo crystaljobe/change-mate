@@ -91,8 +91,7 @@ export default function EventDetails() {
   const renderAttendingButton = () => {
     // Sets attending to true or false based on function call
     const attending = isUserAttending()
-    // If attending render disabled button that tells the user they've already RSVPed
-    
+  
     //converted from button into a-tags for dropdown item
      return (   
     attending ? (
@@ -124,7 +123,10 @@ export default function EventDetails() {
               {/* added volunteer application modal as a component */}
               <a onClick={handleShow}>Volunteer</a>
               <VolunteerApplication show={show} handleClose={handleClose}  />
-              {renderAttendingButton()} 
+
+              {/* added conditional rendering for attend / attending if event needs attendees */}
+              {eventDetails.attendees_needed &&
+(renderAttendingButton() )}
             </div>
           </div>
         </Col>
