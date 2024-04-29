@@ -85,9 +85,17 @@ export default function LocationSearchMap({
 						}
 					});
 
+					const generalLocation = {
+						'country': country,
+						'state': state,
+						'city': city
+					}
+
+					const jsonStringLocation = JSON.stringify(generalLocation)
+
 					setAddress(data.place_name);
 					setEventCoords(data.geometry.coordinates);
-					setLocation(`${city}, ${state}`);
+					setLocation(jsonStringLocation);
 
 				});
 			});
