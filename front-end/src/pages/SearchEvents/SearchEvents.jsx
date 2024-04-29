@@ -21,6 +21,7 @@ function SearchEvents() {
     // TODO: once we have a spot on our events to indicate whether volunteers are needed, we can add functionality to sort searchEvents into searchEventsVolNeed
     const [eventsVolNeed, setEventsVolNeed] = useState([]);
     const [eventsAdditional, setEventsAdditional] = useState([]);
+    const [icon, setIcon] = useState("");
     console.log('searchEvents', searchEvents)
 
 
@@ -181,6 +182,8 @@ function SearchEvents() {
                                 title={e.title}
                                 image={e.event_photo}
                                 description={e.description}
+                                icon={icon}
+                                setIcon={setIcon}
                             />
                     )}
                 </div>
@@ -200,6 +203,8 @@ function SearchEvents() {
                                 title={e.title}
                                 image={e.event_photo}
                                 description={e.description}
+                                icon={icon}
+                                setIcon={setIcon}
                             />
                     )}
                 </div>
