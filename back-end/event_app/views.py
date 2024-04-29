@@ -111,6 +111,7 @@ class EventsView(TokenReq):
                 event_photo = data['event_photo'],
                 description = data['description'],
                 category = category,
+                virtual_event_link = data['virtual_event_link'],
                 location = data['location'], 
                 coordinates = data['coordinates'],
                 attendees_needed = data['attendees_needed'],
@@ -173,7 +174,9 @@ class AnEvent(APIView):
         if updated_event.is_valid():
             updated_event.save()
             return Response(updated_event.data, status=HTTP_200_OK)
-        return Response(updated_event.error_messages, status=HTTP_400_BAD_REQUEST)
+        else:
+            print("Validation errors:", updated_event.errors)
+            return Response({'errors': updated_event.errors}, status=HTTP_400_BAD_REQUEST)
     
 
     @swagger_auto_schema(

@@ -38,4 +38,4 @@ class Event(models.Model):
         UserProfile, related_name="events_attending"
     )
     location = models.CharField(max_length=100, blank=True, null=True)
-    coordinates = ArrayField(models.FloatField(), null=True, blank=True)
+    coordinates = ArrayField(models.FloatField(null=True, blank =True), null=True, blank=True)

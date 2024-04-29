@@ -52,13 +52,13 @@ export default function EditEventDetails() {
       setInterestCategories(categories);
       // get event details and set all useStates
       const eventDetails = await getEventDetails(eventID);
-      // console.log(eventDetails)
+      console.log(eventDetails)
       setTitle(eventDetails.title);
       setEventStart(formatDateForInput(eventDetails.event_start));
       setEventEnd(formatDateForInput(eventDetails.event_end));
       setTimeZone(eventDetails.time_zone);
       setEventType(eventDetails.event_type);
-      setVirtualEventLink(eventDetails.virtualEventLink || '');
+      setVirtualEventLink(eventDetails.virtual_event_link);
       setEventVenue(eventDetails.event_venue);
       setEventVenueAddress(eventDetails.event_venue_address);
       setDescription(eventDetails.description);
@@ -69,7 +69,7 @@ export default function EditEventDetails() {
       setLocation(eventDetails.location);
       //once be model updated uncomment below setStates:
       //setVolunteersNeeded(eventDetails.volunteers_needed)
-      //setAttendeesNeeded(eventDetails.attendees_needed)
+      setAttendeesNeeded(eventDetails.attendees_needed)
     };
     fetchEventAndCategories();
   }, [eventID]);
