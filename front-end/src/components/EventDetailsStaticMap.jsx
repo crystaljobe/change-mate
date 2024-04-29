@@ -7,14 +7,27 @@ mapboxgl.accessToken =
     "pk.eyJ1IjoiY3J5c3RhbGpvYmUiLCJhIjoiY2x2Y3VkMzFxMG13ZzJrcGY5dDB0bGJvYyJ9.PV_ZgI2EhyhNfcRHmp2OPw";
 
 export default function StaticMap({ latitude, longitude }) {
-    
-
-
-   
+    const [viewport, setViewport] = useState({
+        latitude: latitude,
+        longitude: longitude,
+        zoom: 11,
+        width: '100vw',
+        height: '100vh',
+      });
+      console.log("mapLat:", latitude, "mapLon:", longitude)
 
     return (
-        <></>
-    )
+			<>
+				<ReactMapGL className="static-map-container"
+					{...viewport}
+					mapboxApiAccessToken={mapboxgl.accessToken}
+					onViewportChange={(newViewport) => setViewport(newViewport)}>
+					<Marker latitude={latitude} longitude={longitude}>
+						<div>Marker</div>
+					</Marker>
+				</ReactMapGL>
+			</>
+		);
 }
 
 // curl -g https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+e01010(-104.774529,38.877232)/-104.7916,38.8696,10,0/300x200@2x?access_token=pk.eyJ1IjoibWNyZXlub2xkc2giLCJhIjoiY2x2MzFuNzN6MGhoOTJycnd5ZHQ3eWR4ayJ9.QKI5tsCAXhuzNb2XzhyjOg

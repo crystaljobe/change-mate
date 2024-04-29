@@ -4,12 +4,10 @@ import { useEffect, useState } from "react";
 import "add-to-calendar-button";
 import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
 import { getUserProfile } from "../utilities/UserProfileUtilities";
-import { getEventIcon } from '../utilities/DefaultIconsUtilities';
 import { getiCalEventDetails } from "../utilities/EventUtilities";
-import gps from "../assets/gps.jpg";
 import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerApplication from "../components/VolunteerApplication";
-// import StaticMap from "../components/EventDetailsStaticMap";
+import StaticMap from "../components/EventDetailsStaticMap";
 
 export default function EventDetails() {
   let { eventID } = useParams();
@@ -19,8 +17,8 @@ export default function EventDetails() {
   const [usersAttending, setUsersAttending] = useState([]);
   const [eventsAttending, setEventsAttending] = useState([]);
   // event latitude and long for passing to static map component
-  const latitude = eventDetails.lat;
-  const longitude = eventDetails.lon;
+  // const latitude = eventDetails.lat;
+  // const longitude = eventDetails.lon;
 
   //application modal
   const [show, setShow] = useState(false);
@@ -47,7 +45,7 @@ export default function EventDetails() {
   const getEvent = async () => {
     const eventDetails = await getEventDetails(eventID);
     setEventDetails(eventDetails);
-    // console.log("EVENT DETAILS page--event details:", eventDetails);
+    console.log("EVENT DETAILS page--event details:", eventDetails);
 
     setUsersAttending(eventDetails.users_attending);
     //---this is being handled on DetailedEventCard, leaving commented out in case we need it on this page later
@@ -117,9 +115,9 @@ export default function EventDetails() {
               cardCSS={cardCSS}
             ></DetailedEventCard>
           )}
-          <div class="dropdown-container">
-            <button class="dropdown-button">Count me in!</button>
-            <div class="dropdown-content">
+          <div className="dropdown-container">
+            <button className="dropdown-button">Count me in!</button>
+            <div className="dropdown-content">
               {/* TODO: add conditonal rendering for volunteer option if event is accepting volunteers */}
               {/* added volunteer application modal as a component */}
               <a onClick={handleShow}>Volunteer</a>
@@ -132,9 +130,12 @@ export default function EventDetails() {
         {/*LOCATION IMG &&&& DIRECTIONS BUTTON */}
         <Col>
           <br />
-          <Card style={{ width: "90vw", maxWidth: "300px" }} sm={4}>
-            <Card.Img src={gps}></Card.Img>
-          </Card>
+          {/* added static map component */}
+          <Col sm={4}>
+            {eventDetails && (console.log("lat:", eventDetails.lat, "long:", eventDetails.lon))}
+            {eventDetails && (<StaticMap latitude={ eventDetails.lat } longitude={ eventDetails.lon } />)}
+            {/* <StaticMap latitude={ eventDetails.lat } longitude={ eventDetails.lon } /> */}
+          </Col>
           <Link to="/eventdirections">
             <button
               className="button-gradient text-center"
@@ -163,10 +164,7 @@ export default function EventDetails() {
             description={iCalDetails.description}
           ></add-to-calendar-button>
         </Col>
-        {/* added static map component */}
-        {/* <Col>
-        <StaticMap latitude={ latitude } longitude={ longitude } />
-        </Col> */}
+        
       </Row>
     </Container>
   );

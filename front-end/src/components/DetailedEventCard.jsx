@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getEventIcon } from "../utilities/DefaultIconsUtilities";
-
 import {
   Container,
   Col,
@@ -13,7 +12,6 @@ import {
 } from "react-bootstrap";
 
 
-    
 function DetailedEventCard({eventDetails, cardCSS}) {
   // id, title, event_photo, description, collaboratorsStr, startDate, startTime, endDate, endTime, time_zone, event_type, virtual_event_link, event_venue, event_venue_address,
     const [eventIcon, setEventIcon] = useState("");
