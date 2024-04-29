@@ -4,15 +4,14 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { getEventIcon } from "../utilities/DefaultIconsUtilities";
 
-function EventCard({ id, title, image, eventType, icon, setIcon }) {
-    
+function EventCard({ id, title, image, description }) {
+    const [icon, setIcon] = useState("");
 
     useEffect(() => {
-        if (!image && icon == "") {
-            const fetchIcon = async () => {
+        const fetchIcon = async () => {
             const icon = await getEventIcon();
             setIcon(icon);
-        }};
+        };
 
         fetchIcon();
     }, []);
@@ -22,7 +21,7 @@ function EventCard({ id, title, image, eventType, icon, setIcon }) {
             <Card.Img variant="top" src={image ? image : icon} />
             <Card.Body>
                 <Card.Title>{title}</Card.Title>
-                <Card.Text>{eventType}</Card.Text>
+                <Card.Text>{description}</Card.Text>
                 <Button variant="info" as={Link} to={`/event/${id}`}>More Details</Button>
             </Card.Body>
         </Card>

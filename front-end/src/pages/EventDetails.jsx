@@ -16,10 +16,7 @@ export default function EventDetails() {
   const [eventDetails, setEventDetails] = useState([]);
   const [usersAttending, setUsersAttending] = useState([]);
   const [eventsAttending, setEventsAttending] = useState([]);
-  //setting lat / lon as use states using eventDetail obj keeps throwing errors when trying to pass it to static map
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-  console.log("top level:", latitude, longitude)
+
   //application modal
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -46,8 +43,6 @@ export default function EventDetails() {
     const eventDetails = await getEventDetails(eventID);
     setEventDetails(eventDetails);
     console.log("EVENT DETAILS page--event details:", eventDetails);
-    setLatitude(eventDetails.lat);
-    setLongitude(eventDetails.lon);
 
     setUsersAttending(eventDetails.users_attending);
     //---this is being handled on DetailedEventCard, leaving commented out in case we need it on this page later
@@ -132,23 +127,27 @@ export default function EventDetails() {
         {/*LOCATION IMG &&&& DIRECTIONS BUTTON */}
         <Col>
           <br />
-          {/* added static map component */}
+          {/* added static map component to render if in-person*/}
+          {eventDetails.event_type === "In-person" && 
+            (<Row>
+            {eventDetails.lat && <StaticMap lat={ eventDetails.lat } lng={ eventDetails.lon } />}
 
-          {/* {eventDetails && (<StaticMap latitude={ latitude } longitude={ longitude } />)} */}
+              <Link to="/eventdirections">
+              <button 
+                className="button-gradient text-center"
+                variant="info"
+                style={{ width: "90vw", maxWidth: "300px" }}
+              >
+                Get Event Directions
+              </button>
+            </Link>
+            </Row>)
+          }
 
-          <Link to="/eventdirections">
-            <button
-              className="button-gradient text-center"
-              variant="info"
-              style={{ width: "90vw", maxWidth: "300px" }}
-            >
-              Get Event Directions
-            </button>
-          </Link>
           <add-to-calendar-button
             style={{ height: "50px" }}
             size="5"
-            label="Add to personal calendar"
+            label="Add to Calendar"
             options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
             name={iCalDetails.title}
             location={
