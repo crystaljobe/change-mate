@@ -6,14 +6,11 @@ from django.utils.timezone import now
 class ApplicationSerializer(serializers.ModelSerializer):
     '''Serializer for new volunteer applications'''
     applicant = BasicUserDataSerializer()
-    email = serializers.SerializerMethodField()
 
     class Meta:
         model = VolunteerApplication
         exclude = ['decision_made_by', 'decision_text', 'decision_date']
 
-    def get_email(self, obj):
-        return obj.applicant.email
     
 class ApplicationDecisionSerializer(serializers.ModelSerializer):
     '''Serializer for updating application status'''
@@ -30,5 +27,15 @@ class ApplicationDecisionSerializer(serializers.ModelSerializer):
         obj.decision_date = now()  # Set decision_date to the current datetime
         obj.save()
         return obj
+    
+class ApplicationViewSerializer(serializers.ModelSerializer):
+    '''Serializer for viewing volunteer applications'''
+    applicant = BasicUserDataSerializer()
+    decision_made_by = BasicUserDataSerializer()
+
+    class Meta:
+        model = VolunteerApplication
+        exclude = ['decision_text', 'volunteer_role']
+
         
 

@@ -64,6 +64,36 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     def get_collaborators(self, obj):
         return [{"user_id": profile.id, "display_name": profile.display_name, "profile_picture": profile.image} for profile in obj.collaborators.all()]
 
+class EventCardSerializer(serializers.ModelSerializer):
+    '''provide data formatted for event cards'''
+    startTime = serializers.SerializerMethodField()
+    startDate = serializers.SerializerMethodField()
+    endTime = serializers.SerializerMethodField()
+    endDate = serializers.SerializerMethodField()
+    category = InterestCategorySerializer()
+
+    class Meta: 
+        model = Event
+        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'event_photo', 'category', 'location']
+
+    # convert date from YYYY-MM-DD to MM/DD/YYYY
+    def get_startDate(self, obj):
+        return obj.event_start.strftime('%m/%d/%Y')
+    
+    # convert date from YYYY-MM-DD to MM/DD/YYYY
+    def get_endDate(self, obj):
+        return obj.event_end.strftime('%m/%d/%Y')
+    
+    # convert time to 12 hr format
+    def get_startTime(self, obj):
+        return obj.event_start.strftime('%I:%M %p')
+    
+    # convert time to 12 hr format
+    def get_endTime(self, obj):
+        return obj.event_end.strftime('%I:%M %p')
+    
+
+
 
 
 class ICalSerializer(serializers.ModelSerializer):
