@@ -82,14 +82,10 @@ class EventsView(TokenReq):
                 Q(category__category__icontains=general)
                 )
         
-    
         
         # serialize data and return data and status 200
         ser_queryset = EventDetailsSerializer(queryset, many=True)
         return Response(ser_queryset.data, status=HTTP_200_OK)
-
-    
-
 
     @swagger_auto_schema(
         operation_summary="Create event",
@@ -177,8 +173,7 @@ class AnEvent(APIView):
             updated_event.save()
             return Response(updated_event.data, status=HTTP_200_OK)
         return Response(updated_event.error_messages, status=HTTP_400_BAD_REQUEST)
-
-
+    
 
     @swagger_auto_schema(
         operation_summary="Delete event",
@@ -189,6 +184,7 @@ class AnEvent(APIView):
         event = get_object_or_404(Event, id = event_id)
         event.delete()
         return Response(status=HTTP_204_NO_CONTENT)
+
 
 class ICalEvent(APIView):
     '''View a single event by ID'''
