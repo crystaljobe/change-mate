@@ -1,7 +1,7 @@
 from django.db import models
 from event_app.serializers import Event
 from profile_app.serializers import UserProfile
-from .validators import validate_no_duplicates, ValidationError, IntegrityError
+
 
 
 class VolunteerRole(models.Model):
