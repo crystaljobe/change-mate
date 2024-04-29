@@ -11,7 +11,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST,
 )
-from .serializers import UserProfile, UserInterestSerializer, UserProfileSerializer, DisplayNameSerializer, LocationFieldSerializer, ImgFieldSerializer, ProfilePicSerializer
+from .serializers import UserProfile, UserProfileSerializer, DisplayNameSerializer
 from interest_app.serializers import InterestCategory
 from user_app.serializers import AppUser
 from rest_framework.views import APIView
