@@ -276,6 +276,7 @@ function EventForm({
 										))}
 									</datalist>
 									</Form.Label>
+									<br />
 									{renderRemoveLocation()}
 									<br />
 									<Button variant="info" onClick={() => handleAddLocation()}> 
