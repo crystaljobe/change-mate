@@ -3,7 +3,6 @@ import json
 from user_app.models import AppUser
 from interest_app.models import InterestCategory
 
-# Create your models here.
 
 class UserProfile(models.Model):
     # user profile will be created through user signup view and linked by user ID
