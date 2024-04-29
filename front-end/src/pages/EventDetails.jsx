@@ -16,10 +16,10 @@ export default function EventDetails() {
   const [eventDetails, setEventDetails] = useState([]);
   const [usersAttending, setUsersAttending] = useState([]);
   const [eventsAttending, setEventsAttending] = useState([]);
-  // event latitude and long for passing to static map component
-  // const latitude = eventDetails.lat;
-  // const longitude = eventDetails.lon;
-
+  //setting lat / lon as use states using eventDetail obj keeps throwing errors when trying to pass it to static map
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  console.log("top level:", latitude, longitude)
   //application modal
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -46,6 +46,8 @@ export default function EventDetails() {
     const eventDetails = await getEventDetails(eventID);
     setEventDetails(eventDetails);
     console.log("EVENT DETAILS page--event details:", eventDetails);
+    setLatitude(eventDetails.lat);
+    setLongitude(eventDetails.lon);
 
     setUsersAttending(eventDetails.users_attending);
     //---this is being handled on DetailedEventCard, leaving commented out in case we need it on this page later
@@ -126,16 +128,14 @@ export default function EventDetails() {
             </div>
           </div>
         </Col>
-
+        
         {/*LOCATION IMG &&&& DIRECTIONS BUTTON */}
         <Col>
           <br />
           {/* added static map component */}
-          <Col sm={4}>
-            {eventDetails && (console.log("lat:", eventDetails.lat, "long:", eventDetails.lon))}
-            {eventDetails && (<StaticMap latitude={ eventDetails.lat } longitude={ eventDetails.lon } />)}
-            {/* <StaticMap latitude={ eventDetails.lat } longitude={ eventDetails.lon } /> */}
-          </Col>
+
+          {/* {eventDetails && (<StaticMap latitude={ latitude } longitude={ longitude } />)} */}
+
           <Link to="/eventdirections">
             <button
               className="button-gradient text-center"
