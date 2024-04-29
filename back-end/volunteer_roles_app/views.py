@@ -1,24 +1,19 @@
-from PIL import Image, ImageOps
 from requests_oauthlib import OAuth1
 from changemate_proj.settings import env
-import requests
-from rest_framework.views import APIView
 from user_app.views import TokenReq 
 from rest_framework.response import Response
-from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_204_NO_CONTENT,
     HTTP_201_CREATED,
-    HTTP_400_BAD_REQUEST,
-    HTTP_208_ALREADY_REPORTED
+    HTTP_400_BAD_REQUEST
 )
 from .serializers import CreateVolunteerRoleSerializer, AssignVolunteerRoleSerializer, VolunteerRole
 from event_app.models import Event
 from drf_yasg.utils import swagger_auto_schema
-from django.http import JsonResponse
+
 
 
 class AllRoles(TokenReq):
@@ -89,7 +84,14 @@ class ARole(TokenReq):
 
             # set updated list of assigned volunteers
             if volunteer_ids:
-                edited_role.assigned_volunteers.set(volunteer_ids)
+                try:
+                    edited_role.assigned_volunteers.set(volunteer_ids)
+                except IntegrityError as e:
+                        # Extract the user ID from the error message
+                        error_message = str(e)
+                        user_id = error_message.split('=')[-1].split(')')[0].strip("()")
+                        return Response(f"Volunteer Not Added: No User Profile found with ID {user_id}.", status=HTTP_400_BAD_REQUEST)
+
             return Response(ser_role.data, status=HTTP_200_OK)
         return Response(ser_role.errors, status=HTTP_400_BAD_REQUEST)
     
@@ -100,5 +102,7 @@ class ARole(TokenReq):
     )
     def delete(self, request, event_id, role_id):
         role = get_object_or_404(VolunteerRole, pk=role_id)
+        role_name = role.role
+        role_event = role.event.title
         role.delete()
-        return Response(f"{role['role']}, was successfully deleted from {role['event']['title']}", status=HTTP_204_NO_CONTENT)
+        return Response(f"{role_name}, was successfully deleted from {role_event}", status=HTTP_204_NO_CONTENT)
