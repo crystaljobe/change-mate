@@ -85,9 +85,20 @@ export default function LocationSearchMap({
 						}
 					});
 
+					// Formats the data used for location into an object
+					const generalLocation = {
+						'country': country,
+						'state': state,
+						'city': city
+					}
+
+					// Converts the generalLocation object to a json string object
+					const jsonStringLocation = JSON.stringify(generalLocation)
+
 					setAddress(data.place_name);
 					setEventCoords(data.geometry.coordinates);
-					setLocation(`${city}, ${state}`);
+					// Sets the location to the json string object
+					setLocation(jsonStringLocation);
 
 				});
 			});
