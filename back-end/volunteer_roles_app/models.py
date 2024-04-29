@@ -7,8 +7,8 @@ from .validators import validate_no_duplicates, ValidationError, IntegrityError
 class VolunteerRole(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     role = models.CharField(max_length=50)
-    assigned_volunteers = models.ManyToManyField(UserProfile, blank=True, related_name="volunteer_roles")
     num_volunteers_needed = models.IntegerField()
+    # assigned_volunteers - generated in serializer
     # num_volunteers_assigned - calculated in serializer
-    # applicants - list of application instances - related field from volunteer applications model
+    # applications - list of application instances - related field from volunteer applications model
 
