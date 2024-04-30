@@ -39,3 +39,4 @@ class Event(models.Model):
     )
     location = models.CharField(max_length=100, blank=True, null=True)
     coordinates = ArrayField(models.FloatField(null=True, blank =True), null=True, blank=True)
+    # volunteer_roles - related from volunteer roles model

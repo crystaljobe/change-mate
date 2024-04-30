@@ -71,26 +71,10 @@ class ARole(TokenReq):
     )
     def put(self, request, event_id, role_id):
         data = request.data.copy()
-        # Retrieve the list of assigned volunteers and remove from data to work with separately
-        volunteer_ids = data.pop('assigned_volunteers', [])
-        
-        # Get the role to edit
-        role = get_object_or_404(VolunteerRole, pk=role_id)
-
         # Serialize the role with the updated data
         ser_role = AssignVolunteerRoleSerializer(role, data=data, partial=True)
         if ser_role.is_valid():
-            edited_role = ser_role.save()
-
-            # set updated list of assigned volunteers
-            if volunteer_ids:
-                try:
-                    edited_role.assigned_volunteers.set(volunteer_ids)
-                except IntegrityError as e:
-                        # Extract the user ID from the error message
-                        error_message = str(e)
-                        user_id = error_message.split('=')[-1].split(')')[0].strip("()")
-                        return Response(f"Volunteer Not Added: No User Profile found with ID {user_id}.", status=HTTP_400_BAD_REQUEST)
+            ser_role.save()
 
             return Response(ser_role.data, status=HTTP_200_OK)
         return Response(ser_role.errors, status=HTTP_400_BAD_REQUEST)

@@ -3,7 +3,7 @@ from profile_app.models import UserProfile
 from volunteer_roles_app.models import VolunteerRole
 
 class VolunteerApplication(models.Model):
-    volunteer_role = models.ForeignKey(VolunteerRole, on_delete=models.CASCADE, related_name="applicantions")
+    volunteer_role = models.ForeignKey(VolunteerRole, on_delete=models.CASCADE, related_name="applications")
     applicant = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="volunteer_events") # user display name and id - automatically set during post request
     email = models.EmailField()
     phone_number = models.CharField(max_length=15)

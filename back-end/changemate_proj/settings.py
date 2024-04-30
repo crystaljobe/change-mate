@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'event_app',
     'interest_app',
     'volunteer_roles_app',
+    'volunteer_application_app',
     'cities_app',
     'states_app',
     'countries_app',
