@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import EventsView, DefautlEventIcon, ICalEvent, AnEvent, CollabDetails, AdminDetails
+from .views import EventsView, ICalEvent, AnEvent, CollabDetails, AdminDetails
 
 #create event app urls here 
 urlpatterns = [
