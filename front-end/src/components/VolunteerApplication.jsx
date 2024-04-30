@@ -53,14 +53,18 @@ function VolunteerApplication({ show, handleClose, eventID }) {
   };
 
   //handles checkbox selecting/deselecting, updates rolesSelected state accordingly
-  function handleClickRole(roleName) {
-    //selects roleInstance that matches roleName provided to funct
-    const roleInstance = roles.find((r) => r.role === roleName);
-    //if roleName is in rolesSelected arr already, will remove it else adds it to rolesSelected arr
-    const updatedRolesSelected = rolesSelected.some((r) => r.role === roleName)
-      ? rolesSelected.filter((r) => r.role !== roleName)
-      : [...rolesSelected, roleInstance];
-    setRolesSelected(updatedRolesSelected);
+  function handleClickRole(roleID) {
+
+    // find the role instance that matches the provided roleID
+    const roleInstance = roles.find((r) => r.id === roleID);
+    // Check if role ID is already in the rolesSelected array
+    if (rolesSelected.includes(roleInstance.id)) {
+      // If it is, remove it by filtering out the ID from rolesSelected
+      setRolesSelected(rolesSelected.filter((id) => id !== roleInstance.id));
+    } else {
+      // If it's not, add the role ID to the rolesSelected array
+      setRolesSelected([...rolesSelected, roleInstance.id]);
+    }
   }
 
   return (
@@ -146,7 +150,7 @@ function VolunteerApplication({ show, handleClose, eventID }) {
                         label={aRole.role}
                         type="checkbox"
                         onClick={(e) => {
-                          handleClickRole(aRole.role);
+                          handleClickRole(aRole.id);
                         }}
                       />
                     </>
