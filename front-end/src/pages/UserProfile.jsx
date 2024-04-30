@@ -1,6 +1,6 @@
 import { useOutletContext, Link } from "react-router-dom";
 import { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button, CardGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, CardGroup, Image } from 'react-bootstrap';
 import FullCalendar from '@fullcalendar/react'; // Import the FullCalendar component
 import dayGridPlugin from '@fullcalendar/daygrid'; // Plugin to display the calendar in a day grid view
 import { getProfileIcon, getEventIcon } from '../utilities/DefaultIconsUtilities';
@@ -15,11 +15,14 @@ export default function UserProfile({ user }) {
   // State variables to hold various user and events related data
   const [eventsAttending, setEventsAttending] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
+  const [eventsVolunteering, setEventsVolunteering] = useState([]);
   const [userInterests, setUserInterests] = useState([]);
   const [userLocationData, setUserLocationData] = useState([]);
   const [userPhoto, setUserPhoto] = useState(""); // Initialize userPhoto with an empty string
   const [profileIcon, setProfileIcon] = useState("");
   const [eventIcon, setEventIcon] = useState("");
+
+  console.log('userProfileData', userProfileData)
 
   // Fetches default event icon
   const fetchEventIcon = async () => {
@@ -111,15 +114,45 @@ const calendarEvents = userEvents.map(event => {
     </Card>
   );
 
+  const renderBages = () => (
+    <Card className="text-center" style={{ width: '18rem' }}>
+      <Card.Header>Badges</Card.Header>
+      <Card.Body>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+          <Image src={eventIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
+          <Card.Text>
+            {userEvents.length} Events Created
+          </Card.Text>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+          <Image src={eventIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
+          <Card.Text>
+            {eventsAttending.length} Events Commited To
+          </Card.Text>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+          <Image src={eventIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
+          <Card.Text>
+            {eventsVolunteering.length} Events Volunteered For
+          </Card.Text>
+        </div>
+      </Card.Body>
+    </Card>
+  );
+
   // console.log('USER PROFILE -- userEvents:', userEvents)
 
   // Main component layout using Bootstrap's grid system
   return (
     <Container fluid>
       <Row className="justify-content-md-center">
-        <Col md={3}>{renderProfileInfo()}</Col>
+        <Col md={3}>
+          {renderProfileInfo()}
+          <br/>
+          {renderBages()}
+        </Col>
         <Col md={4}>
-          <h1 style={{ color: "#6840DF" }}>Your Events</h1>
+          <h1 style={{ color: "#6840DF" }}>Events You're Hosting</h1>
           <Row>
             {userEvents.length === 0 ? (
               <h3 style={{ fontStyle: "italic" }}>
@@ -189,11 +222,11 @@ const calendarEvents = userEvents.map(event => {
           </Row>
           <br />
 
-          <h1 style={{ color: "#6840DF" }}>Upcoming Events</h1>
+          <h1 style={{ color: "#6840DF" }}>Events You're Attending</h1>
           <br />
           <Row>
-            {userEvents.length > 0 ? (
-              userEvents.map((event) => (
+            {eventsAttending.length > 0 ? (
+              eventsAttending.map((event) => (
                 <CardGroup key={event.id} className="p-2">
                   <Card key={event.id} style={{ width: "18rem" }}>
                     <Card.Body>
