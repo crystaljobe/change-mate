@@ -102,7 +102,7 @@ export default function EventDetails() {
 
     <Container>
       <Row>
-        <Col className="justify-content-md-center">
+        <Col md={8} sm={12}>
           {eventDetails && (
             <DetailedEventCard
               eventDetails={eventDetails}
@@ -130,11 +130,11 @@ export default function EventDetails() {
         </Col>
         
         {/*LOCATION IMG &&&& DIRECTIONS BUTTON */}
-        <Col>
+        <Col md={4} sm={12} className="text-center">
           <br />
           {/* added static map component to render if in-person*/}
           {eventDetails.event_type === "In-person" && 
-            (<Row>
+            (<Row className="justify-content-center">
             {eventDetails.lat && <StaticMap lat={ eventDetails.lat } lng={ eventDetails.lon } />}
 
               <Link to="/eventdirections">

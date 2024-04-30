@@ -18,7 +18,7 @@ function DetailedEventCard({eventDetails}) {
     const [collabStr, setCollabStr] = useState("");
     const styles = {
       cardCSS: {
-        width: "90vw", 
+        // width: "80vw", 
         maxWidth: "800px",
         margin: "24px",
       },
