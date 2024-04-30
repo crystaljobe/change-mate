@@ -1,7 +1,7 @@
 import { Card, ListGroup, Form, Button, InputGroup } from "react-bootstrap";
 import { useState } from "react";
 
-function TodoList() {
+function TodoList( {showAddToDo} ) {
     const [tasks, setTasks] = useState([
         { id: 1, text: "Prepare event budget", completed: false },
         { id: 2, text: "Confirm speakers", completed: true },
@@ -33,7 +33,8 @@ function TodoList() {
                     </ListGroup.Item>
                 ))}
             </ListGroup>
-            <Card.Footer>
+            <Card.Footer> 
+                {showAddToDo &&
                 <InputGroup>
                     <Form.Control
                         type="text"
@@ -42,7 +43,7 @@ function TodoList() {
                         onChange={(e) => setNewTask(e.target.value)}
                     />
                     <Button variant="outline-secondary" onClick={handleAddTask}>Add Task</Button>
-                </InputGroup>
+                </InputGroup>}
             </Card.Footer>
         </Card>
     );

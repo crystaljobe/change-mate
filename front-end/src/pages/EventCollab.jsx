@@ -20,6 +20,7 @@ function EventCollab() {
     // //     const eventDetails = await getEventDetails(eventID);
     // //     setEventDetails(eventDetails);
     // // }
+    const showAddToDo = false
 
     const eventDetails = {
         title: "Sample Event",
@@ -48,7 +49,7 @@ function EventCollab() {
                     <DiscussionForum />
                 </Col>
                 <Col md={4} className="todo-participant-col">
-                    <TodoList />
+                    <TodoList showAddToDo={showAddToDo} />
                     
                 </Col>
             </Row>
