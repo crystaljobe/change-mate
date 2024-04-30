@@ -40,6 +40,17 @@ class AApplication(TokenReq):
     '''Access a volunteer application by ID'''
     
     @swagger_auto_schema(
+            operation_summary="Get a volunteer application by ID",
+            operation_description="Retrieve a volunteer application by ID.",
+            responses={200: ApplicationSerializer()},
+    )
+    def get(self, request, application_id):
+        '''Retrieve a volunteer application by ID'''
+        application = get_object_or_404(VolunteerApplication, pk=application_id)
+        serializer = ApplicationSerializer(application)
+        return Response(serializer.data, status=HTTP_200_OK)
+
+    @swagger_auto_schema(
             operation_summary="Edit volunteer application status",
             operation_description="Edit volunteer application status.",
             request_body=ApplicationDecisionSerializer,
