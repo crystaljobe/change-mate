@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CurrentUserProfile,  DisplayName, ProfilePic, EditUserProfile
+from .views import CurrentUserProfile,  DisplayName, EditUserProfile
 
 # profile app urls 
 urlpatterns = [

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'volunteer_application_app',
     'cities_app',
     'states_app',
+    'noun_app',
     'countries_app',
     'drf_yasg',
 ] 
