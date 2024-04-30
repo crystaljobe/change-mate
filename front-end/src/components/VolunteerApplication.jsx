@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import EventDetails from "../pages/EventDetails";
-import { resolvePath } from "react-router-dom";
+import { resolvePath, useOutletContext } from "react-router-dom";
 
 //name, email, phone, best time to contact, have you volunteered with this organization/person before, why would you like to volunteer for this event, what skills/experience do you have? which role are you interested in?
 
@@ -20,12 +20,18 @@ function VolunteerApplication({ show, handleClose, eventID }) {
   const [rolesSelected, setRolesSelected] = useState([]);
 
   const [roles, setRoles] = useState([]);
+  const { user } = useOutletContext();
 
   //setting roles array by making api call for specific event
   const getVolunteerRoles = async () => {
     let rolesArr = await volunteerRoles(eventID); //{id, assigned_volunteers, role, num_volunteers_needed, event}
     setRoles(rolesArr);
   };
+
+  useEffect(() => {
+    setEmail(user.user);
+  }, [user])
+
 
   useEffect(() => {
     getVolunteerRoles();
@@ -54,18 +60,17 @@ function VolunteerApplication({ show, handleClose, eventID }) {
 
   //handles checkbox selecting/deselecting, updates rolesSelected state accordingly
   function handleClickRole(roleID) {
-
-    // find the role instance that matches the provided roleID
-    const roleInstance = roles.find((r) => r.id === roleID);
+    // console.log('VOLUNTEER', rolesSelected)
     // Check if role ID is already in the rolesSelected array
-    if (rolesSelected.includes(roleInstance.id)) {
+    if (rolesSelected.includes(roleID)) {
       // If it is, remove it by filtering out the ID from rolesSelected
-      setRolesSelected(rolesSelected.filter((id) => id !== roleInstance.id));
+      setRolesSelected(rolesSelected.filter((id) => id !== roleID));
     } else {
       // If it's not, add the role ID to the rolesSelected array
-      setRolesSelected([...rolesSelected, roleInstance.id]);
+      setRolesSelected([...rolesSelected, roleID]);
     }
   }
+  console.log('VOLUNTEER - user', user.user)
 
   return (
     <>
@@ -92,7 +97,7 @@ function VolunteerApplication({ show, handleClose, eventID }) {
                 type="email"
                 placeholder="123@email.com"
                 autoFocus
-                value={email}
+                value={email.length ? email : email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Form.Group>
@@ -144,8 +149,8 @@ function VolunteerApplication({ show, handleClose, eventID }) {
                 {roles.map((aRole, idx) => {
                   return (
                     <>
-                      <Form.Check 
-                      key={idx}
+                      <Form.Check
+                        key={idx}
                         inline
                         label={aRole.role}
                         type="checkbox"
