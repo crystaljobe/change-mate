@@ -128,7 +128,7 @@ export default function EventDetails() {
               {/* added volunteer application modal as a component */}
               <a onClick={handleShow}>Volunteer</a>
               <VolunteerApplication show={show} handleClose={handleClose} eventID={eventID} />
-
+              
               {/* added conditional rendering for attend / attending if event needs attendees */}
               {eventDetails.attendees_needed &&
 (renderAttendingButton() )}

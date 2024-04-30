@@ -32,7 +32,7 @@ function VolunteerApplication({ show, handleClose, eventID }) {
   }, [eventID]);
 
   //TODO - incorporate actual application API call & uncomment submit code
-  const handleSubmit =  () => {
+  const handleSubmit = async () => {
     handleClose();
     // try{
     //   await postApplication(
