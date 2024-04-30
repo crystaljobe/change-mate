@@ -14,7 +14,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .serializers import Event, EventSerializer, ICalSerializer, EventDetailsSerializer
+from .serializers import Event, EventSerializer, ICalSerializer, EventDetailsSerializer, EventCollaborationSerializer, EventAdminSerializer, EventCardSerializer
 from profile_app.models import UserProfile
 from interest_app.models import InterestCategory
 from rest_framework import viewsets
@@ -31,7 +31,7 @@ class EventsView(TokenReq):
     @swagger_auto_schema(
         operation_summary="Get events",
         operation_description="Retrieve events based on provided filters such as category, type, date, and location. If no filters provided, all events are returned.",
-        responses={200: EventDetailsSerializer(many=True)},
+        responses={200: EventCardSerializer(many=True)},
         manual_parameters=[
             openapi.Parameter(name='category', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Category of the event'),
             openapi.Parameter(name='type', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Type of the event (virtual/in-person)'),
@@ -52,8 +52,7 @@ class EventsView(TokenReq):
         location = request.query_params.get('location')
         general = request.query_params.get('keyword')
         
-        
-        
+    
         # case-insensitive partial match for filtering for location
         # event_type search will be exact match
         if event_type:
@@ -131,20 +130,44 @@ class EventsView(TokenReq):
             return Response(e)
     
 
+class AdminDetails(TokenReq):
+    '''View a single event by ID with details for admin page'''
+    @swagger_auto_schema(
+        operation_summary="Admin Page Data",
+        operation_description="Retrieve details of a specific event by its ID.",
+        responses={200: EventAdminSerializer()},
+    )
+    def get(self, request, event_id):
+        event = get_object_or_404(Event, id = event_id)
+        ser_event = EventAdminSerializer(event)
+        return Response(ser_event.data, status=HTTP_200_OK)
+
+class CollabDetails(TokenReq):
+    '''View a single event by ID with details for collaboration page'''
+    @swagger_auto_schema(
+        operation_summary="Collaboration Page Data",
+        operation_description="Retrieve details of a specific event by its ID.",
+        responses={200: EventCollaborationSerializer()},
+    )
+    def get(self, request, event_id):
+        event = get_object_or_404(Event, id = event_id)
+        ser_event = EventCollaborationSerializer(event)
+        return Response(ser_event.data, status=HTTP_200_OK)
 
 
 class AnEvent(APIView):
     '''View a single event by ID'''
     @swagger_auto_schema(
-        operation_summary="Retrieve event details",
+        operation_summary="Event details page data",
         operation_description="Retrieve details of a specific event by its ID.",
         responses={200: EventDetailsSerializer()},
     )
     def get(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
         ser_event = EventDetailsSerializer(event)
-        return Response(ser_event.data, status=HTTP_200_OK)
-        
+        return Response(ser_event.data, status=HTTP_200_OK)   
+
+
 
     @swagger_auto_schema(
         operation_summary="Update event details",
@@ -167,10 +190,8 @@ class AnEvent(APIView):
         user_attending = get_object_or_404(UserProfile, user=user_id)
         #Adds user profile to RSVP list
         event.users_attending.add(user_attending)
-
-        
+        # validate data and save
         updated_event = EventSerializer(event, data=data, partial=True)
-        # print(updated_event)
         if updated_event.is_valid():
             updated_event.save()
             return Response(updated_event.data, status=HTTP_200_OK)
