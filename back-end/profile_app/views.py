@@ -99,28 +99,3 @@ class ProfilePic(TokenReq):
         except Exception as e:
             print(e)
             return Response(e, status=HTTP_400_BAD_REQUEST)
-
-class Profile_Icon(APIView):
-
-    @swagger_auto_schema(
-        operation_summary="Get profile icon",
-        operation_description="Retrieve a profile icon for the currently authenticated user.",
-        responses={200: "Profile icon retrieved successfully."},
-    )
-    def get(self, request):
-        api_key = env.get("API_KEY")
-        secret_key = env.get("SECRET_KEY")
-        auth = OAuth1(api_key, secret_key)
-        endpoint = f"https://api.thenounproject.com/v2/icon/4091300?thumbnail_size=200"
-        response = requests.get(endpoint, auth=auth)
-        json_response = response.json()
-        # print(json_response)
-        # pp.pprint(json_response)
-        if json_response.get("icon"):
-            icon_url = json_response.get('icon').get("thumbnail_url")
-            return Response(icon_url)
-        return Response("This parameter doesn't exist within the noun project")
-    
-
-
-
