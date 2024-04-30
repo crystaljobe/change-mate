@@ -77,7 +77,15 @@ function AdminPage() {
       <Row className="gx-5">
         <Col md={4} className="event-details-col">
           <DetailedEventCard eventDetails={eventDetails} />
-          <ParticipantList />
+          <Button
+            style={{ margin: '5%'}}
+            className="button-gradient text-center"
+            variant="info"
+            as={Link}
+            to={`/editevent/${eventDetails.id}`}
+          >
+            Edit Event Details
+          </Button>
         </Col>
         <Col md={4} className="discussion-forum-col">
           <Row>{/* view applications  component*/}</Row>
