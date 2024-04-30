@@ -144,5 +144,24 @@ export const volunteerRoles = async (eventID) => {
   return rolesArr;
 };
 
-
+//creating new volunteer roles for specific event
+export const createVolunteerRole = async (eventID, roleName, numVolunteersNeeded) => {
+  try{
+    let response = await api.post(`events/${eventID}/volunteers/`, {
+    "role": roleName,
+    "num_volunteers_needed":numVolunteersNeeded,
+  });
+    console.log(response.status);
+    if (response.status === 201){
+        return true
+    } else {
+        console.log("Error Status:", response.status);
+        console.log("Error Data:", response.data);
+        return false;
+    }
+    } catch (error) {
+        console.error("Error when creating new volunteer role", error)
+        return false
+    }
+    };
   

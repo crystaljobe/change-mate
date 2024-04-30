@@ -1,14 +1,12 @@
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import { getEventDetails, volunteerRoles, createVolunteerRole } from "../utilities/EventUtilities";
+import DetailedEventCard from "../components/DetailedEventCard";
+import TodoList from "../components/ToDoList";
 import {
   getProfileIcon,
   getEventIcon,
 } from "../utilities/DefaultIconsUtilities";
-import { getEventDetails } from "../utilities/EventUtilities";
-import DetailedEventCard from "../components/DetailedEventCard";
-import DiscussionForum from "../components/DiscussionForum";
-import TodoList from "../components/ToDoList";
-import ParticipantList from "../components/ParticipantList";
 //styling imports
 import { Container, Row, Col, } from "react-bootstrap";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -43,6 +41,8 @@ import {
 function AdminPage() {
   const [eventDetails, setEventDetails] = useState({});
   const [hostSearchInput, setHostSearchInput] = useState("");
+  const [roles, setRoles] = useState([]);
+
   const [newHost, setNewHost] = useState({});
   const [hosts, setHosts] = useState([]); //array of userProfile instances that are 'collaborators' {display_name, profile_picture, user_id}
   const { userProfileData } = useOutletContext(); //obj that contains {id, display_name, image, user_events[{arr of event Objs that user is a collaborator/host of}]}
@@ -60,17 +60,31 @@ function AdminPage() {
   useEffect(() => {
     getEvent();
     searchNewHost();
+    getVolunteerRoles();
   }, []);
+
+  //setting roles array by making api call for specific event
+  const getVolunteerRoles = async () => {
+    let rolesArr = await volunteerRoles(eventID); //{id, assigned_volunteers, role, num_volunteers_needed, event}
+    setRoles(rolesArr);
+  };
+
+  //creating a volunteer role --- TODO: need roleName & numVolunteersNeeded useStates from vol component
+  const postVolunteerRole = async (e) => {
+    e.preventDefault();
+    try {
+      await postVolunteerRole(eventID, roleName, numVolunteersNeeded);
+    } catch (error) {
+      console.error("Failed to create a new volunteer role", error);
+    }
+  };
 
   //TODO: need to search for users by email
   const searchNewHost = async () => {
     // const newHostData = await getProfileInfo({ 'user': "rs@cp.com" });
-    newHostData ? setNewHost(newHostData) : setNewHost(null)
-    console.log('admin page -- newHostData:', newHostData)
+    newHostData ? setNewHost(newHostData) : setNewHost(null);
+    console.log("admin page -- newHostData:", newHostData);
   };
-
-
-
 
   return (
     <Container fluid className="event-collab-container">
@@ -78,7 +92,7 @@ function AdminPage() {
         <Col md={4} className="event-details-col">
           <DetailedEventCard eventDetails={eventDetails} />
           <Button
-            style={{ margin: '5%'}}
+            style={{ margin: "5%" }}
             className="button-gradient text-center"
             variant="info"
             as={Link}
@@ -93,7 +107,6 @@ function AdminPage() {
           <Row>
             <Card sx={{ width: "50%" }}>
               <CardHeader title="Add Hosts" />
-
               <Box
                 sx={{ display: "flex", alignItems: "flex-end" }}
                 component="form"
