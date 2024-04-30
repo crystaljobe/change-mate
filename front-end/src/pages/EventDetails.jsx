@@ -117,6 +117,12 @@ export default function EventDetails() {
           )}
           <div class="dropdown-container">
             <button class="dropdown-button">Count me in!</button>
+            <Link to="/eventcollab" className="btn btn-primary mr-2">
+              Let's Collaborate!
+            </Link>
+            <Link to="/eventadmin" className="btn btn-primary">
+              Admin Time!
+            </Link>
             <div class="dropdown-content">
               {/* TODO: add conditonal rendering for volunteer option if event is accepting volunteers */}
               {/* added volunteer application modal as a component */}

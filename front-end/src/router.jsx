@@ -12,6 +12,7 @@ import SearchEvents from './pages/SearchEvents/SearchEvents';
 import EventDirections from './pages/EventDirections';
 import UserProfile from './pages/UserProfile';
 import { userConfirmation } from './utilities';
+import EventCollab from './pages/EventCollab';
 
 const router = createBrowserRouter([
     {
@@ -59,7 +60,11 @@ const router = createBrowserRouter([
             {
                 path:"/events",
                 element: <SearchEvents />
-            }
+            },
+            {
+                path:"/eventCollab",
+                element: <EventCollab />
+            },
         ],
         errorElement: <ErrorPage />
     }
