@@ -120,7 +120,7 @@ export default function EventDetails() {
             <Link to={`/eventCollab/${eventID}`} className="btn btn-primary mr-2">
               Let's Collaborate!
             </Link>
-            <Link to="/eventadmin" className="btn btn-primary">
+            <Link to={`/admin/${eventID}`} className="btn btn-primary">
               Admin Time!
             </Link>
             <div class="dropdown-content">

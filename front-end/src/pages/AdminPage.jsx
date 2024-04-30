@@ -1,15 +1,32 @@
 import { useParams, Link, useOutletContext } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getUserProfile } from "../utilities/UserProfileUtilities";
 import {
   getProfileIcon,
   getEventIcon,
 } from "../utilities/DefaultIconsUtilities";
-import { Container, Row, Col, Card, Button, CardGroup } from "react-bootstrap";
+import { getEventDetails } from "../utilities/EventUtilities";
+import DetailedEventCard from "../components/DetailedEventCard";
+import DiscussionForum from "../components/DiscussionForum";
+import TodoList from "../components/ToDoList";
+import ParticipantList from "../components/ParticipantList";
+//styling imports
+import { Container, Row, Col, } from "react-bootstrap";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  IconButton,
+  TextField,
+  Button,
+  Box,
+  Fab,
+  AddIcon,
+  AccountCircle,
+} from "@mui/material";
 
 
-/*currently using .user_events to test formatting
-    NEED TO CHANGE TO .hosted_events */
+
 
 //only hosts have permission to access this page (profile.hosted_events(eventID == eventID))
 //FEATURES:
@@ -25,93 +42,73 @@ import { Container, Row, Col, Card, Button, CardGroup } from "react-bootstrap";
 //GET - view vol role by id
 //PUT - edit volrole {'role', 'assigned_volunteers' <userProf IDs>, 'num_volunteers_needed'}
 //DELETE - delete
+
 function AdminPage() {
-  // URI== /event/:eventID/admin
-  const [userHostEvents, setUserHostEvents] = useState([]);
-  const [eventIcon, setEventIcon] = useState("")
+  const [eventDetails, setEventDetails] = useState({});
+  const [newHost, setNewHost] = useState("")
+  const [hosts, setHosts] = useState([]); //array of userProfile instances that are 'collaborators' {display_name, profile_picture, user_id}
+
+  const { userProfileData } = useOutletContext(); //obj that contains {id, display_name, image, user_events[{arr of event Objs that user is a collaborator/host of}]}
+
   let { eventID } = useParams();
+  const showAddToDo = true;
 
-
-  // Use the OutletContext to get userProfileData and its setter function
-  const { userProfileData, setUserProfileData } = useOutletContext(); //userProfData = {id, hosted_events}
-
-  //console.log('ADMIN PAGE--user profileData', userProfileData.display_name)
-
-  // Fetches default event icon
-  const fetchEventIcon = async () => {
-    const icon = await getEventIcon();
-    setEventIcon(icon);
+  //get event details from url
+  const getEvent = async () => {
+    const eventDetails = await getEventDetails(eventID);
+    setEventDetails(eventDetails);
+    let collabArr = eventDetails.collaborators;
+    console.log("eventdetails funct-collabArr", collabArr);
+    setHosts(collabArr);
   };
-   useEffect(() => {
-     fetchEventIcon();
-   }, []);
 
-
-  //set array of events that are being hosted by this user
   useEffect(() => {
-    // setUserHostEvents(userProfileData.hosted_events)
-    setUserHostEvents(userProfileData.user_events);
-  }, [userProfileData]);
-
- ;
-  //if userProfileData.hosted_events.length === 0 --> display "You are not hosting any events!"
-  console.log("ADMIN PAGE--user user_events", userHostEvents && userHostEvents);
+    getEvent();
+    console.log("admin page- userProfileData", userProfileData);
+  }, []);
 
   return (
-   <>
-   
-   </>
+    <Container fluid className="event-collab-container">
+      <Row className="gx-5">
+        <Col md={4} className="event-details-col">
+          <DetailedEventCard eventDetails={eventDetails} />
+          <ParticipantList />
+        </Col>
+        <Col md={4} className="discussion-forum-col">
+          <Row>view applications</Row>
+          <Row>
+            <Card>
+              <CardHeader title="Add Hosts" />
+        
+              <Box
+                sx={{ display: "flex", alignItems: "flex-end" }}
+                component="form"
+                noValidate
+                autoComplete="off"
+              >
+                <AccountCircle
+                  sx={{ color: "action.active", mr: 1, my: 0.5 }}
+                />
+                <TextField
+                  id="input-with-sx"
+                  label="enter a user's email"
+                  variant="standard"
+                  value={newHost}
+                  onChange={(e) => setNewHost(e.target.value)}
+                />
+                <IconButton>
+                  <AddIcon />
+                </IconButton>
+              </Box>
+            </Card>
+          </Row>
+        </Col>
+        <Col md={4} className="todo-participant-col">
+          <TodoList showAddToDo={showAddToDo} />
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
 export default AdminPage;
-//  <Container fluid >
-//       <Row style={{ overflowX: "scroll", height: '40vh', overflowY: 'hidden'}}>
-//         {userHostEvents && userHostEvents.length === 0 ? (
-//           <h3 style={{ fontStyle: "italic" }}>
-//             You are not hosting any events at this time
-//           </h3>
-//         ) : (
-//           userHostEvents &&
-//           userHostEvents.map((event) => (
-//               <Card key={event.id}  style={{ width: "30vw" }}>
-//                 <Card.Body>
-//                   <Card.Title>{event.title}</Card.Title>
-
-//                   {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
-
-//                   <Card.Img
-//                     variant="top"
-//                     src={(event.event_photo && event.event_photo) || eventIcon}
-//                     style={{ height: "200px", width: "200px" }}
-//                     alt={`${event.title}'s photo`}
-//                   />
-
-//                   <Card.Text>
-//                     <strong> When: </strong>{" "}
-//                     {` ${event.startDate} at ${event.startTime} -- ${event.endDate} at ${event.endTime}`}
-//                     <br />
-//                     <strong>Event Type: </strong> {event.event_type}
-//                     <br />
-//                     {event.event_type === "Virtual" ? null : (
-//                       <>
-//                         <strong>Location: </strong>
-//                         {event.event_venue}
-//                       </>
-//                     )}
-//                   </Card.Text>
-//                   {/* 
-//                     <Button
-//                       style={{ margin: 3 }}
-//                       variant="info"
-//                       as={Link}
-//                       to={`/editevent/${event.id}`}
-//                     >
-//                       Edit Event Details
-//                     </Button> */}
-//                 </Card.Body>
-//               </Card>
-//           ))
-//         )}
-//       </Row>
-//     </Container>
