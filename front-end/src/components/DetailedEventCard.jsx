@@ -12,10 +12,52 @@ import {
 } from "react-bootstrap";
 
 
-function DetailedEventCard({eventDetails, cardCSS}) {
+function DetailedEventCard({eventDetails}) {
   // id, title, event_photo, description, collaboratorsStr, startDate, startTime, endDate, endTime, time_zone, event_type, virtual_event_link, event_venue, event_venue_address,
     const [eventIcon, setEventIcon] = useState("");
     const [collabStr, setCollabStr] = useState("");
+    const styles = {
+      cardCSS: {
+        width: "90vw", 
+        maxWidth: "800px",
+        margin: "24px",
+      },
+      header: {
+        fontFamily: "Playfair Display, serif",
+        fontOpticalSizing: "auto",
+        fontStyle: "normal",
+        fontWeight: "bold", 
+        color: "#6840DF",
+        textDecoration: "underline",
+        marginTop: "15px",
+        marginBottom: "15px",
+      },
+      body: {
+        fontFamily: "Slabo 27px, serif",
+        fontWeight: "400",
+        fontStyle: "normal",
+      },
+      subheader: {
+        fontFamily: "Slabo 27px, serif",
+        fontWeight: "400",
+        fontStyle: "italic",
+      },
+      icon: {
+        width: "80vw",
+        maxWidth: "250px",
+        margin: "0 auto",
+        display: "block",
+      },
+      image: {
+        width: "100%",
+        maxHeight: "575px",
+        marginTop: "30px",
+        marginBottom: "20px", 
+      }
+    }
+
+    // Conditional Style based on src 
+    const imageStyle = eventDetails.event_photo ? styles.image : styles.icon; 
 
     //creates CollaboratorsStr from collab arr in eventDetails
     function setUpCardInfo (){
@@ -30,8 +72,13 @@ function DetailedEventCard({eventDetails, cardCSS}) {
         setEventIcon(icon);
     };
 
+    // updated to add conditional to only fetch icon if it's needed
     useEffect(() => {
-        fetchEventIcon();
+        if (!eventDetails.photo && !eventIcon) {
+          // console.log("no event photo getting eventIcon")
+          fetchEventIcon();
+        }
+
      }, []);
 
      //only runs function once collaborators is loaded
@@ -43,29 +90,25 @@ function DetailedEventCard({eventDetails, cardCSS}) {
 
      
   return (
-    <Card style={cardCSS} sm={8} border="light">
+    <Card style={styles.cardCSS} sm={8} border="light" className="mt-4">
       <Card.Body>
         <Card.Title
           as="h1"
-          style={{ fontWeight: "bold", color: "#6840DF" }}
-          className="text-left"
+          style={styles.header}
+          className="text-center"
         >
           {eventDetails && eventDetails.title}
         </Card.Title>
 
-        <Card.Subtitle style={{ fontStyle: "italic" }} className="text-left">
-          Hosted by: {collabStr}
+        <Card.Subtitle as="h5" style={styles.subheader} className="text-center mt-2">
+          <span style={{fontStyle:"normal", fontWeight:"bold"}}>Hosted by:</span> {collabStr}
         </Card.Subtitle>
-        {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
+
+        {/* Conditional rendering of event photo and styling; If event has photo, render that; If no photo, render default event icon */}
         <Card.Img
           variant="top"
           src={eventDetails.event_photo || eventIcon}
-          style={{
-            width: "80vw",
-            maxWidth: "250px",
-            margin: "0 auto",
-            display: "block",
-          }}
+          style={imageStyle}
           alt={`${eventDetails.title}'s photo`}
         />
 
@@ -74,18 +117,19 @@ function DetailedEventCard({eventDetails, cardCSS}) {
           <ListGroup.Item>
             <ul>
               <li>
-                <strong> Start: </strong>
-                {eventDetails &&
-                  eventDetails.startDate &&
-                  eventDetails.startTime &&
-                  `${eventDetails.startDate} at ${eventDetails.startTime}`}
+                {/* conditional rendering for dates based on single or multiday event */}
+                {eventDetails.startDate === eventDetails.endDate ? 
+                (
+                  <><strong> Date of Event: </strong> {eventDetails.startDate} </>
+                ) : (
+                  <><strong> Event Dates: </strong> {eventDetails.startDate} - {eventDetails.endDate} </>
+                )
+              }
               </li>
               <li>
-                <strong> End: </strong>
-                {eventDetails &&
-                  eventDetails.endDate &&
-                  eventDetails.endTime &&
-                  `${eventDetails.endDate} at ${eventDetails.endTime}`}
+                <strong> Time of Event: </strong>
+                {eventDetails.startTime &&
+                  `${eventDetails.startTime} - ${eventDetails.endTime}`}
               </li>
 
               <li>
@@ -94,13 +138,13 @@ function DetailedEventCard({eventDetails, cardCSS}) {
                 {eventDetails && eventDetails.time_zone}
               </li>
               <li>
-                <strong> Virtual or In-Person?: </strong>
-                {eventDetails && eventDetails.event_type}
+                <strong> Type of Event: </strong>
+                {eventDetails && `${eventDetails.event_type} Event`}
               </li>
-              {eventDetails.event_type === "Virtual" ? (
-                <li>
+              {eventDetails && eventDetails.event_type === "Virtual" ? (
+                <li >
                   <strong> Event Link: </strong>
-                  {eventDetails && eventDetails.virtual_event_link}
+                  <a href={eventDetails.virtual_event_link} style={{fontSize:"14px"}}> {eventDetails.virtual_event_link} </a>
                 </li>
               ) : (
                 <>
@@ -124,7 +168,7 @@ function DetailedEventCard({eventDetails, cardCSS}) {
         <br />
       </Card.Body>
     </Card>
-  );
+    );
 };
 
 export default DetailedEventCard;

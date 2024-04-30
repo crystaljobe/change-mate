@@ -1,6 +1,5 @@
 import { Container, Row, Col, Card, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
-// import Button from "react-bootstrap/esm/Button";
 import Button from "@mui/material/Button";
 import LlamaImg from "../assets/llama-homepage.png";
 
@@ -50,12 +49,12 @@ export default function Homepage() {
 								variant="outlined"
 								sx={{
 									borderColor: "primary.dark", // Default border color
-                                    color: "primary.dark",
+                                    color: "black",
                                     border: "2px solid",
                                     fontWeight: "bold",
 									"&:hover": {
                                         backgroundColor: "secondary.dark",
-                                        color: "primary.light",
+                                        color: "white",
 									},
 								}}>
 								Sign Up
@@ -72,12 +71,12 @@ export default function Homepage() {
 								variant="outlined"
 								sx={{
 									borderColor: "primary.dark", // Default border color
-                                    color: "primary.dark",
+                                    color: "black",
                                     fontWeight: "bold",
                                     border: "2px solid",
 									"&:hover": {
                                         backgroundColor: "secondary.dark",
-                                        color: "primary.light",
+                                        color: "white",
 									},
 								}}>
 								Login

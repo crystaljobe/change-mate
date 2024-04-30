@@ -62,7 +62,11 @@ nav {
 
 /* colorful button -eventdetails page- css */
 .button-gradient {
-  background-image: linear-gradient(to right, rgb(167, 223, 242) 30%, rgb(178, 149, 237) 70%);
+  background: #7F7FD5;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  /* background-image: linear-gradient(to right, rgb(167, 223, 242) 30%, rgb(178, 149, 237) 70%); */
   color: black; /* Text color */
   padding: 10px 20px; /* Padding around the text */
   border: none; /* No border */
@@ -82,7 +86,10 @@ nav {
 }
 
 .dropdown-button {
-  background-image: linear-gradient(to right, rgb(167, 223, 242) 30%, rgb(178, 149, 237) 70%);
+  background: #00B7FF;
+  /* background: rgb(13,202,240); */
+  /* background: linear-gradient(180deg, rgba(13,202,240,0.48503151260504207) 0%, rgba(104,64,223,0.8267682072829132) 93%); */
+  /* background-image: linear-gradient(to right, rgb(167, 223, 242) 30%, rgb(178, 149, 237) 70%); */
   color: black;
   padding: 10px 20px;
   border: none;

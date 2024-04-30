@@ -98,18 +98,15 @@ export default function EventDetails() {
   
   };
 
-  const cardCSS = {width: "90vw", maxWidth: "800px"}
 
   return (
 
     <Container>
       <Row>
-        <Col>
-          <br />
+        <Col className="justify-content-md-center">
           {eventDetails && (
             <DetailedEventCard
               eventDetails={eventDetails}
-              cardCSS={cardCSS}
             ></DetailedEventCard>
           )}
           <div className="dropdown-container">
