@@ -67,7 +67,7 @@ const router = createBrowserRouter([
         element: <EventCollab />,
       },
       {
-        path: "/admin",
+        path: "/admin", // /event/:eventID/admin
         element: <AdminPage />,
       },
     ],
