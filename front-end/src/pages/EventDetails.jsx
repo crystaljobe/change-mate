@@ -4,12 +4,10 @@ import { useEffect, useState } from "react";
 import "add-to-calendar-button";
 import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
 import { getUserProfile } from "../utilities/UserProfileUtilities";
-import { getEventIcon } from '../utilities/DefaultIconsUtilities';
 import { getiCalEventDetails } from "../utilities/EventUtilities";
-import gps from "../assets/gps.jpg";
 import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerApplication from "../components/VolunteerApplication";
-// import StaticMap from "../components/EventDetailsStaticMap";
+import StaticMap from "../components/EventDetailsStaticMap";
 
 export default function EventDetails() {
   let { eventID } = useParams();
@@ -18,9 +16,6 @@ export default function EventDetails() {
   const [eventDetails, setEventDetails] = useState([]);
   const [usersAttending, setUsersAttending] = useState([]);
   const [eventsAttending, setEventsAttending] = useState([]);
-  // event latitude and long for passing to static map component
-  const latitude = eventDetails.lat;
-  const longitude = eventDetails.lon;
 
   //application modal
   const [show, setShow] = useState(false);
@@ -46,6 +41,7 @@ export default function EventDetails() {
   const getEvent = async () => {
     const eventDetails = await getEventDetails(eventID);
     setEventDetails(eventDetails);
+    console.log("EVENT DETAILS page--event details:", eventDetails);
     console.log("EVENT DETAILS page--event details:", eventDetails);
 
     setUsersAttending(eventDetails.users_attending);
@@ -101,18 +97,15 @@ export default function EventDetails() {
   
   };
 
-  const cardCSS = {width: "90vw", maxWidth: "800px"}
 
   return (
 
     <Container>
       <Row>
-        <Col>
-          <br />
+        <Col md={8} sm={12}>
           {eventDetails && (
             <DetailedEventCard
               eventDetails={eventDetails}
-              cardCSS={cardCSS}
             ></DetailedEventCard>
           )}
           <div class="dropdown-container">
@@ -123,7 +116,7 @@ export default function EventDetails() {
             <Link to={`/admin/${eventID}`} className="btn btn-primary">
               Admin Time!
             </Link>
-            <div class="dropdown-content">
+            <div className="dropdown-content">
               {/* TODO: add conditonal rendering for volunteer option if event is accepting volunteers */}
               {/* added volunteer application modal as a component */}
               <a onClick={handleShow}>Volunteer</a>
@@ -135,26 +128,31 @@ export default function EventDetails() {
             </div>
           </div>
         </Col>
-
+        
         {/*LOCATION IMG &&&& DIRECTIONS BUTTON */}
-        <Col>
+        <Col md={4} sm={12} className="text-center">
           <br />
-          <Card style={{ width: "90vw", maxWidth: "300px" }} sm={4}>
-            <Card.Img src={gps}></Card.Img>
-          </Card>
-          <Link to="/eventdirections">
-            <button
-              className="button-gradient text-center"
-              variant="info"
-              style={{ width: "90vw", maxWidth: "300px" }}
-            >
-              Get Event Directions
-            </button>
-          </Link>
+          {/* added static map component to render if in-person*/}
+          {eventDetails.event_type === "In-person" && 
+            (<Row className="justify-content-center">
+            {eventDetails.lat && <StaticMap lat={ eventDetails.lat } lng={ eventDetails.lon } />}
+
+              <Link to="/eventdirections">
+              <button 
+                className="button-gradient text-center"
+                variant="info"
+                style={{ width: "90vw", maxWidth: "300px" }}
+              >
+                Get Event Directions
+              </button>
+            </Link>
+            </Row>)
+          }
+
           <add-to-calendar-button
             style={{ height: "50px" }}
             size="5"
-            label="Add to personal calendar"
+            label="Add to Calendar"
             options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
             name={iCalDetails.title}
             location={
@@ -170,10 +168,7 @@ export default function EventDetails() {
             description={iCalDetails.description}
           ></add-to-calendar-button>
         </Col>
-        {/* added static map component */}
-        {/* <Col>
-        <StaticMap latitude={ latitude } longitude={ longitude } />
-        </Col> */}
+        
       </Row>
     </Container>
   );
