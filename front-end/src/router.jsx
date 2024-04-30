@@ -62,7 +62,7 @@ const router = createBrowserRouter([
                 element: <SearchEvents />
             },
             {
-                path:"/eventCollab",
+                path:"/eventCollab/:eventID",
                 element: <EventCollab />
             },
         ],
