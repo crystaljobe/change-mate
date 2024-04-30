@@ -5,7 +5,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-function TodoList() {
+function TodoList( {showAddToDo} ) {
     const [tasks, setTasks] = useState([
         { id: 1, text: "Prepare event budget", completed: false },
         { id: 2, text: "Confirm speakers", completed: true },
@@ -32,43 +32,72 @@ function TodoList() {
     };
 
     return (
-        <Card>
-            <CardHeader title="To-Do List" />
-            <CardContent>
-                <List>
-                    {tasks.map(task => (
-                        <ListItem key={task.id} dense button onClick={() => toggleTaskCompletion(task.id)}>
-                            <ListItemText primary={task.text} style={{ textDecoration: task.completed ? 'line-through' : 'none' }} />
-                            <ListItemSecondaryAction>
-                                <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteTask(task.id)}>
-                                    <DeleteIcon />
-                                </IconButton>
-                                <IconButton edge="end" aria-label="toggle" onClick={() => toggleTaskCompletion(task.id)}>
-                                    {task.completed ? <CheckCircleIcon /> : <CheckCircleOutlineIcon />}
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                    ))}
-                </List>
-                <TextField
-                    label="Add new task"
-                    variant="outlined"
-                    fullWidth
-                    value={newTask}
-                    onChange={(e) => setNewTask(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleAddTask()}
-                />
-                <Button
-                    startIcon={<AddCircleOutlineIcon />}
-                    onClick={handleAddTask}
-                    color="primary"
-                    variant="contained"
-                    style={{ marginTop: 8 }}
-                >
-                    Add Task
-                </Button>
-            </CardContent>
-        </Card>
+      <Card>
+        <CardHeader title="To-Do List" />
+        <CardContent>
+          <List>
+            {tasks.map((task) => (
+              <ListItem
+                key={task.id}
+                dense
+                button
+                onClick={showAddToDo ? () => toggleTaskCompletion(task.id) : null}
+              >
+                <ListItemText
+                  primary={task.text}
+                  
+                  style={{
+                    textDecoration: (task.completed) ? "line-through" : "none",
+                  }}
+
+                />{showAddToDo &&
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => handleDeleteTask(task.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton
+                    edge="end"
+                    aria-label="toggle"
+                    onClick={() => toggleTaskCompletion(task.id)}
+                  >
+                    {task.completed ? (
+                      <CheckCircleIcon />
+                    ) : (
+                      <CheckCircleOutlineIcon />
+                    )}
+                  </IconButton>
+                </ListItemSecondaryAction>
+}
+              </ListItem>
+            ))}
+          </List>
+          {showAddToDo && (
+            <>
+              <TextField
+                label="Add new task"
+                variant="outlined"
+                fullWidth
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleAddTask()}
+              />
+              <Button
+                startIcon={<AddCircleOutlineIcon />}
+                onClick={handleAddTask}
+                color="primary"
+                variant="contained"
+                style={{ marginTop: 8 }}
+              >
+                Add Task
+              </Button>
+            </>
+          )}
+        </CardContent>
+      </Card>
     );
 }
 

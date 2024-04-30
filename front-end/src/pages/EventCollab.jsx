@@ -19,6 +19,7 @@ function EventCollab() {
         const eventDetails = await getEventDetails(eventID);
         setEventDetails(eventDetails);
     }
+    const showAddToDo = false
 
 
     return (
@@ -32,7 +33,7 @@ function EventCollab() {
                     <DiscussionForum />
                 </Col>
                 <Col md={4} className="todo-participant-col">
-                    <TodoList />
+                    <TodoList showAddToDo={showAddToDo} />
                     
                 </Col>
             </Row>
