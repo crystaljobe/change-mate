@@ -12,6 +12,7 @@ from rest_framework.status import (
 from .serializers import VolunteerApplication, ApplicationSerializer, ApplicationDecisionSerializer
 from drf_yasg.utils import swagger_auto_schema
 from django.utils.timezone import now
+from drf_yasg import openapi
 
 
 class AllApplications(TokenReq):
@@ -51,9 +52,19 @@ class AApplication(TokenReq):
         return Response(serializer.data, status=HTTP_200_OK)
 
     @swagger_auto_schema(
-            operation_summary="Edit volunteer application status",
-            operation_description="Edit volunteer application status.",
-            request_body=ApplicationDecisionSerializer,
+    operation_summary="Approve/Deny volunteer application status",
+    operation_description="Update volunteer application status with True or False.",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=['decision'],
+        properties={
+            'decision': openapi.Schema(
+                type=openapi.TYPE_BOOLEAN,
+                description="Boolean value indicating approval (True) or denial (False) of the application."
+            )
+        }
+    ),
+    responses={200: ApplicationDecisionSerializer()}
     )
     def put(self, request, application_id):
         '''Update a volunteer application status'''

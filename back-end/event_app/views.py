@@ -14,7 +14,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .serializers import Event, EventSerializer, ICalSerializer, EventDetailsSerializer, EventCollaborationSerializer, EventAdminSerializer
+from .serializers import Event, EventSerializer, ICalSerializer, EventDetailsSerializer, EventCollaborationSerializer, EventAdminSerializer, EventCardSerializer
 from profile_app.models import UserProfile
 from interest_app.models import InterestCategory
 from rest_framework import viewsets
@@ -31,7 +31,7 @@ class EventsView(TokenReq):
     @swagger_auto_schema(
         operation_summary="Get events",
         operation_description="Retrieve events based on provided filters such as category, type, date, and location. If no filters provided, all events are returned.",
-        responses={200: EventDetailsSerializer(many=True)},
+        responses={200: EventCardSerializer(many=True)},
         manual_parameters=[
             openapi.Parameter(name='category', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Category of the event'),
             openapi.Parameter(name='type', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING, description='Type of the event (virtual/in-person)'),
