@@ -14,7 +14,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .serializers import Event, EventSerializer, ICalSerializer, EventDetailsSerializer, EventCollaborationSerializer
+from .serializers import Event, EventSerializer, ICalSerializer, EventDetailsSerializer, EventCollaborationSerializer, EventAdminSerializer
 from profile_app.models import UserProfile
 from interest_app.models import InterestCategory
 from rest_framework import viewsets
@@ -52,8 +52,7 @@ class EventsView(TokenReq):
         location = request.query_params.get('location')
         general = request.query_params.get('keyword')
         
-        
-        
+    
         # case-insensitive partial match for filtering for location
         # event_type search will be exact match
         if event_type:
@@ -133,7 +132,15 @@ class EventsView(TokenReq):
 
 class AdminDetails(TokenReq):
     '''View a single event by ID with details for admin page'''
-    pass
+    @swagger_auto_schema(
+        operation_summary="Admin Page Data",
+        operation_description="Retrieve details of a specific event by its ID.",
+        responses={200: EventAdminSerializer()},
+    )
+    def get(self, request, event_id):
+        event = get_object_or_404(Event, id = event_id)
+        ser_event = EventAdminSerializer(event)
+        return Response(ser_event.data, status=HTTP_200_OK)
 
 class CollabDetails(TokenReq):
     '''View a single event by ID with details for collaboration page'''
