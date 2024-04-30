@@ -1,6 +1,6 @@
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { getEventDetails, volunteerRoles, createVolunteerRole } from "../utilities/EventUtilities";
+import { getEventDetails, volunteerRoles, createVolunteerRole, deleteVolunteerRole } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import TodoList from "../components/ToDoList";
 import {
@@ -69,14 +69,19 @@ function AdminPage() {
     setRoles(rolesArr);
   };
 
-  //creating a volunteer role --- TODO: need roleName & numVolunteersNeeded useStates from vol component
+  //TODO: need roleName & numVolunteersNeeded useStates from vol component -- creating a volunteer role
   const postVolunteerRole = async (e) => {
     e.preventDefault();
     try {
-      await postVolunteerRole(eventID, roleName, numVolunteersNeeded);
+      await createVolunteerRole(eventID, roleName, numVolunteersNeeded);
     } catch (error) {
       console.error("Failed to create a new volunteer role", error);
     }
+  };
+
+  //TODO: need to pass in roleID ---> delete a volunteer role
+  const deleteVolRole = async (roleID) => {
+    const responseStatus = await deleteVolunteerRole(roleID);
   };
 
   //TODO: need to search for users by email
