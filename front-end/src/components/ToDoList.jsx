@@ -41,14 +41,16 @@ function TodoList( {showAddToDo} ) {
                 key={task.id}
                 dense
                 button
-                onClick={() => toggleTaskCompletion(task.id)}
+                onClick={showAddToDo ? () => toggleTaskCompletion(task.id) : null}
               >
                 <ListItemText
                   primary={task.text}
+                  
                   style={{
-                    textDecoration: task.completed ? "line-through" : "none",
+                    textDecoration: (task.completed) ? "line-through" : "none",
                   }}
-                />
+
+                />{showAddToDo &&
                 <ListItemSecondaryAction>
                   <IconButton
                     edge="end"
@@ -69,6 +71,7 @@ function TodoList( {showAddToDo} ) {
                     )}
                   </IconButton>
                 </ListItemSecondaryAction>
+}
               </ListItem>
             ))}
           </List>
