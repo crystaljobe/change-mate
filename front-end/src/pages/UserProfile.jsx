@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, CardGroup, Image } from 'react-bootstrap';
 import FullCalendar from '@fullcalendar/react'; // Import the FullCalendar component
 import dayGridPlugin from '@fullcalendar/daygrid'; // Plugin to display the calendar in a day grid view
-import { getProfileIcon, getEventIcon } from '../utilities/DefaultIconsUtilities';
+import { getNounIcon } from '../utilities/DefaultIconsUtilities';
 import { getUserProfile } from '../utilities/UserProfileUtilities';
 
 
@@ -21,17 +21,38 @@ export default function UserProfile({ user }) {
   const [userPhoto, setUserPhoto] = useState(""); // Initialize userPhoto with an empty string
   const [profileIcon, setProfileIcon] = useState("");
   const [eventIcon, setEventIcon] = useState("");
+  const [eventsCreatedIcon, setEventsCreatedIcon] = useState("");
+  const [eventsCommitedToIcon, setEventsCommitedToIcon] = useState("");
+  const [eventsVolunteeredIcon, setEventsVolunteeredIcon] = useState("");
 
   console.log('userProfileData', userProfileData)
 
   // Fetches default event icon
   const fetchEventIcon = async () => {
-    const icon = await getEventIcon()
+    const icon = await getNounIcon(5130800)
     setEventIcon(icon)
+  }
+
+  const fetchEventsCreatedIcon = async () => {
+    const icon = await getNounIcon(2532350)
+    setEventsCreatedIcon(icon)
+  }
+
+  const fetchEventsCommitedToIcon = async () => {
+    const icon = await getNounIcon(6651904)
+    setEventsCommitedToIcon(icon)
+  }
+
+  const fetchEventsVolunteeredIcon = async () => {
+    const icon = await getNounIcon(6763364)
+    setEventsVolunteeredIcon(icon)
   }
 
   useEffect(() => {
     fetchEventIcon()
+    fetchEventsCreatedIcon()
+    fetchEventsCommitedToIcon()
+    fetchEventsVolunteeredIcon()
   }, []);
 
   // Takes  userProfileData.location which is a json string and turns it back into an array of objects for data manipulation
@@ -52,7 +73,7 @@ export default function UserProfile({ user }) {
     const fetchData = async () => {
       try {
         // Use Promise.all for parallel asynchronous calls to get profile and icon data
-        const [iconData, userProfile] = await Promise.all([getProfileIcon(), getUserProfile(user)]);
+        const [iconData, userProfile] = await Promise.all([getNounIcon(4091300), getUserProfile(user)]);
         // console.log('Profile data:', userProfile); // Log the entire profile data
         // console.log('User events:', userProfile.user_events); // Log user events
         // console.log('Events attending:', userProfile.events_attending); // Log events attending
@@ -119,19 +140,19 @@ const calendarEvents = userEvents.map(event => {
       <Card.Header>Badges</Card.Header>
       <Card.Body>
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-          <Image src={eventIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
+          <Image src={eventsCreatedIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
           <Card.Text>
             {userEvents.length} Events Created
           </Card.Text>
         </div>
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-          <Image src={eventIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
+          <Image src={eventsCommitedToIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
           <Card.Text>
             {eventsAttending.length} Events Commited To
           </Card.Text>
         </div>
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-          <Image src={eventIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
+          <Image src={eventsVolunteeredIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
           <Card.Text>
             {eventsVolunteering.length} Events Volunteered For
           </Card.Text>
