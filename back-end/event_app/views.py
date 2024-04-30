@@ -14,7 +14,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .serializers import Event, EventSerializer, ICalSerializer, EventDetailsSerializer
+from .serializers import Event, EventSerializer, ICalSerializer, EventDetailsSerializer, EventCollaborationSerializer
 from profile_app.models import UserProfile
 from interest_app.models import InterestCategory
 from rest_framework import viewsets
@@ -131,6 +131,21 @@ class EventsView(TokenReq):
             return Response(e)
     
 
+class AdminDetails(TokenReq):
+    '''View a single event by ID with details for admin page'''
+    pass
+
+class CollabDetails(TokenReq):
+    '''View a single event by ID with details for collaboration page'''
+    @swagger_auto_schema(
+        operation_summary="Collaboration Page Data",
+        operation_description="Retrieve details of a specific event by its ID.",
+        responses={200: EventCollaborationSerializer()},
+    )
+    def get(self, request, event_id):
+        event = get_object_or_404(Event, id = event_id)
+        ser_event = EventCollaborationSerializer(event)
+        return Response(ser_event.data, status=HTTP_200_OK)
 
 
 class AnEvent(APIView):
@@ -143,8 +158,7 @@ class AnEvent(APIView):
     def get(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
         ser_event = EventDetailsSerializer(event)
-        return Response(ser_event.data, status=HTTP_200_OK)
-        
+        return Response(ser_event.data, status=HTTP_200_OK)   
 
 
 

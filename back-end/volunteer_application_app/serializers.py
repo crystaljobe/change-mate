@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import VolunteerApplication
-from profile_app.serializers import BasicUserDataSerializer
 from django.utils.timezone import now
 
 class ApplicationSerializer(serializers.ModelSerializer):
@@ -21,12 +20,26 @@ class ApplicationDecisionSerializer(serializers.ModelSerializer):
 
 class ApplicationViewSerializer(serializers.ModelSerializer):
     '''Serializer for viewing volunteer applications'''
-    applicant = BasicUserDataSerializer()
-    decision_made_by = BasicUserDataSerializer(required = False)
+    applicant = serializers.SerializerMethodField()
+    decision_made_by = serializers.SerializerMethodField()
 
     class Meta:
         model = VolunteerApplication
-        field = '__all__'
+        fields = '__all__'
+
+    def get_applicant(self, obj):
+        return {
+            'id': obj.applicant.id,
+            'display_name': obj.applicant.display_name,
+            'email': obj.applicant.user.email
+        }
+    
+    def get_decision_made_by(self, obj):
+        return {
+            'id': obj.applicant.id,
+            'display_name': obj.applicant.display_name,
+            'email': obj.applicant.user.email
+        }
 
         
 
