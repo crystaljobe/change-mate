@@ -17,17 +17,52 @@ nav {
   border-bottom: solid;
 }
 
-.homepage-header-text {
+/*Playfair display font styling CSS classes*/
+.playfair-display {
   font-family: "Playfair Display", serif;
   font-optical-sizing: auto;
-  font-weight: 900;
+  font-weight: 400; /* <weight>: Use a value from 400 to 900 */
+  font-style: normal;
+}
+/*Poppins font styling CSS classes*/
+.poppins-extralight {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
   font-style: normal;
 }
 
-.homepage-subtext {
-  font-family: "Slabo 27px", serif;
+.poppins-light {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.homepage-header-text {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  margin-top: 1rem;
+}
+
+.homepage-subtext {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: #AB47BC;
+  margin-top: 2px;
 }
 
 .location-search-map-container {
