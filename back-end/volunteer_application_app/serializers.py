@@ -7,7 +7,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VolunteerApplication
-        exclude = ['decision_made_by', 'decision_text', 'decision_date']
+        fields = '__all__'
 
     
 class ApplicationDecisionSerializer(serializers.ModelSerializer):
