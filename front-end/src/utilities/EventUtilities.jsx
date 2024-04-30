@@ -134,5 +134,14 @@ export const timeZoneAbbreviations = [
     "Pacific/Honolulu",
     "Pacific/Niue",
   ];
+
+
+
+  //view volunteer roles for specific event
+export const volunteerRoles = async (eventID) => {
+  const response = await api.get(`events/${eventID}/volunteers/`);
+  let rolesArr = response.data;
+  return rolesArr;
+};
   
   

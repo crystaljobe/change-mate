@@ -33,7 +33,6 @@ export default function EventDetails() {
   const getiCalInfo = async () => {
     const response = await getiCalEventDetails(eventID);
     setiCalDetails(response);
-    // console.log("EVENT DETAILS page--iCal details:", iCalDetails);
 
   };
 
@@ -42,6 +41,7 @@ export default function EventDetails() {
   const getEvent = async () => {
     const eventDetails = await getEventDetails(eventID);
     setEventDetails(eventDetails);
+    console.log("EVENT DETAILS page--event details:", eventDetails);
     console.log("EVENT DETAILS page--event details:", eventDetails);
 
     setUsersAttending(eventDetails.users_attending);
@@ -82,12 +82,11 @@ export default function EventDetails() {
     }
   };
 
-  // Renders button conditionally based on if user is RSVPed
-  const renderRSVPButton = () => {
+  // Renders button conditionally based on if user is attending event
+  const renderAttendingButton = () => {
     // Sets attending to true or false based on function call
     const attending = isUserAttending()
-    // If attending render disabled button that tells the user they've already RSVPed
-    
+  
     //converted from button into a-tags for dropdown item
      return (   
     attending ? (
@@ -109,9 +108,9 @@ export default function EventDetails() {
               eventDetails={eventDetails}
             ></DetailedEventCard>
           )}
-          <div className="dropdown-container">
-            <button className="dropdown-button">Count me in!</button>
-            <Link to="/eventcollab" className="btn btn-primary mr-2">
+          <div class="dropdown-container">
+            <button class="dropdown-button">Count me in!</button>
+            <Link to={`/eventCollab/${eventID}`} className="btn btn-primary mr-2">
               Let's Collaborate!
             </Link>
             <Link to="/eventadmin" className="btn btn-primary">
@@ -121,8 +120,11 @@ export default function EventDetails() {
               {/* TODO: add conditonal rendering for volunteer option if event is accepting volunteers */}
               {/* added volunteer application modal as a component */}
               <a onClick={handleShow}>Volunteer</a>
-              <VolunteerApplication show={show} handleClose={handleClose}  />
-              {renderRSVPButton()} 
+              <VolunteerApplication show={show} handleClose={handleClose} eventID={eventID} />
+              
+              {/* added conditional rendering for attend / attending if event needs attendees */}
+              {eventDetails.attendees_needed &&
+(renderAttendingButton() )}
             </div>
           </div>
         </Col>
