@@ -38,7 +38,6 @@ export default function EventDetails() {
   const getiCalInfo = async () => {
     const response = await getiCalEventDetails(eventID);
     setiCalDetails(response);
-    // console.log("EVENT DETAILS page--iCal details:", iCalDetails);
 
   };
 
@@ -122,7 +121,7 @@ export default function EventDetails() {
               {/* TODO: add conditonal rendering for volunteer option if event is accepting volunteers */}
               {/* added volunteer application modal as a component */}
               <a onClick={handleShow}>Volunteer</a>
-              <VolunteerApplication show={show} handleClose={handleClose}  />
+              <VolunteerApplication show={show} handleClose={handleClose} eventID={eventID} />
 
               {/* added conditional rendering for attend / attending if event needs attendees */}
               {eventDetails.attendees_needed &&
