@@ -3,9 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Container, Row, Col } from "react-bootstrap";
 import { getEventDetails} from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
-import DiscussionForum from "../components/DiscussionForum";
+import VolunteerManager from "../components/VolunteerManager";
 import TodoList from "../components/ToDoList";
-import ParticipantList from "../components/ParticipantList";
 
 function EventCollab() {
     const [eventDetails, setEventDetails] = useState({});
@@ -18,6 +17,7 @@ function EventCollab() {
     const getEvent = async () => {
         const eventDetails = await getEventDetails(eventID);
         setEventDetails(eventDetails);
+        console.log(eventDetails)
     }
     const showAddToDo = false
 
@@ -27,10 +27,9 @@ function EventCollab() {
             <Row className="gx-5">
                 <Col md={4} className="event-details-col">
                     <DetailedEventCard eventDetails={eventDetails} />
-                    <ParticipantList />
                 </Col>
                 <Col md={4} className="discussion-forum-col">
-                    <DiscussionForum />
+                    <VolunteerManager />
                 </Col>
                 <Col md={4} className="todo-participant-col">
                     <TodoList showAddToDo={showAddToDo} />
