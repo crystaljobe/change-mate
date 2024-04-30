@@ -1,6 +1,5 @@
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { getUserProfile } from "../utilities/UserProfileUtilities";
 import {
   getProfileIcon,
   getEventIcon,
@@ -12,6 +11,8 @@ import TodoList from "../components/ToDoList";
 import ParticipantList from "../components/ParticipantList";
 //styling imports
 import { Container, Row, Col, } from "react-bootstrap";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import AddIcon from "@mui/icons-material/Add";
 import {
   Card,
   CardHeader,
@@ -20,11 +21,7 @@ import {
   TextField,
   Button,
   Box,
-  Fab,
-  AddIcon,
-  AccountCircle,
 } from "@mui/material";
-
 
 
 
@@ -45,11 +42,10 @@ import {
 
 function AdminPage() {
   const [eventDetails, setEventDetails] = useState({});
-  const [newHost, setNewHost] = useState("")
+  const [hostSearchInput, setHostSearchInput] = useState("");
+  const [newHost, setNewHost] = useState({});
   const [hosts, setHosts] = useState([]); //array of userProfile instances that are 'collaborators' {display_name, profile_picture, user_id}
-
   const { userProfileData } = useOutletContext(); //obj that contains {id, display_name, image, user_events[{arr of event Objs that user is a collaborator/host of}]}
-
   let { eventID } = useParams();
   const showAddToDo = true;
 
@@ -58,14 +54,23 @@ function AdminPage() {
     const eventDetails = await getEventDetails(eventID);
     setEventDetails(eventDetails);
     let collabArr = eventDetails.collaborators;
-    console.log("eventdetails funct-collabArr", collabArr);
     setHosts(collabArr);
   };
 
   useEffect(() => {
     getEvent();
-    console.log("admin page- userProfileData", userProfileData);
+    searchNewHost();
   }, []);
+
+  //TODO: need to search for users by email
+  const searchNewHost = async () => {
+    // const newHostData = await getProfileInfo({ 'user': "rs@cp.com" });
+    newHostData ? setNewHost(newHostData) : setNewHost(null)
+    console.log('admin page -- newHostData:', newHostData)
+  };
+
+
+
 
   return (
     <Container fluid className="event-collab-container">
@@ -75,11 +80,12 @@ function AdminPage() {
           <ParticipantList />
         </Col>
         <Col md={4} className="discussion-forum-col">
-          <Row>view applications</Row>
+          <Row>{/* view applications  component*/}</Row>
+
           <Row>
-            <Card>
+            <Card sx={{ width: "50%" }}>
               <CardHeader title="Add Hosts" />
-        
+
               <Box
                 sx={{ display: "flex", alignItems: "flex-end" }}
                 component="form"
@@ -93,8 +99,8 @@ function AdminPage() {
                   id="input-with-sx"
                   label="enter a user's email"
                   variant="standard"
-                  value={newHost}
-                  onChange={(e) => setNewHost(e.target.value)}
+                  value={hostSearchInput}
+                  onChange={(e) => setHostSearchInput(e.target.value)}
                 />
                 <IconButton>
                   <AddIcon />
