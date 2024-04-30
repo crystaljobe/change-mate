@@ -5,7 +5,6 @@ from django.utils.timezone import now
 
 class ApplicationSerializer(serializers.ModelSerializer):
     '''Serializer for new volunteer applications'''
-    applicant = BasicUserDataSerializer()
 
     class Meta:
         model = VolunteerApplication
@@ -14,8 +13,6 @@ class ApplicationSerializer(serializers.ModelSerializer):
     
 class ApplicationDecisionSerializer(serializers.ModelSerializer):
     '''Serializer for updating application status'''
-    decision_made_by = BasicUserDataSerializer()
-    decision_date = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = VolunteerApplication
@@ -25,11 +22,11 @@ class ApplicationDecisionSerializer(serializers.ModelSerializer):
 class ApplicationViewSerializer(serializers.ModelSerializer):
     '''Serializer for viewing volunteer applications'''
     applicant = BasicUserDataSerializer()
-    decision_made_by = BasicUserDataSerializer()
+    decision_made_by = BasicUserDataSerializer(required = False)
 
     class Meta:
         model = VolunteerApplication
-        exclude = ['decision_text', 'volunteer_role']
+        field = '__all__'
 
         
 

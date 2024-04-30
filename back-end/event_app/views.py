@@ -136,7 +136,7 @@ class EventsView(TokenReq):
 class AnEvent(APIView):
     '''View a single event by ID'''
     @swagger_auto_schema(
-        operation_summary="Retrieve event details",
+        operation_summary="Event details page data",
         operation_description="Retrieve details of a specific event by its ID.",
         responses={200: EventDetailsSerializer()},
     )
@@ -145,6 +145,8 @@ class AnEvent(APIView):
         ser_event = EventDetailsSerializer(event)
         return Response(ser_event.data, status=HTTP_200_OK)
         
+
+
 
     @swagger_auto_schema(
         operation_summary="Update event details",
@@ -167,10 +169,8 @@ class AnEvent(APIView):
         user_attending = get_object_or_404(UserProfile, user=user_id)
         #Adds user profile to RSVP list
         event.users_attending.add(user_attending)
-
-        
+        # validate data and save
         updated_event = EventSerializer(event, data=data, partial=True)
-        # print(updated_event)
         if updated_event.is_valid():
             updated_event.save()
             return Response(updated_event.data, status=HTTP_200_OK)

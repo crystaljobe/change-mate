@@ -3,6 +3,7 @@ from .models import Event
 from interest_app.serializers import InterestCategorySerializer
 from django.db.models import Count, Sum
 
+
 class EventSerializer(serializers.ModelSerializer):
     '''provide correctly formatted data for database storage'''
     category = InterestCategorySerializer()
@@ -21,14 +22,15 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     endDate = serializers.SerializerMethodField()
     num_users_attending = serializers.SerializerMethodField()
     volunteer_spots_remaining = serializers.SerializerMethodField()
-    collaborators = serializers.SerializerMethodField()
+    hosts = serializers.SerializerMethodField()
     category = InterestCategorySerializer()
     lat = serializers.SerializerMethodField()
     lon = serializers.SerializerMethodField()
+    volunteer_roles = serializers.SerializerMethodField()
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'description', 'volunteer_spots_remaining', 'event_photo', 'category', 'num_users_attending', 'collaborators', 'location', 'lat', 'lon', 'attendees_needed' ]
+        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'lat', 'lon', 'description', 'category',  'attendees_needed', 'num_users_attending', 'volunteer_spots_remaining', 'volunteer_roles','hosts','event_photo' ]
 
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
@@ -58,14 +60,23 @@ class EventDetailsSerializer(serializers.ModelSerializer):
         return obj.coordinates[1] if obj.coordinates else None
     
     # give list of user id, profile picture, and display name
-    def get_collaborators(self, obj):
-        return [{"user_id": profile.id, "display_name": profile.display_name, "profile_picture": profile.image} for profile in obj.collaborators.all()]
+    def get_hosts(self, obj):
+        return [{"user_id": profile.id, "display_name": profile.display_name, "profile_picture": profile.image} for profile in obj.hosts.all()]
     
     def get_volunteer_spots_remaining(self, obj):
         if obj.volunteer_roles:
             volunteers_needed = obj.volunteer_roles.aggregate(num_volunteers_needed=Sum('num_volunteers_needed'))['num_volunteers_needed']
-            volunteers_assinged = obj.volunteer_roles.aggregate(num_volunteers_assigned=Count('applications'))['num_volunteers_assigned']
-            return volunteers_assinged
+            if volunteers_needed is None:
+                return None
+            volunteer_roles = obj.volunteer_roles.all()
+            volunteers_assigned = sum(role.applications.filter(application_status=True).count() for role in volunteer_roles)
+            return volunteers_needed - volunteers_assigned
+        else:
+            return None
+        
+    def get_volunteer_roles(self, obj):
+        if obj.volunteer_roles:
+            return [{"id": role.id, "role": role.role} for role in obj.volunteer_roles.all()]
         else:
             return None
 

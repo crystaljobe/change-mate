@@ -33,7 +33,7 @@ class Event(models.Model):
         on_delete=models.CASCADE,
         related_name="events",
     )
-    collaborators = models.ManyToManyField(UserProfile, related_name="user_events")
+    hosts = models.ManyToManyField(UserProfile, related_name="user_events")
     users_attending = models.ManyToManyField(
         UserProfile, related_name="events_attending"
     )

@@ -9,7 +9,8 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .serializers import VolunteerApplication, ApplicationSerializer, ApplicationDecisionSerializer, ApplicationViewSerializer
+from .serializers import VolunteerApplication, ApplicationSerializer, ApplicationDecisionSerializer
+from profile_app.serializers import UserProfile, BasicUserDataSerializer
 from drf_yasg.utils import swagger_auto_schema
 from django.utils.timezone import now
 
@@ -23,10 +24,12 @@ class AllApplications(TokenReq):
             request_body=ApplicationSerializer,
             responses={201: ApplicationSerializer()},
     )
-    def post(self, request, event_id, role_id):
+    def post(self, request, role_id):
         '''Create a new volunteer application for event'''
         data = request.data.copy()
+        applicant = request.user.id
         data['volunteer_role'] = role_id
+        data['applicant'] = applicant
         serializer = ApplicationSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -38,7 +41,7 @@ class AApplication(TokenReq):
     '''Access a volunteer application by ID'''
     
     @swagger_auto_schema(
-            operation_summary="Edit volunteer application status"
+            operation_summary="Edit volunteer application status",
             operation_description="Edit volunteer application status.",
             request_body=ApplicationDecisionSerializer,
     )
@@ -48,6 +51,7 @@ class AApplication(TokenReq):
         approver = request.user
         data['decision_made_by'] = approver.id
         data['decision_date'] = now()
+        print(data)
         application = get_object_or_404(VolunteerApplication, pk=application_id)
 
         serializer = ApplicationDecisionSerializer(application, data=data, partial=True)
@@ -57,3 +61,13 @@ class AApplication(TokenReq):
             return Response(serializer.data, status=HTTP_200_OK)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     
+    @swagger_auto_schema(
+            operation_summary="Delete a volunteer application by ID",
+            operation_description="Delete a volunteer application by ID.",
+            responses={204: "No Content"},
+    )
+    def delete(self, request, application_id):
+        '''Delete a volunteer application'''
+        application = get_object_or_404(VolunteerApplication, pk=application_id)
+        application.delete()
+        return Response(status=HTTP_204_NO_CONTENT)
