@@ -201,21 +201,3 @@ class ICalEvent(APIView):
         event = get_object_or_404(Event, id = event_id)
         ser_event = ICalSerializer(event)
         return Response(ser_event.data, status=HTTP_200_OK)
-
-class DefautlEventIcon(APIView):
-     def get(self, request):
-        api_key = env.get("API_KEY")
-        secret_key = env.get("SECRET_KEY")
-        auth = OAuth1(api_key, secret_key)
-        endpoint = f"https://api.thenounproject.com/v2/icon/5130800?thumbnail_size=200"
-        response = requests.get(endpoint, auth=auth)
-        json_response = response.json()
-        # print(json_response)
-        # pp.pprint(json_response)
-        if json_response.get("icon"):
-            icon_url = json_response.get('icon').get("thumbnail_url")
-            return Response(icon_url)
-        return Response("This parameter doesn't exist within the noun project")
-     
-
-     
