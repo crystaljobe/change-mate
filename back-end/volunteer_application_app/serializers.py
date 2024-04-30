@@ -19,15 +19,9 @@ class ApplicationDecisionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VolunteerApplication
-        fields = "__all__"
+        fields = ['application_status', 'decision_made_by', 'decision_text', 'decision_date']
 
-    def update(self, obj, validated_data):
-        obj.application_status = validated_data.get('application_status', obj.application_status)
-        obj.decision_made_by = validated_data.get('decision_made_by', obj.decision_made_by)
-        obj.decision_date = now()  # Set decision_date to the current datetime
-        obj.save()
-        return obj
-    
+
 class ApplicationViewSerializer(serializers.ModelSerializer):
     '''Serializer for viewing volunteer applications'''
     applicant = BasicUserDataSerializer()

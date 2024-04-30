@@ -1,4 +1,3 @@
-from requests_oauthlib import OAuth1
 from changemate_proj.settings import env
 from user_app.views import TokenReq 
 from rest_framework.response import Response
