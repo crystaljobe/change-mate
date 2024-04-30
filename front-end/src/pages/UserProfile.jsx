@@ -135,32 +135,6 @@ const calendarEvents = userEvents.map(event => {
     </Card>
   );
 
-  const renderBages = () => (
-    <Card className="text-center" style={{ width: '18rem' }}>
-      <Card.Header>Badges</Card.Header>
-      <Card.Body>
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-          <Image src={eventsCreatedIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
-          <Card.Text>
-            {userEvents.length} Events Created
-          </Card.Text>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-          <Image src={eventsCommitedToIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
-          <Card.Text>
-            {eventsAttending.length} Events Commited To
-          </Card.Text>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-          <Image src={eventsVolunteeredIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
-          <Card.Text>
-            {eventsVolunteering.length} Events Volunteered For
-          </Card.Text>
-        </div>
-      </Card.Body>
-    </Card>
-  );
-
   // console.log('USER PROFILE -- userEvents:', userEvents)
 
   // Main component layout using Bootstrap's grid system
@@ -170,7 +144,29 @@ const calendarEvents = userEvents.map(event => {
         <Col md={3}>
           {renderProfileInfo()}
           <br/>
-          {renderBages()}
+          <Card className="text-center" style={{ width: '18rem' }}>
+            <Card.Header>Badges</Card.Header>
+            <Card.Body>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                <Image src={eventsCreatedIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
+                <Card.Text>
+                  {userEvents.length} Events Created
+                </Card.Text>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                <Image src={eventsCommitedToIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
+                <Card.Text>
+                  {eventsAttending.length} Events Commited To
+                </Card.Text>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                <Image src={eventsVolunteeredIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
+                <Card.Text>
+                  {eventsVolunteering.length} Events Volunteered For
+                </Card.Text>
+              </div>
+            </Card.Body>
+          </Card>
         </Col>
         <Col md={4}>
           <h1 style={{ color: "#6840DF" }}>Events You're Hosting</h1>
