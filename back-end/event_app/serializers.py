@@ -189,10 +189,10 @@ class EventDetailsSerializer(serializers.ModelSerializer):
 
     def get_lat(self, obj):
 
-        return obj.coordinates[0] if obj.coordinates else None
+        return obj.coordinates[1] if obj.coordinates else None
     
     def get_lon(self, obj):
-        return obj.coordinates[1] if obj.coordinates else None
+        return obj.coordinates[0] if obj.coordinates else None
     
     # give list of user id, profile picture, and display name
     def get_hosts(self, obj):
