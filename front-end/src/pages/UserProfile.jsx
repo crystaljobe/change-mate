@@ -99,8 +99,8 @@ const calendarEvents = userEvents.map(event => {
         <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Locations:</Card.Subtitle>
         <Card.Text>
           {/* Maps through the userLocationData to render in proper format */}
-          {userLocationData.map(l => 
-              <p style={{ margin: '0px' }}>{`${l.city}, ${l.state}`}</p>
+          {userLocationData.map((l, idx)=> 
+              <span key={idx} style={{ margin: '0px' }}>{`${l.city}, ${l.state}`}<br/></span>
             )}
         </Card.Text>
         <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Interests:</Card.Subtitle>

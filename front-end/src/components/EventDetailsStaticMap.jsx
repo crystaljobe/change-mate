@@ -1,45 +1,44 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
-import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+
 
 mapboxgl.accessToken =
     "pk.eyJ1IjoiY3J5c3RhbGpvYmUiLCJhIjoiY2x2Y3VkMzFxMG13ZzJrcGY5dDB0bGJvYyJ9.PV_ZgI2EhyhNfcRHmp2OPw";
 
-export default function StaticMap({ latitude, longitude }) {
+export default function StaticMap({ lat, lng }) {
+    // console.log("mapLat:", lat, "mapLon:", lng)
     const mapContainer = useRef(null);
-    const map = useRef(null); //stores the initialize of map only once so it doesn't reload upon user interaction
-    //sets center coords of map
-
+    const map = useRef(null); // stores the initialize of map only once so it doesn't reload upon user interaction
 
     useEffect(() => {
         if (map.current) return; // initialize map only once
+        //map setup 
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v12',
-            center: [longitude, latitude],
+            center: [lng, lat],
             zoom: 12
         });
+        // console.log("Setting marker at:", lng, lat);
 
-        map.current.addLayer({
-            marker: new mapboxgl.Marker().setLngLat(longitude, latitude).addTo(map)
-        })
+        // Ensure coordinates are valid numbers before placing the marker
+        if (typeof lng === 'number' && typeof lat === 'number') {
+            new mapboxgl.Marker()
+                .setLngLat([lng, lat])
+                .addTo(map.current);
+        } else {
+            console.error("Invalid coordinates:", lng, lat);
+        }
 
+        // Add navigation control (the +/- zoom buttons)
+        map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
 
-      }, [latitude, longitude]);
+    }, []);
 
     return (
-        <div>
-            {/* map container */}
-            <div ref={mapContainer} className="static-map-container"></div>
-        </div>
-    )
+			<>
+				<div ref={mapContainer} className="static-map-container"></div>
+			</>
+		);
 }
-
-// curl -g https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+e01010(-104.774529,38.877232)/-104.7916,38.8696,10,0/300x200@2x?access_token=pk.eyJ1IjoibWNyZXlub2xkc2giLCJhIjoiY2x2MzFuNzN6MGhoOTJycnd5ZHQ3eWR4ayJ9.QKI5tsCAXhuzNb2XzhyjOg
-
-
-
-
-
-
 

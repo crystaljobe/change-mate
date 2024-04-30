@@ -22,7 +22,7 @@ export default function LogIn() {
 
     return (
         <>
-        <Container fluid>
+        <Container fluid className="mt-5">
             <Row>
                 <Col sm> </Col>
                 <Col sm style={{ textAlign: "center" }}>
@@ -30,6 +30,7 @@ export default function LogIn() {
                 </Col>
                 <Col sm> </Col>
             </Row>
+            <br/>
 		</Container>
 
         <Form onSubmit={handleSubmit}>
@@ -50,7 +51,7 @@ export default function LogIn() {
                             We&apos;ll never share your email with anyone else.
                         </Form.Text>
                     </Col>
-                    <Col sm={4} />
+                    <Col />
                 </Form.Group>
 
                 <Form.Group
