@@ -10,7 +10,6 @@ from rest_framework.status import (
     HTTP_400_BAD_REQUEST
 )
 from .serializers import VolunteerApplication, ApplicationSerializer, ApplicationDecisionSerializer
-from profile_app.serializers import UserProfile, BasicUserDataSerializer
 from drf_yasg.utils import swagger_auto_schema
 from django.utils.timezone import now
 

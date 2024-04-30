@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Event
 from interest_app.serializers import InterestCategorySerializer
 from django.db.models import Count, Sum
-# from volunteer_application_app.serializers import ApplicationViewSerializer
+
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -22,10 +22,12 @@ class EventAdminSerializer(serializers.ModelSerializer):
     endDate = serializers.SerializerMethodField()
     hosts = serializers.SerializerMethodField()
     category = InterestCategorySerializer()
+    volunteer_roles = serializers.SerializerMethodField()
+    volunteers = serializers.SerializerMethodField()
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'hosts', 'event_photo' ]
+        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'volunteers', 'volunteer_roles', 'hosts', 'event_photo' ]
 
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
@@ -47,6 +49,31 @@ class EventAdminSerializer(serializers.ModelSerializer):
     def get_hosts(self, obj):
         return [{"user_id": profile.id, "display_name": profile.display_name, "profile_picture": profile.image} for profile in obj.hosts.all()]
     
+   # give list of volunteer applicants
+    def get_volunteer_roles(self, obj):
+        if obj.volunteer_roles:
+            return [{"id": role.id, "role": role.role, "applicants": [{"user_id": application.applicant.id, "display_name": application.applicant.display_name, "profile_picture": application.applicant.image} for application in role.applications.all()]} for role in obj.volunteer_roles.all()]
+        else:
+            return None
+
+    # get list of volunteers that have been assigned  
+    def get_volunteers(self, obj):
+        if obj.volunteer_roles:
+            approved_applications = [role.applications.filter(application_status=True) for role in obj.volunteer_roles.all()]
+            volunteers = []
+            for application_queryset in approved_applications:  # Iterate over each queryset
+                for application in application_queryset:  # Iterate over each application object in the queryset
+                    volunteer = {
+                        "id": application.applicant.id,
+                        "role": application.volunteer_role.role,
+                        "display_name": application.applicant.display_name,
+                        "profile_picture": application.applicant.image
+                    }
+                    volunteers.append(volunteer)
+            return volunteers  # Return the list of volunteers
+        else:
+            return None
+        
 
 class EventCollaborationSerializer(serializers.ModelSerializer):
     '''provide data formatted for event collaboration page'''
