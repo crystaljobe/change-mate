@@ -21,7 +21,7 @@ export default function EditEventDetails() {
   // time zone imported from utilities 
   const [timeZone, setTimeZone] = useState('');
   // event type = In-person or Virtual
-  const [eventType, setEventType] = useState('In-Person');
+  const [eventType, setEventType] = useState('In-person');
   // event virtual link if a virtual event (ex. - user will input their zoom link)
   const [virtualEventLink, setVirtualEventLink] = useState('');
   // event in-person venue ex-"Downtown Park Center"
