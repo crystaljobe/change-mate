@@ -4,7 +4,7 @@
 
 :root {
   --bodyColor:#FDF6EE;
-  padding: 4px;
+  margin: 4px;
 }
 body {
   background: #FDF6EE;
@@ -17,17 +17,52 @@ nav {
   border-bottom: solid;
 }
 
-.homepage-header-text {
+/*Playfair display font styling CSS classes*/
+.playfair-display {
   font-family: "Playfair Display", serif;
   font-optical-sizing: auto;
-  font-weight: 900;
+  font-weight: 400; /* <weight>: Use a value from 400 to 900 */
+  font-style: normal;
+}
+/*Poppins font styling CSS classes*/
+.poppins-extralight {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
   font-style: normal;
 }
 
-.homepage-subtext {
-  font-family: "Slabo 27px", serif;
+.poppins-light {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.homepage-header-text {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  margin-top: 1rem;
+}
+
+.homepage-subtext {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: #AB47BC;
+  margin-top: 2px;
 }
 
 .location-search-map-container {
@@ -46,10 +81,25 @@ nav {
   }
    
 
+.sidebarStyle {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 12px;
+  background-color: #404040;
+  color: #ffffff;
+  z-index: 1 !important;
+  padding: 6px;
+  font-weight: bold;
+}
 
 
-/* colorful button -eventdetails page- css */
 .button-gradient {
+  /* background: #7F7FD5;  fallback for old browsers */
+  /* background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);  Chrome 10-25, Safari 5.1-6 */
+  /* background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
   background-image: linear-gradient(to right, rgb(167, 223, 242) 30%, rgb(178, 149, 237) 70%);
   color: black; /* Text color */
   padding: 10px 20px; /* Padding around the text */
@@ -70,6 +120,7 @@ nav {
 }
 
 .dropdown-button {
+  background: linear-gradient(180deg, rgba(13,202,240,0.48503151260504207) 0%, rgba(104,64,223,0.8267682072829132) 93%);
   background-image: linear-gradient(to right, rgb(167, 223, 242) 30%, rgb(178, 149, 237) 70%);
   color: black;
   padding: 10px 20px;
@@ -107,6 +158,8 @@ nav {
   display: block;
 }
 
+/* background: #00B7FF;
+  background: rgb(13,202,240); */
 
 
 
