@@ -2,29 +2,18 @@ import { useParams, Link, useOutletContext } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
   getAdminEventDetails,
-  volunteerRoles,
-  createVolunteerRole,
-  deleteVolunteerRole,
 } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerManager from "../components/VolunteerManager";
 import TodoList from "../components/ToDoList";
-import {
-  getProfileIcon,
-  getEventIcon,
-} from "../utilities/DefaultIconsUtilities";
+import HostsManager from "../components/HostsManager";
+
 //styling imports
 import { Container, Row, Col, } from "react-bootstrap";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import AddIcon from "@mui/icons-material/Add";
 import {
-  Card,
-  CardHeader,
-  CardContent,
-  IconButton,
-  TextField,
   Button,
-  Box,
 } from "@mui/material";
 
 
@@ -46,12 +35,10 @@ import {
 
 function AdminPage() {
   const [eventDetails, setEventDetails] = useState({});
-  const [hostSearchInput, setHostSearchInput] = useState("");
   const [roles, setRoles] = useState([]);
   const [approvedVolunteers, setApprovedVolunteers] = useState([]);
   const [volunteerApplications, setVolunteerApplications] = useState([]);
 
-  const [newHost, setNewHost] = useState({});
   const [hosts, setHosts] = useState([]); //array of userProfile instances that are 'collaborators' {display_name, profile_picture, user_id}
   const { userProfileData } = useOutletContext(); //obj that contains {id, display_name, image, user_events[{arr of event Objs that user is a collaborator/host of}]}
   let { eventID } = useParams();
@@ -63,31 +50,31 @@ function AdminPage() {
     setEventDetails(eventDetails);
     const hostArr = eventDetails.hosts;
     const approvedVols = eventDetails.volunteers;
-    const volApplications = eventDetails.applicants;
-    setApprovedVolunteers(approvedVols);
+    const volApplications = eventDetails.applicants; //arr of obj {id <role.id>, role, [applicants] < arr of objs {application_id, user_id, applicant_id, display_name, profile_picture}> }
+    let rolesArr = []
+    volApplications.map((roleInstance) => {
+      rolesArr.push(roleInstance.role)
+    })
+
+    setApprovedVolunteers(approvedVols); //an arr of obj {id<applicant id>, role, user_id, display_name, profile_picture}
     setVolunteerApplications(volApplications);
     setHosts(hostArr);
+    setRoles(rolesArr)
   };
 
   useEffect(() => {
     getEvent();
-    searchNewHost();
-    getVolunteerRoles();
   }, []);
 
-  //setting roles array by making api call for specific event
-  const getVolunteerRoles = async () => {
-    let rolesArr = await volunteerRoles(eventID); //{id, assigned_volunteers, role, num_volunteers_needed, event}
-    setRoles(rolesArr);
-  };
+  
+ 
+  // console.log(`admin page-- hosts: ${hosts}  ApprovedVols: ${approvedVolunteers}   volAPPs ${volunteerApplications}`)
+  console.log(`admin page -- hosts`, hosts)
+  console.log(`admin- eventDetails`, eventDetails)
+  console.log(`admin- roles`, roles);
 
 
-  //TODO: need to search for users by email
-  const searchNewHost = async () => {
-    // const newHostData = await getProfileInfo({ 'user': "rs@cp.com" });
-    newHostData ? setNewHost(newHostData) : setNewHost(null);
-    console.log("admin page -- newHostData:", newHostData);
-  };
+
 
   return (
     <Container fluid className="event-collab-container">
@@ -95,6 +82,7 @@ function AdminPage() {
         <Col md={4} className="event-details-col">
           <DetailedEventCard eventDetails={eventDetails} />
           <Button
+            size="large"
             style={{ margin: "5%" }}
             className="button-gradient text-center"
             variant="info"
@@ -105,37 +93,21 @@ function AdminPage() {
           </Button>
         </Col>
         <Col md={4} className="discussion-forum-col">
-          <Row><VolunteerManager />
-          </Row>
-
           <Row>
-            <Card sx={{ width: "50%" }}>
-              <CardHeader title="Add Hosts" />
-              <Box
-                sx={{ display: "flex", alignItems: "flex-end" }}
-                component="form"
-                noValidate
-                autoComplete="off"
-              >
-                <AccountCircle
-                  sx={{ color: "action.active", mr: 1, my: 0.5 }}
-                />
-                <TextField
-                  id="input-with-sx"
-                  label="enter a user's email"
-                  variant="standard"
-                  value={hostSearchInput}
-                  onChange={(e) => setHostSearchInput(e.target.value)}
-                />
-                <IconButton>
-                  <AddIcon />
-                </IconButton>
-              </Box>
-            </Card>
+            <VolunteerManager
+              approvedVolunteers={approvedVolunteers}
+              volunteerApplications={volunteerApplications}
+              eventID={eventID}
+              roles={roles}
+              setRoles={setRoles}
+            />
           </Row>
         </Col>
         <Col md={4} className="todo-participant-col">
           <TodoList showAddToDo={showAddToDo} />
+          <Row>
+            <HostsManager />
+          </Row>
         </Col>
       </Row>
     </Container>
