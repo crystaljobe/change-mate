@@ -70,8 +70,10 @@ class EventsView(TokenReq):
             queryset = queryset.filter(event_start__date=start_date)
          
         # case-insensitive partial match for filtering for location
-        if location:          
-            queryset = queryset.filter(location__icontains=location) 
+        if location:
+            print(location)
+            queryset = queryset.filter(location__icontains=location)
+
            
         # case-insensitive partical match for filtering for keywords in title, description, and category    
         if general:
