@@ -107,7 +107,7 @@ export default function CreateEvent() {
   const handleAddLocation = () => {
     // Create a location string from form values
     const location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
-            
+      
     // Sets the userLocation to the new string of locations
     setLocation(location)  
   }
