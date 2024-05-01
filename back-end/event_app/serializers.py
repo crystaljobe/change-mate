@@ -227,7 +227,7 @@ class EventCardSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'event_photo', 'category', 'location']
+        fields = ['id', 'title', 'event_start', 'event_end', 'startDate', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'event_photo', 'category', 'location']
 
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
@@ -236,14 +236,7 @@ class EventCardSerializer(serializers.ModelSerializer):
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_endDate(self, obj):
         return obj.event_end.strftime('%m/%d/%Y')
-    
-    # convert time to 12 hr format
-    def get_startTime(self, obj):
-        return obj.event_start.strftime('%I:%M %p')
-    
-    # convert time to 12 hr format
-    def get_endTime(self, obj):
-        return obj.event_end.strftime('%I:%M %p')
+
     
 
 

@@ -85,7 +85,7 @@ class EventsView(TokenReq):
         
         
         # serialize data and return data and status 200
-        ser_queryset = EventDetailsSerializer(queryset, many=True)
+        ser_queryset = EventCardSerializer(queryset, many=True)
         return Response(ser_queryset.data, status=HTTP_200_OK)
 
     @swagger_auto_schema(
