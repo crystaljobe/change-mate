@@ -25,51 +25,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 function VolunteerManager({
   roles,
+  setRoles,
   approvedVolunteers,
   volunteerApplications,
   eventID,
 }) {
-  //   const [volunteers, setVolunteers] = useState({
-  //     applications: [
-  //       {
-  //         id: 1,
-  //         name: "Alice Johnson",
-  //         role: "Event Coordinator",
-  //         applicationDetail:
-  //           "I have experience in event planning and coordination.",
-  //       },
-  //       {
-  //         id: 2,
-  //         name: "Bob Smith",
-  //         role: "Food Services",
-  //         applicationDetail: "Previously volunteered at similar events.",
-  //       },
-  //     ],
-  //     roles: [
-  //       {
-  //         role: "Event Coordinator",
-  //         volunteers: [
-  //           {
-  //             id: 1,
-  //             name: "Charlie Davis",
-  //             applicationDetail:
-  //               "I am skilled in AV setups and technical troubleshooting.",
-  //           },
-  //         ],
-  //       },
-  //     ],
-  //   });
-
-  //   const handleAddRole = () => {
-  //     if (newRole) {
-  //   setVolunteers((prev) => ({
-  //     ...prev,
-  //     roles: [...prev.roles, { role: newRole, volunteers: [] }],
-  //   }));
-  //   setNewRole("");
-  // }
-  //   };
-
+ 
   const [openModal, setOpenModal] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [newRole, setNewRole] = useState("");
@@ -91,16 +52,14 @@ function VolunteerManager({
     }
   };
 
-  const handleDeleteRole = (roleIndex) => {
-    setVolunteers((prev) => ({
-      ...prev,
-      roles: prev.roles.filter((_, index) => index !== roleIndex),
-    }));
+  const handleDeleteRole = (role) => {
+    const deleteThisRole = volunteerApplications.filter((roleInstance) => roleInstance.role === role)
+    deleteVolRole(deleteThisRole[0].id)
+    setRoles(roles.filter((roleName) => roleName !== role))
   };
 
-  //TODO: need roleName & numVolunteersNeeded useStates from vol component -- creating a volunteer role
+  //sends post request creating a volunteer role
   const postVolunteerRole = async (newRole) => {
-    e.preventDefault();
     try {
       let roleName = newRole;
       await createVolunteerRole(eventID, roleName, numVolunteersNeeded);
@@ -111,48 +70,55 @@ function VolunteerManager({
 
   //TODO: need to pass in roleID ---> delete a volunteer role
   const deleteVolRole = async (roleID) => {
-    const responseStatus = await deleteVolunteerRole(roleID);
+    const responseStatus = await deleteVolunteerRole(eventID, roleID);
+    console.log('delete role - response status', responseStatus)
   };
 
   return (
     <div>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Volunteer Applications</Typography>
+          <Typography>Pending Volunteer Applications</Typography>
         </AccordionSummary>
         <AccordionDetails>
           {/* volunteer applications/applicants  */}
-          {volunteerApplications.map((volRoleInstance) => (
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <AccordionDetails>
-                  <List key={volRoleInstance.id}>
-                    {volRoleInstance.role}
-                    {volRoleInstance.applicants &&
-                      volRoleInstance.applicants.map((applicant) => (
-                        <ListItem
-                          key={applicant.id}
-                          button
-                          onClick={() => handleOpenModal(applicant)}
-                        >
-                          <ListItemAvatar>
-                            <Avatar>{applicant.profile_picture}</Avatar>
-                          </ListItemAvatar>
-                           <ListItemText
-                                primary={applicant.display_name} />
-                        </ListItem>
-                      ))}
-                  </List>
-                </AccordionDetails>
-              </AccordionSummary>
-            </Accordion>
-          ))}
+          <List>
+            {volunteerApplications.map((volRoleInstance, index) => (
+              // <Accordion>
+              //   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              //     <AccordionDetails>
+              <List key={index}>
+                {volRoleInstance.role}
+                {volRoleInstance.applicants &&
+                  volRoleInstance.applicants.map((applicant) => (
+                    <ListItem
+                      key={applicant.id}
+                      button
+                      onClick={() => handleOpenModal(applicant)}
+                    >
+                      <ListItemAvatar key={applicant.user_id}>
+                        <Avatar key={applicant.user_id}>
+                          {applicant.profile_picture}
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={applicant.user_id}
+                        secondary={volRoleInstance.role}
+                      />
+                    </ListItem>
+                  ))}
+              </List>
+              //     </AccordionDetails>
+              //   </AccordionSummary>
+              // </Accordion>
+            ))}
+          </List>
         </AccordionDetails>
       </Accordion>
 
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Current Volunteer Roles</Typography>
+          <Typography>Assigned Volunteer Roles</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <TextField
@@ -174,7 +140,7 @@ function VolunteerManager({
                     aria-label="delete"
                     onClick={(event) => {
                       event.stopPropagation();
-                      handleDeleteRole(index);
+                      handleDeleteRole(role);
                     }}
                     size="small"
                   >
