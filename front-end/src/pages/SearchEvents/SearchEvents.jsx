@@ -73,14 +73,15 @@ function SearchEvents() {
 
   // Gets current user locations which are a json string and converts it back to an array of objects for manipulation
   const getLocationData = () => {
-    if (searchLocation && searchLocation.length > 0) {
-      const locationsData = JSON.parse(searchLocation)
-      setLocationData(locationsData)
+    if (searchLocation) {
+      setLocationData(searchLocation)
     }
   }
 
   useEffect(() => {
-    getLocationData();
+    if (searchLocation) {
+      getLocationData();
+    }
   }, [searchLocation]);
 
     // Handles changing the searchType; SearchType is needed so that when the form submits it knows which API call to do
@@ -90,14 +91,15 @@ function SearchEvents() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
+
         // Creates an object with all the search parameters
         const allData = {
             "type": searchEventType, 
             "start_date": searchDateStart, 
             "end_date": searchDateEnd, 
             "location": searchLocation,
-            [searchType]: searchTerm
+            searchType: searchTerm
         }
         // Calls the getEventDetailsSearch function from EventUtilities to get the events that match the search parameters
         getEventDetailsSearch(allData)
@@ -134,35 +136,16 @@ function SearchEvents() {
         getLocalEvents()
     }, [userLocations]);
 
-    const handleAddLocation = () => {
+    const handleAddLocation = (e) => {
         // Create a location object from form values
-        const locationAdd = {
-          'country': countryAdd,
-          'state': stateAdd[1],
-          'city': cityAdd
-        }
-    
-        // New array with the objects from userLocationData and locationAdd
-        const newLocations = [...locationData, locationAdd]
-    
-        // Converts newLocations to json string for backend transmission
-        const jsonStringLocations = JSON.stringify(newLocations)
+        const location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
         
         // Sets the userLocation to the new json string of locations
-        setSearchLocation(jsonStringLocations) 
+        setSearchLocation(location) 
+        handleSubmit(e)
       }
     
-      // Handles removing a location from the user's profile
-      const handleRemoveLocation = (key) => {
-        // Filter through userLocationData to remove the specified location
-        const filteredLocations = locationData.filter((_, index) => index !== key)
-    
-        // Converts filteredLocations to json string for backend transmission
-        const jsonStringLocations = JSON.stringify(filteredLocations)
-    
-        // Sets the userLocation to the new json string of locations
-        setSearchLocation(jsonStringLocations) 
-      };
+
 
     // Sorts the events returned from the search into eventsPopular
     const sortPopularEvents = async (searchEvents) => {
@@ -269,14 +252,7 @@ function SearchEvents() {
                                     ))}
                                     </datalist>
                                 </Form.Label>
-                                {locationData.length == 0 ?
-                                    <p style={{fontStyle:'italic'}}>No locations set</p> :
-                                    locationData.map((l, k)=> 
-                                        <div key={k}>
-                                            <Button size="sm" variant="danger" onClick={(e) => handleRemoveLocation(k)} >{`Remove ${l.city},  ${l.state}`}</Button>
-                                        </div>
-                                )}
-                                <br />
+                            
                                 <Button variant="info" onClick={() => handleAddLocation()}> 
                                 Add Location
                                 </Button>

@@ -70,7 +70,7 @@ class EventsView(TokenReq):
             queryset = queryset.filter(event_start__date=start_date)
          
         # case-insensitive partial match for filtering for location
-        if location:
+        if location:          
             queryset = queryset.filter(location__icontains=location) 
            
         # case-insensitive partical match for filtering for keywords in title, description, and category    
@@ -116,9 +116,9 @@ class EventsView(TokenReq):
                 attendees_needed = data['attendees_needed'],
                 )
 
-            # set request user as collaborator
-            collaborator = UserProfile.objects.get(user=request.user)
-            new_event.collaborators.set([collaborator])
+            # set request user as host
+            host = UserProfile.objects.get(user=request.user)
+            new_event.hosts.set([host])
 
             new_event.full_clean()
             new_event.save()

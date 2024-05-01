@@ -31,7 +31,7 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
         "description" : description,
         "category" : category,
         "event_photo" : eventPhoto,  // Set up as a base64 for the backend 
-		"virtual_event_link": virtualEventLink,
+		"virtual_event_link": virtualEventLink || null,
         "location": location || null,
         "coordinates": eventCoordinates || null,
         "attendees_needed": attendeesNeeded
@@ -73,7 +73,6 @@ export const updateEventDetails = async (eventID, title, eventStart, eventEnd, t
             "coordinates": eventCoordinates || null, //to satisfy backend requirements
             "attendees_needed": attendeesNeeded,
         });
-        console.log(response.status);
         if (response.status === 200) {
             return true;
         } else {
