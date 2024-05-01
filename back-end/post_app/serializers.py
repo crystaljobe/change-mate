@@ -1,20 +1,35 @@
 from rest_framework import serializers
-from .models import Post, Comment, Like
 
-
-
-class PostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = '__all__'
+from user_app.serializers import NewUserSerializer
+from .models import Post, Comment
+        
         
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ['id','user', 'post','timestamp','content']
         
-class LikeSerializer(serializers.ModelSerializer):
+
+
+
+class EventPostSerializer(serializers.ModelSerializer):
+    
+    comments = CommentSerializer(many=True, read_only=True)
     class Meta:
-        model = Like
-        fields = '__all__'
+        model = Post
+        fields = ['id','post_orgin','timestamp', 'context', 'comments', 'likes', 'dislikes']
+    
+   
+    
+        
+class CollabPostSerializer(serializers.ModelSerializer):
+    
+    comments = CommentSerializer(many=True, read_only=True)
+    class Meta:
+        model = Post
+        fields = ['id','post_orgin','timestamp', 'context', 'comments']
+    
+   
+
+
         

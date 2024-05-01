@@ -1,100 +1,235 @@
-from django.shortcuts import render, get_object_or_404
-from rest_framework import response, status
-from rest_framework.views import APIView
-from .models import Post, Comment, Like
-from .serializers import PostSerializer, CommentSerializer, LikeSerializer
-from rest_framework import generics
+from requests_oauthlib import OAuth1
+from rest_framework.decorators import api_view
+from user_app.views import TokenReq 
+from rest_framework.response import Response
+# from django.db import IntegrityError
+from django.shortcuts import get_object_or_404, get_list_or_404
+from rest_framework.status import (
+    HTTP_200_OK,
+    HTTP_204_NO_CONTENT,
+    HTTP_201_CREATED,
+    HTTP_400_BAD_REQUEST
+)
+from post_app.serializers import EventPostSerializer, CommentSerializer, CollabPostSerializer
+from .models import Post, Comment
+from event_app.models import Event, UserProfile
+from drf_yasg.utils import swagger_auto_schema
+
 
 # Create your views here.
 
-class PostView(APIView):
-    
-    def get (self, request):
-        post = Post.objects.all()
-        serializer = PostSerializer(post, many=True)
-        return response.Response({'post': serializer.data})
+class EventPostView(TokenReq):
     
     
-    def post(self, request):
-        post = request.data.get('post')
+    @swagger_auto_schema(
+        operation_summary="View all posts for event",
+        operation_description="View all posts for selected event.",
+        responses={200: EventPostSerializer()},
+    )
+    def get(self, request, event_id):
+        posts = get_list_or_404(Post, event=event_id, post_orgin="Events Page")
+        serializer = EventPostSerializer(posts, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)
+    
+
+    @swagger_auto_schema(
+        operation_summary="Create a new post for event",
+        operation_description="Create a new post for selected event.",
+        request_body=EventPostSerializer,
+        responses={201: EventPostSerializer()},
+    )
+    def post(self, request, event_id):
+        event = get_object_or_404(Event, pk=event_id)
+        data = request.data.copy()
+        data['event'] = event_id
+        data['post_orgin'] = "Events Page"
+        data['comments'] = []
+        serializer = EventPostSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+    
+    
+    
+    @swagger_auto_schema(
+        operation_summary="Delete a post",
+        operation_description="Delete a post for selected event by Id.",
+        request_body=EventPostSerializer,
+        responses={204: 'No Content'},
+    )
+    
+    def delete(self, request, event_id):
+        event = get_object_or_404(Event, pk=event_id)
+        posts = get_list_or_404(Post, event=event_id, post_orgin="Events Page", id=request.data['id'])
+        for post in posts:
+            post.delete()
+        return Response(status=HTTP_204_NO_CONTENT)
+
+
+@api_view(['POST'])
+def like_post(request, event_id, post_id):
+        event = get_object_or_404(Event, pk=event_id)
+        post = get_object_or_404(Post, pk=post_id)
+        user = get_object_or_404(UserProfile, pk=request.user.id)
+        post.likes += 1
+        post.save()
+        return Response("A like was add",status=HTTP_200_OK)
+
+@api_view(['POST'])   
+def dislike_post(request, event_id, post_id):
+        event = get_object_or_404(Event, pk=event_id)
+        post = get_object_or_404(Post, pk=post_id)
+        user = get_object_or_404(UserProfile, pk=request.user.id)
+        if post.likes > 0:
+            post.likes -= 1
+            post.save()
+        return Response('A like was sub', status=HTTP_200_OK)
         
-        serializer = PostSerializer(data=post)
-        if serializer.is_valid(raise_exception=True):
-            post_saved = serializer.save()
-        return response.Response({'success': 'Post {} created successfully'.format(post_saved.context)})
+   
+class CollabPostView(TokenReq):
     
     
-    def put(self, request, pk):
-        saved_post = get_object_or_404(Post.objects.all(), pk=pk)
-        data = request.data.get('post')
-        serializer = PostSerializer(instance=saved_post, data=data, partial=True)
-        if serializer.is_valid(raise_exception=True):
-            post_saved = serializer.save()
-        return response.Response({'success': 'Post {} updated successfully'.format(post_saved.context)})
+    @swagger_auto_schema(
+        operation_summary="View all posts for collaborator",
+        operation_description="View all posts for selected collaborator.",
+        responses={200: CollabPostSerializer()},
+    )
+    def get(self, request, event_id):
+        posts = get_list_or_404(Post, event=event_id, post_orgin="Collaborators Page")
+        serializer = CollabPostSerializer(posts, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)   
     
     
-    def delete(self, request, pk):
-        post = get_object_or_404(Post.objects.all(), pk=pk)
+    @swagger_auto_schema(
+        operation_summary="Create a new post for collaborator",
+        operation_description="Create a new post for selected collaborator.",
+        request_body=EventPostSerializer,
+        responses={201: EventPostSerializer()},
+    )
+    
+    def post(self, request, event_id):
+        event = get_object_or_404(Event, pk=event_id)
+        data = request.data.copy()
+        data['event'] = event_id
+        data['post_orgin'] = "Collaborators Page"
+        data['comments'] = []
+        serializer = EventPostSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+    
+    @swagger_auto_schema(
+        operation_summary="Delete a post",
+        operation_description="Delete a post for selected event by Id.",
+        request_body= CollabPostSerializer,
+        responses={204: 'No Content'},
+    )
+    
+    def delete(self, request, event_id):
+        event = get_object_or_404(Event, pk=event_id)
+        posts = get_list_or_404(Post, event=event_id, post_orgin="Collaborators Page", id=request.data['id'])
+        for post in posts:
+            post.delete()
+        return Response(status=HTTP_204_NO_CONTENT)
+    
+
+class APostView(TokenReq):
+    
+    @swagger_auto_schema(
+        operation_summary="View a post",
+        operation_description="View a post for selected event.",
+        responses={200: EventPostSerializer()},
+    )
+    
+    def get(self, request, event_id, post_id):
+        event = get_object_or_404(Event, pk=event_id)
+        post = get_object_or_404(Post, pk=post_id)
+        serializer = EventPostSerializer(post)
+        return Response(serializer.data, status=HTTP_200_OK)
+    
+    
+    @swagger_auto_schema(
+        operation_summary="Update a post",
+        operation_description="Update a post for selected event.",
+        request_body=EventPostSerializer,
+        responses={200: EventPostSerializer()},
+    )
+    
+    def delete(self, request, event_id, post_id):
+        event = get_object_or_404(Event, pk=event_id)
+        post = get_object_or_404(Post, pk=post_id)
         post.delete()
-        return response.Response({'message': 'Post with id {} has been deleted'.format(pk)}, status=status.HTTP_204_NO_CONTENT)
-
-
-class CommentView(APIView):
+        return Response(status=HTTP_204_NO_CONTENT)
     
-    def get (self, request):
-        comment = Comment.objects.all()
-        serializer = CommentSerializer(comment, many=True)
-        return response.Response({'comment': serializer.data})
+    
+ 
+class CommentView(TokenReq):
+    
+    @swagger_auto_schema(
+        operation_summary="View all comments",
+        operation_description="View all comments for selected post.",
+        responses={200: CommentSerializer()},
+    )
+    
+    def get(self, request,event_id, post_id):
+        comments = get_list_or_404(Comment, post=post_id)
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)
+    
+    
+    @swagger_auto_schema(
+        operation_summary="Create a comment",
+        operation_description="Create a comment for selected post.",
+        request_body=CommentSerializer,
+        responses={201: CommentSerializer()},
+    )
+    
+    def post(self, request, event_id, post_id):
+        event = get_object_or_404(Event, pk=event_id)
+        post = get_object_or_404(Post, pk=post_id)
+        user = get_object_or_404(UserProfile, pk=request.user.id)
+        content = request.data.copy()
+        content['user'] = user.id
+        content['post'] = post.id
+        serializer = CommentSerializer(data=content)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"comments":serializer.data}, status=HTTP_201_CREATED)      
+        return Response(serializer.data.error, status=HTTP_200_OK)
+    
+    @swagger_auto_schema(
+        operation_summary="Delete a comment",
+        operation_description="Delete a comment for selected post by Id.",
+        request_body=CommentSerializer,
+        responses={204: 'No Content'},
+    )
+    
+    def delete(self, request, event_id, post_id, comment_id):
+        event = get_object_or_404(Event, pk=event_id)
+        post = get_object_or_404(Post, pk=post_id)
+        comments = get_list_or_404(Comment, post=post_id, id=request.data['id'])
+        for comment in comments:
+            comment.delete()
+        return Response(status=HTTP_204_NO_CONTENT)
     
 
-    def post(self, request):
-        comment = request.data.get('comment')
+
+
+
+
+
+
+    
+    
         
-        serializer = CommentSerializer(data=comment)
-        if serializer.is_valid(raise_exception=True):
-            comment_saved = serializer.save()
-        return response.Response({'success': 'Comment {} created successfully'.format(comment_saved.content)})
-    
-    def put(self, request, pk):
-        saved_comment = get_object_or_404(Comment.objects.all(), pk=pk)
-        data = request.data.get('comment')
-        serializer = CommentSerializer(instance=saved_comment, data=data, partial=True)
-        if serializer.is_valid(raise_exception=True):
-            comment_saved = serializer.save()
-        return response.Response({'success': 'Comment {} updated successfully'.format(comment_saved.content)})
-    
-    
-    def delete(self, request, pk):
-        comment = get_object_or_404(Comment.objects.all(), pk=pk)
-        comment.delete()
-        return response.Response({'message': 'Comment with id {} has been deleted'.format(pk)}, status=status.HTTP_204_NO_CONTENT)
-    
-    
-class LikeView(APIView):
-    
-    def get (self, request):
-        like = Like.objects.all()
-        serializer = LikeSerializer(like, many=True)
-        return response.Response({'like': serializer.data})
-    
-    def post(self, request):
-        like = request.data.get('like')
         
-        serializer = LikeSerializer(data=like)
-        if serializer.is_valid(raise_exception=True):
-            like_saved = serializer.save()
-        return response.Response({'success': 'Like {} created successfully'.format(like_saved.like)})
+  
+            
+            
+   
+ 
     
-    def put(self, request, pk):
-        saved_like = get_object_or_404(Like.objects.all(), pk=pk)
-        data = request.data.get('like')
-        serializer = LikeSerializer(instance=saved_like, data=data, partial=True)
-        if serializer.is_valid(raise_exception=True):
-            like_saved = serializer.save()
-        return response.Response({'success': 'Like {} updated successfully'.format(like_saved.like)})
-    
-    def delete(self, request, pk):
-        like = get_object_or_404(Like.objects.all(), pk=pk)
-        like.delete()
-        return response.Response({'message': 'Like with id {} has been deleted'.format(pk)}, status=status.HTTP_204_NO_CONTENT)
+  
     

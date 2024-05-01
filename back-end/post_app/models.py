@@ -3,10 +3,13 @@ from event_app.models import Event, UserProfile
 
 # Create your models here.
 class Post(models.Model):
-    post_orgin = models.ForeignKey(Event, on_delete=models.CASCADE)
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='posts', default=1)
+    post_orgin = models.CharField(max_length=50, default='ChangeMate')   
+    user = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    context = models.CharField(max_length=1000)
+    context = models.TextField(max_length=1000)
+    likes = models.IntegerField(default=0)
+    dislikes = models.IntegerField(default=0)
     
     
    
@@ -15,7 +18,7 @@ class Post(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
-    content = models.TextField(max_length=150)
+    content = models.TextField(max_length=150, null=True, blank=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
 
 
@@ -23,13 +26,16 @@ class Comment(models.Model):
 
 
 
-class Like(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes')
-    like = models.IntegerField(default=0, null=True, blank=True)
+
     
     
+    
+    
+    
+
+    
+
+        
    
 
 

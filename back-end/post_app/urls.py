@@ -1,13 +1,14 @@
 from django.urls import path
-from .views import PostView, CommentView, LikeView
+from .views import EventPostView, CommentView, APostView, CollabPostView, dislike_post, like_post
+from . import views
+
 
 
 urlpatterns = [
-    path('', PostView.as_view(), name='post'),
-    path('post/<int:pk>', PostView.as_view(), name='post'),
-    path('comment/', CommentView.as_view(), name='comment'),
-    path('comment/<int:pk>', CommentView.as_view(), name='comment'),
-    path('like/', LikeView.as_view(), name='like'),
-    path('like/<int:pk>', LikeView.as_view(), name='like'),
-    
+    path('', EventPostView.as_view(), name='post'),
+    path('<int:post_id>/', APostView.as_view(), name='a_post'),
+    path('<int:post_id>/comments/', CommentView.as_view(), name='comments'),
+    path('<int:post_id>/like/', like_post, name='like_post'),
+    path('<int:post_id>/dislike/', dislike_post, name='dislike_post'),
+    path('collaborators/', CollabPostView.as_view(), name='collaborators'),
 ]
