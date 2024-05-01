@@ -205,7 +205,11 @@ class AnEvent(APIView):
 
         # Checks if hosts are present in body adds host to event
         if 'hosts' in data:
+            host_data = get_object_or_404(UserProfile, id=data['hosts'])
             if data['host_invite'] == "add":
+                #check if host already in event.hosts
+                if host_data in event.hosts.all():
+                    return Response({'errors': 'User is already a host'}, status=HTTP_400_BAD_REQUEST)
                 host_id = data['hosts']
                 host = UserProfile.objects.get(id=host_id)
                 event.hosts.add(host)
