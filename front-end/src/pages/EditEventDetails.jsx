@@ -38,8 +38,6 @@ export default function EditEventDetails() {
   const [photoPreview, setPhotoPreview] = useState('');
   // Set userLocation to/from backend; data format is a json string object
   const [location, setLocation] = useState('');
-  // Set userLocationData reformatted from userLocation as an array of objects for data manipulation
-  const [locationData, setLocationData] = useState([]);
   // Next three set api data for auto-populated suggestions
   const [apiCountries, setApiCountries] = useState([]);
   const [apiStates, setApiStates] = useState([]);
@@ -55,7 +53,7 @@ export default function EditEventDetails() {
   // boolean-attendees needed? yes === true if no  === false 
   const [attendeesNeeded, setAttendeesNeeded] = useState(false)
 
-  console.log('location', location)
+
 
   // Fetches countries and sets them to apiCountries
   const fetchCountries = async () => {
@@ -91,17 +89,7 @@ export default function EditEventDetails() {
     }
   }, [stateAdd]);
 
-   // Gets current user locations which are a json string and converts it back to an array of objects for manipulation
-   const getLocationData = () => {
-    if (location && location.length > 0) {
-      const locationsData = JSON.parse(location)
-      setLocationData(locationsData)
-    }
-  }
 
-  useEffect(() => {
-    getLocationData();
-  }, [location]);
 
   // use effect to grab event details and set all useStates  
   useEffect(() => {
@@ -111,7 +99,7 @@ export default function EditEventDetails() {
       setInterestCategories(categories);
       // get event details and set all useStates
       const eventDetails = await getEventDetails(eventID);
-      console.log('eventDetails', eventDetails)
+      // console.log('eventDetails', eventDetails)
       setTitle(eventDetails.title);
       setEventStart(formatDateForInput(eventDetails.event_start));
       setEventEnd(formatDateForInput(eventDetails.event_end));
@@ -152,35 +140,17 @@ export default function EditEventDetails() {
   };
 
   const handleAddLocation = () => {
-    // Create a location object from form values
-    const locationAdd = {
-      'country': null,
-      'state': null,
-      'city': null
-    }
-
-    // Sets location values to set either city, state or country
-    if (cityAdd && cityAdd.length > 0) {
-      locationAdd['city'] = cityAdd
-    } else if (stateAdd && stateAdd.length > 0) {
-      locationAdd['state'] = stateAdd[1]
-    } else if (countryAdd && countryAdd.length > 0) {
-      locationAdd['country'] = countryAdd
-    }
-
-    // Converts newLocations to json string for backend transmission
-    const jsonStringLocation = JSON.stringify(locationAdd)
-    console.log(locationAdd)
-    
-    // Sets the userLocation to the new json string of locations
-    setLocation(jsonStringLocation) 
+    // Create a location string from form values
+    const location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
+            
+    // Sets the userLocation to the new string of locations
+    setLocation(location) 
   }
 
   // Handles removing a location from the user's profile
   const handleRemoveLocation = () => {
     // Sets the userLocation to an empty string
     setLocation('') 
-    setLocationData([])
   };
 
   // handle form submit to send put request 
@@ -265,7 +235,7 @@ export default function EditEventDetails() {
         apiStates={apiStates}
         apiCities={apiCities}
         stateAdd={stateAdd}
-        locationData={locationData}
+        location={location}
         setCountryAdd={setCountryAdd}
         setStateAdd={setStateAdd}
         setCityAdd={setCityAdd}
