@@ -219,9 +219,7 @@ class EventDetailsSerializer(serializers.ModelSerializer):
 
 class EventCardSerializer(serializers.ModelSerializer):
     '''provide data formatted for event cards'''
-    startTime = serializers.SerializerMethodField()
     startDate = serializers.SerializerMethodField()
-    endTime = serializers.SerializerMethodField()
     endDate = serializers.SerializerMethodField()
     category = InterestCategorySerializer()
 
