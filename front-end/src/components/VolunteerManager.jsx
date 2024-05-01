@@ -34,6 +34,7 @@ function VolunteerManager({
   const [openModal, setOpenModal] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [newRole, setNewRole] = useState("");
+  const [numVolunteersNeeded, setnumVolunteersNeeded] = useState(null)
 
   const handleOpenModal = (applicant) => {
     setSelectedApplicant(applicant);
@@ -45,10 +46,11 @@ function VolunteerManager({
   };
 
   const handleAddRole = () => {
-    if (newRole) {
+    if (newRole && numVolunteersNeeded) {
       postVolunteerRole(newRole);
       setRoles([...roles, newRole]);
       setNewRole("");
+      setnumVolunteersNeeded(null);
     }
   };
 
@@ -68,7 +70,7 @@ function VolunteerManager({
     }
   };
 
-  //TODO: need to pass in roleID ---> delete a volunteer role
+  //need to pass in roleID ---> delete a volunteer role
   const deleteVolRole = async (roleID) => {
     const responseStatus = await deleteVolunteerRole(eventID, roleID);
     console.log('delete role - response status', responseStatus)
@@ -127,6 +129,14 @@ function VolunteerManager({
             fullWidth
             value={newRole}
             onChange={(e) => setNewRole(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleAddRole()}
+          />
+          <TextField
+            label="Number of volunteers needed"
+            variant="outlined"
+            fullWidth
+            value={numVolunteersNeeded}
+            onChange={(e) => setnumVolunteersNeeded(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleAddRole()}
           />
 
