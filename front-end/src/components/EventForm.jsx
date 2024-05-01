@@ -42,7 +42,7 @@ function EventForm({
 	apiStates,
 	apiCities,
 	stateAdd,
-	locationData,
+	location,
 	setCountryAdd,
     setStateAdd,
     setCityAdd,
@@ -60,20 +60,14 @@ function EventForm({
 
 	// Handles conditional rendering for the remove location button
 	const renderRemoveLocation = () => {
-		if (locationData.length == 0) {
+		if (location == "" || location == null) {
 			// If no location
 			return <p style={{fontStyle:'italic'}}>No locations set</p> 
 		} else {
-			if (locationData.city != null) {
+			if (location != null) {
 				// If location is city based
-				return <Button size="sm" variant="danger" onClick={(e) => handleRemoveLocation()} >{`Remove ${locationData.city}`}</Button>
-			} else if (locationData.state != null) {
-				// If location is state based
-				return <Button size="sm" variant="danger" onClick={(e) => handleRemoveLocation()} >{`Remove ${locationData.state}`}</Button>
-			} else if (locationData.country != null) {
-				// If location is country based
-				return <Button size="sm" variant="danger" onClick={(e) => handleRemoveLocation()} >{`Remove ${locationData.country}`}</Button>
-			}
+				return <Button size="sm" variant="danger" onClick={(e) => handleRemoveLocation()} >{location}</Button>
+			} 
 		}
 	}
 
@@ -374,7 +368,7 @@ function EventForm({
 						<Form.Control
 							type="file"
 							accept="image/*"
-							onChange={handleImageChange}
+							onChange={handleImageChange}zf
 						/>
 						{photoPreview && (
 							<img

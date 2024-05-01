@@ -11,7 +11,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST,
 )
-from .serializers import UserProfile, UserInterestSerializer, UserProfileSerializer, DisplayNameSerializer, LocationFieldSerializer, ImgFieldSerializer, ProfilePicSerializer
+from .serializers import UserProfile, UserProfileSerializer, DisplayNameSerializer
 from interest_app.serializers import InterestCategory
 from user_app.serializers import AppUser
 from rest_framework.views import APIView
@@ -79,23 +79,6 @@ class DisplayName(TokenReq):
 
 
 
-class ProfilePic(TokenReq):
 
-    @swagger_auto_schema(
-        operation_summary="Upload profile picture",
-        operation_description="Upload a profile picture for the currently authenticated user.",
-        request_body=ProfilePicSerializer,
-        responses={200: "Profile picture uploaded successfully."},
-    )
-    def post(self, request):
-        try:
-            with Image.open(request.data["file"]) as im:
-                im.thumbnail((200,200))
-                im.save(f'media/users/profile-pic-{request.user.id}.png')
-                request.user.profile_pic = f'users/profile-pic-{request.user.id}.png'
-                request.user.full_clean()
-                request.user.save()
-                return Response(status=HTTP_200_OK)
-        except Exception as e:
-            print(e)
-            return Response(e, status=HTTP_400_BAD_REQUEST)
+
+

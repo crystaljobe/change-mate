@@ -68,23 +68,12 @@ export default function EditUserProfile({ user }) {
     setInterestCategories(categories);
   };
 
-  // Gets current user locations which are a json string and converts it back to an array of objects for manipulation
-  const getUserLocationData = () => {
-    if (userLocation && userLocation.length > 0) {
-      const locationsData = JSON.parse(userLocation)
-      setUserLocationData(locationsData)
-    }
-  }
-
-  useEffect(() => {
-    getUserLocationData();
-  }, [userLocation]);
 
   // get user profile data for default values using utility funct
   const userProfile = async () => {
     const userProfileData = await getUserProfile(user);
     // set data
-    setUserLocation(userProfileData.location);
+    setUserLocation([userProfileData.location]);
     setDisplayName(userProfileData.display_name);
     // map through interests to set the current interests
     setUserInterests(userProfileData.interests.map((cat) => cat.category));
@@ -109,35 +98,20 @@ export default function EditUserProfile({ user }) {
 
   // Handles adding a location to the user's profile
   const handleAddLocation = () => {
-    // Create a location object from form values
-    const locationAdd = {
-      'country': countryAdd,
-      'state': stateAdd[1],
-      'city': cityAdd
-    }
-
-    // New array with the objects from userLocationData and locationAdd
-    const newLocations = [...userLocationData, locationAdd]
-
-    // Converts newLocations to json string for backend transmission
-    const jsonStringLocations = JSON.stringify(newLocations)
-    
-    // Sets the userLocation to the new json string of locations
-    setUserLocation(jsonStringLocations) 
+    // Create a location string from form values
+    const location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
+            
+    // Sets the userLocation to the new string of locations
+    setUserLocation([...userLocation, location])  
   }
 
   // Handles removing a location from the user's profile
-  const handleRemoveLocation = (key) => {
+  const handleRemoveLocation = (l) => {
     // Filter through userLocationData to remove the specified location
-    const filteredLocations = userLocationData.filter((_, index) => index !== key)
-
-    // Converts filteredLocations to json string for backend transmission
-    const jsonStringLocations = JSON.stringify(filteredLocations)
-
+    const filteredLocations = userLocation.filter((location) => location !== l)
     // Sets the userLocation to the new json string of locations
-    setUserLocation(jsonStringLocations) 
+    setUserLocation(filteredLocations) 
   };
-
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -166,6 +140,7 @@ export default function EditUserProfile({ user }) {
     userInterestCategories();
     userProfile();
   }, []);
+
 
   return (
     <Container>
@@ -239,13 +214,14 @@ export default function EditUserProfile({ user }) {
                   ))}
                 </datalist>
               </Form.Label>
-              {userLocationData.length == 0 ?
-                <p style={{fontStyle:'italic'}}>No locations set</p> :
-                  userLocationData.map((l, k)=> 
-                    <div>
-                      <Button id={k} size="sm" variant="danger" onClick={(e) => handleRemoveLocation(k)} >{`Remove ${l.city},  ${l.state}`}</Button>
-                    </div>
-              )}
+              {userLocation.length === 0 ?
+                  <p style={{fontStyle:'italic'}}>No locations set</p> :
+                  userLocation.map((l, k) => (
+                      <div key={k}>
+                          <Button id={k} size="sm" variant="danger" onClick={(e) => handleRemoveLocation(l)}>{l}</Button>
+                      </div>
+                  ))
+              }
               <br />
               <Button variant="info" onClick={() => handleAddLocation()}> 
               Add Location
