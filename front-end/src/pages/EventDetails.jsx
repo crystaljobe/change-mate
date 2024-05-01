@@ -41,18 +41,17 @@ export default function EventDetails() {
   const getEvent = async () => {
     const eventDetails = await getEventDetails(eventID);
     setEventDetails(eventDetails);
-    console.log("EVENT DETAILS page--event details:", eventDetails);
-    console.log("EVENT DETAILS page--event details:", eventDetails);
-
+    
     setUsersAttending(eventDetails.users_attending);
     //---this is being handled on DetailedEventCard, leaving commented out in case we need it on this page later
-      // map through collaborators to get their display names
-      // let collabArr = eventDetails.collaborators;
-      // let collaborators = collabArr.map((collab) => collab.display_name);
-      // setCollaborators(collaborators);
-      // console.log(eventDetails.data);
+    // map through collaborators to get their display names
+    // let collabArr = eventDetails.collaborators;
+    // let collaborators = collabArr.map((collab) => collab.display_name);
+    // setCollaborators(collaborators);
+    // console.log(eventDetails.data);
   };
-
+  
+  console.log("EVENT DETAILS page--event details:", eventDetails);
   //consolidated useEffects on page
   useEffect(() => {
     getEvent();
