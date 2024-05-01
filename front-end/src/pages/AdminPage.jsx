@@ -1,7 +1,13 @@
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { getEventDetails, volunteerRoles, createVolunteerRole, deleteVolunteerRole } from "../utilities/EventUtilities";
+import {
+  getAdminEventDetails,
+  volunteerRoles,
+  createVolunteerRole,
+  deleteVolunteerRole,
+} from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
+import VolunteerManager from "../components/VolunteerManager";
 import TodoList from "../components/ToDoList";
 import {
   getProfileIcon,
@@ -42,6 +48,8 @@ function AdminPage() {
   const [eventDetails, setEventDetails] = useState({});
   const [hostSearchInput, setHostSearchInput] = useState("");
   const [roles, setRoles] = useState([]);
+  const [approvedVolunteers, setApprovedVolunteers] = useState([]);
+  const [volunteerApplications, setVolunteerApplications] = useState([]);
 
   const [newHost, setNewHost] = useState({});
   const [hosts, setHosts] = useState([]); //array of userProfile instances that are 'collaborators' {display_name, profile_picture, user_id}
@@ -49,12 +57,16 @@ function AdminPage() {
   let { eventID } = useParams();
   const showAddToDo = true;
 
-  //get event details from url
+  //get event details - set Hosts, Approved Vols., Vol. applications
   const getEvent = async () => {
-    const eventDetails = await getEventDetails(eventID);
+    const eventDetails = await getAdminEventDetails(eventID);
     setEventDetails(eventDetails);
-    let collabArr = eventDetails.collaborators;
-    setHosts(collabArr);
+    const hostArr = eventDetails.hosts;
+    const approvedVols = eventDetails.volunteers;
+    const volApplications = eventDetails.applicants;
+    setApprovedVolunteers(approvedVols);
+    setVolunteerApplications(volApplications);
+    setHosts(hostArr);
   };
 
   useEffect(() => {
@@ -69,20 +81,6 @@ function AdminPage() {
     setRoles(rolesArr);
   };
 
-  //TODO: need roleName & numVolunteersNeeded useStates from vol component -- creating a volunteer role
-  const postVolunteerRole = async (e) => {
-    e.preventDefault();
-    try {
-      await createVolunteerRole(eventID, roleName, numVolunteersNeeded);
-    } catch (error) {
-      console.error("Failed to create a new volunteer role", error);
-    }
-  };
-
-  //TODO: need to pass in roleID ---> delete a volunteer role
-  const deleteVolRole = async (roleID) => {
-    const responseStatus = await deleteVolunteerRole(roleID);
-  };
 
   //TODO: need to search for users by email
   const searchNewHost = async () => {
@@ -107,7 +105,8 @@ function AdminPage() {
           </Button>
         </Col>
         <Col md={4} className="discussion-forum-col">
-          <Row>{/* view applications  component*/}</Row>
+          <Row><VolunteerManager />
+          </Row>
 
           <Row>
             <Card sx={{ width: "50%" }}>

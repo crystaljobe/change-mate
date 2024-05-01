@@ -207,3 +207,10 @@ export const deleteVolunteerRole = async (eventID, roleID) => {
     return true;
   } else {return false}
 };
+
+//admin page - event details GET request
+export const getAdminEventDetails = async (eventID) => {
+  const response = await api.get(`events/admin/${eventID}/`);
+  let eventDetails = response.data;
+  return eventDetails;
+};
