@@ -27,7 +27,7 @@ class EventAdminSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'volunteers', 'volunteer_roles', 'hosts', 'event_photo' ]
+        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'applicants', 'volunteer_roles', 'hosts', 'event_photo' ]
 
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
