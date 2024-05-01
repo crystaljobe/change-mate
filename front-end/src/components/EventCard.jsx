@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import { getEventIcon } from "../utilities/DefaultIconsUtilities";
+import { getNounIcon } from "../utilities/DefaultIconsUtilities";
 
 function EventCard({ id, title, image, description }) {
     const [icon, setIcon] = useState("");
 
     useEffect(() => {
         const fetchIcon = async () => {
-            const icon = await getEventIcon();
+            const icon = await getNounIcon(5130800);
             setIcon(icon);
         };
 
