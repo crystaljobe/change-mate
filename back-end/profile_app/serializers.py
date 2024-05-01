@@ -18,26 +18,14 @@ class DisplayNameSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['display_name']
 
-class LocationFieldSerializer(serializers.ModelSerializer):
+class BasicUserDataSerializer(serializers.ModelSerializer):
+    email = serializers.SerializerMethodField()
 
     class Meta: 
         model = UserProfile
-        fields = ['location']
-
-class ImgFieldSerializer(serializers.ModelSerializer):
-
-    class Meta: 
-        model = UserProfile
-        fields = ['image']
-
-class UserInterestSerializer(serializers.ModelSerializer):
-    interests = InterestCategorySerializer(many=True) 
-    
-    class Meta: 
-        model = UserProfile
-        fields = ['interests']
+        fields = ['id', 'display_name', 'email']
 
 
-class ProfilePicSerializer(serializers.Serializer):
-    file = serializers.FileField()
+    def get_email(self, obj):
+        return obj.user.email
    

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getEventIcon } from "../utilities/DefaultIconsUtilities";
+import { getNounIcon } from "../utilities/DefaultIconsUtilities";
 import {
   Container,
   Col,
@@ -68,7 +68,7 @@ function DetailedEventCard({eventDetails}) {
 
     // Fetches default event icon
     const fetchEventIcon = async () => {
-        const icon = await getEventIcon();
+        const icon = await getNounIcon(5130800);
         setEventIcon(icon);
     };
 

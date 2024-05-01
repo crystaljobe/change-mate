@@ -29,6 +29,7 @@ class UserProfile(models.Model):
         )
     # events_attending - relation from events: users_attending
     # user_events - relation from events: collaborators
+    # volunteer_events - relation from volunteer_application: applicant
 
 
 
