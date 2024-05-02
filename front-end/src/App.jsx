@@ -2,7 +2,6 @@ import './App.css'
 import { useEffect, useState } from 'react'
 import { Outlet, useNavigate, useLocation, useLoaderData } from 'react-router-dom'
 import MyNavbar from './components/Navbar'
-import { api } from './utilities'
 import { getUserProfile } from './utilities/UserProfileUtilities'
 
 function App() {

@@ -9,9 +9,9 @@ import UserProfileInfoCard from "../components/UserProfileInfoCard";
 
 
 // Define the UserProfile component which accepts a user prop
-export default function UserProfile({ user}) {
+export default function UserProfile() {
   // Use the OutletContext to get userProfileData and its setter function
-  const { userProfileData, setUserProfileData } = useOutletContext();
+  const { userProfileData } = useOutletContext();
 
   // State variables to hold various user and events related data
   const [profileIcon, setProfileIcon] = useState("");
@@ -72,9 +72,9 @@ export default function UserProfile({ user}) {
 
 
 
-  // console.log('USER PROFILE -- userEvents:', userEvents)
 
   // Main component layout using Bootstrap's grid system
+  if (userProfileData) {
   return (
     <Container fluid>
       {userProfileData.id && <Row className="justify-content-md-center">
@@ -245,4 +245,5 @@ export default function UserProfile({ user}) {
       </Row>}
     </Container>
   );
+}
 }

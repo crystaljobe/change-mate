@@ -1,9 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from './App';
-import Homepage from './pages/HomePage'
-import SignUp from './pages/SignUp'
-import LogIn from './pages/LogIn'
-import ErrorPage from './pages/ErrorPage'
+import Homepage from './pages/Homepage/HomePage';
+import SignUp from './pages/SignUp';
+import LogIn from './pages/LogIn';
+import ErrorPage from './pages/ErrorPage';
 import CreateEvent from './pages/CreateEvent';
 import EditEventDetails from './pages/EditEventDetails';
 import EditUserProfile from './pages/EditUserProfile';

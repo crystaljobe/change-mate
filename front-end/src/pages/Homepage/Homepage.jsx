@@ -1,7 +1,8 @@
 import { Container, Row, Col, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
-import LlamaImg from "../assets/llama-homepage.png";
+import LlamaImg from "/src/assets/llama-homepage.png";
+import './Homepage.css';
 
 export default function Homepage() {
 	return (
