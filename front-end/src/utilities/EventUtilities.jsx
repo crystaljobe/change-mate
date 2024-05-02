@@ -1,21 +1,26 @@
 import { api } from "../utilities";
 
 export const getEventDetails = async (eventID) => {
-    const response = await api.get(`events/${eventID}`);
-    let eventDetails = response.data;
-    return eventDetails;
+  const response = await api.get(`events/${eventID}`);
+  let eventDetails = response.data;
+  return eventDetails;
 };
 
 // Get events by search parameters
 export const getEventDetailsSearch = async (allData) => {
-    // Construct API call with only the parameters that are not empty, null, or undefined
-    const requestData = Object.entries(allData)
-        .filter(([key, value]) => value !== "" && value !== null && value !== undefined)
-        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-        .join('&');
+  // Construct API call with only the parameters that are not empty, null, or undefined
+  const requestData = Object.entries(allData)
+    .filter(
+      ([key, value]) => value !== "" && value !== null && value !== undefined
+    )
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+    )
+    .join("&");
 
-    const response = await api.get(`events/?${requestData}`);
-    return response.data;
+  const response = await api.get(`events/?${requestData}`);
+  return response.data;
 };
 
 
@@ -44,14 +49,14 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
 };
 
 export const setUserAttending = async (eventID, usersAttending) => {
-    let response = await api.put(`events/${eventID}/`, {
-        "users_attending" : usersAttending
-    });
-    if (response.status === 200) {
-        return true;
-    } else {
-        console.log("error:", response.data);
-    }
+  let response = await api.put(`events/${eventID}/`, {
+    users_attending: usersAttending,
+  });
+  if (response.status === 200) {
+    return true;
+  } else {
+    console.log("error:", response.data);
+  }
 };
 
 // wrapped in a try catch and additional console.logs for better error handling
@@ -86,16 +91,14 @@ export const updateEventDetails = async (eventID, title, eventStart, eventEnd, t
     }
 };
 
-
 export const deleteEvent = async (eventID, event) => {
-    const response = await api.delete(`events/${eventID}/`, {
-        event
-    });
-    if (response.status === 204) {
-        return true;
-    }
-}
-
+  const response = await api.delete(`events/${eventID}/`, {
+    event,
+  });
+  if (response.status === 204) {
+    return true;
+  }
+};
 
 export const getiCalEventDetails = async (eventID) => {
   const response = await api.get(`events/${eventID}/iCal/`);
@@ -105,42 +108,48 @@ export const getiCalEventDetails = async (eventID) => {
 
 // the goal is make this into an API call to call the backend view get_timezone
 export const timeZoneAbbreviations = [
-    "America/Adak",
-    "America/Anchorage",
-    "America/Chicago",
-    "America/Denver",
-    "America/Halifax",
-    "America/Los_Angeles",
-    "America/New_York",
-    "America/Noronha",
-    "America/St_Johns",
-    "Asia/Bangkok",
-    "Asia/Dhaka",
-    "Asia/Dubai",
-    "Asia/Istanbul",
-    "Asia/Kabul",
-    "Asia/Karachi",
-    "Asia/Kathmandu",
-    "Asia/Kolkata",
-    "Asia/Tehran",
-    "Atlantic/Azores",
-    "Europe/Kiev",
-    "Europe/Lisbon",
-    "Europe/London",
-    "Europe/Moscow",
-    "Europe/Paris",
-    "GMT",
-    "Pacific/Honolulu",
-    "Pacific/Niue",
-  ];
+  "America/Adak",
+  "America/Anchorage",
+  "America/Chicago",
+  "America/Denver",
+  "America/Halifax",
+  "America/Los_Angeles",
+  "America/New_York",
+  "America/Noronha",
+  "America/St_Johns",
+  "Asia/Bangkok",
+  "Asia/Dhaka",
+  "Asia/Dubai",
+  "Asia/Istanbul",
+  "Asia/Kabul",
+  "Asia/Karachi",
+  "Asia/Kathmandu",
+  "Asia/Kolkata",
+  "Asia/Tehran",
+  "Atlantic/Azores",
+  "Europe/Kiev",
+  "Europe/Lisbon",
+  "Europe/London",
+  "Europe/Moscow",
+  "Europe/Paris",
+  "GMT",
+  "Pacific/Honolulu",
+  "Pacific/Niue",
+];
 
-
-
-  //view volunteer roles for specific event
+//need to delete & will need to update volunteer application api call view volunteer roles for specific event
 export const volunteerRoles = async (eventID) => {
   const response = await api.get(`events/${eventID}/volunteers/`);
   let rolesArr = response.data;
   return rolesArr;
 };
-  
-  
+
+
+//admin page - event details GET request
+export const getAdminEventDetails = async (eventID) => {
+  const response = await api.get(`events/admin/${eventID}/`);
+  let eventDetails = response.data;
+  return eventDetails;
+};
+
+
