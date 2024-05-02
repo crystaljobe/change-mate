@@ -1,5 +1,7 @@
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import { updateHosts } from "../utilities/EventUtilities";
+
 
 //styling imports
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -17,12 +19,20 @@ import {
 function HostsManager() {
   const [hostSearchInput, setHostSearchInput] = useState("");
   const [newHost, setNewHost] = useState({});
+
   //TODO: need to search for users by email
   // const searchNewHost = async () => {
   //   // const newHostData = await getProfileInfo({ 'user': "rs@cp.com" });
   //   newHostData ? setNewHost(newHostData) : setNewHost(null);
   //   console.log("admin page -- newHostData:", newHostData);
   // };
+
+  const updateHost = async () => {
+    const response = updateHosts(eventID, user_id, addremove)
+    return response
+  }
+
+  
   return (
     <>
       <Card sx={{ width: "75%", margin: "2vw"}}>

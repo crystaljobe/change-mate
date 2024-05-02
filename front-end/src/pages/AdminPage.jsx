@@ -65,7 +65,7 @@ function AdminPage() {
   
  
   // console.log(`admin page -- hosts`, hosts)
-  console.log(`admin- eventDetails`, eventDetails)
+  console.log('admin- eventDetails', eventDetails)
   console.log('adminpage - approved volunteers', approvedVolunteers)
   // console.log(`admin- roles`, roles);
 
