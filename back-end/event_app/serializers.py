@@ -52,7 +52,21 @@ class EventAdminSerializer(serializers.ModelSerializer):
    # give list of volunteer applicants
     def get_applicants(self, obj):
         if obj.volunteer_roles:
-            return [{"id": role.id, "role": role.role, "applicants": [{"application_id": application.id, "user_id": application.applicant.id, "display_name": application.applicant.display_name, "profile_picture": application.applicant.image} for application in role.applications.all()]} for role in obj.volunteer_roles.all()]
+            pending_applications = [role.applications.exclude(application_status = True) for role in obj.volunteer_roles.all()]
+            applicants = []
+            for application_queryset in pending_applications: 
+                for application in application_queryset:  
+                    status = "Denied" if application.application_status is False else "Pending"
+                    volunteer = {
+                        "application_id": application.applicant.id,
+                        "role": application.volunteer_role.role,
+                        "user_id": application.applicant.id,
+                        "display_name": application.applicant.display_name,
+                        "application_status": status,
+                        "profile_picture": application.applicant.image                        
+                    }
+                    applicants.append(volunteer)
+            return applicants  # Return the list of volunteers
         else:
             return None
 
@@ -64,7 +78,7 @@ class EventAdminSerializer(serializers.ModelSerializer):
             for application_queryset in approved_applications:  # Iterate over each queryset
                 for application in application_queryset:  # Iterate over each application object in the queryset
                     volunteer = {
-                        "id": application.applicant.id,
+                        "application_id": application.applicant.id,
                         "role": application.volunteer_role.role,
                         "user_id": application.applicant.id,
                         "display_name": application.applicant.display_name,
