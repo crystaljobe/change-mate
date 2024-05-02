@@ -2,7 +2,9 @@ import { useState } from "react";
 import {
   createVolunteerRole,
   deleteVolunteerRole,
-} from "../utilities/EventUtilities";
+  getVolunteerApplication,
+  putApplicationDecision,
+} from "../utilities/VolunteerUtilities";
 //styling imports
 import {
   Accordion,
@@ -29,16 +31,19 @@ function VolunteerManager({
   approvedVolunteers,
   volunteerApplications,
   eventID,
+  getEvent
 }) {
  
   const [openModal, setOpenModal] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [newRole, setNewRole] = useState("");
-  const [numVolunteersNeeded, setnumVolunteersNeeded] = useState(null)
+  const [numVolunteersNeeded, setnumVolunteersNeeded] = useState("")
+  const [selectedVolunteerApplication, setSelectedVolunteerApplication] = useState({})
 
   const handleOpenModal = (applicant) => {
     setSelectedApplicant(applicant);
     setOpenModal(true);
+    getVolApplication(applicant.application_id)
   };
 
   const handleCloseModal = () => {
@@ -48,9 +53,8 @@ function VolunteerManager({
   const handleAddRole = () => {
     if (newRole && numVolunteersNeeded) {
       postVolunteerRole(newRole);
-      setRoles([...roles, newRole]);
       setNewRole("");
-      setnumVolunteersNeeded(null);
+      setnumVolunteersNeeded("");
     }
   };
 
@@ -64,10 +68,12 @@ function VolunteerManager({
   const postVolunteerRole = async (newRole) => {
     try {
       let roleName = newRole;
-      await createVolunteerRole(eventID, roleName, numVolunteersNeeded);
+      await createVolunteerRole(eventID, roleName, Number(numVolunteersNeeded));
+      getEvent();
     } catch (error) {
       console.error("Failed to create a new volunteer role", error);
     }
+
   };
 
   //need to pass in roleID ---> delete a volunteer role
@@ -75,6 +81,31 @@ function VolunteerManager({
     const responseStatus = await deleteVolunteerRole(eventID, roleID);
     console.log('delete role - response status', responseStatus)
   };
+
+  //view/get a volunteer application
+  const getVolApplication = async (applicationID) => {
+    const applicationDetails = await getVolunteerApplication(applicationID);
+    setSelectedVolunteerApplication(applicationDetails)
+  };
+
+  //accept/reject volunteer application
+  const volunteerDecision = async (applicationID, applicationDecision) => {
+    try {
+      await putApplicationDecision(applicationID, applicationDecision);
+    } catch (error) {
+      console.error("Failed to give application decision", error);
+    }
+  };
+  const handleAccept = () => {
+    const shoulBeTrue = volunteerDecision(selectedApplicant.application_id, true)
+    if (shoulBeTrue){console.log('accepted application successfully')}
+    handleCloseModal();
+  }
+   const handleReject = () => {
+     volunteerDecision(selectedApplicant.application_id, false);
+    if (shoulBeTrue){console.log('rejected application successfully')}
+     handleCloseModal();
+   };
 
   return (
     <div>
@@ -90,11 +121,11 @@ function VolunteerManager({
               //   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               //     <AccordionDetails>
               <List key={index}>
-                {volRoleInstance.role}
+                {/* {volRoleInstance.role} */}
                 {volRoleInstance.applicants &&
-                  volRoleInstance.applicants.map((applicant) => (
+                  volRoleInstance.applicants.map((applicant, index) => (
                     <ListItem
-                      key={applicant.id}
+                      key={index}
                       button
                       onClick={() => handleOpenModal(applicant)}
                     >
@@ -105,7 +136,7 @@ function VolunteerManager({
                       </ListItemAvatar>
                       <ListItemText
                         primary={applicant.user_id}
-                        secondary={volRoleInstance.role}
+                        secondary={`Applying for: ${volRoleInstance.role}`}
                       />
                     </ListItem>
                   ))}
@@ -198,16 +229,53 @@ function VolunteerManager({
             p: 4,
           }}
         >
-          <Typography
-            id="volunteer-application-modal"
-            variant="h6"
-            component="h2"
-          >
-            {selectedApplicant ? selectedApplicant.name : ""}
+          <Typography id="modal-modal-title" variant="h6">
+            Application
           </Typography>
           <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
-            {selectedApplicant ? selectedApplicant.applicationDetail : ""}
+            {selectedApplicant
+              ? `Email: ${selectedVolunteerApplication.email}`
+              : ""}
           </Typography>
+          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+            {selectedApplicant
+              ? `Phone Number: ${selectedVolunteerApplication.phone_number}`
+              : ""}
+          </Typography>
+
+          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+            {selectedApplicant
+              ? `Preferred Contact Method: ${selectedVolunteerApplication.preferred_contact_method}`
+              : ""}
+          </Typography>
+
+          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+            {selectedApplicant
+              ? `Availability: ${selectedVolunteerApplication.availability}`
+              : ""}
+          </Typography>
+          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+            {selectedApplicant
+              ? `Previously Volunteered: ${selectedVolunteerApplication.return_volunteer}`
+              : ""}
+          </Typography>
+          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+            {selectedApplicant
+              ? `Interested because: ${selectedVolunteerApplication.volunteer_interest}`
+              : ""}
+          </Typography>
+          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+            {selectedApplicant
+              ? `Relevant experience: ${selectedVolunteerApplication.volunteer_experience}`
+              : ""}
+          </Typography>
+
+          <Button onClick={handleAccept} sx={{ mt: 2 }}>
+            Accept
+          </Button>
+          <Button onClick={handleReject} sx={{ mt: 2 }}>
+            Reject
+          </Button>
           <Button onClick={handleCloseModal} sx={{ mt: 2 }}>
             Close
           </Button>

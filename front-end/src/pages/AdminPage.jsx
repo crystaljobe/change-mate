@@ -25,13 +25,6 @@ import {
 // - create todo lists tasks
 // - assign volunteers to tasks
 
-//> (/events/{event_id}/volunteers/)
-//GET - see all vol roles for event
-//POST - create a new vol role for event
-// > (/events/{event_id}/volunteers/{role_id})
-//GET - view vol role by id
-//PUT - edit volrole {'role', 'assigned_volunteers' <userProf IDs>, 'num_volunteers_needed'}
-//DELETE - delete
 
 function AdminPage() {
   const [eventDetails, setEventDetails] = useState({});
@@ -68,13 +61,10 @@ function AdminPage() {
 
   
  
-  // console.log(`admin page-- hosts: ${hosts}  ApprovedVols: ${approvedVolunteers}   volAPPs ${volunteerApplications}`)
-  console.log(`admin page -- hosts`, hosts)
+  // console.log(`admin page -- hosts`, hosts)
   console.log(`admin- eventDetails`, eventDetails)
-  console.log(`admin- roles`, roles);
-
-
-
+  console.log('adminpage - approved volunteers', approvedVolunteers)
+  // console.log(`admin- roles`, roles);
 
   return (
     <Container fluid className="event-collab-container">
@@ -100,6 +90,7 @@ function AdminPage() {
               eventID={eventID}
               roles={roles}
               setRoles={setRoles}
+              getEvent={getEvent}
             />
           </Row>
         </Col>

@@ -137,45 +137,13 @@ export const timeZoneAbbreviations = [
   "Pacific/Niue",
 ];
 
-//view volunteer roles for specific event
+//need to delete & will need to update volunteer application api call view volunteer roles for specific event
 export const volunteerRoles = async (eventID) => {
   const response = await api.get(`events/${eventID}/volunteers/`);
   let rolesArr = response.data;
   return rolesArr;
 };
 
-//creating new volunteer roles for specific event
-export const createVolunteerRole = async (
-  eventID,
-  roleName,
-  numVolunteersNeeded
-) => {
-  try {
-    let response = await api.post(`events/${eventID}/volunteers/`, {
-      role: roleName,
-      num_volunteers_needed: numVolunteersNeeded,
-    });
-    console.log(response.status);
-    if (response.status === 201) {
-      return true;
-    } else {
-      console.log("Error Status:", response.status);
-      console.log("Error Data:", response.data);
-      return false;
-    }
-  } catch (error) {
-    console.error("Error when creating new volunteer role", error);
-    return false;
-  }
-};
-
-//delete a volunteer role for specific event
-export const deleteVolunteerRole = async (eventID, roleID) => {
-  const response = await api.delete(`events/${eventID}/volunteers/${roleID}/`);
-  if (response.status === 204) {
-    return true;
-  } else {return false}
-};
 
 //admin page - event details GET request
 export const getAdminEventDetails = async (eventID) => {
@@ -183,3 +151,5 @@ export const getAdminEventDetails = async (eventID) => {
   let eventDetails = response.data;
   return eventDetails;
 };
+
+
