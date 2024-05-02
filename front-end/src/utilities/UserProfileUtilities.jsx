@@ -27,3 +27,15 @@ export const getUserDisplayName = async(user) => {
     let userDisplayName = response.data;
     return userDisplayName;
 }
+
+//search for a user by email
+export const getUserByEmail = async(email) => {
+  const response = await api.get(`userprofile/search/${email}/`);
+  if (response.status === 200) {
+    let profileData = response.data;
+    return profileData;
+  } else {
+    console.log("error:", response.data);
+    return null
+  }
+};

@@ -109,43 +109,40 @@ function VolunteerManager({
    };
 
   return (
-    <div>
-      <Accordion>
+    <div style={{ marginTop: "2vw" }}>
+      <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>Pending Volunteer Applications</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {/* volunteer applications/applicants  */}
+          {/* pending volunteer applications/applicants  */}
           <List>
             {volunteerApplications.map((volRoleInstance, index) => (
-              // <Accordion>
-              //   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              //     <AccordionDetails>
-              <List key={index}>
-                {/* {volRoleInstance.role} */}
+              // <List key={index}>
+              <>
                 {volRoleInstance.applications &&
-                  volRoleInstance.applications.map((applicant, index) => (
-                    applicant.application_status && 
-                    <ListItem
-                      key={index}
-                      button
-                      onClick={() => handleOpenModal(applicant)}
-                    >
-                      <ListItemAvatar key={applicant.user_id}>
-                        <Avatar key={applicant.user_id}>
-                          {applicant.profile_picture}
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={applicant.display_name}
-                        secondary={`Applying for: ${volRoleInstance.role}`}
-                      />
-                    </ListItem> 
-                  ))}
-              </List>
-              //     </AccordionDetails>
-              //   </AccordionSummary>
-              // </Accordion>
+                  volRoleInstance.applications.map(
+                    (applicant, index) =>
+                      applicant.application_status && (
+                        <ListItem
+                          key={index}
+                          button
+                          onClick={() => handleOpenModal(applicant)}
+                        >
+                          <ListItemAvatar key={applicant.user_id}>
+                            <Avatar key={applicant.user_id}>
+                              {applicant.profile_picture}
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={applicant.display_name}
+                            secondary={`Applying for: ${volRoleInstance.role}`}
+                          />
+                        </ListItem>
+                      )
+                  )}
+              </>
+              // </List>
             ))}
           </List>
         </AccordionDetails>
@@ -195,18 +192,21 @@ function VolunteerManager({
                 {/* APPROVED VOLUNTEERS  an arr of obj {id<applicant id>, role, user_id, display_name, profile_picture}*/}
                 <AccordionDetails>
                   <List>
-                    {approvedVolunteers.map((volunteer) => (
-                      <ListItem
-                        key={volunteer.user_id}
-                        button
-                        onClick={() => handleOpenModal(volunteer)}
-                      >
-                        <ListItemAvatar>
-                          <Avatar>{volunteer.profile_picture}</Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary={volunteer.display_name} />
-                      </ListItem>
-                    ))}
+                    {approvedVolunteers.map(
+                      (volunteer) =>
+                        volunteer.role === role && (
+                          <ListItem
+                            key={volunteer.user_id}
+                            button
+                            onClick={() => handleOpenModal(volunteer)}
+                          >
+                            <ListItemAvatar>
+                              <Avatar>{volunteer.profile_picture}</Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary={volunteer.display_name} />
+                          </ListItem>
+                        )
+                    )}
                   </List>
                 </AccordionDetails>
               </Accordion>

@@ -66,15 +66,17 @@ function AdminPage() {
 
   
  
-  // console.log(`admin page -- hosts`, hosts)
-  console.log('adminpage - approved volunteers', approvedVolunteers)
+  console.log(`admin page -- hosts`, hosts)
+  // console.log('adminpage - approved volunteers', approvedVolunteers)
   // console.log(`admin- roles`, roles);
 
   return (
     <Container fluid className="event-collab-container">
       <Row className="gx-5">
         <Col md={4} className="event-details-col">
-          {eventDetails.hosts && <DetailedEventCard eventDetails={eventDetails} /> }
+          {eventDetails.hosts && (
+            <DetailedEventCard eventDetails={eventDetails} />
+          )}
           <Button
             size="large"
             style={{ margin: "5%" }}
@@ -101,7 +103,7 @@ function AdminPage() {
         <Col md={4} className="todo-participant-col">
           <TodoList showAddToDo={showAddToDo} />
           <Row>
-            <HostsManager />
+            <HostsManager eventID={eventID} hosts={hosts} getEvent={getEvent} />
           </Row>
         </Col>
       </Row>
