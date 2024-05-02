@@ -91,6 +91,7 @@ function VolunteerManager({
   //accept/reject volunteer application
   const volunteerDecision = async (applicationID, applicationDecision, decisionText) => {
     try {
+      console.log("volunteer decision put request", applicationID, applicationDecision)
       await putApplicationDecision(applicationID, applicationDecision, decisionText);
     } catch (error) {
       console.error("Failed to give application decision", error);

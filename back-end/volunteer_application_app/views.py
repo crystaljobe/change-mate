@@ -76,7 +76,7 @@ class AApplication(TokenReq):
         application = get_object_or_404(VolunteerApplication, pk=application_id)
 
         serializer = ApplicationDecisionSerializer(application, data=data, partial=True)
-
+        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=HTTP_200_OK)
