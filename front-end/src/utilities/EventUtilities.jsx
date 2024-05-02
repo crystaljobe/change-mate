@@ -152,4 +152,16 @@ export const getAdminEventDetails = async (eventID) => {
   return eventDetails;
 };
 
+export const getEventPosts = async (eventID, postType) => {
+  // console.log(eventID)
+  const response = await api.get(`events/${eventID}/posts/${postType}/`);
+  let eventPosts = response.data;
+  return eventPosts;
+}
 
+export const postEventPosts = async (eventID, postType, newPostData) => {
+  console.log(newPostData)
+  // const response = await api.post(`events/${eventID}/posts/${postType}/`, newPostData);
+  // let eventPosts = response.data;
+  // return eventPosts;
+}
