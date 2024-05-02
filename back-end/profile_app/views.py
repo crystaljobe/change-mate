@@ -96,9 +96,9 @@ class UserProfileSearch(APIView):
         data = request.data.copy()
         email = data.get('email')
         # search for profiles with email
-        profiles = UserProfile.objects.filter(user__email=email)
+        profile = get_object_or_404(UserProfile, user__email=email)
         # serialize profiles
-        ser_profiles = UserProfileSearchSerializer(profiles, many=True)
+        ser_profiles = UserProfileSearchSerializer(profile, many=True)
         # return serialized profiles
         return Response(ser_profiles.data, status=HTTP_200_OK)
 
