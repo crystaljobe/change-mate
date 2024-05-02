@@ -196,7 +196,7 @@ class AnEvent(APIView):
             required=False 
         )
     ]
-)
+    )
     def put(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
         # Pull user id from logged in user

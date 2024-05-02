@@ -16,6 +16,7 @@ from interest_app.serializers import InterestCategory
 from user_app.serializers import AppUser
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # User Profile views
 class CurrentUserProfile(TokenReq):
@@ -34,7 +35,6 @@ class CurrentUserProfile(TokenReq):
         return Response(ser_profile.data, status=HTTP_200_OK)
 
 class EditUserProfile(APIView):
-    
     @swagger_auto_schema(
         operation_summary="Edit user profile",
         operation_description="Update the profile data of the currently authenticated user.",
@@ -78,11 +78,20 @@ class DisplayName(TokenReq):
         return Response(display_name.data, status=HTTP_200_OK)
     
 class UserProfileSearch(APIView):
+    '''Search user profiles by email address'''
+
     @swagger_auto_schema(
         operation_summary="Search user profiles",
-        operation_description="Search for user profiles by email.",
+        operation_description="Search for user profiles by providing an email in the request body.",
+        manual_parameters=[
+            openapi.Parameter(
+                'email', openapi.IN_QUERY,
+                description="Email of the user to search for.",
+                type=openapi.TYPE_STRING
+            )
+        ],
         responses={200: UserProfileSerializer(many=True)},
-    )
+    )  
     def get(self, request):
         data = request.data.copy()
         email = data.get('email')
