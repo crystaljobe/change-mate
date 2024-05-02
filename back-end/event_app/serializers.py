@@ -52,17 +52,17 @@ class EventAdminSerializer(serializers.ModelSerializer):
    # give list of volunteer applicants
     def get_applicants(self, obj):
         if obj.volunteer_roles:
-            pending_applications = [role.applications.exclude(application_status = True) for role in obj.volunteer_roles.all()]
+            pending_applications = [role.applications.exclude(application_status = "Approved") for role in obj.volunteer_roles.all()]
             applicants = []
             for application_queryset in pending_applications: 
                 for application in application_queryset:  
-                    status = "Denied" if application.application_status is False else "Pending"
+                    
                     volunteer = {
                         "application_id": application.applicant.id,
                         "role": application.volunteer_role.role,
                         "user_id": application.applicant.id,
                         "display_name": application.applicant.display_name,
-                        "application_status": status,
+                        "application_status": application.application_status,
                         "profile_picture": application.applicant.image                        
                     }
                     applicants.append(volunteer)
@@ -73,7 +73,7 @@ class EventAdminSerializer(serializers.ModelSerializer):
     # get list of volunteers that have been assigned  
     def get_volunteers(self, obj):
         if obj.volunteer_roles:
-            approved_applications = [role.applications.filter(application_status=True) for role in obj.volunteer_roles.all()]
+            approved_applications = [role.applications.filter(application_status="approved") for role in obj.volunteer_roles.all()]
             volunteers = []
             for application_queryset in approved_applications:  # Iterate over each queryset
                 for application in application_queryset:  # Iterate over each application object in the queryset
