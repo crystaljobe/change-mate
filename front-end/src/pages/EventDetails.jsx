@@ -130,7 +130,7 @@ export default function EventDetails() {
                 hosts={hosts}
                 event_photo={event_photo}
                 lat={lat}
-                lon={lon}
+                 lon={lon}
                 >
                 </DetailedEventCard>
 
