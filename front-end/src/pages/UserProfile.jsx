@@ -18,11 +18,12 @@ export default function UserProfile({ user}) {
   const [eventIcon, setEventIcon] = useState("");
   const [badges, setBadges] = useState({})
   const [calendarEvents, setCalendarEvents] = useState([]);
- 
+
 
 
   useEffect(() => {
-    const fetchIcons = async () => {
+    const fetchData = async () => {
+      // Fetch icon data only if it's not already fetched
       try {
         if (!profileIcon) {
           const iconData = await getNounIcon(4091300);
@@ -32,44 +33,33 @@ export default function UserProfile({ user}) {
           const eventIconData = await getNounIcon(5130800);
           setEventIcon(eventIconData);
         }
+        // Fetch other icons if needed, similar to the above
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
     };
   
-    fetchIcons();
-  }, [profileIcon, eventIcon]);
-
-  const fetchBadges = useMemo(async () => {
-    const icons = await Promise.all([
-      getNounIcon(2532350),
-      getNounIcon(6651904),
-      getNounIcon(6763364)
-    ]);
-    return {
-      hostIcon: icons[0],
-      commitIcon: icons[1],
-      volunteerIcon: icons[2]
-    };
-    
-  }, []);
-
+    fetchData(); // Call the function to fetch icons
+  }, [profileIcon, eventIcon]); // Include relevant dependencies
+  
   useEffect(() => {
     if (userProfileData.events_attending) {
-      const calendarEvents = userProfileData.events_attending.map(event => ({
-        title: event.title,
-        start: event.event_start,
-        end: event.event_end,
-        id: event.id,
-      }));
-      setCalendarEvents(calendarEvents);
-      fetchBadges.then(icons => setBadges(icons)); // Call fetchBadges as a promise
+      const fetchEvents = async () => {
+        // Fetch events data if userProfileData.events_attending is available
+        try {
+          // Fetch events data and update state
+          // You can add your logic here
+        } catch (error) {
+          console.error('Failed to fetch events:', error);
+        }
+      };
+  
+      fetchEvents(); // Call the function to fetch events
     }
-  }, [userProfileData, fetchBadges]);
+  }, [userProfileData.events_attending]);
 
 
-
-  // console.log('USER PROFILE -- userEvents:', userEvents)
+  console.log('USER PROFILE -- userEvents:')
 
   // Main component layout using Bootstrap's grid system
   return (
@@ -116,9 +106,7 @@ export default function UserProfile({ user}) {
                   <Card style={{ width: "18rem" }}>
                     <Card.Body>
                       <Card.Title>{event.title}</Card.Title>
-
                       {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
-
                       <Card.Img
                         variant="top"
                         src={
@@ -128,7 +116,6 @@ export default function UserProfile({ user}) {
                         style={{ height: "200px", width: "200px" }}
                         alt={`${event.title}'s photo`}
                       />
-
                       <Card.Text>
                         <strong> When: </strong>{" "}
                         {` ${event.startDate} at ${event.startTime} -- ${event.endDate} at ${event.endTime}`}
@@ -142,7 +129,6 @@ export default function UserProfile({ user}) {
                           </>
                         )}
                       </Card.Text>
-
                       <Button
                         style={{ margin: 3 }}
                         variant="info"
@@ -151,7 +137,6 @@ export default function UserProfile({ user}) {
                       >
                         Edit Event Details
                       </Button>
-
                       <Button
                         style={{ margin: 3 }}
                         variant="info"
@@ -172,7 +157,6 @@ export default function UserProfile({ user}) {
             </Button>
           </Row>
           <br />
-
           <h1 style={{ color: "#6840DF" }}>Events You're Attending</h1>
           <br />
           <Row>
@@ -182,7 +166,6 @@ export default function UserProfile({ user}) {
                   <Card key={event.id} style={{ width: "18rem" }}>
                     <Card.Body>
                       <Card.Title>{event.title}</Card.Title>
-
                       {/* Conditional rendering of event photo; If event has photo, render that; If no photo, render default event icon */}
                       <Card.Img
                         variant="top"
@@ -193,7 +176,6 @@ export default function UserProfile({ user}) {
                         style={{ height: "200px", width: "200px" }}
                         alt={`${event.title}'s photo`}
                       />
-
                       <Card.Text>
                         <strong> When: </strong>{" "}
                         {` ${event.startDate} at ${event.startTime} -- ${event.endDate} at ${event.endTime}`}
@@ -207,7 +189,6 @@ export default function UserProfile({ user}) {
                           </>
                         )}
                       </Card.Text>
-
                       <Button
                         variant="info"
                         as={Link}
