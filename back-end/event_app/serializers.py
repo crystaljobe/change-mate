@@ -27,7 +27,7 @@ class EventAdminSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'volunteers', 'applicants', 'hosts', 'event_photo' ]
+        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'applicants', 'volunteers', 'hosts', 'event_photo' ]
 
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
@@ -219,15 +219,13 @@ class EventDetailsSerializer(serializers.ModelSerializer):
 
 class EventCardSerializer(serializers.ModelSerializer):
     '''provide data formatted for event cards'''
-    startTime = serializers.SerializerMethodField()
     startDate = serializers.SerializerMethodField()
-    endTime = serializers.SerializerMethodField()
     endDate = serializers.SerializerMethodField()
     category = InterestCategorySerializer()
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'event_photo', 'category', 'location']
+        fields = ['id', 'title', 'event_start', 'event_end', 'startDate', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'event_photo', 'category', 'location']
 
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
@@ -236,14 +234,7 @@ class EventCardSerializer(serializers.ModelSerializer):
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_endDate(self, obj):
         return obj.event_end.strftime('%m/%d/%Y')
-    
-    # convert time to 12 hr format
-    def get_startTime(self, obj):
-        return obj.event_start.strftime('%I:%M %p')
-    
-    # convert time to 12 hr format
-    def get_endTime(self, obj):
-        return obj.event_end.strftime('%I:%M %p')
+
     
 
 

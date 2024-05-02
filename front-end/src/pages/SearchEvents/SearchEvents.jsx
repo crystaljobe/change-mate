@@ -138,8 +138,10 @@ function SearchEvents() {
 
     const handleAddLocation = (e) => {
         // Create a location object from form values
-        const location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
-        
+        let location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
+        if (stateAdd[1] === undefined) {
+         location = `${countryAdd}`
+        }
         // Sets the userLocation to the new json string of locations
         setSearchLocation(location) 
         handleSubmit(e)
@@ -184,7 +186,7 @@ function SearchEvents() {
         sortPopularEvents(searchEvents)
         sortVolunteerEvents(searchEvents)
     }, [searchEvents]);
-
+    console.log(searchEvents)
     return (
         <div className="search-events">
             {/* Search Bar */}

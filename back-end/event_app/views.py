@@ -70,8 +70,10 @@ class EventsView(TokenReq):
             queryset = queryset.filter(event_start__date=start_date)
          
         # case-insensitive partial match for filtering for location
-        if location:          
-            queryset = queryset.filter(location__icontains=location) 
+        if location:
+            print(location)
+            queryset = queryset.filter(location__icontains=location)
+
            
         # case-insensitive partical match for filtering for keywords in title, description, and category    
         if general:
@@ -83,7 +85,7 @@ class EventsView(TokenReq):
         
         
         # serialize data and return data and status 200
-        ser_queryset = EventDetailsSerializer(queryset, many=True)
+        ser_queryset = EventCardSerializer(queryset, many=True)
         return Response(ser_queryset.data, status=HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -170,15 +172,29 @@ class AnEvent(APIView):
 
 
     @swagger_auto_schema(
-        operation_summary="Update event details",
-        operation_description="Update details of a specific event by its ID.",
-        responses={200: EventSerializer(), 400: "Error: Bad Request"},
-    )
+    operation_summary="Update event details",
+    operation_description="Update details of a specific event by its ID.",
+    request_body=EventSerializer,
+    responses={200: EventSerializer(), 400: "Error: Bad Request"},
+    manual_parameters=[
+        openapi.Parameter(
+            name='host_invite',
+            in_=openapi.IN_QUERY, 
+            description='Indicate whether to add or remove a host from the event. If adding, provide the host ID and set to "add". If removing, provide the host ID and set the value to "remove".',
+            type=openapi.TYPE_STRING,
+            enum=['add', 'remove'], 
+            required=False 
+        )
+    ]
+)
     def put(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
         # Pull user id from logged in user
         user_id = request.user.id
         data = request.data.copy()
+        #Pulls user data from data base
+        user_data = get_object_or_404(UserProfile, user=user_id)
+
         # Checks if category is present in body
         if 'category' in data:
             data['category']
@@ -186,10 +202,22 @@ class AnEvent(APIView):
             category = InterestCategory.objects.get(id = category_id)
             event.category = category
             data.pop('category')
-        #Pulls user data from data base
-        user_attending = get_object_or_404(UserProfile, user=user_id)
+
+        # Checks if hosts are present in body adds host to event
+        if 'hosts' in data:
+            if data['host_invite'] == "add":
+                host_id = data['hosts']
+                host = UserProfile.objects.get(id=host_id)
+                event.hosts.add(host)
+                data.pop('hosts')
+            elif data['host_invite'] == "remove":
+                host_id = data['hosts']
+                host = UserProfile.objects.get(id=host_id)
+                event.hosts.remove(host)
+                data.pop('hosts')
+
         #Adds user profile to RSVP list
-        event.users_attending.add(user_attending)
+        # event.users_attending.add(user_attending)
         # validate data and save
         updated_event = EventSerializer(event, data=data, partial=True)
         if updated_event.is_valid():
@@ -222,3 +250,5 @@ class ICalEvent(APIView):
         event = get_object_or_404(Event, id = event_id)
         ser_event = ICalSerializer(event)
         return Response(ser_event.data, status=HTTP_200_OK)
+
+
