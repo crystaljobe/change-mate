@@ -89,20 +89,20 @@ function VolunteerManager({
   };
 
   //accept/reject volunteer application
-  const volunteerDecision = async (applicationID, applicationDecision) => {
+  const volunteerDecision = async (applicationID, applicationDecision, decisionText) => {
     try {
-      await putApplicationDecision(applicationID, applicationDecision);
+      await putApplicationDecision(applicationID, applicationDecision, decisionText);
     } catch (error) {
       console.error("Failed to give application decision", error);
     }
   };
   const handleAccept = () => {
-    const shoulBeTrue = volunteerDecision(selectedApplicant.application_id, "Approved")
+    const shoulBeTrue = volunteerDecision(selectedApplicant.application_id, "Approved", null)
     if (shoulBeTrue){console.log('accepted application successfully')}
     handleCloseModal();
   }
    const handleReject = () => {
-     volunteerDecision(selectedApplicant.application_id, "Denied");
+     volunteerDecision(selectedApplicant.application_id, "Denied", null);
     if (shoulBeTrue){console.log('rejected application successfully')}
      handleCloseModal();
    };
@@ -114,7 +114,7 @@ function VolunteerManager({
           <Typography>Pending Volunteer Applications</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {/* volunteer applications/applicants  */}
+          {/* volunteer applications/applicants   */}
           <List>
             {volunteerApplications.map((volRoleInstance, index) => (
               // <Accordion>
@@ -122,8 +122,9 @@ function VolunteerManager({
               //     <AccordionDetails>
               <List key={index}>
                 {/* {volRoleInstance.role} */}
-                {volRoleInstance.applicants &&
-                  volRoleInstance.applicants.map((applicant, index) => (
+                {volRoleInstance.applications &&
+                  volRoleInstance.applications.map((applicant, index) => (
+                    applicant.application_status && 
                     <ListItem
                       key={index}
                       button
@@ -138,7 +139,7 @@ function VolunteerManager({
                         primary={applicant.display_name}
                         secondary={`Applying for: ${volRoleInstance.role}`}
                       />
-                    </ListItem>
+                    </ListItem> 
                   ))}
               </List>
               //     </AccordionDetails>

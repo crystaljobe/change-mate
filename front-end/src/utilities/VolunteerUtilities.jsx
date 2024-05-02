@@ -6,11 +6,12 @@ import { api } from "../utilities";
 
 
 //admin give decision on volunteer application
-export const putApplicationDecision = async (applicationID, applicationDecision) => {
+export const putApplicationDecision = async (applicationID, applicationDecision, decisionText) => {
   const response = await api.put(
     `volunteer_applications/decision/${applicationID}/`,
     {
       application_status: applicationDecision,
+      "decision_text": decisionText,
     }
   );
   if (response.status === 200) {

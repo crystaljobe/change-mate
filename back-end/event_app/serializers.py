@@ -24,11 +24,19 @@ class EventAdminSerializer(serializers.ModelSerializer):
     category = InterestCategorySerializer()
     applicants = serializers.SerializerMethodField()
     volunteers = serializers.SerializerMethodField()
+    lat = serializers.SerializerMethodField()
+    lon = serializers.SerializerMethodField()
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'applicants', 'volunteers', 'hosts', 'event_photo' ]
+        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'applicants', 'volunteers', 'hosts', 'event_photo', 'lat', 'lon' ]
 
+    def get_lat(self, obj):
+        return obj.coordinates[0] if obj.coordinates else None
+    
+    def get_lon(self, obj):
+        return obj.coordinates[1] if obj.coordinates else None
+    
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
         return obj.event_start.strftime('%m/%d/%Y')
@@ -53,11 +61,12 @@ class EventAdminSerializer(serializers.ModelSerializer):
     def get_applicants(self, obj):
         if obj.volunteer_roles:
             roles = obj.volunteer_roles.all()
-            applicants = {}
+            applicants = []
             for role in roles: 
-                applicants["role_id"] = role.id
-                applicants["role"] = role.role
-                applicants["applications"] = []
+                role_obj = {}
+                role_obj["role_id"] = role.id
+                role_obj["role"] = role.role
+                role_obj["applications"] = []
                 pending_applications = role.applications.exclude(application_status = "Approved")
                 for application in pending_applications:  
                     application_data = {
@@ -68,7 +77,8 @@ class EventAdminSerializer(serializers.ModelSerializer):
                         "application_status": application.application_status,
                         "profile_picture": application.applicant.image                        
                     }
-                    applicants["applications"].append(application_data)
+                    role_obj["applications"].append(application_data)
+                applicants.append(role_obj)
             return applicants  # Return the list of volunteers
         else:
             return None
