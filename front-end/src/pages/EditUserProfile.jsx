@@ -1,87 +1,29 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
-import {
-  getUserProfile,
-  putUserProfile,
-} from "../utilities/UserProfileUtilities";
-import { getCountries, getStates, getCities } from "../utilities/CountryStateCityUtilities";
+import { putUserProfile } from "../utilities/UserProfileUtilities";
 
-export default function EditUserProfile({ user }) {
+export default function EditUserProfile() {
   // set interest cats for selection options
   const [interestCategories, setInterestCategories] = useState([]);
   // set userProfile interests, display name, and location
+  const { userProfileData, setUserProfileData } = useOutletContext();
   const [userInterests, setUserInterests] = useState([]);
   const [userInterestsIDs, setUserInterestsIDs] = useState([]);
   const [displayName, setDisplayName] = useState([]);
-  // Set userLocation to/from backend; data format is a json string object
   const [userLocation, setUserLocation] = useState('');
-  // Set userLocationData reformatted from userLocation as an array of objects for data manipulation
-  const [userLocationData, setUserLocationData] = useState([]);
   const [profileImage, setProfileImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
-  // Next three set api data for auto-populated suggestions
-  const [apiCountries, setApiCountries] = useState([]);
-  const [apiStates, setApiStates] = useState([]);
-  const [apiCities, setApiCities] = useState([]);
-  // Next three set location data from form to be used in formatting and setting the userLocation
-  const [countryAdd, setCountryAdd] = useState("");
-  const [stateAdd, setStateAdd] = useState("");
-  const [cityAdd, setCityAdd] = useState("");
   // create var navigate for navigating
   const navigate = useNavigate();
 
-  // Fetches countries and sets them to apiCountries
-  const fetchCountries = async () => {
-    const countries = await getCountries()
-    setApiCountries(countries)
-  }
-
-  // Fetches states and sets them to apiStates
-  const fetchStates = async () => {
-    const states = await getStates(countryAdd)
-    setApiStates(states)
-  }
-
-  useEffect(() => {
-    if (countryAdd) {
-      fetchStates();
-    }
-  }, [countryAdd]);
-
-  // Fetches CITIES and sets them to apiCities
-  const fetchCities = async () => {
-    const cities = await getCities(stateAdd[0])
-    setApiCities(cities)
-  }
-
-  useEffect(() => {
-    if (stateAdd) {
-      fetchCities();
-    }
-  }, [stateAdd]);
-
   // get interest categories using utility funct to set options available
-  const userInterestCategories = async () => {
+  const fetchInterestCategory = async () => {
     const categories = await getInterestCategories();
     setInterestCategories(categories);
   };
 
-
-  // get user profile data for default values using utility funct
-  const userProfile = async () => {
-    const userProfileData = await getUserProfile(user);
-    // set data
-    setUserLocation([userProfileData.location]);
-    setDisplayName(userProfileData.display_name);
-    // map through interests to set the current interests
-    setUserInterests(userProfileData.interests.map((cat) => cat.category));
-    setImagePreview(userProfileData.profileImage); // Set the image preview to the current profile image
-    setProfileImage(userProfileData.profileImage); // Set the profile image data for possible re-upload
-  };
-
-  // console.log(userInterestsIDs)
   // upon form submit call utility function to set new user data
   const updateUserProfile = async () => {
     const responseStatus = await putUserProfile(
@@ -96,22 +38,6 @@ export default function EditUserProfile({ user }) {
     }
   };
 
-  // Handles adding a location to the user's profile
-  const handleAddLocation = () => {
-    // Create a location string from form values
-    const location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
-            
-    // Sets the userLocation to the new string of locations
-    setUserLocation([...userLocation, location])  
-  }
-
-  // Handles removing a location from the user's profile
-  const handleRemoveLocation = (l) => {
-    // Filter through userLocationData to remove the specified location
-    const filteredLocations = userLocation.filter((location) => location !== l)
-    // Sets the userLocation to the new json string of locations
-    setUserLocation(filteredLocations) 
-  };
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -134,11 +60,9 @@ export default function EditUserProfile({ user }) {
     updateUserProfile();
   }
 
-  // useEffect to call upon page render
+  // useEffect to call upon page render to get interest categories
   useEffect(() => {
-    fetchCountries()
-    userInterestCategories();
-    userProfile();
+    fetchInterestCategory();
   }, []);
 
 
