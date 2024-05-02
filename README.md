@@ -1,5 +1,9 @@
-# ChangeMate Social Impact App
 
+# ChangeMate: Social Impact App
+
+<p align="center">
+  <img src="https://github.com/crystaljobe/change-mate/assets/142848456/21d9921e-e639-4be2-8dbb-d7d6200a4b45" alt="image">
+</p>
 The ChangeMate Social Impact App is a comprehensive platform designed for individuals who want to make a difference in their communities but struggle to find or organize initiatives. It serves as a social media platform that facilitates the discovery, joining, and organization of social impact events and campaigns. Unlike traditional volunteer portals, ChangeMate integrates advanced features such as social media sharing, event collaboration, and a gamified challenge system to motivate participation and engagement.
 
 ## Features
