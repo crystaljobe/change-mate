@@ -15,7 +15,6 @@ function SearchEvents() {
     const myOutletContextObj = useOutletContext();
     const { userProfileData } = myOutletContextObj;
 
-    console.log(userProfileData)
     const [searchType, setSearchType] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [searchDateStart, setSearchDateStart] = useState('');
@@ -105,7 +104,8 @@ function SearchEvents() {
         sortPopularEvents(searchEvents)
         sortVolunteerEvents(searchEvents)
     }, [searchEvents]);
-    console.log(searchEvents)
+
+    
     return (
         <div className="search-events">
             {/* Search Bar */}
