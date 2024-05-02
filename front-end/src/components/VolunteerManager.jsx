@@ -122,8 +122,8 @@ function VolunteerManager({
               //     <AccordionDetails>
               <List key={index}>
                 {/* {volRoleInstance.role} */}
-                {volRoleInstance.applicants &&
-                  volRoleInstance.applicants.map((applicant, index) => (
+                {volRoleInstance.applications &&
+                  volRoleInstance.applications.map((applicant, index) => (
                     applicant.application_status && 
                     <ListItem
                       key={index}
