@@ -11,22 +11,22 @@ function App() {
   // vars for navigate and location
   const navigate = useNavigate();
   const location = useLocation();
+  console.log(userProfileData)
 
   // get userprofile data to retrieve display name for navbar
   const userProfile = async() => {
-    const userProfileData = await getUserProfile(user);
-    setUserProfileData(userProfileData)
+    const profile = await getUserProfile(user);
+    setUserProfileData(profile)
   }
-  
-  // useEffect for test connection function
+
   useEffect(() => {
-    
-  }, [user]);
+    if(user && userProfileData.length === 0) {
+      userProfile();
+    }
+  }, []); 
 
   // use effect to run when user and location.pathname is updated 
   useEffect(() => {
-    userProfile();
-
     let nullUserUrls = ["/login", "/signup"];
 
     // check if current location is allowed
