@@ -48,16 +48,15 @@ export const postEventDetails = async (title, eventStart, eventEnd, timeZone, ev
     }
 };
 
-export const setUserAttending = async (eventID, usersAttending) => {
-  let response = await api.put(`events/${eventID}/`, {
-    users_attending: usersAttending,
-  });
-  if (response.status === 200) {
-    return true;
-  } else {
-    console.log("error:", response.data);
-  }
-};
+export const setUserAttending = async (eventID) => {
+    let response = await api.put(`events/${eventID}/`);
+        if (response.status === 200) {
+            return true;
+        } else {
+            console.log("error:", response.data, "status:", response.status);
+            return false;
+        }
+}
 
 // wrapped in a try catch and additional console.logs for better error handling
 export const updateEventDetails = async (eventID, title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink, location, eventCoordinates, attendeesNeeded) => {
@@ -78,13 +77,10 @@ export const updateEventDetails = async (eventID, title, eventStart, eventEnd, t
             "coordinates": eventCoordinates || null, //to satisfy backend requirements
             "attendees_needed": attendeesNeeded,
         });
+        // console.log(response.status);
         if (response.status === 200) {
             return true;
-        } else {
-            console.log("Error Status:", response.status);
-            console.log("Error Data:", response.data);
-            return false;
-        }
+        };
     } catch (error) {
         console.error("Exception when updating event details:", error);
         return false;

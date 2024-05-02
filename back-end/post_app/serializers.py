@@ -1,6 +1,4 @@
 from rest_framework import serializers
-
-from user_app.serializers import NewUserSerializer
 from .models import Post, Comment
         
         
