@@ -23,28 +23,25 @@ Contributing to societal betterment holds significance regardless of the scale o
 ### Basic MVP (Minimum Viable Product)
 
 The basic MVP includes:
-- User Authentication
-- User Profile CRUD methods
-- Interest Categories CRUD method
-- Event creation, deletion, editing, and searching
-- Integration with Mapbox and CalendarAPI
-- Monthly/Weekly Social Challenges functionality
-- Social Impact Tracker component
-- Charity Search page
-- Social Media Integration
-- Chat feature
-- Local Event API integration
+- **User Authentication**: Allow users to securely log in and access the platform's features.
+- **User Profile CRUD Methods**: Enable users to create, read, update, and delete their profile information.
+- **Interest Categories CRUD Method**: Provide functionality for managing interest categories, allowing users to select and customize their preferences.
+- **Event Creation, Deletion, Editing, and Searching**: Allow users to create, manage, and search for social impact events.
+- **Integration with Mapbox and CalendarAPI**: Integrate Mapbox for location-based features and CalendarAPI for event scheduling and reminders.
+- **Monthly/Weekly Social Challenges Functionality**: Implement challenges on a monthly or weekly basis to encourage user participation in social impact activities.
+- **Social Impact Tracker Component**: Track and display users' contributions to social impact initiatives, such as volunteer hours or funds raised.
+- **Charity Search Page**: Provide a page where users can search for and learn about various charities and their missions.
+- **Collaboration Page**: Create a dedicated space where users can collaborate on events or social cause projects, share ideas, and coordinate tasks.
+
+
 
 ### Additional App Goals/Functionality
 
 Additional functionalities include:
-- Event Collaboration Page for users to collaborate on events or social cause projects
 - Monthly/Weekly Social Challenges functionality
 - Gamification aspect to assign badges based on challenges completed
-- Social Impact Tracker to track volunteer hours, funds raised, etc.
 - Charity Search page with integration for donations
 - Social Media Integration for sharing impact events
-- Chat feature for user interaction
 - Local Event API integration for importing events from various platforms
 - AI Integration for additional features and enhancements
 
