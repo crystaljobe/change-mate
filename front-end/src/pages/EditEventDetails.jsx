@@ -1,103 +1,132 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
-import { deleteEvent, getEventDetails, updateEventDetails } from "../utilities/EventUtilities";
-import LocationSearchMap from "../components/LocationSearchMap";
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Container, Button } from 'react-bootstrap';
+import EventForm from '../components/EventForm';
+import { getEventDetails, updateEventDetails, deleteEvent, timeZoneAbbreviations } from '../utilities/EventUtilities';
+import { getInterestCategories } from '../utilities/InterestCategoriesUtilities';
+import { getCountries, getStates, getCities } from '../utilities/CountryStateCityUtilities';
 
 export default function EditEventDetails() {
-  // use params to grab event id to get details
-  let { eventID } = useParams();
-  // set const for useNavigate
+  // cucial for page to render the specific event 
+  const { eventID } = useParams();
   const navigate = useNavigate();
-  // set interest categories for users to select from
+  // set Interest Category list for user selection
   const [interestCategories, setInterestCategories] = useState([]);
-  // set all event details useState
-  // event object with all event details
-  const [event, setEvent] = useState("");
-  // event title
-  const [title, setTitle] = useState("");
-  // event start date/time
-  const [eventStart, setEventStart] = useState("");
-  // event end date/time
-  const [eventEnd, setEventEnd] = useState("");
-  // time zone options below in code
-  const [timeZone, setTimeZone] = useState("");
+  // title of the event
+  const [title, setTitle] = useState('');
+  // Event Start: 2024-05-01T08:45:00Z, sample data
+  const [eventStart, setEventStart] = useState('');
+  // Event End: 2024-05-04T08:45:00Z, sample data
+  const [eventEnd, setEventEnd] = useState('');
+  // time zone imported from utilities 
+  const [timeZone, setTimeZone] = useState('');
   // event type = In-person or Virtual
-  const [eventType, setEventType] = useState("In-Person");
+  const [eventType, setEventType] = useState('In-person');
   // event virtual link if a virtual event (ex. - user will input their zoom link)
-  const [virtualEventLink, setVirtualEventLink] = useState(null); //changed starting value from '' to null
+  const [virtualEventLink, setVirtualEventLink] = useState('');
   // event in-person venue ex-"Downtown Park Center"
-  const [eventVenue, setEventVenue] = useState("");
-  // event details text
-  const [description, setDescription] = useState("");
-  // event category for search functionality (only one cat per event)
-  const [category, setCategory] = useState("");
-  const [eventPhoto, setEventPhoto] = useState("");
-  const [photoPreview, setPhotoPreview] = useState("");
+  const [eventVenue, setEventVenue] = useState('');
   // eventVenueAddress = full address "123 Example St, City, St Zip"
-  const [eventVenueAddress, setEventVenueAddress] = useState("");
-  // eventLocation format = "city, state"
-  const [location, setLocation] = useState("");
-  // eventCoordinates = "latitude, longitude"
-  const [eventCoordinates, setEventCoordinates] = useState("");
+  const [eventVenueAddress, setEventVenueAddress] = useState('');
+  // event details text
+  const [description, setDescription] = useState('');
+  // event category for search functionality (only one cat per event)
+  const [category, setCategory] = useState('');
+  // the actual photo 
+  const [eventPhoto, setEventPhoto] = useState('');
+  // to display a photo so the user can see what picture they have
+  const [photoPreview, setPhotoPreview] = useState('');
+  // Set userLocation to/from backend; data format is a json string object
+  const [location, setLocation] = useState('');
+  // Next three set api data for auto-populated suggestions
+  const [apiCountries, setApiCountries] = useState([]);
+  const [apiStates, setApiStates] = useState([]);
+  const [apiCities, setApiCities] = useState([]);
+  // Next three set location data from form to be used in formatting and setting the userLocation
+  const [countryAdd, setCountryAdd] = useState("");
+  const [stateAdd, setStateAdd] = useState("");
+  const [cityAdd, setCityAdd] = useState("");
+  // eventCoordinates = "latitude, longitude" for static map functionality
+  const [eventCoordinates, setEventCoordinates] = useState('');
+  // boolean-volunteers needed? yes === true if no  === false 
+  const [volunteersNeeded, setVolunteersNeeded] = useState(false)
+  // boolean-attendees needed? yes === true if no  === false 
+  const [attendeesNeeded, setAttendeesNeeded] = useState(false)
 
-  //timezone abbreviations array:
-  const timeZoneAbbreviations = [
-    "America/Adak",
-    "America/Anchorage",
-    "America/Chicago",
-    "America/Denver",
-    "America/Halifax",
-    "America/Los_Angeles",
-    "America/New_York",
-    "America/Noronha",
-    "America/St_Johns",
-    "Asia/Bangkok",
-    "Asia/Dhaka",
-    "Asia/Dubai",
-    "Asia/Istanbul",
-    "Asia/Kabul",
-    "Asia/Karachi",
-    "Asia/Kathmandu",
-    "Asia/Kolkata",
-    "Asia/Tehran",
-    "Atlantic/Azores",
-    "Europe/Kiev",
-    "Europe/Lisbon",
-    "Europe/London",
-    "Europe/Moscow",
-    "Europe/Paris",
-    "GMT",
-    "Pacific/Honolulu",
-    "Pacific/Niue",
-  ];
 
-  // get interest cats and set them
-  const eventInterestCategories = async () => {
-    const categories = await getInterestCategories();
-    setInterestCategories(categories);
+
+  // Fetches countries and sets them to apiCountries
+  const fetchCountries = async () => {
+    const countries = await getCountries()
+    setApiCountries(countries)
+  }
+
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
+  // Fetches states and sets them to apiStates
+  const fetchStates = async () => {
+    const states = await getStates(countryAdd)
+    setApiStates(states)
+  }
+
+  useEffect(() => {
+    if (countryAdd) {
+      fetchStates();
+    }
+  }, [countryAdd]);
+
+  // Fetches CITIES and sets them to apiCities
+  const fetchCities = async () => {
+    const cities = await getCities(stateAdd[0])
+    setApiCities(cities)
+  }
+
+  useEffect(() => {
+    if (stateAdd) {
+      fetchCities();
+    }
+  }, [stateAdd]);
+
+
+
+  // use effect to grab event details and set all useStates  
+  useEffect(() => {
+    const fetchEventAndCategories = async () => {
+      // get category list to set selection options and set useState
+      const categories = await getInterestCategories();
+      setInterestCategories(categories);
+      // get event details and set all useStates
+      const eventDetails = await getEventDetails(eventID);
+      // console.log('eventDetails', eventDetails)
+      setTitle(eventDetails.title);
+      setEventStart(formatDateForInput(eventDetails.event_start));
+      setEventEnd(formatDateForInput(eventDetails.event_end));
+      setTimeZone(eventDetails.time_zone);
+      setEventType(eventDetails.event_type);
+      setVirtualEventLink(eventDetails.virtual_event_link);
+      setEventVenue(eventDetails.event_venue);
+      setEventVenueAddress(eventDetails.event_venue_address);
+      setDescription(eventDetails.description);
+      setCategory(eventDetails.category.id);
+      setEventPhoto(eventDetails.event_photo);
+      setPhotoPreview(eventDetails.event_photo);
+      setEventCoordinates([eventDetails.lat, eventDetails.lon]);
+      setLocation(eventDetails.location);
+      //once be model updated uncomment below setStates:
+      //setVolunteersNeeded(eventDetails.volunteers_needed)
+      setAttendeesNeeded(eventDetails.attendees_needed)
+    };
+    fetchEventAndCategories();
+  }, [eventID]);
+
+  // Converts to 'YYYY-MM-DDTHH:MM' to fit date field requirements for input
+  const formatDateForInput = (dateTimeStr) => {
+    const date = new Date(dateTimeStr);
+    return date.toISOString().slice(0, 16); 
   };
 
-  // get event details using utility function and set all data
-  const getEvent = async () => {
-    const eventDetails = await getEventDetails(eventID);
-    console.log('EditEvent --getEvent function--eventDetails',eventDetails);
-    setEvent(eventDetails);
-    setTitle(eventDetails.title);
-    setEventStart(eventDetails.event_start.slice(0, -1)); //slice bc it's coming back with a 'Z' at the end
-    setEventEnd(eventDetails.event_end.slice(0, -1));
-    setTimeZone(eventDetails.time_zone);
-    setEventType(eventDetails.event_type);
-    setEventVenue(eventDetails.event_venue);
-    setDescription(eventDetails.description);
-    setCategory(eventDetails.category.id);
-    setPhotoPreview(eventDetails.event_photo);
-    setEventPhoto(eventDetails.eventPhoto);
-    setEventVenueAddress(eventDetails.event_venue_address);
-  };
-
-  // on change handle image upload
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -110,260 +139,113 @@ export default function EditEventDetails() {
     }
   };
 
-  // update event details in BE using utility function
-  const updateEvent = async () => {
-    // adding check to see if virtualEventLink is blank
+  const handleAddLocation = () => {
+    // Create a location string from form values
+    const location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
+            
+    // Sets the userLocation to the new string of locations
+    setLocation(location) 
+  }
 
-    let responseStatus = await updateEventDetails(
+  // Handles removing a location from the user's profile
+  const handleRemoveLocation = () => {
+    // Sets the userLocation to an empty string
+    setLocation('') 
+  };
+
+  // handle form submit to send put request 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const responseStatus = await updateEventDetails(
       eventID,
       title,
       eventStart,
       eventEnd,
       timeZone,
       eventType,
-      eventVenue || "", // Ensure non-null
-      eventVenueAddress || "", // Ensure non-null
-      description || "", // Ensure non-null
+      eventVenue,
+      eventVenueAddress,
+      description,
       category,
-      eventPhoto, // Already adjusted to send as base64 string
-      virtualEventLink, 
-      location,
+      eventPhoto,
+      virtualEventLink,
+      location, 
       eventCoordinates,
+      attendeesNeeded,
     );
+    // if response status === true navigate user back to their profile
     if (responseStatus) {
-      navigate("/profile");
+      navigate('/profile');
     }
   };
 
-  // onclick event handler if user clicks "delete" button
-  const deleteEntireEvent = async () => {
-    const responseStatus = await deleteEvent(eventID, event);
+  // function to handle user deleting an event
+  const handleDelete = async () => {
+    const responseStatus = await deleteEvent(eventID);
     if (responseStatus) {
-      navigate("/profile");
+      navigate('/profile');
     }
   };
 
-  // upon submit prevent default and call on update event funct
-  function handleSubmit(e) {
-    console.log("Edit Event PAGE", {
-      title: title,
-      event_start: eventStart,
-      event_end: eventEnd,
-      time_zone: timeZone,
-      event_type: eventType,
-      event_venue: eventVenue,
-      event_venue_address: eventVenueAddress,
-      description: description,
-      category: category,
-      event_photo: eventPhoto,
-      virtual_event_link: virtualEventLink,
-      location: location,
-      coordinates: eventCoordinates,
-    });
-    e.preventDefault();
-    updateEvent();
-  }
-
-  // upon page render get event details then get interest cats
-  useEffect(() => {
-    getEvent().then(eventInterestCategories());
-  }, []);
-
+  // return event form 
   return (
     <Container>
-      <br />
-      <Row className="space justify-content-md-center">
-        <Col md="auto">
-          <h2>Enter the following event details:</h2>
-        </Col>
-      </Row>
+      <EventForm
+        title={title}
+        eventStart={eventStart}
+        eventEnd={eventEnd}
+        timeZone={timeZone}
+        eventType={eventType}
+        eventVenue={eventVenue}
+        eventVenueAddress={eventVenueAddress}
+        virtualEventLink={virtualEventLink}
+        description={description}
+        category={category}
+        interestCategories={interestCategories}
+        photoPreview={photoPreview}
+        handleImageChange={handleImageChange}
+        onTitleChange={(e) => setTitle(e.target.value)}
+        onEventStartChange={(e) => setEventStart(e.target.value)}
+        onEventEndChange={(e) => setEventEnd(e.target.value)}
+        onTimeZoneChange={(e) => setTimeZone(e.target.value)}
+        onEventTypeChange={(e) => setEventType(e.target.value)}
+        onEventVenueChange={(e) => setEventVenue(e.target.value)}
+        onEventVenueAddressChange={(e) => setEventVenueAddress(e.target.value)}
+        onVirtualLinkChange={(e) => setVirtualEventLink(e.target.value)}
+        onDescriptionChange={(e) => setDescription(e.target.value)}
+        onCategoryChange={(e) => setCategory(e.target.value)}
+        //added setLocation, setEventVenueAddress, and setEventCoords to pass to location search component to set the state
+        setEventCoordinates= {setEventCoordinates}
+        setLocation = {setLocation}
+        setEventVenueAddress={setEventVenueAddress}
 
-      <Row className="space justify-content-md-center">
-        <Col></Col>
-        <Col className="text-center">
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="title">
-              <Form.Label>
-                Event Title:
-                <input
-                  type="text"
-                  size={40}
-                  defaultValue={event && event.title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </Form.Label>
-            </Form.Group>
+        //added passing curr state for volunteersNeeded and attendeesNeeded
+        volunteersNeeded={volunteersNeeded}
+        attendeesNeeded={attendeesNeeded}
+        //added for volunteer and attendees on click change set the opposite
+        onVolunteersNeededChange={(e) => setVolunteersNeeded(!volunteersNeeded)}
+        onAttendeesNeededChange={(e) => setAttendeesNeeded(!attendeesNeeded)}
 
-            <Form.Group className="mb-3" controlId="date">
-              <Form.Label>
-                Event Start time: {"	"}
-                <input
-                  type="datetime-local"
-                  size={40}
-                  value={eventStart}
-                  onChange={(e) => setEventStart(e.target.value)}
-                />
-              </Form.Label>
-            </Form.Group>
+        timeZoneAbbreviations={timeZoneAbbreviations}
+        handleSubmit={handleSubmit}
+        handleDelete={handleDelete}
 
-            <Form.Group className="mb-3" controlId="date">
-              <Form.Label>
-                Event End time: {"	"}
-                <input
-                  type="datetime-local"
-                  size={40}
-                  value={eventEnd}
-                  onChange={(e) => setEventEnd(e.target.value)}
-                />
-              </Form.Label>
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="timeZone">
-              <Form.Label>
-                Enter your event&apos;s timezone: {"	"}
-                <select
-                  size={4}
-                  value={timeZone}
-                  onChange={(e) => setTimeZone(e.target.value)}
-                >
-                  {timeZoneAbbreviations.map((timeZone, idx) => {
-                    return <option key={idx}>{timeZone}</option>;
-                  })}
-                </select>
-              </Form.Label>
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="event_type">
-              <Form.Label>
-                Will the event be in-person or virtual?
-                <br />
-                <select
-                  size={2}
-                  //   changed this: event && event.event_type
-                  value={event && eventType}
-                  onChange={(e) => setEventType(e.target.value)}
-                >
-                  <option value="In-person">In-person</option>
-                  <option value="Virtual">Virtual</option>
-                </select>
-              </Form.Label>
-            </Form.Group>
-
-            {eventType === "Virtual" ? (
-              <Form.Group className="mb-3" controlId="virtual_event_link">
-                <Form.Label>
-                  Virtual Event Link:{" "}
-                  <input
-                    type="url"
-                    size={30}
-                    value={virtualEventLink}
-                    onChange={(e) => setVirtualEventLink(e.target.value)}
-                  />
-                </Form.Label>
-              </Form.Group>
-            ) : (
-              <>
-                <Form.Group className="mb-3" controlId="event_venue">
-                  <Form.Label>
-                    Event Venue:
-                    <input
-                      type="text"
-                      size={40}
-                      defaultValue={event && event.event_venue}
-                      onChange={(e) => setEventVenue(e.target.value)}
-                    />
-                  </Form.Label>
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="event_venue_address">
-                  <Form.Label>
-                    Set Your Event&apos;s Location:
-                    <br />
-                    <LocationSearchMap
-                      setEventCoords={setEventCoordinates}
-                      setEventVenueAddress={setEventVenueAddress}
-                      setLocation={setLocation}
-                    />
-                  </Form.Label>
-                  <br />
-                  <Form.Label>
-                    Is this the correct address?
-                    <input
-                      name="address"
-                      type="text"
-                      size={40}
-                      value={eventVenueAddress}
-                      onChange={(e) => setEventVenueAddress(e.target.value)}
-                    />
-                  </Form.Label>
-                </Form.Group>
-              </>
-            )}
-
-            <Form.Group className="mb-3" controlId="description">
-              <Form.Label>
-                Tell others about your event and why they should join:
-                <textarea
-                  type="text"
-                  rows={8}
-                  cols={40}
-                  defaultValue={event && event.description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </Form.Label>
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="category">
-              <Form.Label>
-                Select only one event category:
-                <select
-                  size={6}
-                  value={event && category}
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  {event &&
-                    interestCategories &&
-                    interestCategories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.category}
-                      </option>
-                    ))}
-                </select>
-              </Form.Label>
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="eventImage">
-              <Form.Label>Event Image:</Form.Label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-              {/*  This sets the location of the image preview on the screen/form*/}
-              {photoPreview && (
-                <img
-                  src={photoPreview}
-                  alt="Event Preview"
-                  style={{ width: "100%", marginTop: "10px" }}
-                />
-              )}
-            </Form.Group>
-
-            <Button
-              variant="danger"
-              type="button"
-              onClick={deleteEntireEvent}
-              style={{ marginRight: "10px" }}
-            >
-              Delete Event
-            </Button>
-            <Button variant="info" type="submit">
-              Submit changes
-            </Button>
-          </Form>
-        </Col>
-        <Col></Col>
-      </Row>
+        // Added passing these values and functions for location features
+        apiCountries={apiCountries}
+        apiStates={apiStates}
+        apiCities={apiCities}
+        stateAdd={stateAdd}
+        location={location}
+        setCountryAdd={setCountryAdd}
+        setStateAdd={setStateAdd}
+        setCityAdd={setCityAdd}
+        handleAddLocation={handleAddLocation}
+        handleRemoveLocation={handleRemoveLocation}
+      />
+    <div className='text-center' style={{marginTop: "8px", marginBottom: "20px"}}>
+    <Button variant="success" size="lg" style={{marginRight: "40px", paddingLeft: "28px", paddingRight: "28px"}} onClick={handleSubmit}>Save Changes</Button>
+    <Button variant="danger" size="lg" style={{marginLeft: "40px", paddingLeft: "31px", paddingRight: "31px"}}onClick={handleDelete}>Delete Event</Button>
+    </div>
     </Container>
   );
 }

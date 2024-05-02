@@ -49,12 +49,18 @@ urlpatterns = [
     path("api/v1/test/", connection_test),
     path("api/v1/users/", include("user_app.urls")),
     path("api/v1/events/", include("event_app.urls")),
+    path("api/v1/volunteer_applications/", include("volunteer_application_app.urls")),
     path("api/v1/userprofile/", include("profile_app.urls")),
     path("api/v1/interests/", include("interest_app.urls")),
+    path("api/v1/countries/", include("countries_app.urls")),
+    path("api/v1/states/", include("states_app.urls")),
+    path("api/v1/cities/", include("cities_app.urls")),
+    path("api/v1/icons/", include("noun_app.urls")),
+    path("api/v1/timezones/", get_timezones, name="timezones"),
     path("swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"),
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
-    path("api/v1/timezones/", get_timezones, name="timezones")
-]
+
+    ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

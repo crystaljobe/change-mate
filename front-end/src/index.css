@@ -3,38 +3,163 @@
 @tailwind utilities; */
 
 :root {
-  --bodyColor:#f9f1e9;
-  padding: 4px;
+  --bodyColor:#FDF6EE;
+  margin: 4px;
 }
 body {
-  background: #f9f1e9;
+  background: #FDF6EE;
 
 }
 
 nav {
-  background: #f9f1e9;  /* fallback for old browsers */
+  background: #FDF6EE; 
   flex-direction: row;
-  gap: 40px;
+  border-bottom: solid;
+}
+
+/*Playfair display font styling CSS classes*/
+.playfair-display {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 400; /* <weight>: Use a value from 400 to 900 */
+  font-style: normal;
+}
+/*Poppins font styling CSS classes*/
+.poppins-extralight {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.poppins-light {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.homepage-header-text {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  margin-top: 1rem;
+}
+
+.homepage-subtext {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: #AB47BC;
+  margin-top: 2px;
 }
 
 .location-search-map-container {
-  height: 250px;
+  height: 300px;
+  width: 500px;
+  margin-left: 18px;
+}
+
+.static-map-container {
+  height: 300px;
   width: 300px;
-  margin-left: 20px;
 }
 
 .map-container {
     height: 500px;
   }
    
-.sidebar {
-  background-color: rgba(133, 154, 175, 0.9);
-  color: "#fff";
-  padding: 6px 12px;
-  font-family: monospace;
-  z-index: 1;
-  position: sticky;
-  top: 6px;
+
+.sidebarStyle {
+  display: inline-block;
+  position: absolute;
+  top: 0;
   left: 0;
-  border-radius: 4px;
+  margin: 12px;
+  background-color: #404040;
+  color: #ffffff;
+  z-index: 1 !important;
+  padding: 6px;
+  font-weight: bold;
 }
+
+
+.button-gradient {
+  /* background: #7F7FD5;  fallback for old browsers */
+  /* background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);  Chrome 10-25, Safari 5.1-6 */
+  /* background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  background-image: linear-gradient(to right, rgb(167, 223, 242) 30%, rgb(178, 149, 237) 70%);
+  color: black; /* Text color */
+  padding: 10px 20px; /* Padding around the text */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 16px; /* Text size */
+  font-weight: bold; /* Bold text */
+}
+
+
+/* DROPDOWN BUTTON - EVENTDETAILS  */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 15vh;
+  margin-top: 1vh;
+}
+
+.dropdown-button {
+  background: linear-gradient(180deg, rgba(13,202,240,0.48503151260504207) 0%, rgba(104,64,223,0.8267682072829132) 93%);
+  background-image: linear-gradient(to right, rgb(167, 223, 242) 30%, rgb(178, 149, 237) 70%);
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 5px;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+.dropdown-content a:hover {
+  background-color: #bce0fc34;
+}
+
+.dropdown-container:hover .dropdown-content {
+  display: block;
+}
+
+/* background: #00B7FF;
+  background: rgb(13,202,240); */
+
+
+

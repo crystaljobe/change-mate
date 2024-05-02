@@ -11,6 +11,7 @@ class Event(models.Model):
     event_end = models.DateTimeField()
     event_start = models.DateTimeField()
     event_type = models.CharField(validators=[validate_event_type])
+    attendees_needed = models.BooleanField(default=False)
     virtual_event_link = models.URLField(
         blank=True,
         unique=True,
@@ -32,10 +33,10 @@ class Event(models.Model):
         on_delete=models.CASCADE,
         related_name="events",
     )
-    collaborators = models.ManyToManyField(UserProfile, related_name="user_events")
+    hosts = models.ManyToManyField(UserProfile, related_name="user_events")
     users_attending = models.ManyToManyField(
         UserProfile, related_name="events_attending"
     )
     location = models.CharField(max_length=100, blank=True, null=True)
-    
-    coordinates = ArrayField(models.FloatField(), null=True, blank=True)
+    coordinates = ArrayField(models.FloatField(null=True, blank =True), null=True, blank=True)
+    # volunteer_roles - related from volunteer roles model

@@ -45,7 +45,14 @@ INSTALLED_APPS = [
     'profile_app',
     'event_app',
     'interest_app',
+    'volunteer_roles_app',
+    'volunteer_application_app',
+    'cities_app',
+    'states_app',
+    'noun_app',
+    'countries_app',
     'drf_yasg',
+    'post_app'
 ] 
 
 MIDDLEWARE = [
@@ -152,3 +159,4 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user_app.AppUser'
+

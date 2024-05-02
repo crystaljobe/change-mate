@@ -1,9 +1,9 @@
 import { useOutletContext, Link } from "react-router-dom";
 import { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button, CardGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, CardGroup, Image } from 'react-bootstrap';
 import FullCalendar from '@fullcalendar/react'; // Import the FullCalendar component
 import dayGridPlugin from '@fullcalendar/daygrid'; // Plugin to display the calendar in a day grid view
-import { getProfileIcon, getEventIcon } from '../utilities/DefaultIconsUtilities';
+import { getNounIcon } from '../utilities/DefaultIconsUtilities';
 import { getUserProfile } from '../utilities/UserProfileUtilities';
 
 
@@ -15,30 +15,68 @@ export default function UserProfile({ user }) {
   // State variables to hold various user and events related data
   const [eventsAttending, setEventsAttending] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
+  const [eventsVolunteering, setEventsVolunteering] = useState([]);
   const [userInterests, setUserInterests] = useState([]);
+  const [userLocationData, setUserLocationData] = useState([]);
   const [userPhoto, setUserPhoto] = useState(""); // Initialize userPhoto with an empty string
   const [profileIcon, setProfileIcon] = useState("");
   const [eventIcon, setEventIcon] = useState("");
+  const [eventsCreatedIcon, setEventsCreatedIcon] = useState("");
+  const [eventsCommitedToIcon, setEventsCommitedToIcon] = useState("");
+  const [eventsVolunteeredIcon, setEventsVolunteeredIcon] = useState("");
+
+  console.log('userProfileData', userProfileData)
 
   // Fetches default event icon
   const fetchEventIcon = async () => {
-    const icon = await getEventIcon()
+    const icon = await getNounIcon(5130800)
     setEventIcon(icon)
+  }
+
+  const fetchEventsCreatedIcon = async () => {
+    const icon = await getNounIcon(2532350)
+    setEventsCreatedIcon(icon)
+  }
+
+  const fetchEventsCommitedToIcon = async () => {
+    const icon = await getNounIcon(6651904)
+    setEventsCommitedToIcon(icon)
+  }
+
+  const fetchEventsVolunteeredIcon = async () => {
+    const icon = await getNounIcon(6763364)
+    setEventsVolunteeredIcon(icon)
   }
 
   useEffect(() => {
     fetchEventIcon()
+    fetchEventsCreatedIcon()
+    fetchEventsCommitedToIcon()
+    fetchEventsVolunteeredIcon()
   }, []);
+
+  // Takes  userProfileData.location which is a json string and turns it back into an array of objects for data manipulation
+  const getUserLocationData = () => {
+    if (userProfileData.location && userProfileData.location.length > 0) {
+      const locations = userProfileData.location
+      const locationsData = locations
+      setUserLocationData([locationsData])
+    }
+  }
+
+  useEffect(() => {
+    getUserLocationData();
+  }, [userProfileData]);
 
   // useEffect to fetch profile and icon data on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Use Promise.all for parallel asynchronous calls to get profile and icon data
-        const [iconData, userProfile] = await Promise.all([getProfileIcon(), getUserProfile(user)]);
-        console.log('Profile data:', userProfile); // Log the entire profile data
-        console.log('User events:', userProfile.user_events); // Log user events
-        console.log('Events attending:', userProfile.events_attending); // Log events attending
+        const [iconData, userProfile] = await Promise.all([getNounIcon(4091300), getUserProfile(user)]);
+        // console.log('Profile data:', userProfile); // Log the entire profile data
+        // console.log('User events:', userProfile.user_events); // Log user events
+        // console.log('Events attending:', userProfile.events_attending); // Log events attending
         setProfileIcon(iconData);
         setUserProfileData(userProfile);
         setUserEvents(userProfile.user_events);
@@ -55,14 +93,15 @@ export default function UserProfile({ user }) {
   }, [user, setUserProfileData]);
 
   // Map events attending to the format required by FullCalendar
-  const calendarEvents = eventsAttending.map(event => ({
+const calendarEvents = userEvents.map(event => {
+  // console.log(`Event Start: ${event.event_start}, Event End: ${event.event_end}`);  // Add this line
+  return {
     title: event.title,
-    start: event.event_start, 
-    end: event.event_end,     
+    start: event.event_start,
+    end: event.event_end,
     id: event.id,
-  }));
-  console.log('Formatted Calendar Events:', calendarEvents);
-
+  };
+});
 
   // Join user interests array into a string for display
   const userIntStr = userInterests.join(', ');
@@ -80,7 +119,10 @@ export default function UserProfile({ user }) {
         <br />
         <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Locations:</Card.Subtitle>
         <Card.Text>
-          {userProfileData.location}
+          {/* Maps through the userLocationData to render in proper format */}
+          {userLocationData.map((l, idx)=> 
+              <span key={idx} style={{ margin: '0px' }}>{l}<br/></span>
+            )}
         </Card.Text>
         <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Interests:</Card.Subtitle>
         <Card.Text>
@@ -93,15 +135,41 @@ export default function UserProfile({ user }) {
     </Card>
   );
 
-  console.log('USER PROFILE -- userEvents:', userEvents)
+  // console.log('USER PROFILE -- userEvents:', userEvents)
 
   // Main component layout using Bootstrap's grid system
   return (
     <Container fluid>
       <Row className="justify-content-md-center">
-        <Col md={3}>{renderProfileInfo()}</Col>
+        <Col md={3}>
+          {renderProfileInfo()}
+          <br/>
+          <Card className="text-center" style={{ width: '18rem' }}>
+            <Card.Header>Badges</Card.Header>
+            <Card.Body>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                <Image src={eventsCreatedIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
+                <Card.Text>
+                  {userEvents.length} Events Created
+                </Card.Text>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                <Image src={eventsCommitedToIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
+                <Card.Text>
+                  {eventsAttending.length} Events Commited To
+                </Card.Text>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                <Image src={eventsVolunteeredIcon} rounded style={{ height: '40px' , marginRight: '5px'}}/>
+                <Card.Text>
+                  {eventsVolunteering.length} Events Volunteered For
+                </Card.Text>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
         <Col md={4}>
-          <h1 style={{ color: "#6840DF" }}>Your Events</h1>
+          <h1 style={{ color: "#6840DF" }}>Events You're Hosting</h1>
           <Row>
             {userEvents.length === 0 ? (
               <h3 style={{ fontStyle: "italic" }}>
@@ -171,7 +239,7 @@ export default function UserProfile({ user }) {
           </Row>
           <br />
 
-          <h1 style={{ color: "#6840DF" }}>Upcoming Events</h1>
+          <h1 style={{ color: "#6840DF" }}>Events You're Attending</h1>
           <br />
           <Row>
             {eventsAttending.length > 0 ? (

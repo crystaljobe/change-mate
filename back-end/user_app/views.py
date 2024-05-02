@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.core.exceptions import ValidationError
 from django.contrib.auth import login, logout, authenticate
 from rest_framework.views import APIView
+from django.shortcuts import get_list_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
@@ -49,11 +50,13 @@ class SignUp(APIView):
             new_user.full_clean()
             # set user password and save the instance
             new_user.set_password(data.get('password'))
+            new_user.is_staff = False
+            new_user.is_superuser = False
             new_user.save()
 
             # set the user's auth token
             token = Token.objects.create(user = new_user) 
-            
+
             # setup the user's associated profile instance
             profile = UserProfile.objects.create(user = new_user) 
 
@@ -65,8 +68,36 @@ class SignUp(APIView):
         except ValidationError as e:
             print(e)
             return Response(e, status=HTTP_400_BAD_REQUEST)
-    
 
+class Register_admin(APIView): 
+    def post(self, request):
+        # create a copy of data 
+        data = request.data.copy() 
+
+        # set user's email to username key so that username = user's email which ensures unique usernames since all emails are unique
+        data["username"] = request.data.get("email") 
+        # data["username"] = request.data.get("username", data.get("email"))
+
+        # create the user instance
+        new_user = AppUser.objects.create_user(**data)
+        try:
+            # test the data of new instance before saving
+            new_user.full_clean()
+            # set user password and save the instance
+            new_user.set_password(data.get('password'))
+            new_user.is_staff = True
+            new_user.is_superuser = True
+            new_user.save()
+
+            # set the user's auth token
+            token = Token.objects.create(user = new_user) 
+
+            return Response({"user":new_user.email, "token":token.key}, status=HTTP_201_CREATED)
+        # if try doesn't work print error 
+        except ValidationError as e:
+            print(e)
+            return Response(e, status=HTTP_400_BAD_REQUEST)
+        
 class Login(APIView):
     @swagger_auto_schema(
         operation_summary="User login",

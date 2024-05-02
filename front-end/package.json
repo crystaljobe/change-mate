@@ -10,20 +10,27 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@fullcalendar/daygrid": "^6.1.11",
     "@fullcalendar/react": "^6.1.11",
     "@mapbox/mapbox-gl-geocoder": "^5.0.2",
     "@mapbox/search-js-react": "^1.0.0-beta.19",
+    "@mui/icons-material": "^5.15.15",
+    "@mui/material": "^5.15.15",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "add-to-calendar-button": "^2.6.13",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
     "mapbox-gl": "^3.3.0",
     "oauth": "^0.10.0",
+    "package.json": "^0.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.3"
+    "react-router-dom": "^6.22.3",
+    "styled-components": "^6.1.8"
   },
   "devDependencies": {
     "@types/react": "^18.2.56",

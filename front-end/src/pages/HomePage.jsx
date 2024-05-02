@@ -1,46 +1,87 @@
-import HomepageImg from '../assets/Homepage-image.jpg';
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Button from "react-bootstrap/esm/Button";
+import Button from "@mui/material/Button";
+import LlamaImg from "../assets/llama-homepage.png";
 
 export default function Homepage() {
-    const styles = {
-        card: {
-            background:'#DF355F', 
-            margin: '20px',
-        }
-    }
 	return (
-        <>
-        <Container className="container mx-auto">
-            <br/>
-            <Row className="justify-content-md-center" >
-                <Col className="d-flex" >
-                <Card className="text-center" style={styles.card} >
-                    <Card.Body className="text-center" >
-                        <Card.Title as="h1" style={{color: '#40DFB8'}}>Join our vibrant platform to effortlessly organize impactful events, collaborate for social change, and secure donations—</Card.Title>
-                        <Card.Title as="h1" style={{color:'#FDF6EE'}}>all in one place!</Card.Title>
-                        <br></br>
-                        <Card.Text style={{fontStyle:'italic'}} as="h2">Sign up to make impactful connections today!</Card.Text>
-                        <br></br>
-                        <Button variant="light" size="lg" as={Link} to="/signup" style={{marginRight:'10px'}}>
-                            Sign Up
-                        </Button>
-                        <Button variant="light" size="lg" as={Link} to="/login" style={{marginLeft:'10px', padding:'30'}}>
-                           Login
-                        </Button>
-                    </Card.Body>
-                </Card>
-                </Col>
-                
-                <Col className="text-center" style={styles.main}>
-                <Card className="flex-fill" style={styles.card}>
-                    <Card.Img variant="top" src={HomepageImg} alt="telephone pole with post-it note with the words You are Important written" />
-                </Card>
-                </Col>
-            </Row>
-        </Container>
-        </>
+		<Container fluid style={{ marginTop: "8rem" }} >
+			<Row>
+				<Col md={4} lg={4} sm={12} className="text-end" style={{ paddingTop: "2px"}}>
+					<Image
+						src={LlamaImg}
+						rounded
+						style={{ height: "19rem", width: "19rem", marginTop: "8px", filter: "drop-shadow(gray -1rem 2rem 10px)" }}
+					/>
+				</Col>
+
+				<Col lg={6} md={8} sm={12} className="text-center" style={{ paddingTop: "6px"}}>
+					<Row>
+						<h1 className="homepage-header-text">
+							Join our vibrant platform to effortlessly organize impactful
+							events, collaborate for social change, and secure donations{" "} 
+							<span style={{ fontStyle:"italic" }}>all in one place!</span>
+						</h1>
+					</Row>
+					<br />
+					<Row className="text-center">
+						<h4
+							className="homepage-subtext">
+							Sign up to make impactful connections today!
+						</h4>
+					</Row>
+					{/* <br /> */}
+					<Row className="text-center">
+						<Col className="mt-2">
+							<Button 
+                                component={Link} 
+                                to="/signup"
+                                style={{
+									marginRight: "px",
+									paddingLeft: "3rem",
+									paddingRight: "3rem",
+								}}
+                                size="large"
+								variant="outlined"
+								sx={{
+									borderColor: "primary.dark", // Default border color
+                                    color: "black",
+                                    border: "2px solid",
+                                    fontWeight: "bold",
+									"&:hover": {
+                                        backgroundColor: "secondary.dark",
+                                        color: "white",
+									},
+								}}>
+								Sign Up
+							</Button>
+                            <Button
+                                component={Link} 
+                                to="/login"
+                                style={{
+									marginLeft: "20px",
+									paddingLeft: "3.5rem",
+									paddingRight: "3.5rem",
+								}}
+                                size="large"
+								variant="outlined"
+								sx={{
+									borderColor: "primary.dark", // Default border color
+                                    color: "black",
+                                    fontWeight: "bold",
+                                    border: "2px solid",
+									"&:hover": {
+                                        backgroundColor: "secondary.dark",
+                                        color: "white",
+									},
+								}}>
+								Login
+							</Button>
+							
+						</Col>
+					</Row>
+				</Col>
+			</Row>
+		</Container>
 	);
 }
-
