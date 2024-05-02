@@ -29,3 +29,7 @@ class BasicUserDataSerializer(serializers.ModelSerializer):
     def get_email(self, obj):
         return obj.user.email
    
+class UserProfileSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['id', 'display_name', 'image']

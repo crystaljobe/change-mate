@@ -11,7 +11,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST,
 )
-from .serializers import UserProfile, UserProfileSerializer, DisplayNameSerializer
+from .serializers import UserProfile, UserProfileSerializer, DisplayNameSerializer, UserProfileSearchSerializer
 from interest_app.serializers import InterestCategory
 from user_app.serializers import AppUser
 from rest_framework.views import APIView
@@ -76,6 +76,22 @@ class DisplayName(TokenReq):
         profile = get_object_or_404(UserProfile, user=request.user)
         display_name = DisplayNameSerializer(profile)
         return Response(display_name.data, status=HTTP_200_OK)
+    
+class UserProfileSearch(APIView):
+    @swagger_auto_schema(
+        operation_summary="Search user profiles",
+        operation_description="Search for user profiles by email.",
+        responses={200: UserProfileSerializer(many=True)},
+    )
+    def get(self, request):
+        data = request.data.copy()
+        email = data.get('email')
+        # search for profiles with email
+        profiles = UserProfile.objects.filter(user__email=email)
+        # serialize profiles
+        ser_profiles = UserProfileSearchSerializer(profiles, many=True)
+        # return serialized profiles
+        return Response(ser_profiles.data, status=HTTP_200_OK)
 
 
 
