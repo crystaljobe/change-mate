@@ -38,11 +38,9 @@ export default function UserProfile({ user}) {
     };
   
     fetchIcons();
-    console.log("Fetching icons")
   }, [profileIcon, eventIcon]);
 
   const fetchBadges = useMemo(async () => {
-    console.log("Fetching badges")
     const icons = await Promise.all([
       getNounIcon(2532350),
       getNounIcon(6651904),
@@ -67,7 +65,6 @@ export default function UserProfile({ user}) {
       setCalendarEvents(calendarEvents);
       fetchBadges.then(icons => setBadges(icons)); // Call fetchBadges as a promise
     }
-    console.log("Fetching calendar events")
   }, [userProfileData, fetchBadges]);
 
 
