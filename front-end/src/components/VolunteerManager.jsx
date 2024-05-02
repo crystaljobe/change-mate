@@ -135,7 +135,7 @@ function VolunteerManager({
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
-                        primary={applicant.user_id}
+                        primary={applicant.display_name}
                         secondary={`Applying for: ${volRoleInstance.role}`}
                       />
                     </ListItem>
