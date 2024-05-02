@@ -97,12 +97,12 @@ function VolunteerManager({
     }
   };
   const handleAccept = () => {
-    const shoulBeTrue = volunteerDecision(selectedApplicant.application_id, true)
+    const shoulBeTrue = volunteerDecision(selectedApplicant.application_id, "Approved")
     if (shoulBeTrue){console.log('accepted application successfully')}
     handleCloseModal();
   }
    const handleReject = () => {
-     volunteerDecision(selectedApplicant.application_id, false);
+     volunteerDecision(selectedApplicant.application_id, "Denied");
     if (shoulBeTrue){console.log('rejected application successfully')}
      handleCloseModal();
    };
