@@ -114,7 +114,7 @@ function VolunteerManager({
           <Typography>Pending Volunteer Applications</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {/* volunteer applications/applicants  */}
+          {/* volunteer applications/applicants   */}
           <List>
             {volunteerApplications.map((volRoleInstance, index) => (
               // <Accordion>
