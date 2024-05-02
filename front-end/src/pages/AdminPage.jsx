@@ -46,7 +46,7 @@ function AdminPage() {
     setEventDetails(eventDetails);
     const hostArr = eventDetails.hosts;
     const approvedVols = eventDetails.volunteers;
-    const volApplications = eventDetails.applicants; //arr of obj {id <role.id>, role, [applicants] < arr of objs {application_id, user_id, applicant_id, display_name, profile_picture}> }
+    const volApplications = eventDetails.applications; //arr of obj {id <role.id>, role, [applicants] < arr of objs {application_id, user_id, applicant_id, display_name, profile_picture}> }
     let rolesArr = []
     volApplications.map((roleInstance) => {
       rolesArr.push(roleInstance.role)
@@ -73,7 +73,7 @@ function AdminPage() {
     <Container fluid className="event-collab-container">
       <Row className="gx-5">
         <Col md={4} className="event-details-col">
-          <DetailedEventCard eventDetails={eventDetails} />
+          {/* <DetailedEventCard eventDetails={eventDetails} /> */}
           <Button
             size="large"
             style={{ margin: "5%" }}

@@ -52,6 +52,9 @@ class EventAdminSerializer(serializers.ModelSerializer):
    # give list of volunteer applicants
     def get_applicants(self, obj):
         if obj.volunteer_roles:
+           
+            return [{"id": role.id, "role": role.role, "applicants": [{"application_id": application.id, "user_id": application.applicant.id, "application_status": application.application_status, "display_name": application.applicant.display_name, "profile_picture": application.applicant.image} for application in role.applications.all()]} for role in obj.volunteer_roles.all()]
+        
             pending_applications = [role.applications.exclude(application_status = True) for role in obj.volunteer_roles.all()]
             applicants = []
             for application_queryset in pending_applications: 
@@ -66,6 +69,7 @@ class EventAdminSerializer(serializers.ModelSerializer):
                         "profile_picture": application.applicant.image                        
                     }
                     applicants.append(volunteer)
+          
             return applicants  # Return the list of volunteers
         else:
             return None
