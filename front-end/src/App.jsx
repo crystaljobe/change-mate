@@ -11,7 +11,7 @@ function App() {
   // vars for navigate and location
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(userProfileData)
+  // console.log(userProfileData)
 
   useEffect(() => {
   const fetchUserProfile = async () => {
@@ -19,7 +19,7 @@ function App() {
       try {
         const userProfileData = await getUserProfile(user);
         setUserProfileData(userProfileData);
-        console.log('User profile data loaded:', userProfileData);
+        // console.log('User profile data loaded:', userProfileData);
       } catch (error) {
         console.error('Error fetching user profile data:', error);
       }

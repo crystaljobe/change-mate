@@ -8,8 +8,7 @@ mapboxgl.accessToken =
 
 export default function LocationSearchMap({
 	setAddress,
-	setEventCoords,
-	setLocation,
+	setCoords,
 }) {
 	const mapContainer = useRef(null);
 	const map = useRef(null);
@@ -49,14 +48,14 @@ export default function LocationSearchMap({
 					//set marker on user location search
 					marker: true,
 					// Placeholder text for the search bar
-					placeholder: "     Enter venue address here",
+					placeholder: "Search location",
 					//sort search based on user location
 					proximity: {
 						longitude: lng,
 						latitude: lat,
 					},
 					// search parameters:
-					// countries: "us",
+					countries: "us",
 					language: "en",
 					autocomplete: false,
 					// limit search to address, street, and secondary address for full addresses
@@ -71,23 +70,8 @@ export default function LocationSearchMap({
 				geocoder.on("result", (event) => {
 					const data = event.result;
 					// console.log(data)
-					const contextArr = data.context;
-					let city = "";
-					let state = "";
-					contextArr.map((context) => {
-						if (context.id.startsWith("place")) {
-							city = context.text_en;
-						} else if (context.id.startsWith("region")) {
-							state = context.text_en;
-						}
-					});
-
-					// Formats the data used for location into an object
-					const generalLocation = `${city}, ${state}`;
-
 					setAddress(data.place_name);
-					setEventCoords(data.geometry.coordinates);
-					setLocation(generalLocation);
+					setCoords(data.geometry.coordinates);
 
 				});
 			});
@@ -103,7 +87,20 @@ export default function LocationSearchMap({
 		</>
 	);
 }
-// {/* button to show currently saved name and coords */}
-// <Button className="text-center" variant="info" onClick={getCoords}>
-//  Set Event Location
-// </Button>
+
+
+					// const contextArr = data.context;
+					// let city = "";
+					// let state = "";
+					// contextArr.map((context) => {
+					// 	if (context.id.startsWith("place")) {
+					// 		city = context.text_en;
+					// 	} else if (context.id.startsWith("district")) {
+					// 		city = context.text_en;
+					// 	} else if (context.id.startsWith("region")) {
+					// 		state = context.text_en;
+					// 	}
+					// });
+
+					// // Formats the data used for location into an object
+					// const generalLocation = `${city}, ${state}`;
