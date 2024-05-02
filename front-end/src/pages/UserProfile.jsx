@@ -25,7 +25,7 @@ export default function UserProfile({ user }) {
   const [eventsCommitedToIcon, setEventsCommitedToIcon] = useState("");
   const [eventsVolunteeredIcon, setEventsVolunteeredIcon] = useState("");
 
-  console.log('userProfileData', userProfileData)
+  // console.log('userProfileData', userProfileData)
 
   // Fetches default event icon
   const fetchEventIcon = async () => {

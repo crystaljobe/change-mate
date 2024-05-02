@@ -2,7 +2,6 @@ import './App.css'
 import { useEffect, useState } from 'react'
 import { Outlet, useNavigate, useLocation, useLoaderData } from 'react-router-dom'
 import MyNavbar from './components/Navbar'
-import { api } from './utilities'
 import { getUserProfile } from './utilities/UserProfileUtilities'
 
 function App() {
@@ -13,12 +12,6 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // async func to test api connection
-  const testConnection = async() => {
-    const response = await api.get("test/");
-    console.log(response.data);
-  }
-
   // get userprofile data to retrieve display name for navbar
   const userProfile = async() => {
     const userProfileData = await getUserProfile(user);
@@ -27,12 +20,13 @@ function App() {
   
   // useEffect for test connection function
   useEffect(() => {
-    testConnection();
-    userProfile()
-  }, []);
+    
+  }, [user]);
 
   // use effect to run when user and location.pathname is updated 
   useEffect(() => {
+    userProfile();
+
     let nullUserUrls = ["/login", "/signup"];
 
     // check if current location is allowed
@@ -46,7 +40,7 @@ function App() {
       navigate("/");
     }
     
-    console.log('user:', user);
+    // console.log('user:', user);
   }, [user, location.pathname]);
 
   return (
