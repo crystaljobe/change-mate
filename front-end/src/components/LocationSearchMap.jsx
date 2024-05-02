@@ -74,26 +74,19 @@ export default function LocationSearchMap({
 					const contextArr = data.context;
 					let city = "";
 					let state = "";
-					let country = "";
 					contextArr.map((context) => {
 						if (context.id.startsWith("place")) {
 							city = context.text_en;
 						} else if (context.id.startsWith("region")) {
 							state = context.text_en;
-						} else if (context.id.startsWith("country")) {
-							country = context.text_en;
 						}
 					});
 
 					// Formats the data used for location into an object
-					const generalLocation = `${country}, ${state}, ${city}`
-
-					// Converts the generalLocation object to a json string object
-					
+					const generalLocation = `${city}, ${state}`;
 
 					setAddress(data.place_name);
 					setEventCoords(data.geometry.coordinates);
-					// Sets the location to the json string object
 					setLocation(generalLocation);
 
 				});

@@ -21,6 +21,9 @@ from rest_framework import viewsets
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.db.models import Q
+from django.db.models import F
+from django.db.models.functions import Sqrt
+
 
 
 # views for all events
@@ -49,8 +52,9 @@ class EventsView(TokenReq):
         event_type = request.query_params.get('type')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
-        location = request.query_params.get('location')
         general = request.query_params.get('keyword')
+        coordinates = request.query_params.get('coordinates')
+        distance = request.query_params.get('distance')
         
     
         # case-insensitive partial match for filtering for location
@@ -69,10 +73,16 @@ class EventsView(TokenReq):
         if start_date and not end_date:
             queryset = queryset.filter(event_start__date=start_date)
          
-        # case-insensitive partial match for filtering for location
-        if location:
-            print(location)
-            queryset = queryset.filter(location__icontains=location)
+        # search for events near location
+        if coordinates:
+            # split coordinates into lat and lon from array
+            lat, lon = [float(coord) for coord in coordinates.strip("[]").split(",")]
+            queryset = queryset.annotate(
+            distance=Sqrt(
+                (F('coordinates__0') - lat) ** 2.0 +
+                (F('coordinates__1') - lon) ** 2.0
+            )
+        ).filter(distance__lte=distance)  
 
            
         # case-insensitive partical match for filtering for keywords in title, description, and category    
@@ -194,7 +204,7 @@ class AnEvent(APIView):
             required=False 
         )
     ]
-)
+    )
     def put(self, request, event_id):
         event = get_object_or_404(Event, id = event_id)
         # Pull user id from logged in user
@@ -213,7 +223,11 @@ class AnEvent(APIView):
 
         # Checks if hosts are present in body adds host to event
         if 'hosts' in data:
+            host_data = get_object_or_404(UserProfile, id=data['hosts'])
             if data['host_invite'] == "add":
+                #check if host already in event.hosts
+                if host_data in event.hosts.all():
+                    return Response({'errors': 'User is already a host'}, status=HTTP_400_BAD_REQUEST)
                 host_id = data['hosts']
                 host = UserProfile.objects.get(id=host_id)
                 event.hosts.add(host)
