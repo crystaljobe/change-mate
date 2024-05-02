@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'noun_app',
     'countries_app',
     'drf_yasg',
+    'post_app'
 ] 
 
 MIDDLEWARE = [

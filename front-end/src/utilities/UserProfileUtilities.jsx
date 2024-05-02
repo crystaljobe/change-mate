@@ -15,7 +15,6 @@ export const putUserProfile = async (user, userInterests, displayName, userLocat
         location: userLocation,
         image: profileImage
     });
-    console.log(response);
     if (response.status === 200) {
         return true;
     } else {

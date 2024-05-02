@@ -22,12 +22,12 @@ class EventAdminSerializer(serializers.ModelSerializer):
     endDate = serializers.SerializerMethodField()
     hosts = serializers.SerializerMethodField()
     category = InterestCategorySerializer()
-    volunteer_roles = serializers.SerializerMethodField()
+    applicants = serializers.SerializerMethodField()
     volunteers = serializers.SerializerMethodField()
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'volunteers', 'volunteer_roles', 'hosts', 'event_photo' ]
+        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'applicants', 'volunteers', 'hosts', 'event_photo' ]
 
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
@@ -50,9 +50,9 @@ class EventAdminSerializer(serializers.ModelSerializer):
         return [{"user_id": profile.id, "display_name": profile.display_name, "profile_picture": profile.image} for profile in obj.hosts.all()]
     
    # give list of volunteer applicants
-    def get_volunteer_roles(self, obj):
+    def get_applicants(self, obj):
         if obj.volunteer_roles:
-            return [{"id": role.id, "role": role.role, "applicants": [{"user_id": application.applicant.id, "display_name": application.applicant.display_name, "profile_picture": application.applicant.image} for application in role.applications.all()]} for role in obj.volunteer_roles.all()]
+            return [{"id": role.id, "role": role.role, "applicants": [{"application_id": application.id, "user_id": application.applicant.id, "display_name": application.applicant.display_name, "profile_picture": application.applicant.image} for application in role.applications.all()]} for role in obj.volunteer_roles.all()]
         else:
             return None
 
@@ -66,6 +66,7 @@ class EventAdminSerializer(serializers.ModelSerializer):
                     volunteer = {
                         "id": application.applicant.id,
                         "role": application.volunteer_role.role,
+                        "user_id": application.applicant.id,
                         "display_name": application.applicant.display_name,
                         "profile_picture": application.applicant.image
                     }
@@ -218,15 +219,13 @@ class EventDetailsSerializer(serializers.ModelSerializer):
 
 class EventCardSerializer(serializers.ModelSerializer):
     '''provide data formatted for event cards'''
-    startTime = serializers.SerializerMethodField()
     startDate = serializers.SerializerMethodField()
-    endTime = serializers.SerializerMethodField()
     endDate = serializers.SerializerMethodField()
     category = InterestCategorySerializer()
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'event_photo', 'category', 'location']
+        fields = ['id', 'title', 'event_start', 'event_end', 'startDate', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'event_photo', 'category', 'location']
 
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
@@ -235,14 +234,7 @@ class EventCardSerializer(serializers.ModelSerializer):
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_endDate(self, obj):
         return obj.event_end.strftime('%m/%d/%Y')
-    
-    # convert time to 12 hr format
-    def get_startTime(self, obj):
-        return obj.event_start.strftime('%I:%M %p')
-    
-    # convert time to 12 hr format
-    def get_endTime(self, obj):
-        return obj.event_end.strftime('%I:%M %p')
+
     
 
 

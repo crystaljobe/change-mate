@@ -59,8 +59,8 @@ export default function UserProfile({ user }) {
   const getUserLocationData = () => {
     if (userProfileData.location && userProfileData.location.length > 0) {
       const locations = userProfileData.location
-      const locationsData = JSON.parse(locations)
-      setUserLocationData(locationsData)
+      const locationsData = locations
+      setUserLocationData([locationsData])
     }
   }
 
@@ -121,7 +121,7 @@ const calendarEvents = userEvents.map(event => {
         <Card.Text>
           {/* Maps through the userLocationData to render in proper format */}
           {userLocationData.map((l, idx)=> 
-              <span key={idx} style={{ margin: '0px' }}>{`${l.city}, ${l.state}`}<br/></span>
+              <span key={idx} style={{ margin: '0px' }}>{l}<br/></span>
             )}
         </Card.Text>
         <Card.Subtitle as='h4' style={{ fontWeight: 'bold' }}>Interests:</Card.Subtitle>
