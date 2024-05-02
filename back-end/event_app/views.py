@@ -184,6 +184,14 @@ class AnEvent(APIView):
             type=openapi.TYPE_STRING,
             enum=['add', 'remove'], 
             required=False 
+        ),
+        openapi.Parameter(
+            name='rsvp',
+            in_=openapi.IN_QUERY, 
+            description='Indicate the RSVP status for the event. Set to "yes" to add event to events_attending or "no" to remove from event from events_attending.',
+            type=openapi.TYPE_STRING,
+            enum=['yes', 'no'], 
+            required=False 
         )
     ]
 )
@@ -218,6 +226,15 @@ class AnEvent(APIView):
 
         #Adds user profile to RSVP list
         # event.users_attending.add(user_attending)
+        # Checks if RSVP is present in body
+        if 'rsvp' in data:
+            if data['rsvp'] == "yes":
+                event.users_attending.add(user_data)
+                data.pop('rsvp')
+            elif data['rsvp'] == "no":
+                event.users_attending.remove(user_data)
+                data.pop('rsvp')
+        
         # validate data and save
         updated_event = EventSerializer(event, data=data, partial=True)
         if updated_event.is_valid():
