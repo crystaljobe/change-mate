@@ -13,76 +13,23 @@ import EventCard from "../../components/EventCard";
 import { getCountries, getStates, getCities } from "../../utilities/CountryStateCityUtilities";
 
 function SearchEvents() {
-    const [userLocations, setUserLocations] = useState([]);
+    const myOutletContextObj = useOutletContext();
+    const { user, userProfile } = myOutletContextObj;
+    const [userLocations, setUserLocations] = useState(userProfile.coordinates);
     const [searchType, setSearchType] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [searchDateStart, setSearchDateStart] = useState('');
     const [searchDateEnd, setSearchDateEnd] = useState('');
-    const [searchLocation, setSearchLocation] = useState('');
-    const [locationData, setLocationData] = useState([]);
     const [searchEventType, setSearchEventType] = useState('');
     const [searchEvents, setSearchEvents] = useState([]);
     const [eventsPopular, setEventsPopular] = useState([]);
     // TODO: once we have a spot on our events to indicate whether volunteers are needed, we can add functionality to sort searchEvents into searchEventsVolNeed
     const [eventsVolNeed, setEventsVolNeed] = useState([]);
     const [eventsAdditional, setEventsAdditional] = useState([]);
-    // Next three set api data for auto-populated suggestions
-    const [apiCountries, setApiCountries] = useState([]);
-    const [apiStates, setApiStates] = useState([]);
-    const [apiCities, setApiCities] = useState([]);
-    // Next three set location data from form to be used in formatting and setting the userLocation
-    const [countryAdd, setCountryAdd] = useState("");
-    const [stateAdd, setStateAdd] = useState("");
-    const [cityAdd, setCityAdd] = useState("");
-    const myOutletContextObj = useOutletContext();
-    const { user } = myOutletContextObj;
+    const [searchCoordinates, setSearchCoordinates] = useState([]);
+    const [searchDistance, setSearchDistance] = useState(25);
 
-    // Fetches countries and sets them to apiCountries
-  const fetchCountries = async () => {
-    const countries = await getCountries()
-    setApiCountries(countries)
-  }
-
-  useEffect(() => {
-    fetchCountries()
-}, []);
-
-  // Fetches states and sets them to apiStates
-  const fetchStates = async () => {
-    const states = await getStates(countryAdd)
-    setApiStates(states)
-  }
-
-  useEffect(() => {
-    if (countryAdd) {
-      fetchStates();
-    }
-  }, [countryAdd]);
-
-  // Fetches CITIES and sets them to apiCities
-  const fetchCities = async () => {
-    const cities = await getCities(stateAdd[0])
-    setApiCities(cities)
-  }
-
-  useEffect(() => {
-    if (stateAdd) {
-      fetchCities();
-    }
-  }, [stateAdd]);
-
-  // Gets current user locations which are a json string and converts it back to an array of objects for manipulation
-  const getLocationData = () => {
-    if (searchLocation) {
-      setLocationData(searchLocation)
-    }
-  }
-
-  useEffect(() => {
-    if (searchLocation) {
-      getLocationData();
-    }
-  }, [searchLocation]);
+    
 
     // Handles changing the searchType; SearchType is needed so that when the form submits it knows which API call to do
     const handleSearchTypeChange = (selectedType) => {
@@ -98,7 +45,8 @@ function SearchEvents() {
             "type": searchEventType, 
             "start_date": searchDateStart, 
             "end_date": searchDateEnd, 
-            "location": searchLocation,
+            "coordinates": searchCoordinates,
+            "distance": searchDistance,
             searchType: searchTerm
         }
         // Calls the getEventDetailsSearch function from EventUtilities to get the events that match the search parameters
@@ -107,24 +55,11 @@ function SearchEvents() {
                 setSearchEvents(response)
             })
     }
-    // Gets user locations for rendering events based on user location upon page render
-    const getUserLocations= async () => {
-        const userResponse = await getUserProfile(user);
-        const locations = userResponse.location
-        setUserLocations(locations)
-    };
 
-    useEffect(() => {
-        getUserLocations()
-    }, [userLocations]);
 
     const getLocalEvents = async () => {
         const allData = {
-            "type": undefined, 
-            "start_date": undefined, 
-            "end_date": undefined, 
-            "location": userLocations,
-            searchType: undefined
+            "coordinates": userLocations
         }
         getEventDetailsSearch(allData)
             .then((response) => {
@@ -135,17 +70,6 @@ function SearchEvents() {
     useEffect(() => {
         getLocalEvents()
     }, [userLocations]);
-
-    const handleAddLocation = (e) => {
-        // Create a location object from form values
-        let location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
-        if (stateAdd[1] === undefined) {
-         location = `${countryAdd}`
-        }
-        // Sets the userLocation to the new json string of locations
-        setSearchLocation(location) 
-        handleSubmit(e)
-      }
     
 
 
