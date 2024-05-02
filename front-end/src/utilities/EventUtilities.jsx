@@ -157,7 +157,21 @@ export const getEventPosts = async (eventID, postType) => {
 
 export const postEventPosts = async (eventID, postType, newPostData) => {
   console.log(newPostData)
-  // const response = await api.post(`events/${eventID}/posts/${postType}/`, newPostData);
-  // let eventPosts = response.data;
-  // return eventPosts;
+  const response = await api.post(`events/${eventID}/posts/${postType}/`, newPostData);
+  let eventPosts = response.data;
+  return eventPosts;
+}
+
+export const postPostComment = async (eventID, postId, newCommentData) => {
+  console.log(newCommentData)
+  const response = await api.post(`events/${eventID}/posts/${postId}/comments/`, newCommentData);
+  let postComments = response.data;
+  return postComments;
+}
+
+export const getEventTasks = async (eventID) => {
+  // console.log(eventID)
+  const response = await api.get(`events/${eventID}/todo/`);
+  let eventTasks = response.data;
+  return eventTasks;
 }

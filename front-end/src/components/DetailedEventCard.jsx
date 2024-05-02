@@ -25,7 +25,7 @@ function DetailedEventCard({
   virtual_event_link,
   event_venue,
   event_venue_address,
-  categoryName,
+//   categoryName,
   num_users_attending,
   volunteer_spots_remaining,
   hosts,

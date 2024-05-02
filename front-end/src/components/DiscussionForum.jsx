@@ -5,7 +5,7 @@ import SendIcon from '@mui/icons-material/Send';
 import ReplyIcon from '@mui/icons-material/Reply';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PersonIcon from '@mui/icons-material/Person';
-import { getEventPosts, postEventPosts } from '../utilities/EventUtilities';
+import { getEventPosts, postEventPosts, postPostComment } from '../utilities/EventUtilities';
 
 function DiscussionForum({eventDetails, postType}) {
     const { userProfileData } = useOutletContext();
@@ -15,12 +15,7 @@ function DiscussionForum({eventDetails, postType}) {
     const [replyingTo, setReplyingTo] = useState(null);
     const [openPostDialog, setOpenPostDialog] = useState(false);
 
-    // { id: 1, content: "Looking forward to this event!", timestamp: new Date().toISOString(), replies: [], user: "Alice Johnson" },
-    // { id: 2, content: "Does anyone know if there's parking available?", timestamp: new Date().toISOString(), replies: [], user: "Bob Smith" }
-
-    console.log(userProfileData)
-    console.log('posts', posts)
-
+    // Fetches posts and sets them to posts for rendering 
     const fetchPosts = async () => {
         try {
             const postsData = await getEventPosts(eventDetails.id, postType);
@@ -31,12 +26,11 @@ function DiscussionForum({eventDetails, postType}) {
         }
     };
     
-    // Call fetchPosts when the component mounts
     useEffect(() => {
         fetchPosts();
     }, [eventDetails]);
-
-    const handlePost = () => {
+    
+    const handlePost = async () => {
         if (newPost.trim()) {
             const newPostData = {
                 event: eventDetails.id,
@@ -45,23 +39,25 @@ function DiscussionForum({eventDetails, postType}) {
                 replies: [],
                 user: userProfileData.id
             };
-            postEventPosts(eventDetails.id, postType, newPostData)
+            await postEventPosts(eventDetails.id, postType, newPostData)
             setNewPost("");
             setOpenPostDialog(false);
+            fetchPosts() // Refreshes posts for rendering new post without refreshing the page
         }
     };
 
-    const handleReply = (postId) => {
+    const handleReply = async (postId) => {
         if (newReply.trim()) {
-            const updatedPosts = posts.map(post =>
-                post.id === postId ? {
-                    ...post,
-                    replies: [...post.replies, { id: post.replies.length + 1, content: newReply, timestamp: new Date().toISOString(), user: "Current User" }] // Dynamically replace with the actual user's name
-                } : post
-            );
-            setPosts(updatedPosts);
+            const newReplyData = {
+                post: postId,
+                content: newReply,
+                timestamp: new Date().toISOString(),
+                user: userProfileData.id
+            };
+            await postPostComment(eventDetails.id, postId, newReplyData)
             setNewReply("");
             setReplyingTo(null); // Clear the reply state
+            fetchPosts() // Refreshes posts for rendering new comment without refreshing the page
         }
     };
 
@@ -121,7 +117,7 @@ function DiscussionForum({eventDetails, postType}) {
                                     Reply
                                 </Button>
                             )}
-                            {post.replies && post.replies.map(reply => (
+                            {post.comments && post.comments.map(reply => (
                                 <ListItem sx={{ pl: 4 }} key={reply.id}>
                                     <ListItemText
                                         primary={reply.content}
@@ -134,50 +130,6 @@ function DiscussionForum({eventDetails, postType}) {
                     ))
                 )}
             </List>
-                {/* {posts.map((post, index) => (
-                    <React.Fragment key={post.id}>
-                        <ListItem alignItems="flex-start" sx={{ mb: 2 }}>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <PersonIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={post.content}
-                                secondary={`${post.user} - ${new Date(post.timestamp).toLocaleString()}`}
-                            />
-                            <IconButton onClick={() => setReplyingTo(post.id === replyingTo ? null : post.id)} edge="end" aria-label="reply">
-                                <ReplyIcon />
-                            </IconButton>
-                        </ListItem>
-                        {replyingTo === post.id && (
-                            <TextField
-                                label="Write a reply..."
-                                variant="outlined"
-                                fullWidth
-                                multiline
-                                minRows={1}
-                                value={newReply}
-                                onChange={(e) => setNewReply(e.target.value)}
-                                margin="normal"
-                            />
-                        )}
-                        {replyingTo === post.id && (
-                            <Button variant="contained" color="primary" endIcon={<SendIcon />} onClick={() => handleReply(post.id)}>
-                                Reply
-                            </Button>
-                        )}
-                        {post.replies.map(reply => (
-                            <ListItem sx={{ pl: 4 }} key={reply.id}>
-                                <ListItemText
-                                    primary={reply.content}
-                                    secondary={`${reply.user} - ${new Date(reply.timestamp).toLocaleString()}`}
-                                />
-                            </ListItem>
-                        ))}
-                        <Divider variant="inset" component="li" />
-                    </React.Fragment>
-                ))} */}
             <Dialog open={openPostDialog} onClose={closeNewPostDialog} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">New Post</DialogTitle>
                 <DialogContent>
