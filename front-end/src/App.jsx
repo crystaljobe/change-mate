@@ -13,35 +13,23 @@ function App() {
   const location = useLocation();
   console.log(userProfileData)
 
-  // get userprofile data to retrieve display name for navbar
-  const userProfile = async() => {
-    const profile = await getUserProfile(user);
-    setUserProfileData(profile)
-  }
-
   useEffect(() => {
-    if(user && userProfileData.length === 0) {
-      userProfile();
+  const fetchUserProfile = async () => {
+    if (user && userProfileData.length === 0) {
+      try {
+        const userProfileData = await getUserProfile(user);
+        setUserProfileData(userProfileData);
+        console.log('User profile data loaded:', userProfileData);
+      } catch (error) {
+        console.error('Error fetching user profile data:', error);
+      }
     }
-  }, []); 
+  };
 
-  // use effect to run when user and location.pathname is updated 
-  useEffect(() => {
-    let nullUserUrls = ["/login", "/signup"];
+  fetchUserProfile();
 
-    // check if current location is allowed
-    let isAllowed = nullUserUrls.includes(location.pathname);
+  }, [user, location.pathname, userProfileData]);
 
-    // redirect user to homepage if user is logged in and trying to go to signup/signin
-    // redirect user to login/signup page if not logged in 
-    if(user && isAllowed) {
-      navigate("/events");
-    } else if (!user && !isAllowed) {
-      navigate("/");
-    }
-    
-    // console.log('user:', user);
-  }, [user, location.pathname]);
 
   return (
     <>
