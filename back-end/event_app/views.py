@@ -224,14 +224,16 @@ class AnEvent(APIView):
                 event.hosts.remove(host)
                 data.pop('hosts')
 
-        #Adds user profile to RSVP list
-        # event.users_attending.add(user_attending)
+
         # Checks if RSVP is present in body
         if 'rsvp' in data:
+            # Checks if RSVP is yes or no
             if data['rsvp'] == "yes":
+                # Adds user to events attending
                 event.users_attending.add(user_data)
                 data.pop('rsvp')
             elif data['rsvp'] == "no":
+                # Removes user from events attending
                 event.users_attending.remove(user_data)
                 data.pop('rsvp')
         
