@@ -31,25 +31,23 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle, 
+  DialogTitle,
   DialogContentText,
 } from "@mui/material";
 
 function HostsManager({ eventID, hosts, getEvent }) {
   const [hostSearchInput, setHostSearchInput] = useState("");
   const [newHost, setNewHost] = useState({});
-
+  //modal open/close <add hosts>
   const [openModal, setOpenModal] = useState(false);
   const handleopenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
-
+  //dialog open/close <remove hosts>
   const [openDialog, setDialogOpen] = useState(false);
-
-  const handleClickOpenDialog = () => {
-    setDialogOpen(true);
-  };
-  
-  const handleDialogClose = () => {
+  const handleClickOpenDialog = () => setDialogOpen(true);
+  const handleDialogClose = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
     setDialogOpen(false);
   };
 
@@ -82,53 +80,33 @@ function HostsManager({ eventID, hosts, getEvent }) {
     }
   };
 
-  const handleDeleteHost = (userID) => {
+  const handleDeleteHost = (event, userID) => {
+    handleDialogClose(event);
     let shouldBeTrue = updateHost(userID, "remove");
-     if (shouldBeTrue) {
-       console.log("host removed successfully");
-       getEvent();
-       handleCloseModal();
-     } else {
-       console.log("not able to add host");
-     }
+    if (shouldBeTrue) {
+      console.log("host removed successfully");
+      getEvent();
+    } else {
+      console.log("not able to remove host");
+    }
   };
 
   const updateHost = async (user_id, addremove) => {
     const response = await updateHosts(eventID, user_id, addremove);
     console.log("update host", response);
-    setHostSearchInput("")
+    setHostSearchInput("");
     return response;
   };
 
   return (
     <>
-      {/* <Card sx={{ width: "75%", margin: "2vw" }}>
-        <CardHeader title="Hosts Manager" />
-        <Box
-          sx={{ display: "flex", alignItems: "flex-end" }}
-          component="form"
-          noValidate
-          autoComplete="off"
-        >
-          <AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />
-          <TextField
-            id="input-with-sx"
-            label="enter a user's email"
-            variant="standard"
-            value={hostSearchInput}
-            onChange={(e) => setHostSearchInput(e.target.value)}
-          />
-          <IconButton onClick={searchNewHost}>
-            <AddIcon />
-          </IconButton>
-        </Box>
-      </Card> */}
       <div style={{ marginTop: "2vw" }}>
         <Accordion defaultExpanded={true}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography>Current Hosts</Typography>
           </AccordionSummary>
           <AccordionDetails>
+            {/* !!! lists all hosts w/ trash icon to delete hosts !!! */}
             <List>
               {hosts.map((host, index) => (
                 <ListItem key={index}>
@@ -143,7 +121,8 @@ function HostsManager({ eventID, hosts, getEvent }) {
                     size="small"
                   >
                     <DeleteIcon />
-                    {/* !!!!!!!!!!!!!!!!!!!!!!ARE U SURE YOU WANT TO DELETE THIS HOST??? */}
+
+                    {/* !!! opens a dialog to confirm deletion !!! */}
                     <Dialog
                       open={openDialog}
                       onClose={handleDialogClose}
@@ -153,17 +132,20 @@ function HostsManager({ eventID, hosts, getEvent }) {
                       <DialogTitle id="alert-dialog-title">
                         {"ARE YOU SURE YOU WANT TO DELETE THIS HOST?"}
                       </DialogTitle>
-                      <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                          Let Google help apps determine location. This means
-                          sending anonymous location data to Google, even when
-                          no apps are running.
-                        </DialogContentText>
-                      </DialogContent>
                       <DialogActions>
-                        <Button onClick={handleDialogClose}>Disagree</Button>
-                        <Button onClick={handleDialogClose} autoFocus>
-                          Agree
+                        <Button
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleDeleteHost(event, host.user_id);
+                          }}
+                        >
+                          Yes
+                        </Button>
+                        <Button
+                          onClick={(event) => handleDialogClose(event)}
+                          autoFocus
+                        >
+                          No
                         </Button>
                       </DialogActions>
                     </Dialog>
@@ -175,6 +157,7 @@ function HostsManager({ eventID, hosts, getEvent }) {
         </Accordion>
         <Accordion defaultExpanded={false}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            {/* !!!  opens search field to add a host !!! */}
             <Typography>Add Hosts</Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -202,7 +185,8 @@ function HostsManager({ eventID, hosts, getEvent }) {
             </List>
           </AccordionDetails>
         </Accordion>
-
+        
+        {/* !!!  Modal opens to confirm searched user is correct user  !!! */}
         <Modal
           open={openModal}
           onClose={handleCloseModal}
