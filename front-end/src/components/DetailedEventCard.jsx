@@ -52,14 +52,14 @@ function DetailedEventCard({
 			marginBottom: "15px",
 		},
 		body: {
-			fontFamily: "Slabo 27px, serif",
+			fontFamily: "Poppins, sans-serif",
 			fontWeight: "400",
 			fontStyle: "normal",
 		},
 		subheader: {
-			fontFamily: "Slabo 27px, serif",
+			fontFamily: "Playfair Display, serif",
 			fontWeight: "400",
-			fontStyle: "italic",
+			fontStyle: "normal",
 		},
 		icon: {
 			width: "80vw",
