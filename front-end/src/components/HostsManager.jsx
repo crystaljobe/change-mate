@@ -111,7 +111,7 @@ function HostsManager({ eventID, hosts, getEvent }) {
               {hosts.map((host, index) => (
                 <ListItem key={index}>
                   <ListItemAvatar>
-                    <Avatar key={host.user_id}>{host.profile_picture}</Avatar>
+                    <Avatar key={host.user_id} src={host.profile_picture}> </Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={host.display_name} />
                   <IconButton
@@ -185,7 +185,7 @@ function HostsManager({ eventID, hosts, getEvent }) {
             </List>
           </AccordionDetails>
         </Accordion>
-        
+
         {/* !!!  Modal opens to confirm searched user is correct user  !!! */}
         <Modal
           open={openModal}
@@ -212,7 +212,7 @@ function HostsManager({ eventID, hosts, getEvent }) {
                   <ListItem>
                     {" "}
                     <ListItemAvatar>
-                      <Avatar>{newHost.profile_picture}</Avatar>
+                      <Avatar src={newHost.profile_picture}> </Avatar>
                     </ListItemAvatar>
                     <ListItemText>{newHost.display_name}</ListItemText>
                     <IconButton

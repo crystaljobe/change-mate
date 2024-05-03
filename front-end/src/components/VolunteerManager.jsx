@@ -130,8 +130,7 @@ function VolunteerManager({
                           onClick={() => handleOpenModal(applicant)}
                         >
                           <ListItemAvatar key={applicant.user_id}>
-                            <Avatar key={applicant.user_id}>
-                              {applicant.profile_picture}
+                            <Avatar src={applicant.profile_picture} key={applicant.user_id}>
                             </Avatar>
                           </ListItemAvatar>
                           <ListItemText
@@ -201,7 +200,7 @@ function VolunteerManager({
                             onClick={() => handleOpenModal(volunteer)}
                           >
                             <ListItemAvatar>
-                              <Avatar>{volunteer.profile_picture}</Avatar>
+                              <Avatar src={volunteer.profile_picture}> </Avatar>
                             </ListItemAvatar>
                             <ListItemText primary={volunteer.display_name} />
                           </ListItem>
