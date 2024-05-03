@@ -10,7 +10,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from post_app.serializers import EventPostSerializer, CommentSerializer, CollabPostSerializer
+from post_app.serializers import EventPostSerializer, CommentSerializer, ViewEventPostSerializer
 from .models import Post, Comment
 from event_app.models import Event, UserProfile
 from drf_yasg.utils import swagger_auto_schema
@@ -28,25 +28,29 @@ class EventPostView(TokenReq):
     )
     def get(self, request, event_id):
         posts = get_list_or_404(Post, event=event_id, post_orgin="Events Page")
-        serializer = EventPostSerializer(posts, many=True)
+        serializer = ViewEventPostSerializer(posts, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
     
 
     @swagger_auto_schema(
-        operation_summary="Create a new post for event",
+        operation_summary="Create a new post for event. The post will gerate orgin depending on the urlspattern 1st path parameter (" "). ",
         operation_description="Create a new post for selected event.",
         request_body=EventPostSerializer,
         responses={201: EventPostSerializer()},
     )
     def post(self, request, event_id):
         event = get_object_or_404(Event, pk=event_id)
+        user = get_object_or_404(UserProfile, pk=request.user.id)
         data = request.data.copy()
-        data['event'] = event_id
+        data['event'] = event.id
         data['post_orgin'] = "Events Page"
         data['comments'] = []
+        data['user'] = user.id
+        print(data)
         serializer = EventPostSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save()   
+            print(serializer.data) 
             return Response(serializer.data, status=HTTP_201_CREATED)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     
@@ -93,11 +97,11 @@ class CollabPostView(TokenReq):
     @swagger_auto_schema(
         operation_summary="View all posts for collaborator",
         operation_description="View all posts for selected collaborator.",
-        responses={200: CollabPostSerializer()},
+        responses={200: ViewEventPostSerializer()},
     )
     def get(self, request, event_id):
         posts = get_list_or_404(Post, event=event_id, post_orgin="Collaborators Page")
-        serializer = CollabPostSerializer(posts, many=True)
+        serializer = ViewEventPostSerializer(posts, many=True)
         return Response(serializer.data, status=HTTP_200_OK)   
     
     
@@ -110,10 +114,12 @@ class CollabPostView(TokenReq):
     
     def post(self, request, event_id):
         event = get_object_or_404(Event, pk=event_id)
+        user = get_object_or_404(UserProfile, pk=request.user.id)
         data = request.data.copy()
-        data['event'] = event_id
+        data['event'] = event.id
         data['post_orgin'] = "Collaborators Page"
         data['comments'] = []
+        data['user'] = user.id
         serializer = EventPostSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -123,7 +129,7 @@ class CollabPostView(TokenReq):
     @swagger_auto_schema(
         operation_summary="Delete a post",
         operation_description="Delete a post for selected event by Id.",
-        request_body= CollabPostSerializer,
+        request_body= EventPostSerializer,
         responses={204: 'No Content'},
     )
     
