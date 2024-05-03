@@ -44,7 +44,7 @@ export default function EditEventDetails() {
   const [volunteersNeeded, setVolunteersNeeded] = useState(false)
   // boolean-attendees needed? yes === true if no  === false 
   const [attendeesNeeded, setAttendeesNeeded] = useState(false)
-
+  console.log(location, eventCoordinates, eventVenueAddress)
 
   // use effect to grab event details and set all useStates  
   useEffect(() => {

@@ -32,7 +32,6 @@ function EventForm({
     attendeesNeeded,
     onVolunteersNeededChange,
     onAttendeesNeededChange,
-	setLocation,
 	setEventCoordinates,
 	handleSubmit,
 	setEventVenueAddress,
@@ -171,10 +170,9 @@ function EventForm({
 
 									<Row className="mb-3" style={{ justifyContent: "center" }}>
 										<LocationSearchMap
-											setEventCoords={setEventCoordinates}
+											setCoords={setEventCoordinates}
 											setEventVenueAddress={handleLocationChange}
 											setAddress={setEventVenueAddress}
-											setLocation={setLocation}
 										/>
 									</Row>
 								</Row>
@@ -269,7 +267,7 @@ function EventForm({
 						<Form.Control
 							type="file"
 							accept="image/*"
-							onChange={handleImageChange}zf
+							onChange={handleImageChange}
 						/>
 						{photoPreview && (
 							<img

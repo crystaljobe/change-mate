@@ -2,7 +2,7 @@ import {Card, Button} from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 export default function UserProfileInfoCard({ image, display_name, location, userIntStr, profileIcon}) {
-
+  
   // Function to render user's profile information using Card component
   return (
     <Card className="text-center" style={{ width: '18rem' }}>

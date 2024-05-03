@@ -1,28 +1,54 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
-import { putUserProfile } from "../utilities/UserProfileUtilities";
+import {
+  getUserProfile,
+  putUserProfile,
+} from "../utilities/UserProfileUtilities";
+import LocationSearchMap from "../components/LocationSearchMap";
 
-export default function EditUserProfile() {
+
+export default function EditUserProfile({ user }) {
   // set interest cats for selection options
   const [interestCategories, setInterestCategories] = useState([]);
   // set userProfile interests, display name, and location
-  const { userProfileData, setUserProfileData } = useOutletContext();
   const [userInterests, setUserInterests] = useState([]);
   const [userInterestsIDs, setUserInterestsIDs] = useState([]);
   const [displayName, setDisplayName] = useState([]);
-  const [userLocation, setUserLocation] = useState('');
+
+  // Set userLocation to/from backend; data format is a json string object
+  const [userLocation, setUserLocation] = useState(''); 
+  const [userLocationCoords, setUserLocationCoords] = useState([])
+  // console.log(userLocation, userLocationCoords)
+
   const [profileImage, setProfileImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
+  
   // create var navigate for navigating
   const navigate = useNavigate();
 
+
   // get interest categories using utility funct to set options available
-  const fetchInterestCategory = async () => {
+  const userInterestCategories = async () => {
     const categories = await getInterestCategories();
     setInterestCategories(categories);
   };
+
+
+  // get user profile data for default values using utility funct
+  const userProfile = async () => {
+    const userProfileData = await getUserProfile(user);
+    // set data
+    setUserLocation(userProfileData.location);
+    setUserLocationCoords(userProfile.coordinates);
+    setDisplayName(userProfileData.display_name);
+    // map through interests to set the current interests
+    setUserInterests(userProfileData.interests.map((cat) => cat.category));
+    setImagePreview(userProfileData.profileImage); // Set the image preview to the current profile image
+    setProfileImage(userProfileData.profileImage); // Set the profile image data for possible re-upload
+  };
+
 
   // upon form submit call utility function to set new user data
   
@@ -39,6 +65,7 @@ export default function EditUserProfile() {
       navigate("/profile");
     }
   };
+
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -62,9 +89,10 @@ export default function EditUserProfile() {
     updateUserProfile();
   }
 
-  // useEffect to call upon page render to get interest categories
+  // useEffect to call upon page render
   useEffect(() => {
-    fetchInterestCategory();
+    userProfile();
+    userInterestCategories();
   }, []);
 
 
@@ -92,6 +120,13 @@ export default function EditUserProfile() {
                 />
               </Form.Label>
             </Form.Group>
+
+            <Row className="mb-3" style={{ justifyContent: "center" }}>
+										<LocationSearchMap
+											setCoords={setUserLocationCoords}
+											setAddress={setUserLocation}
+										/>
+						</Row>
 
             <Form.Group className="mb-3" controlId="interests">
               <Form.Label>
