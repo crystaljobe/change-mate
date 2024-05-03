@@ -5,16 +5,17 @@ import './SearchEvents.css';
 import EventCard from "../../components/EventCard";
 import DropdownComponent from "../../components/AdvancedFilterButtons";
 import { getEventDetailsSearch } from "../../utilities/EventUtilities";
+import MapboxGeocoderComponent from "../../components/MapboxGeocoderComponent";
 // import EventCard from "../../components/EventCard";
 
 
 function SearchEvents() {
     const { userProfileData } = useOutletContext();
     const [userCoordinates, setUserCoordinates] = useState([]);
-    const deafaultDistance = 200
+    const [distance, setDistance] = useState(100);
 
     const [searchEvents, setSearchEvents] = useState([]);
-    const [filteredEvents, setFilteredEvents] = useState([]);
+    // const [filteredEvents, setFilteredEvents] = useState([]);
     const [searchSubmitted, setSearchSubmitted] = useState(false);
 
     
@@ -22,7 +23,7 @@ function SearchEvents() {
     const [searchCoordinates, setSearchCoordinates] = useState([]);
     const [searchEventType, setSearchEventType] = useState('');
 
-    const [selectedDistance, setSelectedDistance] = useState(null);
+    // const [selectedDistance, setSelectedDistance] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedStartDate, setSelectedStartDate] = useState('');
     const [selectedEndDate, setSelectedEndDate] = useState('');
@@ -37,62 +38,68 @@ function SearchEvents() {
     // const [searchDateEnd, setSearchDateEnd] = useState('');
    
 
-    console.log('userCoordinates', userCoordinates)
+    // console.log('userCoordinates', userCoordinates)
+    console.log('searchEvents', searchEvents)
+    // console.log('searchCoordinates', searchCoordinates)
+    // console.log('filteredEvents', filteredEvents)
 
     const getUserCoordinates = async () => {
         setUserCoordinates(userProfileData.coordinates)
-    }
-
-    const getLocalEvents = async () => {
-        const allData = {
-            "coordinates": userCoordinates,
-            "distance": deafaultDistance
-        }
-
-        console.log('allData', allData)
-        getEventDetailsSearch(allData)
-            .then((response) => {
-                setSearchEvents(response)
-            })
     }
 
     useEffect(() => {
         getUserCoordinates()
     }, [userProfileData]);
 
+    // Gets events on render for events local to the user
+    const getLocalEvents = async () => {
+        if (userCoordinates && userCoordinates.length > 0){
+            const allData = {
+                "coordinates": userCoordinates,
+                "distance": distance/60
+            }
+    
+            console.log('allData', allData)
+            getEventDetailsSearch(allData)
+                .then((response) => {
+                    setSearchEvents(response)
+                })
+        }
+    }
+
     useEffect(() => {
         getLocalEvents()
     }, [userCoordinates]);
     
-
-
-    // // Handles changing the searchType; SearchType is needed so that when the form submits it knows which API call to do
-    // const handleSearchTypeChange = (selectedType) => {
-    //     setSearchType(selectedType);
-    // }
+    // Handles searching for events
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Creates an object with all the search parameters
         const allData = {
             "type": searchEventType, 
-            // "start_date": searchDateStart, 
-            // "end_date": searchDateEnd, 
             "coordinates": searchCoordinates,
-            "distance": deafaultDistance,
-            "keyword": searchTerm
+            "distance": distance/60,
+            "keyword": searchTerm,
+            "start_date": selectedStartDate, 
+            "end_date": selectedEndDate, 
+            "category": selectedCategory
         }
+
+        console.log(allData)
 
         // Calls the getEventDetailsSearch function from EventUtilities to get the events that match the search parameters
         getEventDetailsSearch(allData)
             .then((response) => {
                 setSearchEvents(response)
+                // Renders advanced search options
+                setSearchSubmitted(true)
             })
     }
 
-
-    
-
-
+    useEffect(() => {
+        sortPopularEvents(searchEvents)
+        sortVolunteerEvents(searchEvents)
+    }, [searchEvents]);
 
     // Sorts the events returned from the search into eventsPopular
     const sortPopularEvents = async (events) => {
@@ -112,7 +119,7 @@ function SearchEvents() {
         setEventsPopular(popEvents)
         setEventsAdditional(unpopEvents)
     }
-    // Not funtional yet; Awaiting backend to add volunteers_needed to the model
+    // Not funtional yet; Awaiting backend to add volunteers_needed to the model serializer
     const sortVolunteerEvents = async (events) => {
         const needVol = []
         // Loops through the searchEvents to determine if event needs volunteers
@@ -126,16 +133,7 @@ function SearchEvents() {
 
     }
 
-    useEffect(() => {
-        sortPopularEvents(searchEvents)
-        sortVolunteerEvents(searchEvents)
-    }, [searchEvents]);
-
-    useEffect(() => {
-        sortPopularEvents(filteredEvents)
-        sortVolunteerEvents(filteredEvents)
-    }, [filteredEvents]);
-
+    // Chunks results of popular events, volunteer events and additional events into groups of three for rendering
     function chunkArray(array, chunkSize) {
         const chunks = [];
         for (let i = 0; i < array.length; i += chunkSize) {
@@ -148,29 +146,34 @@ function SearchEvents() {
     const volunteerGroupedEvents = chunkArray(eventsVolNeed, 3);
     const additionalGroupedEvents = chunkArray(eventsAdditional, 3);
 
+    // SAVE THIS! Can't do this now, but this function is almost set up to filter search events result on front end to reduce api calls; we need the event to have lat and lon included in the serializer to be able to do though so we can calculate the radius on the front end.
+    //     useEffect(() => {
+    //     // Function to check if an event matches the filter criteria
+    //     const matchesFilterCriteria = (event) => {
+    //         // Check if the event matches the selected category
+    //         const matchesCategory = selectedCategory ? event.category.category === selectedCategory : true;
 
-    // How do I update this to filter the searchEvents by category OR start date OR category and start date OR start date and end date OR category and start date and end date???
-    useEffect(() => {
-    // Function to check if an event matches the filter criteria
-    const matchesFilterCriteria = (event) => {
-        // Check if the event matches the selected category
-        const matchesCategory = selectedCategory ? event.category.category === selectedCategory : true;
+    //         // Check if the event falls within the selected start and end dates
+    //         const startDateCondition = selectedStartDate ? event.startDate >= selectedStartDate : true;
+    //         const endDateCondition = selectedEndDate ? event.startDate <= selectedEndDate : true;
 
-        // Check if the event falls within the selected start and end dates
-        const startDateCondition = selectedStartDate ? event.startDate >= selectedStartDate : true;
-        const endDateCondition = selectedEndDate ? event.startDate <= selectedEndDate : true;
+    //         // TODO: add locationCondition once searching by location radius works
 
-        // TODO: add locationCondition once searching by location radius works
+    //         return matchesCategory && startDateCondition && endDateCondition;
+    //     };
 
-        return matchesCategory && startDateCondition && endDateCondition;
-    };
+    //     // Apply filters to searchEvents based on category, start date, and end date
+    //     const filteredEventsData = searchEvents.filter(event => matchesFilterCriteria(event));
+        
+    //     // Set the filtered events
+    //     setFilteredEvents(filteredEventsData);
+    // }, [selectedCategory, selectedStartDate, selectedEndDate]);
 
-    // Apply filters to searchEvents based on category, start date, and end date
-    const filteredEventsData = searchEvents.filter(event => matchesFilterCriteria(event));
-    
-    // Set the filtered events
-    setFilteredEvents(filteredEventsData);
-}, [selectedCategory, selectedStartDate, selectedEndDate]);
+      // useEffect(() => {
+    //     sortPopularEvents(filteredEvents)
+    //     sortVolunteerEvents(filteredEvents)
+    // }, [filteredEvents]);
+
     
     
     return (
@@ -192,13 +195,9 @@ function SearchEvents() {
                                     <Col md={4}>
                                         <InputGroup>
                                             <InputGroup.Text>Location</InputGroup.Text>
-                                            <Form.Control placeholder="State, City" list="location-list" onChange={(e) => setCountryAdd(e.target.value)} />
-                                            <datalist id="location-list">
-                                                {/* Assuming combined list, or you can manage separate inputs as needed
-                                                {apiCountries.concat(apiStates).concat(apiCities).map((loc, index) => (
-                                                    <option key={index} value={loc.name} />
-                                                ))} */}
-                                            </datalist>
+                                            <MapboxGeocoderComponent
+                                                setCoords={setSearchCoordinates}
+                                            />
                                         </InputGroup>
                                     </Col>
                                     <Col md={3}>
@@ -221,7 +220,7 @@ function SearchEvents() {
             </div>
                                 
             {/* Conditionally render component W/ searchSubmitted and pass query setSelectedCategory for subquery*/}
-            {searchSubmitted && <DropdownComponent setSelectedCategory={setSelectedCategory} setSelectedStartDate={setSelectedStartDate} setSelectedEndDate={setSelectedEndDate} setFilteredEvents={setFilteredEvents} />} 
+            {searchSubmitted && <DropdownComponent setSelectedCategory={setSelectedCategory} setSelectedStartDate={setSelectedStartDate} setSelectedEndDate={setSelectedEndDate} setDistance={setDistance} />} 
 
             {/* Popular Events with Carousel */}
             <div className="search-events p-4">
@@ -245,7 +244,8 @@ function SearchEvents() {
                         </Carousel>
                     )}
                 </Container>
-
+                
+                {/* Volunteer Events with Carousel */}
                 <Container fluid className="mt-5">
                     <h2 className="text-center">Events Needing Volunteers</h2>
                     {eventsVolNeed.length === 0 ? (
@@ -266,7 +266,8 @@ function SearchEvents() {
                         </Carousel>
                     )}
                 </Container>
-
+                
+                {/* Additional Events with Carousel */}
                 <Container fluid className="mt-5">
                     <h2 className="text-center">Additional Events</h2>
                     {eventsAdditional.length === 0 ? (

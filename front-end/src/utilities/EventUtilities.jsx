@@ -20,7 +20,6 @@ export const getEventDetailsSearch = async (allData) => {
     .join("&");
 
   const response = await api.get(`events/?${requestData}`);
-  console.log('response', response)
   return response.data;
 };
 

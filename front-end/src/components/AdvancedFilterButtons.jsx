@@ -5,7 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { getInterestCategories } from '../utilities/InterestCategoriesUtilities';
 import { startOfWeek, endOfWeek } from 'date-fns';
 
-const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelectedEndDate, setFilteredEvents}) => {
+const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelectedEndDate, setDistance}) => {
 
     const [showProximityDropdown, setShowProximityDropdown] = useState(false);
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
@@ -16,7 +16,7 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
 
     const proximityOptions = ['5', '10', '25', '50', '100'];
 
-    // get interest categories using utility function to set options available
+    // Get interest categories using utility function to set options available
     const fetchInterestCategories = async () => {
         const categories = await getInterestCategories();
         setInterestCategories(categories);
@@ -75,11 +75,13 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
         setSelectedEndDate(formatDate(endOfMonthDate));
     };
 
-    const handleFilterReset = (e) => {
+    // Resets filtere data and re-calls search with original parameters
+    const handleFilterReset = async (e) => {
         e.preventDefault()
         setSelectedCategory('')
         setSelectedStartDate('')
         setSelectedEndDate('')
+        setDistance(100)
     }
 
     return (
@@ -88,7 +90,7 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
                 <Col xs={12} style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '10px 0' }}>
                     <DropdownButton id="proximity-dropdown" title="Filter by Proximity" variant="secondary">
                         {proximityOptions.map(option => (
-                            <Dropdown.Item key={option} as="button" onClick={() => console.log(`${option} miles selected`)}>
+                            <Dropdown.Item key={option} as="button" onClick={() => setDistance(parseInt(option))}>
                                 {option} miles
                             </Dropdown.Item>
                         ))}

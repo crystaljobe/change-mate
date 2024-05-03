@@ -57,7 +57,8 @@ export default function EditUserProfile({ user }) {
       userInterestsIDs,
       displayName,
       userLocation,
-      profileImage
+      profileImage, 
+      userLocationCoords
     );
     if (responseStatus) {
       navigate("/profile");
