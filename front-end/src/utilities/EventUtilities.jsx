@@ -167,6 +167,7 @@ export const updateHosts = async (eventID, user_id, addremove) => {
     "hosts": user_id,
     "host_invite": addremove
   });
+  console.log("utility funct", user_id, addremove, eventID)
   if (response.status === 200) {
     return true;
   }

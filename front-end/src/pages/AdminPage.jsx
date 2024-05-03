@@ -64,8 +64,10 @@ export default function AdminPage() {
     getEvent();
   }, []);
 
-  // console.log(`admin page -- hosts`, hosts)
-  console.log('adminpage - approved volunteers', approvedVolunteers)
+  
+ 
+  console.log(`admin page -- hosts`, hosts)
+  // console.log('adminpage - approved volunteers', approvedVolunteers)
   // console.log(`admin- roles`, roles);
 
   return (
@@ -100,7 +102,7 @@ export default function AdminPage() {
         <Col md={4} className="todo-participant-col">
           <TodoList showAddToDo={showAddToDo} />
           <Row>
-            <HostsManager />
+            <HostsManager eventID={eventID} hosts={hosts} getEvent={getEvent} />
           </Row>
         </Col>
       </Row>

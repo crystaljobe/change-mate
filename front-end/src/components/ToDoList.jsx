@@ -32,7 +32,7 @@ function TodoList( {showAddToDo} ) {
     };
 
     return (
-      <Card>
+      <Card style={{ marginTop: "2vw" }}>
         <CardHeader title="To-Do List" />
         <CardContent>
           <List>
@@ -41,37 +41,38 @@ function TodoList( {showAddToDo} ) {
                 key={task.id}
                 dense
                 button
-                onClick={showAddToDo ? () => toggleTaskCompletion(task.id) : null}
+                onClick={
+                  showAddToDo ? () => toggleTaskCompletion(task.id) : null
+                }
               >
                 <ListItemText
                   primary={task.text}
-                  
                   style={{
-                    textDecoration: (task.completed) ? "line-through" : "none",
+                    textDecoration: task.completed ? "line-through" : "none",
                   }}
-
-                />{showAddToDo &&
-                <ListItemSecondaryAction>
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleDeleteTask(task.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                  <IconButton
-                    edge="end"
-                    aria-label="toggle"
-                    onClick={() => toggleTaskCompletion(task.id)}
-                  >
-                    {task.completed ? (
-                      <CheckCircleIcon />
-                    ) : (
-                      <CheckCircleOutlineIcon />
-                    )}
-                  </IconButton>
-                </ListItemSecondaryAction>
-}
+                />
+                {showAddToDo && (
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleDeleteTask(task.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label="toggle"
+                      onClick={() => toggleTaskCompletion(task.id)}
+                    >
+                      {task.completed ? (
+                        <CheckCircleIcon />
+                      ) : (
+                        <CheckCircleOutlineIcon />
+                      )}
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                )}
               </ListItem>
             ))}
           </List>
