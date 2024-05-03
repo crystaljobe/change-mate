@@ -23,7 +23,7 @@ class BasicUserDataSerializer(serializers.ModelSerializer):
 
     class Meta: 
         model = UserProfile
-        fields = ['id', 'display_name', 'email']
+        fields = ['id', 'display_name', 'email', 'image']
 
 
     def get_email(self, obj):

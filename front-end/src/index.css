@@ -8,7 +8,11 @@
 }
 body {
   background: #FDF6EE;
+  font-size: min(max(16px, 1vw), 22px);
+}
 
+h1 {
+  font-size: min(max(26px, 3vw), 40px);
 }
 
 nav {
@@ -62,8 +66,16 @@ nav {
 
 .map-container {
     height: 500px;
-  }
-   
+}
+
+.search-box-container {
+  width: 100px; 
+  height: 50px;
+}
+
+.mapboxgl-ctrl-geocoder input[type="text"] {
+  padding-left: 30px;
+}
 
 .sidebarStyle {
   display: inline-block;
