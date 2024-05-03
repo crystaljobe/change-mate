@@ -8,15 +8,18 @@ import { getEventDetailsSearch } from "../../utilities/EventUtilities";
 
 function SearchEvents() {
     // This holds all events initially fetched or loaded
-    const [allEvents, setAllEvents] = useState([]); // This holds all events initially fetched or loaded
+    const [searchEvents, setSearchEvents] = useState([]); 
+    // This holds the filtered events after advanced filteres are applied
+    const [filteredEvents, setFilteredEvents] = useState([]); 
     // to save query parameters for sub filtering 
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedStartDate, setSelectedStartDate] = useState('');
+    const [selectedEndDate, setSelectedEndDate] = useState('');
     // to conditionally render advanced search buttons
     const [searchSubmitted, setSearchSubmitted] = useState(false);
-    const [searchType, setSearchType] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
-    const [searchEventType, setSearchEventType] = useState('');
-    const [searchEvents, setSearchEvents] = useState([]);
+    const [searchEventType, setSearchEventType] = useState('In-person');
+    // Sort events for rendering into popular, volunteers needed, and additional events
     const [eventsPopular, setEventsPopular] = useState([]);
     // TODO: once we have a spot on our events to indicate whether volunteers are needed, we can add functionality to sort searchEvents into searchEventsVolNeed
     const [eventsVolNeed, setEventsVolNeed] = useState([]);
@@ -24,10 +27,12 @@ function SearchEvents() {
     const myOutletContextObj = useOutletContext();
     const { user } = myOutletContextObj;
 
-    // Handles changing the searchType; SearchType is needed so that when the form submits it knows which API call to do
-    const handleSearchTypeChange = (selectedType) => {
-        setSearchType(selectedType);
-    }
+    console.log('searchEvents', searchEvents)
+    console.log('filteredEvents', filteredEvents)
+    console.log('selectedCategory', selectedCategory)
+    console.log('selectedStartDate', selectedStartDate)
+    console.log('selectedEndDate', selectedEndDate)
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -36,8 +41,9 @@ function SearchEvents() {
         // Creates an object with all the search parameters
         const allData = {
             "type": searchEventType,
-            [searchType]: searchTerm
+            "keyword": searchTerm
         }
+
         // Calls the getEventDetailsSearch function from EventUtilities to get the events that match the search parameters
         getEventDetailsSearch(allData)
             .then((response) => {
@@ -46,12 +52,11 @@ function SearchEvents() {
             })
     }
 
+    // Will be reworked to set searchEvents to events local to the user; Currently it returns all events to be rendered on page load
     const getLocalEvents = async () => {
         const allData = {
             "type": undefined,
-            "start_date": undefined,
-            "end_date": undefined,
-            searchType: undefined
+            "keyword": undefined
         }
         getEventDetailsSearch(allData)
             .then((response) => {
@@ -60,12 +65,12 @@ function SearchEvents() {
     }
 
     // Sorts the events returned from the search into eventsPopular
-    const sortPopularEvents = async (searchEvents) => {
+    const sortPopularEvents = async (events) => {
         const popEvents = []
         const unpopEvents = []
         // Loops through the searchEvents to determine if event is popular or not and sorts them into their respective categories
-        for (const event of searchEvents) {
-            // TODO: DEPLOYMENT - Currently for development purposes an event is popular if more than 1 user or more is attending; Before deployment we must chnage this to a more reasonable real-world threshhold
+        for (const event of events) {
+            // TODO: DEPLOYMENT - Currently for development purposes an event is popular if more than 1 user is attending; Before deployment we must chnage this to a more reasonable real-world threshhold
             if (event.num_users_attending > 1) {
                 popEvents.push(event)
             } else {
@@ -79,10 +84,10 @@ function SearchEvents() {
     }
 
     // Not funtional yet; Awaiting backend to add volunteers_needed to the model
-    const sortVolunteerEvents = async (searchEvents) => {
+    const sortVolunteerEvents = async (events) => {
         const needVol = []
         // Loops through the searchEvents to determine if event needs volunteers
-        for (const event of searchEvents) {
+        for (const event of events) {
             if (event.volunteers_needed) {
                 needVol.push(event)
             }
@@ -93,9 +98,18 @@ function SearchEvents() {
     }
 
     useEffect(() => {
+        getLocalEvents()
+    }, []);
+
+    useEffect(() => {
         sortPopularEvents(searchEvents)
         sortVolunteerEvents(searchEvents)
     }, [searchEvents]);
+
+    useEffect(() => {
+        sortPopularEvents(filteredEvents)
+        sortVolunteerEvents(filteredEvents)
+    }, [filteredEvents]);
 
     function chunkArray(array, chunkSize) {
         const chunks = [];
@@ -109,12 +123,29 @@ function SearchEvents() {
     const volunteerGroupedEvents = chunkArray(eventsVolNeed, 3);
     const additionalGroupedEvents = chunkArray(eventsAdditional, 3);
 
+
+    // How do I update this to filter the searchEvents by category OR start date OR category and start date OR start date and end date OR category and start date and end date???
     useEffect(() => {
-        if (searchSubmitted && selectedCategory) {
-            const filteredEvents = allEvents.filter(event => event.category === selectedCategory);
-            setSearchEvents(filteredEvents);
-        }
-    }, [selectedCategory, searchSubmitted, allEvents]);
+    // Function to check if an event matches the filter criteria
+    const matchesFilterCriteria = (event) => {
+        // Check if the event matches the selected category
+        const matchesCategory = selectedCategory ? event.category.category === selectedCategory : true;
+
+        // Check if the event falls within the selected start and end dates
+        const startDateCondition = selectedStartDate ? event.startDate >= selectedStartDate : true;
+        const endDateCondition = selectedEndDate ? event.startDate <= selectedEndDate : true;
+
+        // TODO: add locationCondition once searching by location radius works
+
+        return matchesCategory && startDateCondition && endDateCondition;
+    };
+
+    // Apply filters to searchEvents based on category, start date, and end date
+    const filteredEventsData = searchEvents.filter(event => matchesFilterCriteria(event));
+    
+    // Set the filtered events
+    setFilteredEvents(filteredEventsData);
+}, [selectedCategory, selectedStartDate, selectedEndDate]);
     
     
     return (
@@ -130,7 +161,7 @@ function SearchEvents() {
                                     <Col md={4}>
                                         <InputGroup>
                                             <InputGroup.Text>Keyword</InputGroup.Text>
-                                            <Form.Control aria-label="Keyword search" onChange={(e) => handleSearchTypeChange(e.target.value)} />
+                                            <Form.Control aria-label="Keyword search" onChange={(e) => setSearchTerm(e.target.value)} />
                                         </InputGroup>
                                     </Col>
                                     <Col md={4}>
@@ -148,7 +179,7 @@ function SearchEvents() {
                                     <Col md={3}>
                                         <InputGroup>
                                         <InputGroup.Text>Type</InputGroup.Text>
-                                        <Form.Select onChange={(e) => setSearchEventType(e.target.value)} defaultValue="In-person">
+                                        <Form.Select onChange={(e) => setSearchEventType(e.target.value)} defaultValue="In-person" >
                                             <option value="In-person">In-Person</option>
                                             <option value="Virtual">Virtual</option>
                                         </Form.Select>
@@ -165,7 +196,7 @@ function SearchEvents() {
             </div>
                                 
             {/* Conditionally render component W/ searchSubmitted and pass query setSelectedCategory for subquery*/}
-            {searchSubmitted && <DropdownComponent onCategoryChange={setSelectedCategory} />} 
+            {searchSubmitted && <DropdownComponent setSelectedCategory={setSelectedCategory} setSelectedStartDate={setSelectedStartDate} setSelectedEndDate={setSelectedEndDate} setFilteredEvents={setFilteredEvents} />} 
 
             {/* Popular Events with Carousel */}
             <div className="search-events p-4">
