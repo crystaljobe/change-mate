@@ -2,6 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getNounIcon } from "../utilities/DefaultIconsUtilities";
 import { FcCalendar, FcClock } from "react-icons/fc";
+import { IoPeopleCircle } from "react-icons/io5";
+import { GiLaptop } from "react-icons/gi";
+import { FaLink } from "react-icons/fa";
+import { PiBuildingOfficeFill } from "react-icons/pi";
+import { PiMapPinLineFill } from "react-icons/pi";
+import { MdLocationOn } from "react-icons/md";
+
 
 import {
 	Container,
@@ -99,6 +106,26 @@ function DetailedEventCard({
   // Conditional Styling for image display based on src
 	const imageStyle = event_photo ? styles.image : styles.icon;
 
+	//conditional for setting # of users 
+	function usersAttendingMessage() {
+		if (num_users_attending === 0) {
+			return;
+		} else if (num_users_attending === 1){
+			return `${num_users_attending} of your mates is attending this event, would you like to join them at this event?`
+		} else {
+			return `${num_users_attending} of your mates are attending this event, would you like to join them at this event?`
+		}
+	}
+
+	//conditional for setting # of volunteers needed 
+	function volunteersNeededMessage(){
+		if (volunteer_spots_remaining === 0) {
+			return "All volunteer spots filled!"
+		} else if (volunteer_spots_remaining === 1) {
+			return `This event is needing ${volunteer_spots_remaining} more volunteer. Would you like to volunteer for ${title}?`
+		}
+	}
+
 	return (
 		<Card style={styles.cardCSS} sm={8} border="light" className="mt-4">
       {/* Conditional rendering of event event_photo and styling; If event has event_photo, render that; If no event_photo, render default event icon */}
@@ -148,22 +175,20 @@ function DetailedEventCard({
 								)}
 							</ListGroup.Item>
 							<ListGroup.Item>
-              <FcClock />
-								{` ${startTime} - ${endTime}`}
+              					<FcClock />
+								{` ${startTime} - ${endTime}`}{" "}{time_zone}
 							</ListGroup.Item>
 
 							<ListGroup.Item>
-								{" "}
-								<strong> Time Zone: </strong>{" "}
-								{time_zone}
-							</ListGroup.Item>
-							<ListGroup.Item>
-								<strong> Event Type: </strong>
-								{event_type}
+								{event_venue ?  
+									<><IoPeopleCircle />{" "}{event_type}</> :
+									<><GiLaptop />{" "}{event_type}</>
+ 								}
+								
 							</ListGroup.Item>
 							{virtual_event_link ? (
 								<ListGroup.Item>
-									<strong> Event ListGroup.Item: </strong>
+									<FaLink />{" "}
 									<a
 										href={virtual_event_link}
 										style={{ fontSize: "14px" }}>
@@ -174,17 +199,18 @@ function DetailedEventCard({
 							) : (
 								<>
 									<ListGroup.Item>
-										<strong> Event Venue: </strong>
-										{event_venue}
+									<PiBuildingOfficeFill />
+
+									{" "}{event_venue}
 									</ListGroup.Item>
 									<ListGroup.Item>
-										<strong>Venue Address: </strong>
+									<MdLocationOn />
                     <Link
                   to={`https://www.google.com/maps?q=${lat},${lon}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   > 
-                {event_venue_address}
+                {" "}{event_venue_address}
                 </Link>
 									</ListGroup.Item>
 								</>
