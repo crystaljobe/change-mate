@@ -27,7 +27,7 @@ export default function EditUserProfile({ user }) {
   
   // create var navigate for navigating
   const navigate = useNavigate();
-
+   console.log(userLocationCoords)
 
   // get interest categories using utility funct to set options available
   const userInterestCategories = async () => {
