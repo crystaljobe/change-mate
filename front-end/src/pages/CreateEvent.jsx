@@ -4,7 +4,6 @@ import { Container, Button } from 'react-bootstrap';
 import EventForm from '../components/EventForm';
 import { postEventDetails, timeZoneAbbreviations } from '../utilities/EventUtilities';
 import { getInterestCategories } from '../utilities/InterestCategoriesUtilities';
-import { getCountries, getStates, getCities } from '../utilities/CountryStateCityUtilities';
 
 export default function CreateEvent() {
   const navigate = useNavigate();
