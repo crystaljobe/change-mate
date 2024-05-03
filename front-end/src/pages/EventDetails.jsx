@@ -49,7 +49,8 @@ export default function EventDetails() {
 			console.log("user rsvp");
 		}
 	};
-
+ //still working on this piece 
+ 
 	// Checks the events that the user is attending for id match with the eventID for this page
 	// const isUserAttending = () => {
 	//   // Checks if eventsAttending has data
@@ -80,10 +81,10 @@ export default function EventDetails() {
 		);
 	};
 
-	//application modal
-	// const [show, setShow] = useState(false);
-	// const handleClose = () => setShow(false);
-	// const handleShow = () => setShow(true);
+	// application modal
+	const [show, setShow] = useState(false);
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
 
 	return (
 		<Container>
@@ -94,23 +95,7 @@ export default function EventDetails() {
 					{eventDetails.hosts && (
 						<DetailedEventCard {...eventDetails}></DetailedEventCard>
 					)}
-
-					<div className="dropdown-container">
-						<button className="dropdown-button">Count me in!</button>
-						<div className="dropdown-content">
-							{/* TODO: add conditonal rendering for volunteer option if event is accepting volunteers */}
-							{/* added volunteer application modal as a component */}
-							{/* <a onClick={handleShow}>Volunteer</a>
-                <VolunteerApplication
-                  show={show}
-                  handleClose={handleClose}
-                  eventID={eventID}
-                /> */}
-
-							{/* if event needs attendees */}
-							{eventDetails.attendees_needed ? renderAttendingButton() : null}
-
-							<Link
+          <Link
 								to={`/eventCollab/${eventID}`}
 								className="btn btn-primary mr-2">
 								Let's Collaborate!
@@ -118,6 +103,23 @@ export default function EventDetails() {
 							<Link to="/eventadmin" className="btn btn-primary">
 								Admin Time!
 							</Link>
+
+					<div className="dropdown-container">
+						<button className="dropdown-button">Count me in!</button>
+						<div className="dropdown-content">
+							{/* TODO: add conditonal rendering for volunteer option if event is accepting volunteers */}
+							{/* added volunteer application modal as a component */}
+							<a onClick={handleShow}>Volunteer</a>
+                <VolunteerApplication
+                  show={show}
+                  handleClose={handleClose}
+                  eventID={eventID}
+                />
+
+							{/* if event needs attendees */}
+							{eventDetails.attendees_needed ? renderAttendingButton() : null}
+
+							
 						</div>
 					</div>
 				</Col>
