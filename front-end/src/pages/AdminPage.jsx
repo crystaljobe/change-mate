@@ -16,8 +16,6 @@ import {
   Button,
 } from "@mui/material";
 
-
-
 //only hosts have permission to access this page (profile.hosted_events(eventID == eventID))
 //FEATURES:
 // DONE - view volunteer volApplications
@@ -29,8 +27,8 @@ import {
 // - add other hosts
 
 
-function AdminPage() {
-  const [eventDetails, setEventDetails] = useState({});
+export default function AdminPage() {
+  const [eventDetails, setEventDetails] = useState(null);
   const [roles, setRoles] = useState([]);
   const [approvedVolunteers, setApprovedVolunteers] = useState([]);
   const [volunteerApplications, setVolunteerApplications] = useState([]);
@@ -44,6 +42,8 @@ function AdminPage() {
   const getEvent = async () => {
     const eventDetails = await getAdminEventDetails(eventID);
     setEventDetails(eventDetails);
+  console.log("admin- eventDetails", eventDetails);
+
     const hostArr = eventDetails.hosts;
     const approvedVols = eventDetails.volunteers;
     const volApplications = eventDetails.applicants; //arr of obj {id <role.id>, role, [applicants] < arr of objs {application_id, user_id, applicant_id, display_name, profile_picture}> }
@@ -62,18 +62,61 @@ function AdminPage() {
     getEvent();
   }, []);
 
-  
- 
   // console.log(`admin page -- hosts`, hosts)
-  console.log(`admin- eventDetails`, eventDetails)
   console.log('adminpage - approved volunteers', approvedVolunteers)
   // console.log(`admin- roles`, roles);
+
+  if (eventDetails) {
+    // destructure event details set props with null value to default value
+   const {
+     description,
+     title,
+     startTime,
+     startDate,
+     endTime,
+     endDate,
+     time_zone,
+     event_type,
+     virtual_event_link = false,
+     event_venue = false,
+     event_venue_address = false,
+     category: { category },
+     hosts,
+     event_photo = false,
+     location,
+     lat,
+     lon,
+     attendees_needed,
+     volunteer_roles = [],
+     num_users_attending = 0,
+     volunteer_spots_remaining = 0,
+   } = eventDetails; 
 
   return (
     <Container fluid className="event-collab-container">
       <Row className="gx-5">
         <Col md={4} className="event-details-col">
-          <DetailedEventCard eventDetails={eventDetails} />
+        <DetailedEventCard
+                description={description}
+                title={title}
+                startTime={startTime}
+                startDate={startDate}
+                endTime={endTime}
+                endDate={endDate}
+                time_zone={time_zone}
+                event_type={event_type}
+                virtual_event_link={virtual_event_link}
+                event_venue={event_venue}
+                event_venue_address={event_venue_address}
+                category={category.category}
+                num_users_attending={num_users_attending}
+                volunteer_spots_remaining={volunteer_spots_remaining}
+                hosts={hosts}
+                event_photo={event_photo}
+                lat={lat}
+                lon={lon}
+                >
+                </DetailedEventCard>
           <Button
             size="large"
             style={{ margin: "5%" }}
@@ -107,5 +150,5 @@ function AdminPage() {
     </Container>
   );
 }
+}
 
-export default AdminPage;
