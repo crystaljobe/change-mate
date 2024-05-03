@@ -74,7 +74,7 @@ function AdminPage() {
     <Container fluid className="event-collab-container">
       <Row className="gx-5">
         <Col md={4} className="event-details-col">
-          {eventDetails.hosts && <DetailedEventCard eventDetails={eventDetails} /> }
+          {eventDetails.hosts && <DetailedEventCard {...eventDetails} /> }
           <Button
             size="large"
             style={{ margin: "5%" }}

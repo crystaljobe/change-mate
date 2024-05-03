@@ -13,25 +13,25 @@ import {
 	ListGroupItem,
 } from "react-bootstrap";
 
-function DetailedEventCard({ eventDetails
-//   description,
-//   title,
-//   startTime, 
-//   startDate,
-//   endTime,
-//   endDate,
-//   time_zone,
-//   event_type,
-//   virtual_event_link,
-//   event_venue,
-//   event_venue_address,
-//   categoryName,
-//   num_users_attending,
-//   volunteer_spots_remaining,
-//   hosts,
-//   lat, 
-//   lon,
-//   event_photo,
+function DetailedEventCard({
+  description,
+  title,
+  startTime, 
+  startDate,
+  endTime,
+  endDate,
+  time_zone,
+  event_type,
+  virtual_event_link,
+  event_venue,
+  event_venue_address,
+  categoryName,
+  num_users_attending,
+  volunteer_spots_remaining,
+  hosts,
+  lat, 
+  lon,
+  event_photo,
  }) {
 
   //styles for card
@@ -87,19 +87,19 @@ function DetailedEventCard({ eventDetails
 	// updated to add conditional to only fetch icon if it's needed
   // reduced use effects to one, since collaborators will never be undefined - automatically call setUpCardInfo
 	useEffect(() => {
-		if (!eventDetails.event_photo && !eventIcon) {
-			// console.log("no event event_photo getting eventIcon")
+		if (!event_photo && !eventIcon) {
+			// console.log("no event event_photo getting event Icon")
 			fetchEventIcon();
 		}
-    	//creates hostsStr from collab arr in 	
+    //creates hostsStr from collab arr in 	
 		if (!hostStr) {
-      let hostArr = eventDetails.hosts.map((host) => host.display_name);
+      let hostArr = hosts.map((host) => host.display_name);
       setHostStr(hostArr.join(", "));
     }
 	}, []);
 
   // Conditional Styling for image display based on src
-	const imageStyle = eventDetails.event_photo ? styles.image : styles.icon;
+	const imageStyle = event_photo ? styles.image : styles.icon;
 
 	return (
     <Card style={styles.cardCSS} sm={8} border="light" className="mt-4">
@@ -107,13 +107,13 @@ function DetailedEventCard({ eventDetails
       <Card.Img
         className=""
         variant="top"
-        src={eventDetails.event_photo || eventIcon}
+        src={event_photo || eventIcon}
         style={imageStyle}
-        alt={`${eventDetails.title}'s event_photo`}
+        alt={`${title}'s event_photo`}
       />
       <Card.Body>
         <Card.Title as="h1" style={styles.header} className="text-center">
-          {eventDetails.title}
+          {title}
         </Card.Title>
 
         <Card.Subtitle
@@ -133,7 +133,7 @@ function DetailedEventCard({ eventDetails
             className="text-center"
             style={{ paddingBottom: "10px" }}
           >
-            {eventDetails.description}
+            {description}
           </ListGroup.Item>
           <br />
           <ListGroup.Item className="mb-2">
@@ -141,55 +141,55 @@ function DetailedEventCard({ eventDetails
 
             <ListGroup.Item className="mt-2">
               {/* conditional rendering for dates based on single or multiday event */}
-              {eventDetails.startDate === eventDetails.endDate ? (
+              {startDate === endDate ? (
                 <>
-                  <FcCalendar /> {eventDetails.startDate}
+                  <FcCalendar /> {startDate}
                 </>
               ) : (
                 <>
-                  <FcCalendar /> {eventDetails.startDate} -{" "}
-                  {eventDetails.endDate}{" "}
+                  <FcCalendar /> {startDate} -{" "}
+                  {endDate}{" "}
                 </>
               )}
             </ListGroup.Item>
             <ListGroup.Item>
               <FcClock />
-              {` ${eventDetails.startTime} - ${eventDetails.endTime}`}
+              {` ${startTime} - ${endTime}`}
             </ListGroup.Item>
 
             <ListGroup.Item>
               {" "}
-              <strong> Time Zone: </strong> {eventDetails.time_zone}
+              <strong> Time Zone: </strong> {time_zone}
             </ListGroup.Item>
             <ListGroup.Item>
               <strong> Event Type: </strong>
-              {eventDetails.event_type}
+              {event_type}
             </ListGroup.Item>
-            {eventDetails.event_type === "Virtual" ? (
+            {virtual_event_link ? (
               <ListGroup.Item>
                 <strong> Event ListGroup.Item: </strong>
                 <a
-                  href={eventDetails.virtual_event_link}
+                  href={virtual_event_link}
                   style={{ fontSize: "14px" }}
                 >
                   {" "}
-                  {eventDetails.virtual_event_link}{" "}
+                  {virtual_event_link}{" "}
                 </a>
               </ListGroup.Item>
             ) : (
               <>
                 <ListGroup.Item>
                   <strong> Event Venue: </strong>
-                  {eventDetails.event_venue}
+                  {event_venue}
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <strong>Venue Address: </strong>
                   <Link
-                    to={`https://www.google.com/maps?q=${eventDetails.lat},${eventDetails.lon}`}
+                    to={`https://www.google.com/maps?q=${lat},${lon}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {eventDetails.event_venue_address}
+                    {event_venue_address}
                   </Link>
                 </ListGroup.Item>
               </>

@@ -16,7 +16,7 @@ export default function UserProfile({ user}) {
   // State variables to hold various user and events related data
   const [profileIcon, setProfileIcon] = useState("");
   const [eventIcon, setEventIcon] = useState("");
-  const [badges, setBadges] = useState({})
+  const [badges, setBadges] = useState({});
   const [calendarEvents, setCalendarEvents] = useState([]);
 
 
@@ -33,14 +33,20 @@ export default function UserProfile({ user}) {
           const eventIconData = await getNounIcon(5130800);
           setEventIcon(eventIconData);
         }
-        // Fetch other icons if needed, similar to the above
+        if (!badges) {
+          const hostIcon = await getNounIcon(2532350)
+          const commitIcon = await getNounIcon(6651904)
+          const volunteerIcon = await getNounIcon(6763364)
+          setBadges({"hostIcon": hostIcon, "commitIcon":commitIcon, "volunteerIcon":volunteerIcon})
+        }
+
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
     };
   
-    fetchData(); // Call the function to fetch icons
-  }, [profileIcon, eventIcon]); // Include relevant dependencies
+    fetchData(); 
+  }, [profileIcon, eventIcon, badges]);
   
   useEffect(() => {
     if (userProfileData.events_attending) {

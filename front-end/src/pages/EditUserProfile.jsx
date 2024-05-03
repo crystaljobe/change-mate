@@ -25,13 +25,15 @@ export default function EditUserProfile() {
   };
 
   // upon form submit call utility function to set new user data
+  
   const updateUserProfile = async () => {
-    const responseStatus = await putUserProfile(
-      user,
-      userInterestsIDs,
-      displayName,
-      userLocation,
-      profileImage
+    const upload_data = {
+      interests: userInterestsIDs,
+      display_name: displayName,
+      location: userLocation,
+      image: profileImage,
+    };
+    const responseStatus = await putUserProfile(upload_data
     );
     if (responseStatus) {
       navigate("/profile");
@@ -79,78 +81,6 @@ export default function EditUserProfile() {
         <Col></Col>
         <Col className="text-center">
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formLocationSearch">
-              <Form.Label>
-                Country
-                <br />
-                <input
-                  name="country"
-                  placeholder="Country"
-                  type="text"
-                  list="countries-list" // Use the list attribute to associate with the datalist
-                  size={40}
-                  onChange={(e) => setCountryAdd(e.target.value)}
-                />
-                {/* Create a datalist with options from apiCountries */}
-                <datalist id="countries-list">
-                  {apiCountries.map((country, index) => (
-                    <option key={index} value={country.name} />
-                  ))}
-                </datalist>
-              </Form.Label>
-              <Form.Label>
-                Region/State
-                <br />
-                <input
-                  name="state"
-                  placeholder=" Region/State"
-                  type="text"
-                  list="states-list" // Use the list attribute to associate with the datalist
-                  size={40}
-                  value={stateAdd[1]} // Display only the state name
-                  onChange={(e) => {
-                    const selectedState = apiStates.find(state => state.name === e.target.value);
-                    setStateAdd(selectedState ? [selectedState.id, selectedState.name] : []);
-                  }}
-                />
-                {/* Create a datalist with options from apiStates */}
-                <datalist id="states-list">
-                  {apiStates.map((state, index) => (
-                    <option key={index} value={state.name} />
-                  ))}
-                </datalist>
-              </Form.Label>
-              <Form.Label>
-                City
-                <br />
-                <input
-                  name="city"
-                  placeholder="City"
-                  type="text"
-                  list="cities-list" // Use the list attribute to associate with the datalist
-                  size={40}
-                  onChange={(e) => setCityAdd(e.target.value)}
-                />
-                {/* Create a datalist with options from apiCities */}
-                <datalist id="cities-list">
-                  {apiCities.map((city, index) => (
-                    <option key={index} value={city.name} />
-                  ))}
-                </datalist>
-              </Form.Label>
-              {userLocation.length === 0 ?
-                  <p style={{fontStyle:'italic'}}>No locations set</p> :
-                  userLocation.map((l, k) => (
-                      <div key={k}>
-                          <Button id={k} size="sm" variant="danger" onClick={(e) => handleRemoveLocation(l)}>{l}</Button>
-                      </div>
-                  ))
-              }
-              <br />
-              <Button variant="info" onClick={() => handleAddLocation()}> 
-              Add Location
-            </Button>
-            </Form.Group>
             <Form.Group className="mb-3" controlId="display_name">
               <Form.Label>
                 Display Name:
