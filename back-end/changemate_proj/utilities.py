@@ -11,13 +11,13 @@ session = boto3.Session(
 class ImageUploader:
     '''Utility class to upload images to S3 bucket'''
     @staticmethod
-    def upload_image(user_id, image):
+    def upload_image(id, image, folder):
         '''
         Upload an image to S3 bucket and return the URL of the image
         param user_id: ID of the user
         param image: base64 encoded image
         return: URL of the image'''
-        filename = f'profile_photos/{user_id}_profile_picture.jpeg'
+        filename = f'{folder}/{id}_profile_picture.jpeg'
         imagedata = image
 
         # Decode the base64-encoded image data into bytes
