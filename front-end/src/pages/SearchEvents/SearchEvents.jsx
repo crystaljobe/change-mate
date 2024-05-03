@@ -1,88 +1,28 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Button from 'react-bootstrap/Button';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import './SearchEvents.css'; // Assuming you add a CSS file for extra styles
-import { getEventDetailsSearch } from "../../utilities/EventUtilities";
-import { getUserProfile } from '../../utilities/UserProfileUtilities'
+import { Button, Form, InputGroup, Container, Row, Col, Carousel } from 'react-bootstrap';
+import './SearchEvents.css';
 import EventCard from "../../components/EventCard";
-import { getCountries, getStates, getCities } from "../../utilities/CountryStateCityUtilities";
+import DropdownComponent from "../../components/AdvancedFilterButtons";
+import { getEventDetailsSearch } from "../../utilities/EventUtilities";
 
 function SearchEvents() {
-    const [userLocations, setUserLocations] = useState([]);
+    // This holds all events initially fetched or loaded
+    const [allEvents, setAllEvents] = useState([]); // This holds all events initially fetched or loaded
+    // to save query parameters for sub filtering 
+    const [selectedCategory, setSelectedCategory] = useState('');
+    // to conditionally render advanced search buttons
+    const [searchSubmitted, setSearchSubmitted] = useState(false);
     const [searchType, setSearchType] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
-    const [searchDateStart, setSearchDateStart] = useState('');
-    const [searchDateEnd, setSearchDateEnd] = useState('');
-    const [searchLocation, setSearchLocation] = useState('');
-    const [locationData, setLocationData] = useState([]);
     const [searchEventType, setSearchEventType] = useState('');
     const [searchEvents, setSearchEvents] = useState([]);
     const [eventsPopular, setEventsPopular] = useState([]);
     // TODO: once we have a spot on our events to indicate whether volunteers are needed, we can add functionality to sort searchEvents into searchEventsVolNeed
     const [eventsVolNeed, setEventsVolNeed] = useState([]);
     const [eventsAdditional, setEventsAdditional] = useState([]);
-    // Next three set api data for auto-populated suggestions
-    const [apiCountries, setApiCountries] = useState([]);
-    const [apiStates, setApiStates] = useState([]);
-    const [apiCities, setApiCities] = useState([]);
-    // Next three set location data from form to be used in formatting and setting the userLocation
-    const [countryAdd, setCountryAdd] = useState("");
-    const [stateAdd, setStateAdd] = useState("");
-    const [cityAdd, setCityAdd] = useState("");
     const myOutletContextObj = useOutletContext();
     const { user } = myOutletContextObj;
-
-    // Fetches countries and sets them to apiCountries
-  const fetchCountries = async () => {
-    const countries = await getCountries()
-    setApiCountries(countries)
-  }
-
-  useEffect(() => {
-    fetchCountries()
-}, []);
-
-  // Fetches states and sets them to apiStates
-  const fetchStates = async () => {
-    const states = await getStates(countryAdd)
-    setApiStates(states)
-  }
-
-  useEffect(() => {
-    if (countryAdd) {
-      fetchStates();
-    }
-  }, [countryAdd]);
-
-  // Fetches CITIES and sets them to apiCities
-  const fetchCities = async () => {
-    const cities = await getCities(stateAdd[0])
-    setApiCities(cities)
-  }
-
-  useEffect(() => {
-    if (stateAdd) {
-      fetchCities();
-    }
-  }, [stateAdd]);
-
-  // Gets current user locations which are a json string and converts it back to an array of objects for manipulation
-  const getLocationData = () => {
-    if (searchLocation) {
-      setLocationData(searchLocation)
-    }
-  }
-
-  useEffect(() => {
-    if (searchLocation) {
-      getLocationData();
-    }
-  }, [searchLocation]);
 
     // Handles changing the searchType; SearchType is needed so that when the form submits it knows which API call to do
     const handleSearchTypeChange = (selectedType) => {
@@ -91,39 +31,26 @@ function SearchEvents() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        setSearchSubmitted(false);
 
         // Creates an object with all the search parameters
         const allData = {
-            "type": searchEventType, 
-            "start_date": searchDateStart, 
-            "end_date": searchDateEnd, 
-            "location": searchLocation,
-            searchType: searchTerm
+            "type": searchEventType,
+            [searchType]: searchTerm
         }
         // Calls the getEventDetailsSearch function from EventUtilities to get the events that match the search parameters
         getEventDetailsSearch(allData)
             .then((response) => {
                 setSearchEvents(response)
+                setSearchSubmitted(true); 
             })
     }
-    // Gets user locations for rendering events based on user location upon page render
-    const getUserLocations= async () => {
-        const userResponse = await getUserProfile(user);
-        const locations = userResponse.location
-        setUserLocations(locations)
-    };
-
-    useEffect(() => {
-        getUserLocations()
-    }, [userLocations]);
 
     const getLocalEvents = async () => {
         const allData = {
-            "type": undefined, 
-            "start_date": undefined, 
-            "end_date": undefined, 
-            "location": userLocations,
+            "type": undefined,
+            "start_date": undefined,
+            "end_date": undefined,
             searchType: undefined
         }
         getEventDetailsSearch(allData)
@@ -131,23 +58,6 @@ function SearchEvents() {
                 setSearchEvents(response)
             })
     }
-
-    useEffect(() => {
-        getLocalEvents()
-    }, [userLocations]);
-
-    const handleAddLocation = (e) => {
-        // Create a location object from form values
-        let location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
-        if (stateAdd[1] === undefined) {
-         location = `${countryAdd}`
-        }
-        // Sets the userLocation to the new json string of locations
-        setSearchLocation(location) 
-        handleSubmit(e)
-      }
-    
-
 
     // Sorts the events returned from the search into eventsPopular
     const sortPopularEvents = async (searchEvents) => {
@@ -161,7 +71,7 @@ function SearchEvents() {
             } else {
                 unpopEvents.push(event)
             }
-            
+
         }
         // Sets popular events to eventsPopular and not popular events to eventsAdditional
         setEventsPopular(popEvents)
@@ -179,193 +89,148 @@ function SearchEvents() {
         }
         // Sets events that need volunteers to the eventsVolNeed
         setEventsVolNeed(needVol)
-       
+
     }
 
     useEffect(() => {
         sortPopularEvents(searchEvents)
         sortVolunteerEvents(searchEvents)
     }, [searchEvents]);
-    console.log(searchEvents)
+
+    function chunkArray(array, chunkSize) {
+        const chunks = [];
+        for (let i = 0; i < array.length; i += chunkSize) {
+            chunks.push(array.slice(i, i + chunkSize));
+        }
+        return chunks;
+    }
+
+    const popularGroupedEvents = chunkArray(eventsPopular, 3);
+    const volunteerGroupedEvents = chunkArray(eventsVolNeed, 3);
+    const additionalGroupedEvents = chunkArray(eventsAdditional, 3);
+
+    useEffect(() => {
+        if (searchSubmitted && selectedCategory) {
+            const filteredEvents = allEvents.filter(event => event.category === selectedCategory);
+            setSearchEvents(filteredEvents);
+        }
+    }, [selectedCategory, searchSubmitted, allEvents]);
+    
+    
     return (
-        <div className="search-events">
-            {/* Search Bar */}
-            <div className="container-fluid mt-5">
-                <div className="row">
-                    <div className="col">
-                        <h2>Search Events</h2>
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Group className="mb-3" controlId="formLocationSearch">
-                                <Form.Label>
-                                    Country
-                                    <br />
-                                    <input
-                                    name="country"
-                                    placeholder="Country"
-                                    type="text"
-                                    list="countries-list" // Use the list attribute to associate with the datalist
-                                    size={40}
-                                    onChange={(e) => setCountryAdd(e.target.value)}
-                                    />
-                                    {/* Create a datalist with options from apiCountries */}
-                                    <datalist id="countries-list">
-                                    {apiCountries.map((country, index) => (
-                                        <option key={index} value={country.name} />
-                                    ))}
-                                    </datalist>
-                                </Form.Label>
-                                <Form.Label>
-                                    Region/State
-                                    <br />
-                                    <input
-                                    name="state"
-                                    placeholder=" Region/State"
-                                    type="text"
-                                    list="states-list" // Use the list attribute to associate with the datalist
-                                    size={40}
-                                    value={stateAdd[1]} // Display only the state name
-                                    onChange={(e) => {
-                                        const selectedState = apiStates.find(state => state.name === e.target.value);
-                                        setStateAdd(selectedState ? [selectedState.id, selectedState.name] : []);
-                                    }}
-                                    />
-                                    {/* Create a datalist with options from apiStates */}
-                                    <datalist id="states-list">
-                                    {apiStates.map((state, index) => (
-                                        <option key={index} value={state.name} />
-                                    ))}
-                                    </datalist>
-                                </Form.Label>
-                                <Form.Label>
-                                    City
-                                    <br />
-                                    <input
-                                    name="city"
-                                    placeholder="City"
-                                    type="text"
-                                    list="cities-list" // Use the list attribute to associate with the datalist
-                                    size={40}
-                                    onChange={(e) => setCityAdd(e.target.value)}
-                                    />
-                                    {/* Create a datalist with options from apiCities */}
-                                    <datalist id="cities-list">
-                                    {apiCities.map((city, index) => (
-                                        <option key={index} value={city.name} />
-                                    ))}
-                                    </datalist>
-                                </Form.Label>
-                            
-                                <Button variant="info" onClick={() => handleAddLocation()}> 
-                                Add Location
-                                </Button>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Date(s):</Form.Label>{' '}
-                                <Form.Text  muted>
-                                    Enter first date for exact match, or both dates for a range
-                                </Form.Text>
-                                <div className="d-flex">
-                                        <div>
-                                            <Form.Control type="date" onChange={(e) => setSearchDateStart(e.target.value)} />
-                                        </div>
-                                        <div>
-                                            <Form.Control type="date" onChange={(e) => setSearchDateEnd(e.target.value)} />
-                                        </div>
-                                    </div>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>In-Person/Virtual?</Form.Label>
-                                <div className="mb-3">
-                                    <Form.Check
-                                        inline
-                                        label="In-Person"
-                                        name="group1"
-                                        type='radio'
-                                        value='In-person'
-                                        onChange={(e) => setSearchEventType(e.target.value)}
-                                    />
-                                    <Form.Check
-                                        inline
-                                        label="Virtual"
-                                        name="group1"
-                                        type='radio'
-                                        value='Virtual'
-                                        onChange={(e) => setSearchEventType(e.target.value)}
-                                    />
-                                </div>
-                            </Form.Group>
-                            <InputGroup className="mb-3">
-                                <DropdownButton
-                                    variant="outline-secondary"
-                                    title={searchType ? `Search by ${searchType}` : "Search Type"}
-                                    id="input-group-dropdown-1"
-                                >
-                                    <Dropdown.Item onClick={() => handleSearchTypeChange('keyword')}>Keyword</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => handleSearchTypeChange('category')}>Category</Dropdown.Item>
-                                </DropdownButton>
-                                <Form.Control aria-label="Text input with dropdown button" onChange={(e) => setSearchTerm(e.target.value)} />
-                                <Button variant="outline-secondary" id="button-addon2" type="submit">Search</Button>
-                            </InputGroup>
-                        </Form>
+        <div className="search-events p-4">
+            <div className="search-events-background">
+                {/* This container-fluid will apply to the overall layout, allowing sections like event cards to stretch fully */}
+                <div className="container-fluid mt-5">
+                    <div className="row">
+                        <div className="col-md-10 mx-auto">
+                            <h2 className="mb-4" style={{ textAlign: 'center' }}>Search Events</h2>
+                            <Form onSubmit={handleSubmit} className="shadow p-3 mb-5 bg-white rounded">
+                                <Row>
+                                    <Col md={4}>
+                                        <InputGroup>
+                                            <InputGroup.Text>Keyword</InputGroup.Text>
+                                            <Form.Control aria-label="Keyword search" onChange={(e) => handleSearchTypeChange(e.target.value)} />
+                                        </InputGroup>
+                                    </Col>
+                                    <Col md={4}>
+                                        <InputGroup>
+                                            <InputGroup.Text>Location</InputGroup.Text>
+                                            <Form.Control placeholder="State, City" list="location-list" onChange={(e) => setCountryAdd(e.target.value)} />
+                                            <datalist id="location-list">
+                                                {/* Assuming combined list, or you can manage separate inputs as needed
+                                                {apiCountries.concat(apiStates).concat(apiCities).map((loc, index) => (
+                                                    <option key={index} value={loc.name} />
+                                                ))} */}
+                                            </datalist>
+                                        </InputGroup>
+                                    </Col>
+                                    <Col md={3}>
+                                        <InputGroup>
+                                        <InputGroup.Text>Type</InputGroup.Text>
+                                        <Form.Select onChange={(e) => setSearchEventType(e.target.value)} defaultValue="In-person">
+                                            <option value="In-person">In-Person</option>
+                                            <option value="Virtual">Virtual</option>
+                                        </Form.Select>
+                                        </InputGroup>
+                                    </Col>
+                                    <Col md={1}>
+                                        <Button variant="primary" type="submit" className="w-100">Search</Button>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </div>
                     </div>
                 </div>
             </div>
+                                
+            {/* Conditionally render component W/ searchSubmitted and pass query setSelectedCategory for subquery*/}
+            {searchSubmitted && <DropdownComponent onCategoryChange={setSelectedCategory} />} 
 
-            {/* Popular Events */}
-            <div className="container-fluid mt-5">
-                <h2 className="mb-3 text-center">Popular Events</h2>
-                <div className="row row-cols-1 row-cols-lg-4 g-4">
-                    {/* Renders no popular events message if no popular events returned; If popular events is returned, maps through eventsPopular rendering an EventCard for each*/}
-                    {eventsPopular.length == 0 ?
-                        <h5 style={{fontStyle:'italic'}}>No popular events found matching your search parameters</h5> :
-                        eventsPopular.map(e => 
-                            <EventCard 
-                                key={e.id}
-                                id={e.id}
-                                title={e.title}
-                                image={e.event_photo}
-                                description={e.description}
-                            />
+            {/* Popular Events with Carousel */}
+            <div className="search-events p-4">
+                <Container fluid className="mt-5">
+                    <h2 className="text-center">Popular Events</h2>
+                    {eventsPopular.length === 0 ? (
+                        <p className="text-muted text-center">No popular events found.</p>
+                    ) : (
+                        <Carousel interval={null} indicators={true}>
+                            {popularGroupedEvents.map((group, index) => (
+                                <Carousel.Item key={index}>
+                                    <Row className="justify-content-center">
+                                        {group.map((event) => (
+                                            <Col key={event.id} xs={12} md={4} className="d-flex align-items-stretch">
+                                                <EventCard {...event} />
+                                            </Col>
+                                        ))}
+                                    </Row>
+                                </Carousel.Item>
+                            ))}
+                        </Carousel>
                     )}
-                </div>
-            </div>
-            
-            {/* Events Needing Volunteers */}
-            <div className="container-fluid mt-5 mb-5">
-                <h2 className="mb-3 text-center">Events Needing Volunteers</h2>
-                <div className="row row-cols-1 row-cols-lg-4 g-4">
-                    {/* Renders no events needing volunteers message if no events needing volunteers returned; If events needing volunteers is returned, maps through eventsVolNeed rendering an EventCard for each*/}
-                    {eventsVolNeed.length == 0 ?
-                        <h5 style={{fontStyle:'italic'}}>No events needing volunteers found matching your search parameters</h5> :
-                        eventsVolNeed.map(e => 
-                            <EventCard 
-                                key={e.id}
-                                id={e.id}
-                                title={e.title}
-                                image={e.event_photo}
-                                description={e.description}
-                            />
-                    )}
-                </div>
-            </div>
+                </Container>
 
-            {/* Additional Events */}
-            <div className="container-fluid mt-5">
-                <h2 className="mb-3 text-center">Additional Events</h2>
-                <div className="row row-cols-1 row-cols-lg-4 g-4">
-                    {/* Renders no other events message if no additional events returned; If additional events is returned, maps through eventsAdditional rendering an EventCard for each*/}
-                    {eventsAdditional.length == 0 ?
-                        <h5 style={{fontStyle:'italic'}}>No other events found matching your search parameters</h5> :
-                        eventsAdditional.map(e => 
-                            <EventCard 
-                                key={e.id}
-                                id={e.id}
-                                title={e.title}
-                                image={e.event_photo}
-                                description={e.description}
-                            />
+                <Container fluid className="mt-5">
+                    <h2 className="text-center">Events Needing Volunteers</h2>
+                    {eventsVolNeed.length === 0 ? (
+                        <p className="text-muted text-center">No events needing volunteers found.</p>
+                    ) : (
+                        <Carousel interval={null} indicators={true}>
+                            {volunteerGroupedEvents.map((group, index) => (
+                                <Carousel.Item key={index}>
+                                    <Row className="justify-content-center">
+                                        {group.map((event) => (
+                                            <Col key={event.id} xs={12} md={4} className="d-flex align-items-stretch">
+                                                <EventCard {...event} />
+                                            </Col>
+                                        ))}
+                                    </Row>
+                                </Carousel.Item>
+                            ))}
+                        </Carousel>
                     )}
-                </div>
+                </Container>
+
+                <Container fluid className="mt-5">
+                    <h2 className="text-center">Additional Events</h2>
+                    {eventsAdditional.length === 0 ? (
+                        <p className="text-muted text-center">No other events found.</p>
+                    ) : (
+                        <Carousel interval={null} indicators={true}>
+                            {additionalGroupedEvents.map((group, index) => (
+                                <Carousel.Item key={index}>
+                                    <Row className="justify-content-center">
+                                        {group.map((event) => (
+                                            <Col key={event.id} xs={12} md={2} className="d-flex align-items-stretch">
+                                                <EventCard {...event} />
+                                            </Col>
+                                        ))}
+                                    </Row>
+                                </Carousel.Item>
+                            ))}
+                        </Carousel>
+                    )}
+                </Container>
             </div>
         </div>
     );

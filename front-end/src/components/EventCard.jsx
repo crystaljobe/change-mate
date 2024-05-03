@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { getNounIcon } from "../utilities/DefaultIconsUtilities";
 
-function EventCard({ id, title, image, description }) {
+function EventCard({ id, title, event_photo, description }) {
     const [icon, setIcon] = useState("");
 
     useEffect(() => {
@@ -18,7 +18,7 @@ function EventCard({ id, title, image, description }) {
 
     return (
         <Card style={{ width: '40rem' }}>
-            <Card.Img variant="top" src={image ? image : icon} />
+            <Card.Img variant="top" src={event_photo ? event_photo : icon} />
             <Card.Body>
                 <Card.Title>{title}</Card.Title>
                 <Card.Text>{description}</Card.Text>

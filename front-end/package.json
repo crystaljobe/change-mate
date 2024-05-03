@@ -17,6 +17,7 @@
     "@mapbox/mapbox-gl-geocoder": "^5.0.2",
     "@mapbox/search-js-react": "^1.0.0-beta.19",
     "@mui/icons-material": "^5.15.15",
+    "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.15",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "add-to-calendar-button": "^2.6.13",
@@ -28,6 +29,7 @@
     "package.json": "^0.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
+    "react-datepicker": "^6.9.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
     "styled-components": "^6.1.8"
