@@ -7,11 +7,11 @@ from event_app.serializers import EventCardSerializer
 class UserProfileSerializer(serializers.ModelSerializer):
     user_events = EventCardSerializer(many=True)
     events_attending = EventCardSerializer(many=True)
-    volunteer_events = EventCardSerializer(many=True)
+    interests = InterestCategorySerializer(many=True)
 
     class Meta: 
         model = UserProfile
-        fields = ['id','interests','display_name','image','location','user_events', 'events_attending', 'volunteer_events']
+        fields = ['id', 'display_name', 'location', 'coordinates', 'image', 'interests', 'user_events', 'events_attending', 'volunteer_events']
 
 class DisplayNameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,3 +29,7 @@ class BasicUserDataSerializer(serializers.ModelSerializer):
     def get_email(self, obj):
         return obj.user.email
    
+class UserProfileSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['id', 'display_name', 'image']

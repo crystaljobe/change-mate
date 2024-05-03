@@ -32,22 +32,10 @@ function EventForm({
     attendeesNeeded,
     onVolunteersNeededChange,
     onAttendeesNeededChange,
-	setLocation,
 	setEventCoordinates,
 	handleSubmit,
 	setEventVenueAddress,
 
-	// Props added for location features
-	apiCountries,
-	apiStates,
-	apiCities,
-	stateAdd,
-	location,
-	setCountryAdd,
-    setStateAdd,
-    setCityAdd,
-	handleAddLocation,
-	handleRemoveLocation,
 
 }) {
 	const styles = {
@@ -58,18 +46,6 @@ function EventForm({
 		onEventVenueAddressChange({ target: { value: newAddress } });
 	};
 
-	// Handles conditional rendering for the remove location button
-	const renderRemoveLocation = () => {
-		if (location == "" || location == null) {
-			// If no location
-			return <p style={{fontStyle:'italic'}}>No locations set</p> 
-		} else {
-			if (location != null) {
-				// If location is city based
-				return <Button size="sm" variant="danger" onClick={(e) => handleRemoveLocation()} >{location}</Button>
-			} 
-		}
-	}
 
 	return (
 		<Form onSubmit={handleSubmit} className="p-3">
@@ -194,89 +170,12 @@ function EventForm({
 
 									<Row className="mb-3" style={{ justifyContent: "center" }}>
 										<LocationSearchMap
-											setEventCoords={setEventCoordinates}
+											setCoords={setEventCoordinates}
 											setEventVenueAddress={handleLocationChange}
 											setAddress={setEventVenueAddress}
-											setLocation={setLocation}
 										/>
 									</Row>
 								</Row>
-							)}
-
-							{/* If event is virtual render inputs for setting a general location */}
-							{eventType.includes("Virtual") && (
-								<Form.Group className="mb-3" controlId="formLocationSearch">
-									<Form.Label className="mt-2" style={styles.label}>
-										General Location:{" "}
-										<span style={{ fontStyle: "italic", fontWeight: "normal" }}>
-											(My virtual event has to do with something specific to a country, region/state or city (ex. local city government public policy); leave blank if not applicable)
-										</span>
-									</Form.Label>
-									<Form.Label>
-									Country
-									<br />
-									<input
-										name="country"
-										placeholder="Country"
-										type="text"
-										list="countries-list" // Use the list attribute to associate with the datalist
-										size={40}
-										onChange={(e) => setCountryAdd(e.target.value)}
-									/>
-									{/* Create a datalist with options from apiCountries */}
-									<datalist id="countries-list">
-										{apiCountries.map((country, index) => (
-										<option key={index} value={country.name} />
-										))}
-									</datalist>
-									</Form.Label>
-									<Form.Label>
-									Region/State
-									<br />
-									<input
-										name="state"
-										placeholder=" Region/State"
-										type="text"
-										list="states-list" // Use the list attribute to associate with the datalist
-										size={40}
-										value={stateAdd[1]} // Display only the state name
-										onChange={(e) => {
-										const selectedState = apiStates.find(state => state.name === e.target.value);
-										setStateAdd(selectedState ? [selectedState.id, selectedState.name] : []);
-										}}
-									/>
-									{/* Create a datalist with options from apiStates */}
-									<datalist id="states-list">
-										{apiStates.map((state, index) => (
-										<option key={index} value={state.name} />
-										))}
-									</datalist>
-									</Form.Label>
-									<Form.Label>
-									City
-									<br />
-									<input
-										name="city"
-										placeholder="City"
-										type="text"
-										list="cities-list" // Use the list attribute to associate with the datalist
-										size={40}
-										onChange={(e) => setCityAdd(e.target.value)}
-									/>
-									{/* Create a datalist with options from apiCities */}
-									<datalist id="cities-list">
-										{apiCities.map((city, index) => (
-										<option key={index} value={city.name} />
-										))}
-									</datalist>
-									</Form.Label>
-									<br />
-									{renderRemoveLocation()}
-									<br />
-									<Button variant="info" onClick={() => handleAddLocation()}> 
-									Add Location
-								</Button>
-							  </Form.Group>
 							)}
 						</Col>
 						<Col sm={12} md={6}>
@@ -368,7 +267,7 @@ function EventForm({
 						<Form.Control
 							type="file"
 							accept="image/*"
-							onChange={handleImageChange}zf
+							onChange={handleImageChange}
 						/>
 						{photoPreview && (
 							<img

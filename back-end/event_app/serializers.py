@@ -24,11 +24,19 @@ class EventAdminSerializer(serializers.ModelSerializer):
     category = InterestCategorySerializer()
     applicants = serializers.SerializerMethodField()
     volunteers = serializers.SerializerMethodField()
+    lat = serializers.SerializerMethodField()
+    lon = serializers.SerializerMethodField()
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'applicants', 'volunteers', 'hosts', 'event_photo' ]
+        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'applicants', 'volunteers', 'hosts', 'event_photo', 'lat', 'lon' ]
 
+    def get_lat(self, obj):
+        return obj.coordinates[0] if obj.coordinates else None
+    
+    def get_lon(self, obj):
+        return obj.coordinates[1] if obj.coordinates else None
+    
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
         return obj.event_start.strftime('%m/%d/%Y')
@@ -52,19 +60,38 @@ class EventAdminSerializer(serializers.ModelSerializer):
    # give list of volunteer applicants
     def get_applicants(self, obj):
         if obj.volunteer_roles:
-            return [{"id": role.id, "role": role.role, "applicants": [{"application_id": application.id, "user_id": application.applicant.id, "display_name": application.applicant.display_name, "profile_picture": application.applicant.image} for application in role.applications.all()]} for role in obj.volunteer_roles.all()]
+            roles = obj.volunteer_roles.all()
+            applicants = []
+            for role in roles: 
+                role_obj = {}
+                role_obj["role_id"] = role.id
+                role_obj["role"] = role.role
+                role_obj["applications"] = []
+                pending_applications = role.applications.exclude(application_status = "Approved")
+                for application in pending_applications:  
+                    application_data = {
+                        "application_id": application.applicant.id,
+                        "role": application.volunteer_role.role,
+                        "user_id": application.applicant.id,
+                        "display_name": application.applicant.display_name,
+                        "application_status": application.application_status,
+                        "profile_picture": application.applicant.image                        
+                    }
+                    role_obj["applications"].append(application_data)
+                applicants.append(role_obj)
+            return applicants  # Return the list of volunteers
         else:
             return None
 
     # get list of volunteers that have been assigned  
     def get_volunteers(self, obj):
         if obj.volunteer_roles:
-            approved_applications = [role.applications.filter(application_status=True) for role in obj.volunteer_roles.all()]
+            approved_applications = [role.applications.filter(application_status="approved") for role in obj.volunteer_roles.all()]
             volunteers = []
             for application_queryset in approved_applications:  # Iterate over each queryset
                 for application in application_queryset:  # Iterate over each application object in the queryset
                     volunteer = {
-                        "id": application.applicant.id,
+                        "application_id": application.applicant.id,
                         "role": application.volunteer_role.role,
                         "user_id": application.applicant.id,
                         "display_name": application.applicant.display_name,

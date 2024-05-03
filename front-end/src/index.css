@@ -49,22 +49,6 @@ nav {
   font-style: normal;
 }
 
-.homepage-header-text {
-  font-family: "Playfair Display", serif;
-  font-optical-sizing: auto;
-  font-weight: 600;
-  font-style: normal;
-  margin-top: 1rem;
-}
-
-.homepage-subtext {
-  font-family: "Poppins", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  color: #AB47BC;
-  margin-top: 2px;
-}
-
 .location-search-map-container {
   height: 300px;
   width: 500px;
@@ -78,8 +62,16 @@ nav {
 
 .map-container {
     height: 500px;
-  }
-   
+}
+
+.search-box-container {
+  width: 100px; 
+  height: 50px;
+}
+
+.mapboxgl-ctrl-geocoder input[type="text"] {
+  padding-left: 30px;
+}
 
 .sidebarStyle {
   display: inline-block;

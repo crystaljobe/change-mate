@@ -16,8 +16,6 @@ import {
   Button,
 } from "@mui/material";
 
-
-
 //only hosts have permission to access this page (profile.hosted_events(eventID == eventID))
 //FEATURES:
 // DONE - view volunteer volApplications
@@ -29,7 +27,7 @@ import {
 // - add other hosts
 
 
-function AdminPage() {
+export default function AdminPage() {
   const [eventDetails, setEventDetails] = useState({});
   const [roles, setRoles] = useState([]);
   const [approvedVolunteers, setApprovedVolunteers] = useState([]);
@@ -44,6 +42,10 @@ function AdminPage() {
   const getEvent = async () => {
     const eventDetails = await getAdminEventDetails(eventID);
     setEventDetails(eventDetails);
+  console.log("admin- eventDetails", eventDetails);
+
+  console.log("admin- eventDetails", eventDetails);
+
     const hostArr = eventDetails.hosts;
     const approvedVols = eventDetails.volunteers;
     const volApplications = eventDetails.applicants; //arr of obj {id <role.id>, role, [applicants] < arr of objs {application_id, user_id, applicant_id, display_name, profile_picture}> }
@@ -62,10 +64,7 @@ function AdminPage() {
     getEvent();
   }, []);
 
-  
- 
   // console.log(`admin page -- hosts`, hosts)
-  console.log(`admin- eventDetails`, eventDetails)
   console.log('adminpage - approved volunteers', approvedVolunteers)
   // console.log(`admin- roles`, roles);
 
@@ -73,7 +72,8 @@ function AdminPage() {
     <Container fluid className="event-collab-container">
       <Row className="gx-5">
         <Col md={4} className="event-details-col">
-          <DetailedEventCard eventDetails={eventDetails} />
+        {eventDetails.hosts && <DetailedEventCard {...eventDetails}>
+                  </DetailedEventCard>}
           <Button
             size="large"
             style={{ margin: "5%" }}
@@ -108,4 +108,4 @@ function AdminPage() {
   );
 }
 
-export default AdminPage;
+
