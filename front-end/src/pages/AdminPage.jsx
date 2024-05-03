@@ -44,6 +44,8 @@ export default function AdminPage() {
     setEventDetails(eventDetails);
   console.log("admin- eventDetails", eventDetails);
 
+  console.log("admin- eventDetails", eventDetails);
+
     const hostArr = eventDetails.hosts;
     const approvedVols = eventDetails.volunteers;
     const volApplications = eventDetails.applicants; //arr of obj {id <role.id>, role, [applicants] < arr of objs {application_id, user_id, applicant_id, display_name, profile_picture}> }
