@@ -67,7 +67,7 @@ function DetailedEventCard({
 		},
 		image: {
 			width: "100%",
-			maxHeight: "575px",
+			maxHeight: "500px",
 			// marginBottom: "20px",
 		},
 	};
@@ -95,9 +95,6 @@ function DetailedEventCard({
 		}
 	}, []);
 
-	// Conditional Styling for image display based on src
-	const imageStyle = event_photo ? styles.image : styles.icon;
-
 	//conditional for setting # of users
 	function usersAttendingMessage() {
 		if (num_users_attending === 0) {
@@ -120,6 +117,9 @@ function DetailedEventCard({
 			return `${volunteer_spots_remaining} volunteer roles still waiting to be filled.`;
 		}
 	}
+
+	// Conditional Styling for image display based on src
+	const imageStyle = event_photo ? styles.image : styles.icon;
 
 	return (
 		<Card style={styles.cardCSS} sm={8} border="light" className="mt-4">
