@@ -165,7 +165,7 @@ function DetailedEventCard({
 								<strong> Event Type: </strong>
 								{event_type}
 							</ListGroup.Item>
-							{event_type === "Virtual" ? (
+							{virtual_event_link ? (
 								<ListGroup.Item>
 									<strong> Event ListGroup.Item: </strong>
 									<a
