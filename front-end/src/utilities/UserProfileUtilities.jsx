@@ -7,7 +7,6 @@ export const getUserProfile = async(user) => {
 }
 
 export const putUserProfile = async (user, userInterests, displayName, userLocation, profileImage) => {
-    
 
     let response = await api.put("userprofile/edit_profile/", {
         interests: userInterests,
@@ -16,6 +15,7 @@ export const putUserProfile = async (user, userInterests, displayName, userLocat
         image: profileImage
     });
     if (response.status === 200) {
+        console.log(response.data)
         return true;
     } else {
         console.log("error:", response.data);

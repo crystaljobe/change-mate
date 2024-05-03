@@ -5,64 +5,67 @@ import './SearchEvents.css';
 import EventCard from "../../components/EventCard";
 import DropdownComponent from "../../components/AdvancedFilterButtons";
 import { getEventDetailsSearch } from "../../utilities/EventUtilities";
+import EventCard from "../../components/EventCard";
+
 
 function SearchEvents() {
-    // This holds all events initially fetched or loaded
-    const [searchEvents, setSearchEvents] = useState([]); 
-    // This holds the filtered events after advanced filteres are applied
-    const [filteredEvents, setFilteredEvents] = useState([]); 
-    // to save query parameters for sub filtering 
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const [selectedStartDate, setSelectedStartDate] = useState('');
-    const [selectedEndDate, setSelectedEndDate] = useState('');
-    // to conditionally render advanced search buttons
-    const [searchSubmitted, setSearchSubmitted] = useState(false);
+    const myOutletContextObj = useOutletContext();
+    const { userProfileData } = myOutletContextObj;
+
+    const [searchType, setSearchType] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
-    const [searchEventType, setSearchEventType] = useState('In-person');
-    // Sort events for rendering into popular, volunteers needed, and additional events
+    const [searchDateStart, setSearchDateStart] = useState('');
+    const [searchDateEnd, setSearchDateEnd] = useState('');
+    const [searchEventType, setSearchEventType] = useState('');
+    const [searchEvents, setSearchEvents] = useState([]);
     const [eventsPopular, setEventsPopular] = useState([]);
     // TODO: once we have a spot on our events to indicate whether volunteers are needed, we can add functionality to sort searchEvents into searchEventsVolNeed
     const [eventsVolNeed, setEventsVolNeed] = useState([]);
     const [eventsAdditional, setEventsAdditional] = useState([]);
-    const myOutletContextObj = useOutletContext();
-    const { user } = myOutletContextObj;
-
-    console.log('searchEvents', searchEvents)
-    console.log('filteredEvents', filteredEvents)
-    console.log('selectedCategory', selectedCategory)
-    console.log('selectedStartDate', selectedStartDate)
-    console.log('selectedEndDate', selectedEndDate)
+    // const [searchCoordinates, setSearchCoordinates] = useState(userProfileData.coordinates);
+    // const [searchDistance, setSearchDistance] = useState(25);
     
 
+
+    // Handles changing the searchType; SearchType is needed so that when the form submits it knows which API call to do
+    const handleSearchTypeChange = (selectedType) => {
+        setSearchType(selectedType);
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setSearchSubmitted(false);
-
         // Creates an object with all the search parameters
         const allData = {
-            "type": searchEventType,
-            "keyword": searchTerm
+            "type": searchEventType, 
+            "start_date": searchDateStart, 
+            "end_date": searchDateEnd, 
+            // "coordinates": searchCoordinates,
+            // "distance": searchDistance,
+            searchType: searchTerm
         }
 
         // Calls the getEventDetailsSearch function from EventUtilities to get the events that match the search parameters
         getEventDetailsSearch(allData)
             .then((response) => {
                 setSearchEvents(response)
-                setSearchSubmitted(true); 
             })
     }
 
-    // Will be reworked to set searchEvents to events local to the user; Currently it returns all events to be rendered on page load
-    const getLocalEvents = async () => {
-        const allData = {
-            "type": undefined,
-            "keyword": undefined
-        }
-        getEventDetailsSearch(allData)
-            .then((response) => {
-                setSearchEvents(response)
-            })
-    }
+
+    // const getLocalEvents = async () => {
+    //     const allData = {
+    //         "coordinates": userCoordinates,
+    //     }
+    //     getEventDetailsSearch(allData)
+    //         .then((response) => {
+    //             setSearchEvents(response)
+    //         })
+    // }
+
+    // useEffect(() => {
+    //     getLocalEvents()
+    // }, [userLocations]);
+
+
 
     // Sorts the events returned from the search into eventsPopular
     const sortPopularEvents = async (events) => {
@@ -82,7 +85,6 @@ function SearchEvents() {
         setEventsPopular(popEvents)
         setEventsAdditional(unpopEvents)
     }
-
     // Not funtional yet; Awaiting backend to add volunteers_needed to the model
     const sortVolunteerEvents = async (events) => {
         const needVol = []
@@ -105,6 +107,8 @@ function SearchEvents() {
         sortPopularEvents(searchEvents)
         sortVolunteerEvents(searchEvents)
     }, [searchEvents]);
+
+    
 
     useEffect(() => {
         sortPopularEvents(filteredEvents)
@@ -266,5 +270,4 @@ function SearchEvents() {
         </div>
     );
 }
-
 export default SearchEvents;
