@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
@@ -10,6 +10,7 @@ import LocationSearchMap from "../components/LocationSearchMap";
 
 
 export default function EditUserProfile({ user }) {
+  const { userProfileData, setUserProfileData } = useOutletContext();
   // set interest cats for selection options
   const [interestCategories, setInterestCategories] = useState([]);
   // set userProfile interests, display name, and location
@@ -38,15 +39,16 @@ export default function EditUserProfile({ user }) {
 
   // get user profile data for default values using utility funct
   const userProfile = async () => {
-    const userProfileData = await getUserProfile(user);
+    const ProfileData = await getUserProfile(user);
+   
     // set data
-    setUserLocation(userProfileData.location);
+    setUserLocation(ProfileData.location);
     setUserLocationCoords(userProfile.coordinates);
-    setDisplayName(userProfileData.display_name);
+    setDisplayName(ProfileData.display_name);
     // map through interests to set the current interests
-    setUserInterests(userProfileData.interests.map((cat) => cat.category));
-    setImagePreview(userProfileData.profileImage); // Set the image preview to the current profile image
-    setProfileImage(userProfileData.profileImage); // Set the profile image data for possible re-upload
+    setUserInterests(ProfileData.interests.map((cat) => cat.category));
+    setImagePreview(ProfileData.profileImage); // Set the image preview to the current profile image
+    setProfileImage(ProfileData.profileImage); // Set the profile image data for possible re-upload
   };
 
 
@@ -62,6 +64,7 @@ export default function EditUserProfile({ user }) {
     const responseStatus = await putUserProfile(upload_data
     );
     if (responseStatus) {
+      setUserProfileData(responseStatus);
       navigate("/profile");
     }
   };

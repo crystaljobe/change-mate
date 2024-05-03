@@ -98,7 +98,6 @@ function DetailedEventCard({
 
   // Conditional Styling for image display based on src
 	const imageStyle = event_photo ? styles.image : styles.icon;
-	const imageStyle = event_photo ? styles.image : styles.icon;
 
 	return (
 		<Card style={styles.cardCSS} sm={8} border="light" className="mt-4">

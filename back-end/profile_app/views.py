@@ -47,29 +47,29 @@ class EditUserProfile(APIView):
         user_profile = get_object_or_404(UserProfile, user=user)
         data = request.data.copy()
         
-        # Assuming interests are submitted as a list of IDs, handle them separately
+        # Get the interests from the data and remove it from the data body
         interests_ids = data.pop('interests', [])  
         
+        # pull the profile picture from data body
         profile_pic = data['image']
         
         if profile_pic:
             try:
                 response = ImageUploader.upload_image(user.id, profile_pic)
+                data["image"] = response
+                print("Image uploaded successfully", response)
             except Exception as e:
                 return Response(str(e), status=HTTP_400_BAD_REQUEST)
             
-            
-
-
         edit_profile = UserProfileSerializer(instance=user_profile, data=data, partial=True)
         if edit_profile.is_valid():
             # Save the user profile first
             updated_profile = edit_profile.save()
 
-            # Then handle interests if present
+           # Update the interests
             if interests_ids:
                 updated_profile.interests.set(interests_ids)
-
+            print(updated_profile)
             return Response(edit_profile.data, status=HTTP_200_OK)
         
         return Response(edit_profile.errors, status=HTTP_400_BAD_REQUEST)

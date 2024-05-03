@@ -46,21 +46,7 @@ export default function UserProfile({ user }) {
     fetchData(); 
   }, [profileIcon, eventIcon, badges]);
   
-  useEffect(() => {
-    if (userProfileData.events_attending) {
-      const fetchEvents = async () => {
-        // Fetch events data if userProfileData.events_attending is available
-        try {
-          // Fetch events data and update state
-          // You can add your logic here
-        } catch (error) {
-          console.error('Failed to fetch events:', error);
-        }
-      };
-  
-      fetchEvents(); // Call the function to fetch events
-    }
-  }, [userProfileData.events_attending]);
+
 
 
   // Main component layout using Bootstrap's grid system

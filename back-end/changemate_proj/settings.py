@@ -171,7 +171,3 @@ AWS_SECRET_ACCESS_KEY = env.get('AWS_SECRET_ACCESS_KEY')
 # Depending on the AWS account used, you might also need to declare AWS_SESSION_TOKEN as an environment variable
 
 AWS_STORAGE_BUCKET_NAME = env.get('AWS_STORAGE_BUCKET_NAME')
-# AWS_S3_REGION_NAME = 'us-east-2'
-# AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
-# AWS_DEFAULT_ACL = 'public-read'
-# AWS_QUERYSTRING_AUTH = False

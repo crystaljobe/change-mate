@@ -19,8 +19,7 @@ export const putUserProfile = async (upload_data) => {
     console.log(filteredUploadData)
     let response = await api.put("userprofile/edit_profile/", filteredUploadData);
     if (response.status === 200) {
-        console.log(response.data)
-        return true;
+        return response.data;
     } else {
         console.log("error:", response.data);
     }

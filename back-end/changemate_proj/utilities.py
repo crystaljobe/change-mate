@@ -9,8 +9,14 @@ session = boto3.Session(
 )
 
 class ImageUploader:
+    '''Utility class to upload images to S3 bucket'''
     @staticmethod
     def upload_image(user_id, image):
+        '''
+        Upload an image to S3 bucket and return the URL of the image
+        param user_id: ID of the user
+        param image: base64 encoded image
+        return: URL of the image'''
         filename = f'profile_photos/{user_id}_profile_picture.jpeg'
         imagedata = image
 
@@ -28,4 +34,4 @@ class ImageUploader:
             s3_url = f"https://{env.get('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com/{filename}"
             return s3_url
         except Exception as e:
-            return False, str(e)
+            raise Exception("Failed to upload image to s3")
