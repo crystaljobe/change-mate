@@ -5,42 +5,81 @@ import './SearchEvents.css';
 import EventCard from "../../components/EventCard";
 import DropdownComponent from "../../components/AdvancedFilterButtons";
 import { getEventDetailsSearch } from "../../utilities/EventUtilities";
-import EventCard from "../../components/EventCard";
+// import EventCard from "../../components/EventCard";
 
 
 function SearchEvents() {
-    const myOutletContextObj = useOutletContext();
-    const { userProfileData } = myOutletContextObj;
+    const { userProfileData } = useOutletContext();
+    const [userCoordinates, setUserCoordinates] = useState([]);
+    const deafaultDistance = 200
 
-    const [searchType, setSearchType] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [searchDateStart, setSearchDateStart] = useState('');
-    const [searchDateEnd, setSearchDateEnd] = useState('');
-    const [searchEventType, setSearchEventType] = useState('');
     const [searchEvents, setSearchEvents] = useState([]);
+    const [filteredEvents, setFilteredEvents] = useState([]);
+    const [searchSubmitted, setSearchSubmitted] = useState(false);
+
+    
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchCoordinates, setSearchCoordinates] = useState([]);
+    const [searchEventType, setSearchEventType] = useState('');
+
+    const [selectedDistance, setSelectedDistance] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedStartDate, setSelectedStartDate] = useState('');
+    const [selectedEndDate, setSelectedEndDate] = useState('');
+    
     const [eventsPopular, setEventsPopular] = useState([]);
     // TODO: once we have a spot on our events to indicate whether volunteers are needed, we can add functionality to sort searchEvents into searchEventsVolNeed
     const [eventsVolNeed, setEventsVolNeed] = useState([]);
     const [eventsAdditional, setEventsAdditional] = useState([]);
-    // const [searchCoordinates, setSearchCoordinates] = useState(userProfileData.coordinates);
-    // const [searchDistance, setSearchDistance] = useState(25);
+
+    // const [searchType, setSearchType] = useState('');
+    // const [searchDateStart, setSearchDateStart] = useState('');
+    // const [searchDateEnd, setSearchDateEnd] = useState('');
+   
+
+    console.log('userCoordinates', userCoordinates)
+
+    const getUserCoordinates = async () => {
+        setUserCoordinates(userProfileData.coordinates)
+    }
+
+    const getLocalEvents = async () => {
+        const allData = {
+            "coordinates": userCoordinates,
+            "distance": deafaultDistance
+        }
+
+        console.log('allData', allData)
+        getEventDetailsSearch(allData)
+            .then((response) => {
+                setSearchEvents(response)
+            })
+    }
+
+    useEffect(() => {
+        getUserCoordinates()
+    }, [userProfileData]);
+
+    useEffect(() => {
+        getLocalEvents()
+    }, [userCoordinates]);
     
 
 
-    // Handles changing the searchType; SearchType is needed so that when the form submits it knows which API call to do
-    const handleSearchTypeChange = (selectedType) => {
-        setSearchType(selectedType);
-    }
+    // // Handles changing the searchType; SearchType is needed so that when the form submits it knows which API call to do
+    // const handleSearchTypeChange = (selectedType) => {
+    //     setSearchType(selectedType);
+    // }
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Creates an object with all the search parameters
         const allData = {
             "type": searchEventType, 
-            "start_date": searchDateStart, 
-            "end_date": searchDateEnd, 
-            // "coordinates": searchCoordinates,
-            // "distance": searchDistance,
-            searchType: searchTerm
+            // "start_date": searchDateStart, 
+            // "end_date": searchDateEnd, 
+            "coordinates": searchCoordinates,
+            "distance": deafaultDistance,
+            "keyword": searchTerm
         }
 
         // Calls the getEventDetailsSearch function from EventUtilities to get the events that match the search parameters
@@ -51,19 +90,7 @@ function SearchEvents() {
     }
 
 
-    // const getLocalEvents = async () => {
-    //     const allData = {
-    //         "coordinates": userCoordinates,
-    //     }
-    //     getEventDetailsSearch(allData)
-    //         .then((response) => {
-    //             setSearchEvents(response)
-    //         })
-    // }
-
-    // useEffect(() => {
-    //     getLocalEvents()
-    // }, [userLocations]);
+    
 
 
 
@@ -100,15 +127,9 @@ function SearchEvents() {
     }
 
     useEffect(() => {
-        getLocalEvents()
-    }, []);
-
-    useEffect(() => {
         sortPopularEvents(searchEvents)
         sortVolunteerEvents(searchEvents)
     }, [searchEvents]);
-
-    
 
     useEffect(() => {
         sortPopularEvents(filteredEvents)
