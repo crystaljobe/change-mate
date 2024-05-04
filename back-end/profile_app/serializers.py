@@ -19,17 +19,13 @@ class DisplayNameSerializer(serializers.ModelSerializer):
         fields = ['display_name']
 
 class BasicUserDataSerializer(serializers.ModelSerializer):
-    email = serializers.SerializerMethodField()
 
     class Meta: 
         model = UserProfile
-        fields = ['id', 'display_name', 'email']
+        fields = ['id', 'display_name', 'image']
 
-
-    def get_email(self, obj):
-        return obj.user.email
    
 class UserProfileSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['id', 'display_name', 'image']
+        fields = ['id', 'display_name', 'image', 'email']

@@ -54,7 +54,7 @@ class EventsView(TokenReq):
         end_date = request.query_params.get('end_date')
         general = request.query_params.get('keyword')
         coordinates = request.query_params.get('coordinates')
-        distance = request.query_params.get('distance')
+        set_distance = request.query_params.get('distance')
         
     
         # case-insensitive partial match for filtering for location
@@ -82,7 +82,7 @@ class EventsView(TokenReq):
                 (F('coordinates__0') - lat) ** 2.0 +
                 (F('coordinates__1') - lon) ** 2.0
             )
-        ).filter(distance__lte=distance)  
+        ).filter(distance__lte=set_distance)  
 
            
         # case-insensitive partical match for filtering for keywords in title, description, and category    
