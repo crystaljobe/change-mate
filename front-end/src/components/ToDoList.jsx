@@ -42,26 +42,34 @@ function TodoList( {showAddToDo, eventDetails} ) {
     setTasks(tasks.filter(task => task.id !== taskId));
   };
 
+  //styles for card
+	const styles = {
+		cardCSS: {
+			maxWidth: "800px",
+			margin: "24px",
+      width: "100%",
+      maxHeight: "1300px",
+		},
+	};
+
   return (
-    <Card>
-      <CardHeader title="To-Do List" />
+    <Card className="cardCSS d-flex justify-self-end" style={styles.cardCSS}>
+      <h2>To-Do List</h2>
+      <hr/>
       <CardContent>
         <List>
           {tasks.map((task) => (
             <ListItem
+              style={{ marginLeft: 0 }}
               key={task.id}
               dense
               button
               onClick={showAddToDo ? () => toggleTaskCompletion(task.id) : null}
             >
-              <ListItemText
-                primary={task.task}
-                
-                style={{
+              <span className='card-body' style={{
                   textDecoration: (task.completed) ? "line-through" : "none",
-                }}
-
-              />{showAddToDo &&
+                }}>- {task.task}</span>
+              {showAddToDo &&
               <ListItemSecondaryAction>
                 <IconButton
                   edge="end"

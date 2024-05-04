@@ -169,9 +169,24 @@ export const postPostComment = async (eventID, postId, newCommentData) => {
   return postComments;
 }
 
+export const deletePostComment = async (eventID, replyId) => {
+  const response = await api.delete(`events/${eventID}/posts/comment/${replyId}/`);
+  console.log(response)
+  let postComments = response.data;
+  console.log("RETURN DATA", postComments)
+  return postComments;
+}
+
+export const deleteEventPost = async (eventID, postId) => {
+  const response = await api.delete(`events/${eventID}/posts/${postId}/`);
+  let postComments = response.data;
+  console.log("RETURN DATA", postComments)
+  return postComments;
+}
+
 export const getEventTasks = async (eventID) => {
   // console.log(eventID)
-  const response = await api.get(`events/${eventID}/todo/`);
+  const response = await api.get(`todo/${eventID}`);
   let eventTasks = response.data;
   return eventTasks;
 }

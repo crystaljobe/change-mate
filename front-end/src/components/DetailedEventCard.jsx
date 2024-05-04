@@ -39,6 +39,7 @@ function DetailedEventCard({
 		cardCSS: {
 			// width: "80vw",
 			maxWidth: "800px",
+			minWidth: "300px",
 			margin: "24px",
 		},
 		header: {

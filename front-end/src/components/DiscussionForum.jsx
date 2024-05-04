@@ -1,11 +1,14 @@
-import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, TextField, Button, Typography, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Divider } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, TextField, Button, Typography, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Divider, InputAdornment, GlobalStyles } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Form, Image } from 'react-bootstrap';
+import { useState, useEffect, useRef, Fragment } from 'react';
 import { useOutletContext } from "react-router-dom";
 import SendIcon from '@mui/icons-material/Send';
 import ReplyIcon from '@mui/icons-material/Reply';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
 import PersonIcon from '@mui/icons-material/Person';
-import { getEventPosts, postEventPosts, postPostComment } from '../utilities/EventUtilities';
+import { getEventPosts, postEventPosts, postPostComment, deleteEventPost, deletePostComment } from '../utilities/EventUtilities';
 
 function DiscussionForum({eventDetails, postType}) {
     const { userProfileData } = useOutletContext();
@@ -14,6 +17,7 @@ function DiscussionForum({eventDetails, postType}) {
     const [newReply, setNewReply] = useState("");
     const [replyingTo, setReplyingTo] = useState(null);
     const [openPostDialog, setOpenPostDialog] = useState(false);
+    const listRef = useRef(null);
 
     // Fetches posts and sets them to posts for rendering 
     const fetchPosts = async () => {
@@ -25,6 +29,7 @@ function DiscussionForum({eventDetails, postType}) {
         }
     };
     
+
     useEffect(() => {
         fetchPosts();
     }, [eventDetails]);
@@ -56,6 +61,18 @@ function DiscussionForum({eventDetails, postType}) {
         }
     };
 
+    const deletePost = async (postId) => {
+        const response = await deleteEventPost(eventDetails.id, postId)
+        setPosts(response)
+        
+        
+    }
+
+    const deleteReply = async (postId, replyId) => {
+        const response = await deletePostComment(eventDetails.id, replyId)
+        setPosts(response)
+    }
+
     const openNewPostDialog = () => {
         setOpenPostDialog(true);
     };
@@ -65,36 +82,67 @@ function DiscussionForum({eventDetails, postType}) {
         setNewPost("");
     };
 
+  //styles for card
+  const styles = {
+    cardCSS: {
+        maxWidth: "none",
+        margin: "24px",
+        width: "100%",
+        maxHeight: "1300px",
+    },
+};
+
+  // Function to scroll the list to the bottom
+  const scrollToBottom = () => {
+    if (listRef.current) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+  };
+
+  // Scroll to bottom whenever new content is added
+  useEffect(() => {
+    scrollToBottom();
+  }, [posts]);
+
     return (
-        <Paper style={{ padding: '16px', margin: '16px' }}>
-            <Typography variant="h6" gutterBottom>
-                Discussion Forum
-            </Typography>
-            <Button variant="outlined" startIcon={<AddCircleOutlineIcon />} onClick={openNewPostDialog}>
-                Create Post
-            </Button>
-            <List>
+        <Paper className="cardCSS ms-0 me-0" style={styles.cardCSS}>
+            <h2>Discussion Forum</h2>
+            <hr/>
+            
+            <List  ref={listRef} style={{overflow:"scroll"}}>
                 {posts && posts.length === 0 ? (
-                    <h3 style={{ fontStyle: "italic" }}>
+                    <h3 className='d-flex justify-content-center pt-5 pb-4'>
                         This event doesn't have any posts yet
                     </h3>
                 ) : (
                     posts.map((post, index) => (
-                        <React.Fragment key={post.id}>
-                            <ListItem alignItems="flex-start" sx={{ mb: 2 }}>
-                                <ListItemAvatar>
+                        <Fragment key={post.id}>
+                            <ListItem alignItems="flex-start" sx={{ mb: 1 }}>
+                                <ListItemAvatar className='me-3' >
                                     {post.user.image ?
-                                    <Avatar src={post.user.image} /> : 
+                                    <Avatar  alt={post.user.display_name} src={post.user.image} sx={{ width: 70, height: 70 }} /> : 
                                     <Avatar> <PersonIcon /> </Avatar>
                                     }
                                 </ListItemAvatar>
+                                
                                 <ListItemText
-                                    primary={post.context}
-                                    secondary={`${post.user.display_name} - ${new Date(post.timestamp).toLocaleString()}`}
+                                    primary={<span className='card-body'>{post.context}</span>}
+                                    secondary={<div>
+                                    <span className='card-body' >
+                                    {`${post.user.display_name} - `} 
+                                    </span>
+                                    <span className='card-body' style={{fontSize:"1rem"}}>
+                                    {new Date(post.timestamp).toLocaleString()}
+                                    </span>
+                                    </div>
+                                    }
                                 />
                                 <IconButton onClick={() => setReplyingTo(post.id === replyingTo ? null : post.id)} edge="end" aria-label="reply">
                                     <ReplyIcon />
                                 </IconButton>
+                                {userProfileData.id === post.user.id && <IconButton onClick={() => deletePost(post.id)} edge="end" aria-label="delete">
+                                    <DeleteIcon />
+                                </IconButton>}
                             </ListItem>
                             {replyingTo === post.id && (
                                 <TextField
@@ -116,17 +164,20 @@ function DiscussionForum({eventDetails, postType}) {
                             {post.comments && post.comments.map(reply => (
                                 <ListItem sx={{ pl: 4 }} key={reply.id}>
                                     <ListItemText
-                                        style={{ fontStyle: "italic"}}
-                                        primary={reply.content}
+                                        primary={<span style={{ fontStyle: "italic"}} className='card-body'>{reply.content}</span>}
                                         secondary={`${reply.user.display_name} - ${new Date(reply.timestamp).toLocaleString()}`}
                                     />
+                                    {userProfileData.id === post.user.id && <IconButton onClick={() => deleteReply(post.id, reply.id)} edge="end" aria-label="delete">
+                                    <DeleteIcon />
+                                </IconButton>}
                                 </ListItem>
                             ))}
                             <Divider variant="inset" component="li" />
-                        </React.Fragment>
+                        </Fragment>
                     ))
                 )}
             </List>
+
             <Dialog open={openPostDialog} onClose={closeNewPostDialog} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">New Post</DialogTitle>
                 <DialogContent>
@@ -151,6 +202,28 @@ function DiscussionForum({eventDetails, postType}) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <TextField
+                label="Message..."
+                variant="outlined"
+                fullWidth
+                multiline
+                minRows={1}
+                maxRows={3}
+                value={newPost}
+                onChange={(e) => setNewPost(e.target.value)}
+                margin="normal"
+                inputstyle={{ fontSize: 40 }}
+                InputProps={{
+                endAdornment: (
+                    <InputAdornment position="end">
+                        <IconButton onClick={handlePost}>
+                            <SendIcon />
+                        </IconButton>
+                    </InputAdornment>
+                ),
+                }}
+            />
         </Paper>
     );
 }
