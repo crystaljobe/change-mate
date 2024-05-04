@@ -147,7 +147,7 @@ function VolunteerManager({
         </AccordionDetails>
       </Accordion>
 
-      <Accordion>
+      <Accordion style={{marginTop: "1vh"}}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>Assigned Volunteer Roles</Typography>
         </AccordionSummary>
