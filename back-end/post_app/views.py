@@ -66,6 +66,9 @@ class EventPostView(TokenReq):
         for post in posts:
             post.delete()
         return Response(status=HTTP_204_NO_CONTENT)
+    
+
+
 @api_view(['POST'])
 def like_post(request, event_id, post_id):
         event = get_object_or_404(Event, pk=event_id)
@@ -162,7 +165,9 @@ class APostView(TokenReq):
         event = get_object_or_404(Event, pk=event_id)
         post = get_object_or_404(Post, pk=post_id)
         post.delete()
-        return Response(status=HTTP_204_NO_CONTENT)
+        all_posts = get_list_or_404(Post, event=event_id, post_orgin="Collaborators Page")
+        ser_posts = ViewEventPostSerializer(all_posts, many=True)
+        return Response(ser_posts.data, status=HTTP_200_OK)
     
     
  
@@ -202,17 +207,20 @@ class CommentView(TokenReq):
             return Response(ser_posts.data, status=HTTP_201_CREATED)      
         return Response(serializer.data.error, status=HTTP_200_OK)
     
+
+     
+class ACommentView(TokenReq):
     @swagger_auto_schema(
         operation_summary="Delete a comment",
         operation_description="Delete a comment for selected post by Id.",
         request_body=CommentSerializer,
-        responses={204: 'No Content'},
+        responses={200: EventPostSerializer()},
     )
-    
-    def delete(self, request, event_id, post_id, comment_id):
-        event = get_object_or_404(Event, pk=event_id)
-        post = get_object_or_404(Post, pk=post_id)
-        comments = get_list_or_404(Comment, post=post_id, id=request.data['id'])
-        for comment in comments:
-            comment.delete()
-        return Response(status=HTTP_204_NO_CONTENT)
+    def delete(self, request, event_id, comment_id):
+        comment = get_object_or_404(Comment, id=comment_id)
+        comment.delete()
+        all_posts = get_list_or_404(Post, event=event_id, post_orgin="Collaborators Page")
+        ser_posts = ViewEventPostSerializer(all_posts, many=True)
+        print(ser_posts.data)
+        return Response(ser_posts.data, status=HTTP_200_OK)
+        

@@ -4,7 +4,7 @@ from profile_app.models import UserProfile
 from interest_app.models import InterestCategory
 from django.contrib.postgres.fields import ArrayField
 from decimal import Decimal
-from todo_app.models import TodoList
+
 
 # Create your models here.
 class Event(models.Model):
@@ -41,5 +41,4 @@ class Event(models.Model):
     location = models.CharField(max_length=100, blank=True, null=True)
     coordinates = ArrayField(models.FloatField(null=True, blank =True), null=True, blank=True)
     # volunteer_roles - related from volunteer roles model
-    
-    to_do_list = models.ForeignKey(TodoList, on_delete=models.CASCADE, related_name='event_tasks', null=True, blank=True)
+    # to_do_list - related from to do list model
