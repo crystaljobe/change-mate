@@ -156,16 +156,16 @@ export const getEventPosts = async (eventID, postType) => {
 }
 
 export const postEventPosts = async (eventID, postType, newPostData) => {
-  console.log(newPostData)
   const response = await api.post(`events/${eventID}/posts/${postType}/`, newPostData);
   let eventPosts = response.data;
+  console.log("RETURN DATA", eventPosts)
   return eventPosts;
 }
 
 export const postPostComment = async (eventID, postId, newCommentData) => {
-  console.log(newCommentData)
   const response = await api.post(`events/${eventID}/posts/${postId}/comments/`, newCommentData);
   let postComments = response.data;
+  console.log("RETURN DATA", postComments)
   return postComments;
 }
 

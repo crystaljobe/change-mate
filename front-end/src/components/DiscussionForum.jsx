@@ -19,7 +19,6 @@ function DiscussionForum({eventDetails, postType}) {
     const fetchPosts = async () => {
         try {
             const postsData = await getEventPosts(eventDetails.id, postType);
-            console.log(postsData)
             setPosts(postsData); // Update the state with fetched posts
         } catch (error) {
             console.error("Error fetching posts:", error);
@@ -34,15 +33,12 @@ function DiscussionForum({eventDetails, postType}) {
         if (newPost.trim()) {
             const newPostData = {
                 event: eventDetails.id,
-                context: newPost,
-                timestamp: new Date().toISOString(),
-                replies: [],
-                user: userProfileData.id
+                context: newPost
             };
-            await postEventPosts(eventDetails.id, postType, newPostData)
+            const response = await postEventPosts(eventDetails.id, postType, newPostData)
             setNewPost("");
             setOpenPostDialog(false);
-            fetchPosts() // Refreshes posts for rendering new post without refreshing the page
+            setPosts(response) // Refreshes posts for rendering new post without refreshing the page
         }
     };
 
@@ -51,13 +47,12 @@ function DiscussionForum({eventDetails, postType}) {
             const newReplyData = {
                 post: postId,
                 content: newReply,
-                timestamp: new Date().toISOString(),
                 user: userProfileData.id
             };
-            await postPostComment(eventDetails.id, postId, newReplyData)
+            const response = await postPostComment(eventDetails.id, postId, newReplyData)
             setNewReply("");
             setReplyingTo(null); // Clear the reply state
-            fetchPosts() // Refreshes posts for rendering new comment without refreshing the page
+            setPosts(response) // Refreshes posts for rendering new comment without refreshing the page
         }
     };
 
@@ -88,13 +83,14 @@ function DiscussionForum({eventDetails, postType}) {
                         <React.Fragment key={post.id}>
                             <ListItem alignItems="flex-start" sx={{ mb: 2 }}>
                                 <ListItemAvatar>
-                                    <Avatar>
-                                        <PersonIcon />
-                                    </Avatar>
+                                    {post.user.image ?
+                                    <Avatar src={post.user.image} /> : 
+                                    <Avatar> <PersonIcon /> </Avatar>
+                                    }
                                 </ListItemAvatar>
                                 <ListItemText
                                     primary={post.context}
-                                    secondary={`${post.user} - ${new Date(post.timestamp).toLocaleString()}`}
+                                    secondary={`${post.user.display_name} - ${new Date(post.timestamp).toLocaleString()}`}
                                 />
                                 <IconButton onClick={() => setReplyingTo(post.id === replyingTo ? null : post.id)} edge="end" aria-label="reply">
                                     <ReplyIcon />
@@ -120,8 +116,9 @@ function DiscussionForum({eventDetails, postType}) {
                             {post.comments && post.comments.map(reply => (
                                 <ListItem sx={{ pl: 4 }} key={reply.id}>
                                     <ListItemText
+                                        style={{ fontStyle: "italic"}}
                                         primary={reply.content}
-                                        secondary={`${reply.user} - ${new Date(reply.timestamp).toLocaleString()}`}
+                                        secondary={`${reply.user.display_name} - ${new Date(reply.timestamp).toLocaleString()}`}
                                     />
                                 </ListItem>
                             ))}

@@ -91,7 +91,7 @@ function DetailedEventCard({
 			// console.log("no event event_photo getting eventIcon")
 			fetchEventIcon();
 		}
-    	//creates hostsStr from collab arr in 	
+    //creates hostsStr from collab arr in 	
 		if (!hostStr) {
       let hostArr = hosts.map(
         (host) => host.display_name
