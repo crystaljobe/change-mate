@@ -96,7 +96,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
   const updateTheTodo = async (taskID, assignedHost, completed) => {
       console.log("update the todo funct --", taskID, assignedHost, completed);
 
-    let response = await updateTodo(eventID, taskID, assignedHost, completed);
+    let response = await updateTodo(taskID, assignedHost, completed);
     if (response) {
       getTodos();
       console.log("todo updated --all tasks --", tasks);
@@ -108,7 +108,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
 
   //delete todo
   const deleteTheTodo = async (taskID) => {
-    let response = await deleteATodo(eventID, taskID);
+    let response = await deleteATodo(taskID);
     if (response) {
       getTodos();
     } else {
