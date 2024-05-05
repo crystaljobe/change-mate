@@ -2,16 +2,11 @@ import {
 	Container,
 	Col,
 	Row,
-	ListGroup,
-	Card,
-	Button,
-	ListGroupItem,
 } from "react-bootstrap";
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "add-to-calendar-button";
 import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
-import { getiCalEventDetails } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerApplication from "../components/VolunteerApplication";
 import StaticMap from "../components/EventDetailsStaticMap";
@@ -19,7 +14,7 @@ import StaticMap from "../components/EventDetailsStaticMap";
 export default function EventDetails() {
 	let { eventID } = useParams();
 	const { userProfileData } = useOutletContext();
-	const [iCalDetails, setiCalDetails] = useState([]);
+
 	const [eventDetails, setEventDetails] = useState({});
 
 	//consolidated useEffects on page and only recall api if event id changes
@@ -30,9 +25,7 @@ export default function EventDetails() {
 				try {
 					//get and set event details and iCal details
 					const event = await getEventDetails(eventID);
-					const iCal = await getiCalEventDetails(eventID);
 					setEventDetails(event);
-					setiCalDetails(iCal);
 					// console.log("fetching and setting")
 				} catch (error) {
 					console.error(error);
@@ -49,6 +42,26 @@ export default function EventDetails() {
 			console.log("user rsvp");
 		}
 	};
+
+	//conditional for setting # of users 
+	function usersAttendingMessage() {
+		if (num_users_attending === 0) {
+			return;
+		} else if (num_users_attending === 1){
+			return `${num_users_attending} of your mates is attending this event, would you like to join them at this event?`
+		} else {
+			return `${num_users_attending} of your mates are attending this event, would you like to join them at this event?`
+		}
+	}
+
+	//conditional for setting # of volunteers needed 
+	function volunteersNeededMessage(){
+		if (volunteer_spots_remaining === 0) {
+			return "All volunteer spots filled!"
+		} else if (volunteer_spots_remaining === 1) {
+			return `This event is needing ${volunteer_spots_remaining} more volunteer. Would you like to volunteer for this event?`
+		}
+	}
  //still working on this piece 
  
 	// Checks the events that the user is attending for id match with the eventID for this page
@@ -93,8 +106,8 @@ export default function EventDetails() {
 					{console.log(eventDetails)}
 
 					{eventDetails.hosts && (
-						<DetailedEventCard {...eventDetails}></DetailedEventCard>
-					)}
+						<DetailedEventCard {...eventDetails} />)
+					}
           <Link
 								to={`/eventCollab/${eventID}`}
 								className="btn btn-primary mr-2">
@@ -110,16 +123,14 @@ export default function EventDetails() {
 							{/* TODO: add conditonal rendering for volunteer option if event is accepting volunteers */}
 							{/* added volunteer application modal as a component */}
 							<a onClick={handleShow}>Volunteer</a>
+
                 <VolunteerApplication
                   show={show}
                   handleClose={handleClose}
                   eventID={eventID}
                 />
-
-							{/* if event needs attendees */}
-							{eventDetails.attendees_needed ? renderAttendingButton() : null}
-
-							
+						{/* if event needs attendees */}
+						{eventDetails.attendees_needed ? renderAttendingButton() : null}
 						</div>
 					</div>
 				</Col>
@@ -144,26 +155,6 @@ export default function EventDetails() {
 						</Row>
 					)}
 
-					{/* add to calendar button */}
-					{iCalDetails.description && (
-						<add-to-calendar-button
-							style={{ height: "50px" }}
-							size="5"
-							label="Add to Calendar"
-							options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-							name={iCalDetails.title}
-							location={
-								eventDetails.event_type === "Virtual"
-									? eventDetails.virtual_event_link
-									: `${eventDetails.event_venue} - ${eventDetails.event_venue_address}`
-							}
-							startDate={iCalDetails.startDate}
-							endDate={iCalDetails.endDate}
-							startTime={iCalDetails.startTime}
-							endTime={iCalDetails.endTime}
-							timeZone={iCalDetails.time_zone}
-							description={iCalDetails.description}></add-to-calendar-button>
-					)}
 				</Col>
 			</Row>
 		</Container>
