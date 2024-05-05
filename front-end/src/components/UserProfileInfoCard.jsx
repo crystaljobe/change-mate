@@ -1,5 +1,6 @@
 import { Card, Button, Row, Col, Image } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import DefaultProfileImg from "/src/assets/Default-Profile.png";
 
 export default function UserProfileInfoCard({
   image,

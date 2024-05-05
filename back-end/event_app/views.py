@@ -242,11 +242,11 @@ class AnEvent(APIView):
         # Checks if RSVP is present in body
         if 'rsvp' in data:
             # Checks if RSVP is yes or no
-            if data['rsvp'] == "yes":
+            if data['rsvp'] == True:
                 # Adds user to events attending
                 event.users_attending.add(user_data)
                 data.pop('rsvp')
-            elif data['rsvp'] == "no":
+            elif data['rsvp'] == False:
                 # Removes user from events attending
                 event.users_attending.remove(user_data)
                 data.pop('rsvp')

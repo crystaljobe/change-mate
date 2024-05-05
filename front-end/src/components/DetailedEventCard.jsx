@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getNounIcon } from "../utilities/DefaultIconsUtilities";
+import DefaultEventPhoto from "/src/assets/Default-Event.png";
 import { FcCalendar, FcClock } from "react-icons/fc";
 import { IoPeopleCircle } from "react-icons/io5";
 import { GiLaptop } from "react-icons/gi";
 import { FaLink } from "react-icons/fa";
 import { PiBuildingOfficeFill } from "react-icons/pi";
 import { MdLocationOn } from "react-icons/md";
-import { ListGroup, Card, Button, CardBody } from "react-bootstrap";
+import { ListGroup, Card } from "react-bootstrap";
 import ICalButton from "./iCalButton";
+import "add-to-calendar-button";
+
 
 
 function DetailedEventCard({
@@ -61,42 +63,30 @@ function DetailedEventCard({
 		},
 		icon: {
 			width: "80vw",
-			maxWidth: "250px",
+			maxWidth: "300px",
 			margin: "0 auto",
+			paddingTop: "20px",
 			display: "block",
 		},
 		image: {
 			width: "100%",
-			maxHeight: "575px",
+			maxHeight: "500px",
 			// marginBottom: "20px",
 		},
 	};
 
 	//use states
-	const [eventIcon, setEventIcon] = useState("");
 	const [hostStr, setHostStr] = useState(null);
-	// Fetch default event icon
-	const fetchEventIcon = async () => {
-		const icon = await getNounIcon(5130800);
-		setEventIcon(icon);
-	};
 
 	// updated to add conditional to only fetch icon if it's needed
 	// reduced use effects to one, since collaborators will never be undefined - automatically call setUpCardInfo
 	useEffect(() => {
-		if (!event_photo && !eventIcon) {
-			// console.log("no event event_photo getting eventIcon")
-			fetchEventIcon();
-		}
 		//creates hostsStr from collab arr in
 		if (!hostStr) {
 			let hostArr = hosts.map((host) => host.display_name);
 			setHostStr(hostArr.join(", "));
 		}
 	}, []);
-
-	// Conditional Styling for image display based on src
-	const imageStyle = event_photo ? styles.image : styles.icon;
 
 	//conditional for setting # of users
 	function usersAttendingMessage() {
@@ -121,13 +111,16 @@ function DetailedEventCard({
 		}
 	}
 
+	// Conditional Styling for image display based on src
+	const imageStyle = event_photo ? styles.image : styles.icon;
+
 	return (
 		<Card style={styles.cardCSS} sm={8} border="light" className="mt-4">
 			{/* Conditional rendering of event event_photo and styling; If event has event_photo, render that; If no event_photo, render default event icon */}
 			<Card.Img
 				className=""
 				variant="top"
-				src={event_photo || eventIcon}
+				src={event_photo || DefaultEventPhoto}
 				style={imageStyle}
 				alt={`${title}'s event_photo`}
 			/>
