@@ -221,6 +221,5 @@ class ACommentView(TokenReq):
         comment.delete()
         all_posts = get_list_or_404(Post, event=event_id, post_orgin="Collaborators Page")
         ser_posts = ViewEventPostSerializer(all_posts, many=True)
-        print(ser_posts.data)
         return Response(ser_posts.data, status=HTTP_200_OK)
         

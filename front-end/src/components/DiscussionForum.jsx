@@ -73,14 +73,6 @@ function DiscussionForum({eventDetails, postType}) {
         setPosts(response)
     }
 
-    const openNewPostDialog = () => {
-        setOpenPostDialog(true);
-    };
-
-    const closeNewPostDialog = () => {
-        setOpenPostDialog(false);
-        setNewPost("");
-    };
 
   //styles for card
   const styles = {
@@ -157,7 +149,7 @@ function DiscussionForum({eventDetails, postType}) {
                                     InputProps={{
                                     endAdornment: (
                                         <InputAdornment position="end">
-                                            <IconButton onClick={handleReply(post.id)}>
+                                            <IconButton onClick={() => handleReply(post.id)}>
                                                 <SendIcon />
                                             </IconButton>
                                         </InputAdornment>
@@ -206,7 +198,6 @@ function DiscussionForum({eventDetails, postType}) {
                 value={newPost}
                 onChange={(e) => setNewPost(e.target.value)}
                 margin="normal"
-                inputstyle={{ fontSize: 40 }}
                 InputProps={{
                 endAdornment: (
                     <InputAdornment position="end">
