@@ -5,6 +5,7 @@ import FullCalendar from '@fullcalendar/react'; // Import the FullCalendar compo
 import dayGridPlugin from '@fullcalendar/daygrid'; // Plugin to display the calendar in a day grid view
 import { getNounIcon } from '../utilities/DefaultIconsUtilities';
 import UserProfileInfoCard from "../components/UserProfileInfoCard";
+import EventCard from "../components/EventCard";
 
 
 // Define the UserProfile component which accepts a user prop
@@ -12,49 +13,13 @@ export default function UserProfile({ user }) {
   // Use the OutletContext to get userProfileData and its setter function
   const { userProfileData, setUserProfileData } = useOutletContext();
   // State variables to hold various user and events related data
-  const [profileIcon, setProfileIcon] = useState("");
-  const [eventIcon, setEventIcon] = useState("");
   const [badges, setBadges] = useState({})
   const [calendarEvents, setCalendarEvents] = useState([]); // State to show events on calendar
   const [isCalendarVisible, setIsCalendarVisible] = useState(true); // State to toggle calendar visibility
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      // Fetch icon data only if it's not already fetched
-      try {
-        if (!profileIcon) {
-          const iconData = await getNounIcon(4091300);
-          setProfileIcon(iconData);
-        }
-        if (!eventIcon) {
-          const eventIconData = await getNounIcon(5130800);
-          setEventIcon(eventIconData);
-        }
-        // Fetch other icons if needed, similar to the above
-      } catch (error) {
-        console.error('Failed to fetch data:', error);
-      }
-    };
 
-    fetchData(); // Call the function to fetch icons
-  }, [profileIcon, eventIcon]); // Include relevant dependencies
 
-  useEffect(() => {
-    if (userProfileData.events_attending) {
-      const fetchEvents = async () => {
-        // Fetch events data if userProfileData.events_attending is available
-        try {
-          // Fetch events data and update state
-          // You can add your logic here
-        } catch (error) {
-          console.error('Failed to fetch events:', error);
-        }
-      };
-
-      fetchEvents(); // Call the function to fetch events
-    }
-  }, [userProfileData.events_attending]);
 
   const toggleCalendarVisibility = () => {
     setIsCalendarVisible(!isCalendarVisible);
@@ -68,7 +33,6 @@ export default function UserProfile({ user }) {
           <Col xs={12}>
             <UserProfileInfoCard
               {...userProfileData}  // This spreads existing props, continue to use if applicable
-              profileIcon={profileIcon}
               badges={badges}
               interests={userProfileData.interests}
               userEvents={userProfileData.user_events}
@@ -101,29 +65,7 @@ export default function UserProfile({ user }) {
                   <Carousel.Item key={idx}>
                     <div className="d-flex justify-content-around">
                       {eventGroup.map(event => (
-                        <Card key={event.id} style={{ width: "30rem", height: "40rem", flex: "0 0 48%" }}> {/* Adjusted width */}
-                          <Card.Body>
-                            <Card.Title>{event.title}</Card.Title>
-                            <Card.Img
-                              variant="top"
-                              src={event.event_photo || eventIcon}
-                              style={{ height: "425px", width: "100%" }}
-                            />
-                            <Card.Text>
-                              <strong>When:</strong> {`${event.startDate} at ${event.startTime} -- ${event.endDate} at ${event.endTime}`}
-                              <br />
-                              <strong>Event Type:</strong> {event.event_type}
-                              {event.event_type !== "Virtual" && (
-                                <>
-                                  <br />
-                                  <strong>Location:</strong> {event.event_venue}
-                                </>
-                              )}
-                            </Card.Text>
-                            <Button variant="info" as={Link} to={`/editevent/${event.id}`}>Edit Event Details</Button>
-                            <Button variant="info" as={Link} to={`/event/${event.id}`}>View Event Details</Button>
-                          </Card.Body>
-                        </Card>
+                       <EventCard key={event.id} {...event} />
                       ))}
                     </div>
                   </Carousel.Item>

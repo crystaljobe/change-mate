@@ -12,8 +12,6 @@ export default function UserProfileInfoCard({
   image,
   display_name,
   location,
-  userIntStr,
-  profileIcon,
   badges,
   userEvents,
   eventsAttending,
