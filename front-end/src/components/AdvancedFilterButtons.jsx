@@ -6,9 +6,6 @@ import { getInterestCategories } from '../utilities/InterestCategoriesUtilities'
 import { startOfWeek, endOfWeek } from 'date-fns';
 
 const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelectedEndDate, setDistance}) => {
-
-    const [showProximityDropdown, setShowProximityDropdown] = useState(false);
-    const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
     const [interestCategories, setInterestCategories] = useState([]);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [startDate, setStartDate] = useState(new Date()); 
@@ -26,16 +23,7 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
         fetchInterestCategories();
     }, []);
 
-    const handleDateFilterChange = (option) => {
-        if (option === 'Custom Range') {
-            setShowDatePicker(true);
-        } else {
-            setShowDatePicker(false);
-            // handle other date filter options here
-        }
-    };
-
-    // Function to format date to "mm/dd/yyyy" format
+    // Function to format date to "YYYY-MM-DD" format
     const formatDate = (date) => {
         // Get the individual components of the date
         const day = date.getDate().toString().padStart(2, '0');
@@ -43,9 +31,10 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
         const year = date.getFullYear();
 
         // Return the formatted date
-        return `${month}/${day}/${year}`;
+        return `${year}-${month}-${day}`;
     };
 
+    // Function to get dates of current week
     const handleThisWeekSelection = () => {
         const today = new Date();
         const startOfWeekDate = startOfWeek(today); // Start of the current week
@@ -88,6 +77,7 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
         <Container fluid className="mt-5">
             <Row className="justify-content-center mt-4 mb-4">
                 <Col xs={12} style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '10px 0' }}>
+                    {/* Proximity Dropdown Filter */}
                     <DropdownButton id="proximity-dropdown" title="Filter by Proximity" variant="secondary">
                         {proximityOptions.map(option => (
                             <Dropdown.Item key={option} as="button" onClick={() => setDistance(parseInt(option))}>
@@ -95,7 +85,8 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
                             </Dropdown.Item>
                         ))}
                     </DropdownButton>
-
+                    
+                    {/* Category Dropdown Filter */}
                     <DropdownButton id="category-dropdown" title="Filter by Category" variant="secondary">
                         {interestCategories.map(option => (
                             <Dropdown.Item key={option.id} as="button" onClick={() => setSelectedCategory(option.category)}>
@@ -103,7 +94,8 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
                             </Dropdown.Item>
                         ))}
                     </DropdownButton>
-
+                    
+                    {/* Date Dropdown Filter */}
                     <DropdownButton id="date-dropdown" title="Filter by Day" variant="secondary">
                         <Dropdown.Item as="button" onClick={() => setShowDatePicker(!showDatePicker && true)}>Custom Range</Dropdown.Item>
                         <Dropdown.Item as="button" onClick={() => {
@@ -115,7 +107,8 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
                         <Dropdown.Item as="button" onClick={() => handleThisWeekSelection()}>This Week</Dropdown.Item>
                         <Dropdown.Item as="button" onClick={() => handleThisMonthSelection()}>This Month</Dropdown.Item>
                     </DropdownButton>
-
+                    
+                    {/* Date Picker Filter */}
                     {showDatePicker && (
                         <Form>
                             <DatePicker

@@ -37,7 +37,7 @@ const MapboxGeocoderComponent = ({setCoords}) => {
 
   return (
     <div>
-      <div id="geocoder" style={{ margin: '20px', minWidth: '100%' }}></div>
+      <div id="geocoder" style={{ minWidth: '100%' }}></div>
     </div>
   );
 };
