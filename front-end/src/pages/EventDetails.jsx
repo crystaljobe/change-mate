@@ -1,4 +1,4 @@
-import { Container, Col, Row, Button } from "react-bootstrap";
+import { Container, Col, Row, Button, Card } from "react-bootstrap";
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
@@ -10,52 +10,29 @@ export default function EventDetails() {
 	let { eventID } = useParams();
 	const { userProfileData } = useOutletContext();
 	const [eventDetails, setEventDetails] = useState({});
-
 	// boolean to check if user is attending event
 	const [rsvp, setRSVP] = useState(
 		Boolean(userProfileData.events_attending.filter((event) => event.id === eventID).length)
 		);
-
 	// console.log(userProfileData)
 	// console.log(eventDetails)
 
 	//consolidated useEffects on page and only recall api if event id changes
 	useEffect(() => {
 		//only fetch data once
-		if (!eventDetails.hosts) {
-			async function fetchAllData() {
-				try {
-					//get and set event details
-					const event = await getEventDetails(eventID);
-					setEventDetails(event);
-					// console.log("fetching and setting")
-				} catch (error) {
-					console.error(error);
-				}
+		async function fetchAllData() {
+			try {
+				//get and set event details
+				const event = await getEventDetails(eventID);
+				setEventDetails(event);
+				// console.log("fetching and setting")
+			} catch (error) {
+				console.error(error);
 			}
-			fetchAllData();
 		}
-	}, [eventID]);
+		fetchAllData();
 
-	//conditional for setting # of users
-	function usersAttendingMessage() {
-		if (num_users_attending === 0) {
-			return;
-		} else if (num_users_attending === 1) {
-			return `${num_users_attending} of your mates is attending this event, would you like to join them at this event?`;
-		} else {
-			return `${num_users_attending} of your mates are attending this event, would you like to join them at this event?`;
-		}
-	}
-
-	//conditional for setting # of volunteers needed
-	function volunteersNeededMessage() {
-		if (volunteer_spots_remaining === 0) {
-			return "All volunteer spots filled!";
-		} else if (volunteer_spots_remaining === 1) {
-			return `This event is needing ${volunteer_spots_remaining} more volunteer. Would you like to volunteer for this event?`;
-		}
-	}
+	}, []);
 
 	// Renders button conditionally based on if user is attending event
 	const renderAttendingButton = () => {
@@ -98,6 +75,19 @@ export default function EventDetails() {
 							)}
 						</Row>
 					)}
+					<Row>
+					<Card className="text-center">
+						<Card.Header>Ready to make a difference?</Card.Header>
+						<Card.Body>
+							<Card.Title>Special title treatment</Card.Title>
+							<Card.Text>
+							With supporting text below as a natural lead-in to additional content.
+							</Card.Text>
+							<Button variant="primary">Go somewhere</Button>
+						</Card.Body>
+						<Card.Footer className="text-muted">2 days ago</Card.Footer>
+						</Card>
+					</Row>
 					<Row>
 						{/* if event needs attendees */}
 						{eventDetails.hosts && !eventDetails.attendees_needed ? null : renderAttendingButton() }
