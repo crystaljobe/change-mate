@@ -58,7 +58,7 @@ function App() {
 
   return (
     <>
-      <MyNavbar user={ user } setUser={ setUser } displayName={userProfileData.display_name}/>
+      <MyNavbar setUserProfileData={setUserProfileData} user={ user } setUser={ setUser } displayName={userProfileData.display_name}/>
       <Outlet context={{ user, setUser, userProfileData, setUserProfileData }} />
     </>
   )
