@@ -5,37 +5,38 @@ import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerApplication from "../components/VolunteerApplication";
 import StaticMap from "../components/EventDetailsStaticMap";
-
 export default function EventDetails() {
 	let { eventID } = useParams();
 	const { userProfileData } = useOutletContext();
 	const [eventDetails, setEventDetails] = useState({});
+	const [rsvp, setRSVP] = useState(true);
 
-	// boolean to check if user is attending event
-	const [rsvp, setRSVP] = useState(
-		Boolean(userProfileData.events_attending.filter((event) => event.id === eventID).length)
-		);
+	//consolidated useEffects on page and only recall api if event id changes
+	useEffect(() => {
+		async function fetchAllData() {
+			try {
+				const event = await getEventDetails(eventID);
+				setEventDetails(event);
+				// Fetching userProfileData if not already available
+				// Assuming userProfileData is also fetched asynchronously
+			} catch (error) {
+				console.error(error);
+			}
+		}
+	
+		fetchAllData();
+	}, [eventID]); // Make sure to include eventID and userProfileData in the dependencies array
+	
+	useEffect(() => {
+		if (userProfileData && eventDetails) {
+			const isAttending = userProfileData.events_attending && userProfileData.events_attending.filter(event => event.id === eventID);
+			setRSVP(isAttending);
+		}
+	}, [userProfileData, eventDetails, eventID]);
 
 	// console.log(userProfileData)
 	// console.log(eventDetails)
 
-	//consolidated useEffects on page and only recall api if event id changes
-	useEffect(() => {
-		//only fetch data once
-		if (!eventDetails.hosts) {
-			async function fetchAllData() {
-				try {
-					//get and set event details
-					const event = await getEventDetails(eventID);
-					setEventDetails(event);
-					// console.log("fetching and setting")
-				} catch (error) {
-					console.error(error);
-				}
-			}
-			fetchAllData();
-		}
-	}, [eventID]);
 
 	//conditional for setting # of users
 	function usersAttendingMessage() {
@@ -80,7 +81,6 @@ export default function EventDetails() {
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
-
 	return (
 		<Container>
 			<Row>
@@ -91,11 +91,10 @@ export default function EventDetails() {
 				{/*Map displaying event location with link to google maps*/}
 				<Col md={4} sm={12} className="text-center">
 					<br />
-					{eventDetails.event_type === "In-person" && (
+					{console.log(eventDetails.lat)}
+					{eventDetails.lat && (
 						<Row className="justify-content-center">
-							{eventDetails.lat && (
 								<StaticMap lat={eventDetails.lat} lng={eventDetails.lon} />
-							)}
 						</Row>
 					)}
 					<Row>
@@ -116,7 +115,7 @@ export default function EventDetails() {
 							</div>
 							) 
 						: null }
-							
+
 					</Row>
 				</Col>
 			</Row>
