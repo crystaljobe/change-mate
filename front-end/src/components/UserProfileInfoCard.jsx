@@ -2,6 +2,9 @@ import { Card, Button, Row, Col, Image } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import DefaultProfileImg from "/src/assets/Default-Profile.png";
 import Avatar from '@mui/material/Avatar';
+import Diversity1Icon from '@mui/icons-material/Diversity1';
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
+import FollowTheSignsIcon from '@mui/icons-material/FollowTheSigns';
 
 export default function UserProfileInfoCard({
   image,
@@ -43,16 +46,16 @@ export default function UserProfileInfoCard({
               {interests.map((cat) => cat.category).join(", ") || 'Not specified'}
             </Card.Text>
           </Col>
-          <Col md={5}  style={{ paddingRight: '500px' }}> 
+          <Col md={6}  style={{ paddingRight: '300px' }}> 
             <Card.Title as='h3' style={{ fontWeight: 'bold', color: "#6840DF", textAlign: 'right' }}>Social Impact</Card.Title>
             <div style={{ textAlign: 'right' }}>
               {badges && <>
-                <Image src={badges['hostIcon']} rounded style={{ height: '10px', marginRight: '10px', verticalAlign: 'right' }} />
+                <Diversity1Icon fontSize='large'/>
                 <div>{userEvents.length} Events Created</div>
-                <Image src={badges["commitIcon"]} rounded style={{ height: '10px', marginRight: '10px', verticalAlign: 'right' }} />
-                <div>{eventsAttending.length} Events Committed To</div>
-                <Image src={badges["volunteerIcon"]} rounded style={{ height: '10px', marginRight: '10px', verticalAlign: 'right' }} />
+                <VolunteerActivismIcon fontSize='large'/>
                 <div>{volunteerEvents.length} Events Volunteered For</div>
+                <FollowTheSignsIcon fontSize='large'/>
+                <div>{eventsAttending.length} Events Committed To</div>
               </>}
             </div>
           </Col>
