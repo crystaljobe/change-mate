@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
