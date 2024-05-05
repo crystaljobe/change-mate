@@ -12,37 +12,31 @@ import MapboxGeocoderComponent from "../../components/MapboxGeocoderComponent";
 function SearchEvents() {
     const { userProfileData } = useOutletContext();
     const [userCoordinates, setUserCoordinates] = useState([]);
-    const [distance, setDistance] = useState(100);
+    // Distance set to 200 by default
+    const [distance, setDistance] = useState(200);
 
     const [searchEvents, setSearchEvents] = useState([]);
+    // filteredEvents useState can be used later once we setup filtering on front end
     // const [filteredEvents, setFilteredEvents] = useState([]);
     const [searchSubmitted, setSearchSubmitted] = useState(false);
 
-    
+    // Basic search parameters
     const [searchTerm, setSearchTerm] = useState('');
     const [searchCoordinates, setSearchCoordinates] = useState([]);
     const [searchEventType, setSearchEventType] = useState('');
 
-    // const [selectedDistance, setSelectedDistance] = useState(null);
+    // Filter parameters
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedStartDate, setSelectedStartDate] = useState('');
     const [selectedEndDate, setSelectedEndDate] = useState('');
     
+    // Categories for sorting search results into
     const [eventsPopular, setEventsPopular] = useState([]);
     // TODO: once we have a spot on our events to indicate whether volunteers are needed, we can add functionality to sort searchEvents into searchEventsVolNeed
     const [eventsVolNeed, setEventsVolNeed] = useState([]);
     const [eventsAdditional, setEventsAdditional] = useState([]);
 
-    // const [searchType, setSearchType] = useState('');
-    // const [searchDateStart, setSearchDateStart] = useState('');
-    // const [searchDateEnd, setSearchDateEnd] = useState('');
-   
-
-    // console.log('userCoordinates', userCoordinates)
-    console.log('searchEvents', searchEvents)
-    // console.log('searchCoordinates', searchCoordinates)
-    // console.log('filteredEvents', filteredEvents)
-
+    // Gets the user coordinates for automatic fetching of events in user's area
     const getUserCoordinates = async () => {
         setUserCoordinates(userProfileData.coordinates)
     }
@@ -58,8 +52,8 @@ function SearchEvents() {
                 "coordinates": userCoordinates,
                 "distance": distance/60
             }
-    
-            console.log('allData', allData)
+            
+            // Calls the getEventDetailsSearch function from EventUtilities to get the events that match the user's location
             getEventDetailsSearch(allData)
                 .then((response) => {
                     setSearchEvents(response)
@@ -84,8 +78,6 @@ function SearchEvents() {
             "end_date": selectedEndDate, 
             "category": selectedCategory
         }
-
-        console.log(allData)
 
         // Calls the getEventDetailsSearch function from EventUtilities to get the events that match the search parameters
         getEventDetailsSearch(allData)
@@ -130,7 +122,6 @@ function SearchEvents() {
         }
         // Sets events that need volunteers to the eventsVolNeed
         setEventsVolNeed(needVol)
-
     }
 
     // Chunks results of popular events, volunteer events and additional events into groups of three for rendering
