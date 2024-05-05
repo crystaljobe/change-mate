@@ -7,9 +7,8 @@ import { getNounIcon } from '../utilities/DefaultIconsUtilities';
 import UserProfileInfoCard from "../components/UserProfileInfoCard";
 
 
-
 // Define the UserProfile component which accepts a user prop
-export default function UserProfile({ user}) {
+export default function UserProfile({ user }) {
   // Use the OutletContext to get userProfileData and its setter function
   const { userProfileData, setUserProfileData } = useOutletContext();
 
@@ -18,7 +17,6 @@ export default function UserProfile({ user}) {
   const [eventIcon, setEventIcon] = useState("");
   const [badges, setBadges] = useState({})
   const [calendarEvents, setCalendarEvents] = useState([]);
-
 
 
   useEffect(() => {
@@ -59,8 +57,6 @@ export default function UserProfile({ user}) {
   }, [userProfileData.events_attending]);
 
 
-  console.log('USER PROFILE -- userEvents:')
-
   // Main component layout using Bootstrap's grid system
   return (
     <Container fluid>
@@ -92,6 +88,7 @@ export default function UserProfile({ user}) {
             </Card.Body>
           </Card>
         </Col>
+
         <Col md={4}>
           <h1 style={{ color: "#6840DF" }}>Events You're Hosting</h1>
           <Row>

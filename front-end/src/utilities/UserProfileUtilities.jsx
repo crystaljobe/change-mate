@@ -7,7 +7,6 @@ export const getUserProfile = async(user) => {
 }
 
 export const putUserProfile = async (user, userInterests, displayName, userLocation, profileImage) => {
-    
 
     let response = await api.put("userprofile/edit_profile/", {
         interests: userInterests,
@@ -16,6 +15,7 @@ export const putUserProfile = async (user, userInterests, displayName, userLocat
         image: profileImage
     });
     if (response.status === 200) {
+        console.log(response.data)
         return true;
     } else {
         console.log("error:", response.data);
@@ -27,3 +27,15 @@ export const getUserDisplayName = async(user) => {
     let userDisplayName = response.data;
     return userDisplayName;
 }
+
+//search for a user by email
+export const getUserByEmail = async(email) => {
+  const response = await api.get(`userprofile/search/${email}/`);
+  if (response.status === 200) {
+    let profileData = response.data;
+    return profileData;
+  } else {
+    console.log("error:", response.data);
+    return null
+  }
+};

@@ -41,10 +41,9 @@ h2 {
 }
 
 h3 {
-  font-size: min(max(18px, 1.5vw), 26px);
-  font-family: "Poppins", sans-serif;
+  font-family: Playfair Display, serif;
   font-weight: 400;
-  font-style: italic;
+  font-style: normal;
 }
 
 .card-body {

@@ -53,14 +53,14 @@ function DetailedEventCard({
 			marginBottom: "15px",
 		},
 		body: {
-			fontFamily: "Slabo 27px, serif",
+			fontFamily: "Poppins, sans-serif",
 			fontWeight: "400",
 			fontStyle: "normal",
 		},
 		subheader: {
-			fontFamily: "Slabo 27px, serif",
+			fontFamily: "Playfair Display, serif",
 			fontWeight: "400",
-			fontStyle: "italic",
+			fontStyle: "normal",
 		},
 		icon: {
 			width: "80vw",
@@ -72,19 +72,15 @@ function DetailedEventCard({
 			width: "100%",
 			maxHeight: "575px",
 			// marginBottom: "20px",
-
 		},
 	};
-
 	const [eventIcon, setEventIcon] = useState("");
 	const [hostStr, setHostStr] = useState(null);
-
 	// Fetch default event icon
 	const fetchEventIcon = async () => {
 		const icon = await getNounIcon(5130800);
 		setEventIcon(icon);
 	};
-
 	// updated to add conditional to only fetch icon if it's needed
   // reduced use effects to one, since collaborators will never be undefined - automatically call setUpCardInfo
 	useEffect(() => {
@@ -129,7 +125,7 @@ function DetailedEventCard({
 					{hostStr}
 				</Card.Subtitle>
 
-				
+
 				<ListGroup variant="flush">
         <ListGroup.Item></ListGroup.Item>
         <ListGroup.Item className="text-center" style={{paddingBottom:"10px"}}>
@@ -166,7 +162,7 @@ function DetailedEventCard({
 								<strong> Event Type: </strong>
 								{event_type}
 							</ListGroup.Item>
-							{event_type === "Virtual" ? (
+							{virtual_event_link ? (
 								<ListGroup.Item>
 									<strong> Event ListGroup.Item: </strong>
 									<a
@@ -195,11 +191,9 @@ function DetailedEventCard({
 								</>
 							)}
 					</ListGroup.Item>
-
 				</ListGroup>
 			</Card.Body>
 		</Card>
 	);
 }
-
 export default DetailedEventCard;

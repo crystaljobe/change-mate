@@ -39,6 +39,7 @@ function DiscussionForum({eventDetails, postType}) {
             const newPostData = {
                 event: eventDetails.id,
                 context: newPost
+                
             };
             const response = await postEventPosts(eventDetails.id, postType, newPostData)
             setNewPost("");
@@ -52,7 +53,7 @@ function DiscussionForum({eventDetails, postType}) {
             const newReplyData = {
                 post: postId,
                 content: newReply,
-                user: userProfileData.id
+             
             };
             const response = await postPostComment(eventDetails.id, postId, newReplyData)
             setNewReply("");
@@ -64,7 +65,6 @@ function DiscussionForum({eventDetails, postType}) {
     const deletePost = async (postId) => {
         const response = await deleteEventPost(eventDetails.id, postId)
         setPosts(response)
-        
         
     }
 
@@ -117,7 +117,7 @@ function DiscussionForum({eventDetails, postType}) {
                 ) : (
                     posts.map((post, index) => (
                         <Fragment key={post.id}>
-                            <ListItem alignItems="flex-start" sx={{ mb: 1 }}>
+                            <ListItem style={{border:"1px solid #e0e0e0", borderRadius:"6px", boxShadow:"0 2px 4px rgba(0,0,0,0.1)"}} alignItems="flex-start" sx={{ mb: 1 }}>
                                 <ListItemAvatar className='me-3' >
                                     {post.user.image ?
                                     <Avatar  alt={post.user.display_name} src={post.user.image} sx={{ width: 70, height: 70 }} /> : 
@@ -154,20 +154,39 @@ function DiscussionForum({eventDetails, postType}) {
                                     value={newReply}
                                     onChange={(e) => setNewReply(e.target.value)}
                                     margin="normal"
+                                    InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton onClick={handleReply(post.id)}>
+                                                <SendIcon />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                    }}
                                 />
                             )}
-                            {replyingTo === post.id && (
-                                <Button variant="contained" color="primary" endIcon={<SendIcon />} onClick={() => handleReply(post.id)}>
-                                    Reply
-                                </Button>
-                            )}
                             {post.comments && post.comments.map(reply => (
-                                <ListItem sx={{ pl: 4 }} key={reply.id}>
+                                <ListItem  sx={{ pl: 6 }} key={reply.id}>
+                                    <ListItemAvatar className='d-flex justify-content-end pe-1 ps-0' 
+                                    style={{
+                                        borderLeft: "2px solid #6840DF",
+                                        height:"3rem"}}>
+                                        {post.user.image ?
+                                        <Avatar 
+                                        className='align-self-center pt-0'
+                                        alt={post.user.display_name}
+                                        src={post.user.image} 
+                                        sx={{ width: 33, height: 33 }} /> : 
+                                        <Avatar> <PersonIcon /> </Avatar>
+                                        }
+                                    </ListItemAvatar>
                                     <ListItemText
+                                        className='ms-0 ps-2'
+                                        
                                         primary={<span style={{ fontStyle: "italic"}} className='card-body'>{reply.content}</span>}
                                         secondary={`${reply.user.display_name} - ${new Date(reply.timestamp).toLocaleString()}`}
                                     />
-                                    {userProfileData.id === post.user.id && <IconButton onClick={() => deleteReply(post.id, reply.id)} edge="end" aria-label="delete">
+                                    {userProfileData.id === reply.user.id && <IconButton onClick={() => deleteReply(post.id, reply.id)} edge="end" aria-label="delete">
                                     <DeleteIcon />
                                 </IconButton>}
                                 </ListItem>
@@ -177,32 +196,6 @@ function DiscussionForum({eventDetails, postType}) {
                     ))
                 )}
             </List>
-
-            <Dialog open={openPostDialog} onClose={closeNewPostDialog} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">New Post</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="post"
-                        label="What's on your mind?"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        value={newPost}
-                        onChange={(e) => setNewPost(e.target.value)}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={closeNewPostDialog} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handlePost} color="primary" endIcon={<SendIcon />}>
-                        Post
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
             <TextField
                 label="Message..."
                 variant="outlined"

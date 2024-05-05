@@ -1,28 +1,54 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
-import { putUserProfile } from "../utilities/UserProfileUtilities";
+import {
+  getUserProfile,
+  putUserProfile,
+} from "../utilities/UserProfileUtilities";
+import LocationSearchMap from "../components/LocationSearchMap";
 
-export default function EditUserProfile() {
+
+export default function EditUserProfile({ user }) {
   // set interest cats for selection options
   const [interestCategories, setInterestCategories] = useState([]);
   // set userProfile interests, display name, and location
-  const { userProfileData, setUserProfileData } = useOutletContext();
   const [userInterests, setUserInterests] = useState([]);
   const [userInterestsIDs, setUserInterestsIDs] = useState([]);
   const [displayName, setDisplayName] = useState([]);
-  const [userLocation, setUserLocation] = useState('');
+
+  // Set userLocation to/from backend; data format is a json string object
+  const [userLocation, setUserLocation] = useState(''); 
+  const [userLocationCoords, setUserLocationCoords] = useState([])
+  // console.log(userLocation, userLocationCoords)
+
   const [profileImage, setProfileImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
+  
   // create var navigate for navigating
   const navigate = useNavigate();
 
+
   // get interest categories using utility funct to set options available
-  const fetchInterestCategory = async () => {
+  const userInterestCategories = async () => {
     const categories = await getInterestCategories();
     setInterestCategories(categories);
   };
+
+
+  // get user profile data for default values using utility funct
+  const userProfile = async () => {
+    const userProfileData = await getUserProfile(user);
+    // set data
+    setUserLocation(userProfileData.location);
+    setUserLocationCoords(userProfile.coordinates);
+    setDisplayName(userProfileData.display_name);
+    // map through interests to set the current interests
+    setUserInterests(userProfileData.interests.map((cat) => cat.category));
+    setImagePreview(userProfileData.profileImage); // Set the image preview to the current profile image
+    setProfileImage(userProfileData.profileImage); // Set the profile image data for possible re-upload
+  };
+
 
   // upon form submit call utility function to set new user data
   const updateUserProfile = async () => {
@@ -37,6 +63,7 @@ export default function EditUserProfile() {
       navigate("/profile");
     }
   };
+
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -60,9 +87,10 @@ export default function EditUserProfile() {
     updateUserProfile();
   }
 
-  // useEffect to call upon page render to get interest categories
+  // useEffect to call upon page render
   useEffect(() => {
-    fetchInterestCategory();
+    userProfile();
+    userInterestCategories();
   }, []);
 
 
@@ -79,78 +107,7 @@ export default function EditUserProfile() {
         <Col></Col>
         <Col className="text-center">
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formLocationSearch">
-              <Form.Label>
-                Country
-                <br />
-                <input
-                  name="country"
-                  placeholder="Country"
-                  type="text"
-                  list="countries-list" // Use the list attribute to associate with the datalist
-                  size={40}
-                  onChange={(e) => setCountryAdd(e.target.value)}
-                />
-                {/* Create a datalist with options from apiCountries */}
-                <datalist id="countries-list">
-                  {apiCountries.map((country, index) => (
-                    <option key={index} value={country.name} />
-                  ))}
-                </datalist>
-              </Form.Label>
-              <Form.Label>
-                Region/State
-                <br />
-                <input
-                  name="state"
-                  placeholder=" Region/State"
-                  type="text"
-                  list="states-list" // Use the list attribute to associate with the datalist
-                  size={40}
-                  value={stateAdd[1]} // Display only the state name
-                  onChange={(e) => {
-                    const selectedState = apiStates.find(state => state.name === e.target.value);
-                    setStateAdd(selectedState ? [selectedState.id, selectedState.name] : []);
-                  }}
-                />
-                {/* Create a datalist with options from apiStates */}
-                <datalist id="states-list">
-                  {apiStates.map((state, index) => (
-                    <option key={index} value={state.name} />
-                  ))}
-                </datalist>
-              </Form.Label>
-              <Form.Label>
-                City
-                <br />
-                <input
-                  name="city"
-                  placeholder="City"
-                  type="text"
-                  list="cities-list" // Use the list attribute to associate with the datalist
-                  size={40}
-                  onChange={(e) => setCityAdd(e.target.value)}
-                />
-                {/* Create a datalist with options from apiCities */}
-                <datalist id="cities-list">
-                  {apiCities.map((city, index) => (
-                    <option key={index} value={city.name} />
-                  ))}
-                </datalist>
-              </Form.Label>
-              {userLocation.length === 0 ?
-                  <p style={{fontStyle:'italic'}}>No locations set</p> :
-                  userLocation.map((l, k) => (
-                      <div key={k}>
-                          <Button id={k} size="sm" variant="danger" onClick={(e) => handleRemoveLocation(l)}>{l}</Button>
-                      </div>
-                  ))
-              }
-              <br />
-              <Button variant="info" onClick={() => handleAddLocation()}> 
-              Add Location
-            </Button>
-            </Form.Group>
+           
             <Form.Group className="mb-3" controlId="display_name">
               <Form.Label>
                 Display Name:
@@ -162,6 +119,13 @@ export default function EditUserProfile() {
                 />
               </Form.Label>
             </Form.Group>
+
+            <Row className="mb-3" style={{ justifyContent: "center" }}>
+										<LocationSearchMap
+											setCoords={setUserLocationCoords}
+											setAddress={setUserLocation}
+										/>
+						</Row>
 
             <Form.Group className="mb-3" controlId="interests">
               <Form.Label>

@@ -89,61 +89,59 @@ function VolunteerManager({
   };
 
   //accept/reject volunteer application
-  const volunteerDecision = async (applicationID, applicationDecision) => {
+  const volunteerDecision = async (applicationID, applicationDecision, decisionText) => {
     try {
-      await putApplicationDecision(applicationID, applicationDecision);
+      console.log("volunteer decision put request", applicationID, applicationDecision)
+      await putApplicationDecision(applicationID, applicationDecision, decisionText);
     } catch (error) {
       console.error("Failed to give application decision", error);
     }
   };
   const handleAccept = () => {
-    const shoulBeTrue = volunteerDecision(selectedApplicant.application_id, "Approved")
+    const shoulBeTrue = volunteerDecision(selectedApplicant.application_id, "Approved", null)
     if (shoulBeTrue){console.log('accepted application successfully')}
     handleCloseModal();
   }
    const handleReject = () => {
-     volunteerDecision(selectedApplicant.application_id, "Denied");
+     volunteerDecision(selectedApplicant.application_id, "Denied", null);
     if (shoulBeTrue){console.log('rejected application successfully')}
      handleCloseModal();
    };
 
   return (
-    <div>
-      <Accordion>
+    <div style={{ marginTop: "2vw" }}>
+      <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>Pending Volunteer Applications</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {/* volunteer applications/applicants  */}
+          {/* pending volunteer applications/applicants  */}
           <List>
             {volunteerApplications.map((volRoleInstance, index) => (
-              // <Accordion>
-              //   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              //     <AccordionDetails>
-              <List key={index}>
-                {/* {volRoleInstance.role} */}
-                {volRoleInstance.applicants &&
-                  volRoleInstance.applicants.map((applicant, index) => (
-                    <ListItem
-                      key={index}
-                      button
-                      onClick={() => handleOpenModal(applicant)}
-                    >
-                      <ListItemAvatar key={applicant.user_id}>
-                        <Avatar key={applicant.user_id}>
-                          {applicant.profile_picture}
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={applicant.display_name}
-                        secondary={`Applying for: ${volRoleInstance.role}`}
-                      />
-                    </ListItem>
-                  ))}
-              </List>
-              //     </AccordionDetails>
-              //   </AccordionSummary>
-              // </Accordion>
+              // <List key={index}>
+              <>
+                {volRoleInstance.applications &&
+                  volRoleInstance.applications.map(
+                    (applicant, index) =>
+                      applicant.application_status && (
+                        <ListItem
+                          key={index}
+                          button
+                          onClick={() => handleOpenModal(applicant)}
+                        >
+                          <ListItemAvatar key={applicant.user_id}>
+                            <Avatar src={applicant.profile_picture} key={applicant.user_id}>
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={applicant.display_name}
+                            secondary={`Applying for: ${volRoleInstance.role}`}
+                          />
+                        </ListItem>
+                      )
+                  )}
+              </>
+              // </List>
             ))}
           </List>
         </AccordionDetails>
@@ -193,18 +191,21 @@ function VolunteerManager({
                 {/* APPROVED VOLUNTEERS  an arr of obj {id<applicant id>, role, user_id, display_name, profile_picture}*/}
                 <AccordionDetails>
                   <List>
-                    {approvedVolunteers.map((volunteer) => (
-                      <ListItem
-                        key={volunteer.user_id}
-                        button
-                        onClick={() => handleOpenModal(volunteer)}
-                      >
-                        <ListItemAvatar>
-                          <Avatar>{volunteer.profile_picture}</Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary={volunteer.display_name} />
-                      </ListItem>
-                    ))}
+                    {approvedVolunteers.map(
+                      (volunteer) =>
+                        volunteer.role === role && (
+                          <ListItem
+                            key={volunteer.user_id}
+                            button
+                            onClick={() => handleOpenModal(volunteer)}
+                          >
+                            <ListItemAvatar>
+                              <Avatar src={volunteer.profile_picture}> </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary={volunteer.display_name} />
+                          </ListItem>
+                        )
+                    )}
                   </List>
                 </AccordionDetails>
               </Accordion>

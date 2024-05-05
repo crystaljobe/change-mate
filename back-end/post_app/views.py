@@ -11,6 +11,7 @@ from rest_framework.status import (
     HTTP_400_BAD_REQUEST
 )
 from post_app.serializers import EventPostSerializer, CommentSerializer, ViewEventPostSerializer
+from post_app.serializers import EventPostSerializer, CommentSerializer, ViewEventPostSerializer
 from .models import Post, Comment
 from event_app.models import Event, UserProfile
 from drf_yasg.utils import swagger_auto_schema
@@ -110,13 +111,12 @@ class CollabPostView(TokenReq):
     )
 
     def post(self, request, event_id):
-        event = get_object_or_404(Event, pk=event_id)
-        user = get_object_or_404(UserProfile, pk=request.user.id)
+        event = get_object_or_404(Event, id=event_id)
         data = request.data.copy()
         data['event'] = event.id
         data['post_orgin'] = "Collaborators Page"
         data['comments'] = []
-        data['user'] = user.id
+        data['user'] = request.user.id
         serializer = EventPostSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -205,7 +205,7 @@ class CommentView(TokenReq):
             all_posts = get_list_or_404(Post, event=event_id, post_orgin="Collaborators Page")
             ser_posts = ViewEventPostSerializer(all_posts, many=True)
             return Response(ser_posts.data, status=HTTP_201_CREATED)      
-        return Response(serializer.data.error, status=HTTP_200_OK)
+        return Response(serializer.errors, status=HTTP_200_OK)
     
 
      
