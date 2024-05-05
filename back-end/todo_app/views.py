@@ -44,10 +44,11 @@ class TodoListView(TokenReq):
         else:
             user = UserProfile.objects.get(user=request.user.user_profile.id)
         data = request.data.copy()
-        data['event'] = event.id
+        data['event'] = event_id
         data['assigned_host'] = user.id
         data['task'] = data.get('task')
         data['completed'] = False
+        print("!!! data ---", data)
         serializer = TodoListSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
