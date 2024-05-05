@@ -16,12 +16,60 @@ body {
 
 h1 {
   font-size: min(max(26px, 3vw), 40px);
+  font-family: Playfair Display, serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-weight: bold;
+  color: #6840DF;
+  /* // textDecoration: "underline", */
+  margin-top: 15px;
+  margin-bottom: 15px;
+  align-self: center;
+}
+
+h2 {
+  font-size: min(max(20px, 2.2vw), 33px);
+  font-family: Playfair Display, serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-weight: bold;
+  color: #6840DF;
+  /* // textDecoration: "underline", */
+  margin-top: 15px;
+  margin-bottom: 15px;
+  align-self: center;
+}
+
+h3 {
+  font-family: Playfair Display, serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.card-body {
+  font-size: min(max(16px, 1vw), 22px);
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 nav {
   background: #FDF6EE; 
   flex-direction: row;
   border-bottom: solid;
+}
+
+.cardCSS {
+  max-width: 800px;
+  min-width: 300px;
+  margin: 24px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.detailed-event-card.card {
+  margin: 10px;
 }
 
 /*Playfair display font styling CSS classes*/
@@ -156,9 +204,4 @@ nav {
 .dropdown-container:hover .dropdown-content {
   display: block;
 }
-
-/* background: #00B7FF;
-  background: rgb(13,202,240); */
-
-
 
