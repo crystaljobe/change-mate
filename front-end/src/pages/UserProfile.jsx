@@ -17,10 +17,6 @@ export default function UserProfile({ user }) {
   const [calendarEvents, setCalendarEvents] = useState([]); // State to show events on calendar
   const [isCalendarVisible, setIsCalendarVisible] = useState(true); // State to toggle calendar visibility
 
-
-
-
-
   const toggleCalendarVisibility = () => {
     setIsCalendarVisible(!isCalendarVisible);
   };
@@ -89,28 +85,7 @@ export default function UserProfile({ user }) {
                   <Carousel.Item key={idx}>
                     <div className="d-flex justify-content-around">
                       {eventGroup.map(event => (
-                        <Card key={event.id} style={{ width: "30rem", height: "40rem", flex: "0 0 48%" }}> {/* Adjusted width for two cards */}
-                          <Card.Body>
-                            <Card.Title>{event.title}</Card.Title>
-                            <Card.Img
-                              variant="top"
-                              src={event.event_photo || eventIcon}
-                              style={{ height: "425px", width: "100%" }}  // Adjust height if necessary
-                            />
-                            <Card.Text>
-                              <strong>When:</strong> {`${event.startDate} at ${event.startTime} -- ${event.endDate} at ${event.endTime}`}
-                              <br />
-                              <strong>Event Type:</strong> {event.event_type}
-                              {event.event_type !== "Virtual" && (
-                                <>
-                                  <br />
-                                  <strong>Location:</strong> {event.event_venue}
-                                </>
-                              )}
-                            </Card.Text>
-                            <Button variant="info" as={Link} to={`/event/${event.id}`}>View Event Details</Button>
-                          </Card.Body>
-                        </Card>
+                        <EventCard key={event.id} {...event} />
                       ))}
                     </div>
                   </Carousel.Item>
