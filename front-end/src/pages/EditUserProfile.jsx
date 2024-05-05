@@ -9,6 +9,7 @@ import {
 import LocationSearchMap from "../components/LocationSearchMap";
 
 
+
 export default function EditUserProfile({ user }) {
   // set interest cats for selection options
   const [interestCategories, setInterestCategories] = useState([]);

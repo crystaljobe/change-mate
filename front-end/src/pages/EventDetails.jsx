@@ -5,34 +5,58 @@ import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerApplication from "../components/VolunteerApplication";
 import StaticMap from "../components/EventDetailsStaticMap";
-
 export default function EventDetails() {
 	let { eventID } = useParams();
 	const { userProfileData } = useOutletContext();
 	const [eventDetails, setEventDetails] = useState({});
-	// boolean to check if user is attending event
-	const [rsvp, setRSVP] = useState(
-		Boolean(userProfileData.events_attending.filter((event) => event.id === eventID).length)
-		);
-	// console.log(userProfileData)
-	// console.log(eventDetails)
+	const [rsvp, setRSVP] = useState(true);
 
 	//consolidated useEffects on page and only recall api if event id changes
 	useEffect(() => {
-		//only fetch data once
 		async function fetchAllData() {
 			try {
-				//get and set event details
 				const event = await getEventDetails(eventID);
 				setEventDetails(event);
-				// console.log("fetching and setting")
+				// Fetching userProfileData if not already available
+				// Assuming userProfileData is also fetched asynchronously
 			} catch (error) {
 				console.error(error);
 			}
 		}
+	
 		fetchAllData();
+	}, [eventID]); // Make sure to include eventID and userProfileData in the dependencies array
+	
+	useEffect(() => {
+		if (userProfileData && eventDetails) {
+			const isAttending = userProfileData.events_attending && userProfileData.events_attending.filter(event => event.id === eventID);
+			setRSVP(isAttending);
+		}
+	}, [userProfileData, eventDetails, eventID]);
 
-	}, []);
+	// console.log(userProfileData)
+	// console.log(eventDetails)
+
+
+	//conditional for setting # of users
+	function usersAttendingMessage() {
+		if (num_users_attending === 0) {
+			return;
+		} else if (num_users_attending === 1) {
+			return `${num_users_attending} of your mates is attending this event, would you like to join them at this event?`;
+		} else {
+			return `${num_users_attending} of your mates are attending this event, would you like to join them at this event?`;
+		}
+	}
+
+	//conditional for setting # of volunteers needed
+	function volunteersNeededMessage() {
+		if (volunteer_spots_remaining === 0) {
+			return "All volunteer spots filled!";
+		} else if (volunteer_spots_remaining === 1) {
+			return `This event is needing ${volunteer_spots_remaining} more volunteer. Would you like to volunteer for this event?`;
+		}
+	}
 
 	// Renders button conditionally based on if user is attending event
 	const renderAttendingButton = () => {
@@ -57,7 +81,6 @@ export default function EventDetails() {
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
-
 	return (
 		<Container>
 			<Row>
@@ -68,11 +91,10 @@ export default function EventDetails() {
 				{/*Map displaying event location with link to google maps*/}
 				<Col md={4} sm={12} className="text-center">
 					<br />
-					{eventDetails.event_type === "In-person" && (
+					{console.log(eventDetails.lat)}
+					{eventDetails.lat && (
 						<Row className="justify-content-center">
-							{eventDetails.lat && (
 								<StaticMap lat={eventDetails.lat} lng={eventDetails.lon} />
-							)}
 						</Row>
 					)}
 					<Row>
@@ -106,7 +128,7 @@ export default function EventDetails() {
 							</div>
 							) 
 						: null }
-							
+
 					</Row>
 				</Col>
 			</Row>

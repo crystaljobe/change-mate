@@ -70,6 +70,7 @@ export default function UserProfile({ user }) {
               {...userProfileData}  // This spreads existing props, continue to use if applicable
               profileIcon={profileIcon}
               badges={badges}
+              interests={userProfileData.interests}
               userEvents={userProfileData.user_events}
               eventsAttending={userProfileData.events_attending}
               volunteerEvents={userProfileData.volunteer_events}
