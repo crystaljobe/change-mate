@@ -140,11 +140,8 @@ class ATodoListTask(TokenReq):
     def delete(self, request, task_id):
         user = UserProfile.objects.get(user=request.user)
         task = get_object_or_404(TodoList, id = task_id)
-        if task.assigned_host == user:
-            task.delete()
-            return Response("Task has been deleted", status=HTTP_204_NO_CONTENT)
-        else:
-            return Response("You are not the assigned host of this task", status=HTTP_400_BAD_REQUEST)
+        task.delete()
+        return Response("Task has been deleted", status=HTTP_204_NO_CONTENT)
         
         
 @swagger_auto_schema(

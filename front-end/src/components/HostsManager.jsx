@@ -41,7 +41,10 @@ function HostsManager({ eventID, hosts, getEvent }) {
   //modal open/close <add hosts>
   const [openModal, setOpenModal] = useState(false);
   const handleopenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+  const handleCloseModal = () => {
+    setOpenModal(false)
+    setNewHost({});
+  }
   //dialog open/close <remove hosts>
   const [openDialog, setDialogOpen] = useState(false);
   const handleClickOpenDialog = () => setDialogOpen(true);
@@ -60,7 +63,8 @@ function HostsManager({ eventID, hosts, getEvent }) {
     } else {
       console.log("No users by this email");
     }
-    console.log("admin page -- NEW HOST:", newHost);
+    console.log("admin page -- NEW HOST:", newHostData);
+
   };
 
   const handleSearchHost = () => {
@@ -212,7 +216,7 @@ function HostsManager({ eventID, hosts, getEvent }) {
                   <ListItem>
                     {" "}
                     <ListItemAvatar>
-                      <Avatar src={newHost.profile_picture}> </Avatar>
+                      <Avatar src={newHost.image}> </Avatar>
                     </ListItemAvatar>
                     <ListItemText>{newHost.display_name}</ListItemText>
                     <IconButton

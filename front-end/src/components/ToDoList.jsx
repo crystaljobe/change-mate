@@ -115,7 +115,6 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
       console.log("todo could not be deleted");
     }
   };
-    // console.log("allParticipants--", allParticipants);
 
   return (
     <Card style={{ marginTop: "2vw" }}>
