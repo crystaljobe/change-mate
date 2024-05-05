@@ -71,7 +71,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
 
   const getNameFromId = (id) => {
     return allParticipants.find((participant) => participant.user_id === id)
-      .display_name;
+      ?.display_name;
   };
 
   //get all todos for an event

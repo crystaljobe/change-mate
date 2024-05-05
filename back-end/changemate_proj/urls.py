@@ -52,7 +52,7 @@ urlpatterns = [
     path("api/v1/volunteer_applications/", include("volunteer_application_app.urls")),
     path("api/v1/userprofile/", include("profile_app.urls")),
     path("api/v1/interests/", include("interest_app.urls")),
-    path('api/v1/todo/', include('todo_app.urls')),
+    path("api/v1/todo/", include("todo_app.urls")),
     path("api/v1/countries/", include("countries_app.urls")),
     path("api/v1/states/", include("states_app.urls")),
     path("api/v1/cities/", include("cities_app.urls")),

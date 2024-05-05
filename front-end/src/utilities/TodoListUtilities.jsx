@@ -2,7 +2,7 @@ import { api } from "../utilities";
 
 //get all todos for an event
 export const getAllTodos = async (eventID) => {
-  const response = await api.get(`todo/${eventID}/`);
+  const response = await api.get(`todo/event/${eventID}/`);
   let todos = response.data;
   console.log('utilities --todos', todos)
   return todos;
@@ -10,7 +10,7 @@ export const getAllTodos = async (eventID) => {
 
 //make a new todo for an event 
 export const postTodo = async (eventID, assignedHost, task) => {
-  const response = await api.post(`todo/${eventID}/`, {
+  const response = await api.post(`todo/event/${eventID}/`, {
     assigned_host: assignedHost,
     task: task,
   });
@@ -38,6 +38,7 @@ export const updateTodo = async (taskID, assignedHost, completed) => {
 
 //delete todo 
 export const deleteATodo = async (taskID) => {
+
   const response = await api.delete(`todo/${taskID}/`);
     if (response.status === 204) {
       return true;
