@@ -1,17 +1,7 @@
-import {
-	Container,
-	Col,
-	Row,
-	ListGroup,
-	Card,
-	Button,
-	ListGroupItem,
-} from "react-bootstrap";
+import { Container, Col, Row, Button } from "react-bootstrap";
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
-import "add-to-calendar-button";
 import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
-import { getiCalEventDetails } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerApplication from "../components/VolunteerApplication";
 import StaticMap from "../components/EventDetailsStaticMap";
@@ -19,8 +9,15 @@ import StaticMap from "../components/EventDetailsStaticMap";
 export default function EventDetails() {
 	let { eventID } = useParams();
 	const { userProfileData } = useOutletContext();
-	const [iCalDetails, setiCalDetails] = useState([]);
 	const [eventDetails, setEventDetails] = useState({});
+
+	// boolean to check if user is attending event
+	const [rsvp, setRSVP] = useState(
+		Boolean(userProfileData.events_attending.filter((event) => event.id === eventID).length)
+		);
+
+	// console.log(userProfileData)
+	// console.log(eventDetails)
 
 	//consolidated useEffects on page and only recall api if event id changes
 	useEffect(() => {
@@ -28,11 +25,9 @@ export default function EventDetails() {
 		if (!eventDetails.hosts) {
 			async function fetchAllData() {
 				try {
-					//get and set event details and iCal details
+					//get and set event details
 					const event = await getEventDetails(eventID);
-					const iCal = await getiCalEventDetails(eventID);
 					setEventDetails(event);
-					setiCalDetails(iCal);
 					// console.log("fetching and setting")
 				} catch (error) {
 					console.error(error);
@@ -42,44 +37,44 @@ export default function EventDetails() {
 		}
 	}, [eventID]);
 
-	// onClick function for RSVP button to handle put request to add user as attending
-	const handleRSVP = async () => {
-		const rsvp = await setUserAttending(eventID);
-		if (rsvp) {
-			console.log("user rsvp");
+	//conditional for setting # of users
+	function usersAttendingMessage() {
+		if (num_users_attending === 0) {
+			return;
+		} else if (num_users_attending === 1) {
+			return `${num_users_attending} of your mates is attending this event, would you like to join them at this event?`;
+		} else {
+			return `${num_users_attending} of your mates are attending this event, would you like to join them at this event?`;
 		}
-	};
- //still working on this piece 
- 
-	// Checks the events that the user is attending for id match with the eventID for this page
-	// const isUserAttending = () => {
-	//   // Checks if eventsAttending has data
-	//   if(eventsAttending) {
-	//     // Loops through the events
-	//     for (const event of eventsAttending) {
-	//       // Makes comparison between the page's eventID and the user's event.id
-	//       if (eventID == event.id) {
-	//         // If match user is RSVPed
-	//         return true
-	//       }
-	//     }
-	//   } else {
-	//     return false
-	//   }
-	// };
+	}
+
+	//conditional for setting # of volunteers needed
+	function volunteersNeededMessage() {
+		if (volunteer_spots_remaining === 0) {
+			return "All volunteer spots filled!";
+		} else if (volunteer_spots_remaining === 1) {
+			return `This event is needing ${volunteer_spots_remaining} more volunteer. Would you like to volunteer for this event?`;
+		}
+	}
 
 	// Renders button conditionally based on if user is attending event
 	const renderAttendingButton = () => {
-		// Sets attending to true or false based on function call
-		const attending = true;
-
-		//converted from button into a-tags for dropdown item
-		return attending ? (
-			<a>Attending</a>
-		) : (
-			<a onClick={handleRSVP}>Attend This Event</a>
-		);
+		// if user not attending already return button else disable button
+		if (rsvp){
+			return <Button onClick={handleRSVP}> Attend </Button>
+		} else {
+			return <Button onClick={handleRSVP}> Un-RSVP </Button>
+		}
 	};
+	// onClick function for RSVP button to handle put request to add user as attending
+	const handleRSVP = async () => {
+		const response = await setUserAttending(eventID, rsvp);
+		setRSVP(!rsvp)
+		if (response) {
+			console.log("user rsvp");
+		}
+	};
+
 
 	// application modal
 	const [show, setShow] = useState(false);
@@ -90,41 +85,10 @@ export default function EventDetails() {
 		<Container>
 			<Row>
 				<Col md={8} sm={12}>
-					{console.log(eventDetails)}
-
-					{eventDetails.hosts && (
-						<DetailedEventCard {...eventDetails}></DetailedEventCard>
-					)}
-          <Link
-								to={`/eventCollab/${eventID}`}
-								className="btn btn-primary mr-2">
-								Let's Collaborate!
-							</Link>
-							<Link to="/eventadmin" className="btn btn-primary">
-								Admin Time!
-							</Link>
-
-					<div className="dropdown-container">
-						<button className="dropdown-button">Count me in!</button>
-						<div className="dropdown-content">
-							{/* TODO: add conditonal rendering for volunteer option if event is accepting volunteers */}
-							{/* added volunteer application modal as a component */}
-							<a onClick={handleShow}>Volunteer</a>
-                <VolunteerApplication
-                  show={show}
-                  handleClose={handleClose}
-                  eventID={eventID}
-                />
-
-							{/* if event needs attendees */}
-							{eventDetails.attendees_needed ? renderAttendingButton() : null}
-
-							
-						</div>
-					</div>
+					{eventDetails.hosts && <DetailedEventCard {...eventDetails} />}
 				</Col>
 
-				{/*Map displaying event location */}
+				{/*Map displaying event location with link to google maps*/}
 				<Col md={4} sm={12} className="text-center">
 					<br />
 					{eventDetails.event_type === "In-person" && (
@@ -132,38 +96,28 @@ export default function EventDetails() {
 							{eventDetails.lat && (
 								<StaticMap lat={eventDetails.lat} lng={eventDetails.lon} />
 							)}
-
-							<Link to="/eventdirections">
-								<button
-									className="button-gradient text-center"
-									variant="info"
-									style={{ width: "90vw", maxWidth: "300px" }}>
-									Get Event Directions
-								</button>
-							</Link>
 						</Row>
 					)}
-
-					{/* add to calendar button */}
-					{iCalDetails.description && (
-						<add-to-calendar-button
-							style={{ height: "50px" }}
-							size="5"
-							label="Add to Calendar"
-							options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-							name={iCalDetails.title}
-							location={
-								eventDetails.event_type === "Virtual"
-									? eventDetails.virtual_event_link
-									: `${eventDetails.event_venue} - ${eventDetails.event_venue_address}`
-							}
-							startDate={iCalDetails.startDate}
-							endDate={iCalDetails.endDate}
-							startTime={iCalDetails.startTime}
-							endTime={iCalDetails.endTime}
-							timeZone={iCalDetails.time_zone}
-							description={iCalDetails.description}></add-to-calendar-button>
-					)}
+					<Row>
+						{/* if event needs attendees */}
+						{eventDetails.hosts && !eventDetails.attendees_needed ? null : renderAttendingButton() }
+					</Row>
+					<Row>
+						{/* if event needs volunteers */}
+						{eventDetails.hosts && eventDetails.volunteer_roles.length > 0  
+						?  (
+							<div className="mt-3">
+							<Button variant="primary" onClick={handleShow}>Volunteer</Button>
+							<VolunteerApplication
+								show={show}
+								handleClose={handleClose}
+								eventID={eventID}
+							/>
+							</div>
+							) 
+						: null }
+							
+					</Row>
 				</Col>
 			</Row>
 		</Container>

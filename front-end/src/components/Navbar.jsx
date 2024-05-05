@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -6,12 +6,15 @@ import Button from "react-bootstrap/esm/Button";
 import ChangeMateLogo from '../assets/changemate-logo.svg';
 import { userLogout } from "../utilities/UserUtilities";
 
-export default function MyNavbar({ user, setUser, displayName }) {
-
+export default function MyNavbar({ user, setUser, displayName, setUserProfileData }) {
+	const navigate = useNavigate();
 	const handleUserLogout = async () => {
 		const loggedOut = await userLogout();
 		if (loggedOut) {
 			setUser(null);
+			setUserProfileData([]);
+			navigate("/")
+			
 		}
 	};
 

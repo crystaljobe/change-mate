@@ -62,7 +62,7 @@ export const postEventDetails = async (
   }
 };
 
-export const setUserAttending = async (eventID) => {
+export const setUserAttending = async (eventID, RSVPStatus) => {
     let response = await api.put(`events/${eventID}/`);
         if (response.status === 200) {
             return true;
@@ -174,3 +174,46 @@ export const updateHosts = async (eventID, user_id, addremove) => {
   console.log("Cannot add hosts:", response.status);
   return false;
 };
+
+export const getEventPosts = async (eventID, postType) => {
+  // console.log(eventID)
+  const response = await api.get(`events/${eventID}/posts/${postType}/`);
+  let eventPosts = response.data;
+  return eventPosts;
+}
+
+export const postEventPosts = async (eventID, postType, newPostData) => {
+  const response = await api.post(`events/${eventID}/posts/${postType}/`, newPostData);
+  let eventPosts = response.data;
+  console.log("RETURN DATA", eventPosts)
+  return eventPosts;
+}
+
+export const postPostComment = async (eventID, postId, newCommentData) => {
+  const response = await api.post(`events/${eventID}/posts/${postId}/comments/`, newCommentData);
+  let postComments = response.data;
+  console.log("RETURN DATA", postComments)
+  return postComments;
+}
+
+export const deletePostComment = async (eventID, replyId) => {
+  const response = await api.delete(`events/${eventID}/posts/comment/${replyId}/`);
+  console.log(response)
+  let postComments = response.data;
+  console.log("RETURN DATA", postComments)
+  return postComments;
+}
+
+export const deleteEventPost = async (eventID, postId) => {
+  const response = await api.delete(`events/${eventID}/posts/${postId}/`);
+  let postComments = response.data;
+  console.log("RETURN DATA", postComments)
+  return postComments;
+}
+
+export const getEventTasks = async (eventID) => {
+  // console.log(eventID)
+  const response = await api.get(`todo/${eventID}`);
+  let eventTasks = response.data;
+  return eventTasks;
+}
