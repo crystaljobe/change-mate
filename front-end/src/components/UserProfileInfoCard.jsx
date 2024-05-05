@@ -12,8 +12,11 @@ export default function UserProfileInfoCard({
   badges,
   userEvents,
   eventsAttending,
-  volunteerEvents
+  volunteerEvents,
+  interests
 }) {
+
+  console.log(interests)
   return (
     <Card className="text-center shadow-lg" style={{ width: '100%', overflow: 'hidden', borderRadius: '15px' }}>
       {/* <Card.Header style={{ backgroundColor: '#6840DF', color: '#ffffff', fontSize: '1.25rem' }}>Profile Info</Card.Header> */}
@@ -37,11 +40,11 @@ export default function UserProfileInfoCard({
               Interests:
             </Card.Subtitle>
             <Card.Text>
-              {userIntStr || 'Not specified'}
+              {interests.map((cat) => cat.category).join(", ") || 'Not specified'}
             </Card.Text>
           </Col>
           <Col md={5}  style={{ paddingRight: '500px' }}> 
-            <Card.Title as='h3' style={{ fontWeight: 'bold', color: "#6840DF", textAlign: 'right' }}>Badges</Card.Title>
+            <Card.Title as='h3' style={{ fontWeight: 'bold', color: "#6840DF", textAlign: 'right' }}>Social Impact</Card.Title>
             <div style={{ textAlign: 'right' }}>
               {badges && <>
                 <Image src={badges['hostIcon']} rounded style={{ height: '10px', marginRight: '10px', verticalAlign: 'right' }} />
