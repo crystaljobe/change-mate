@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Container, Row, Col } from "react-bootstrap";
 import { getEventDetails} from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
-import VolunteerManager from "../components/VolunteerManager";
+import DiscussionForum from "../components/DiscussionForum";
 import TodoList from "../components/ToDoList";
 
 function EventCollab() {
@@ -29,7 +29,7 @@ function EventCollab() {
                     <DetailedEventCard eventDetails={eventDetails} />
                 </Col>
                 <Col md={4} className="discussion-forum-col">
-                    <VolunteerManager />
+                    <DiscussionForum />
                 </Col>
                 <Col md={4} className="todo-participant-col">
                     <TodoList showAddToDo={showAddToDo} />
