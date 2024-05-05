@@ -1,5 +1,6 @@
 import { Card, Button, Row, Col, Image } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import Avatar from '@mui/material/Avatar';
 
 export default function UserProfileInfoCard({
   image,
@@ -14,10 +15,13 @@ export default function UserProfileInfoCard({
 }) {
   return (
     <Card className="text-center shadow-lg" style={{ width: '100%', overflow: 'hidden', borderRadius: '15px' }}>
-      <Card.Header style={{ backgroundColor: '#6840DF', color: '#ffffff', fontSize: '1.25rem' }}>Profile Info</Card.Header>
+      {/* <Card.Header style={{ backgroundColor: '#6840DF', color: '#ffffff', fontSize: '1.25rem' }}>Profile Info</Card.Header> */}
       <Card.Img variant="top" src={image || profileIcon} style={{ height: '350px', objectFit: 'cover' }} alt={`${display_name}'s photo`} />
       <Card.Body style={{ backgroundColor: '#f8f9fa', padding: '20px' }}>
         <Row>
+          <Col md={2}>
+          <Avatar  alt={display_name} src={image} sx={{ width: 200, height: 200 }} />
+          </Col>
           <Col md={4} style={{ paddingLeft: '20px' }}> 
             <Card.Title as='h3' style={{ fontWeight: 'bold', color: "#6840DF" }}>
               {display_name}
@@ -35,7 +39,7 @@ export default function UserProfileInfoCard({
               {userIntStr || 'Not specified'}
             </Card.Text>
           </Col>
-          <Col md={8}  style={{ paddingRight: '500px' }}> 
+          <Col md={5}  style={{ paddingRight: '500px' }}> 
             <Card.Title as='h3' style={{ fontWeight: 'bold', color: "#6840DF", textAlign: 'right' }}>Badges</Card.Title>
             <div style={{ textAlign: 'right' }}>
               {badges && <>

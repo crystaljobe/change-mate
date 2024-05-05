@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import { getEventDetails } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
-import VolunteerManager from "../components/VolunteerManager";
 import TodoList from "../components/ToDoList";
 import DiscussionForum from "../components/DiscussionForum";
 import { Button, Drawer, Box, IconButton } from "@mui/material";
@@ -44,6 +43,7 @@ function EventCollab() {
     };
   }, []);
 
+  // TODO - set trigger on useparams
   useEffect(() => {
     getEvent();
   }, []);
@@ -54,7 +54,7 @@ function EventCollab() {
     console.log(eventDetails);
   };
   const showAddToDo = false;
-  // {"task": "Test 2", "assigned_host": "1"}
+
 
   return (
     <Container fluid className="event-collab-container">
