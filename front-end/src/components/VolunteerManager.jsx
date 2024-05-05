@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   createVolunteerRole,
   deleteVolunteerRole,
@@ -60,7 +60,7 @@ function VolunteerManager({
 
   const handleDeleteRole = (role) => {
     const deleteThisRole = volunteerApplications.filter((roleInstance) => roleInstance.role === role)
-    deleteVolRole(deleteThisRole[0].id)
+    deleteVolRole(deleteThisRole[0].role_id)
     setRoles(roles.filter((roleName) => roleName !== role))
   };
 
@@ -93,6 +93,7 @@ function VolunteerManager({
     try {
       console.log("volunteer decision put request", applicationID, applicationDecision)
       await putApplicationDecision(applicationID, applicationDecision, decisionText);
+      getEvent();
     } catch (error) {
       console.error("Failed to give application decision", error);
     }
@@ -119,19 +120,20 @@ function VolunteerManager({
           <List>
             {volunteerApplications.map((volRoleInstance, index) => (
               // <List key={index}>
-              <>
+              <React.Fragment key={volRoleInstance.role}>
                 {volRoleInstance.applications &&
                   volRoleInstance.applications.map(
                     (applicant, index) =>
-                      applicant.application_status && (
+                      applicant.application_status === "Pending" && (
                         <ListItem
-                          key={index}
+                          key={`${volRoleInstance.role}-${applicant.user_id}`}
                           button
                           onClick={() => handleOpenModal(applicant)}
                         >
-                          <ListItemAvatar key={applicant.user_id}>
-                            <Avatar src={applicant.profile_picture} key={applicant.user_id}>
-                            </Avatar>
+                          <ListItemAvatar>
+                            <Avatar
+                              src={applicant.profile_picture}
+                            ></Avatar>
                           </ListItemAvatar>
                           <ListItemText
                             primary={applicant.display_name}
@@ -140,14 +142,14 @@ function VolunteerManager({
                         </ListItem>
                       )
                   )}
-              </>
+              </React.Fragment>
               // </List>
             ))}
           </List>
         </AccordionDetails>
       </Accordion>
 
-      <Accordion style={{marginTop: "1vh"}}>
+      <Accordion style={{ marginTop: "1vh" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>Assigned Volunteer Roles</Typography>
         </AccordionSummary>
@@ -172,7 +174,7 @@ function VolunteerManager({
           {/* roles = arr of string role names */}
           {roles &&
             roles.map((role, index) => (
-              <Accordion key={index}>
+              <Accordion key={role}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <IconButton
                     edge="start"
@@ -192,10 +194,10 @@ function VolunteerManager({
                 <AccordionDetails>
                   <List>
                     {approvedVolunteers.map(
-                      (volunteer) =>
+                      (volunteer, index) =>
                         volunteer.role === role && (
                           <ListItem
-                            key={volunteer.user_id}
+                            key={index}
                             button
                             onClick={() => handleOpenModal(volunteer)}
                           >

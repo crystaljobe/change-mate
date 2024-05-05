@@ -99,8 +99,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
     let response = await updateTodo(taskID, assignedHost, completed);
     if (response) {
       getTodos();
-      console.log("todo updated --all tasks --", tasks);
-
+      handleCloseModal();
     } else {
       console.log("todo could not be updated");
     }
@@ -111,6 +110,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
     let response = await deleteATodo(taskID);
     if (response) {
       getTodos();
+      handleCloseModal();
     } else {
       console.log("todo could not be deleted");
     }

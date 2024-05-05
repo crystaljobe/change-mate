@@ -125,7 +125,6 @@ class ATodoListTask(TokenReq):
                 task.assigned_host = new_assigned_host
                 data.pop('assigned_host')
         serializer = TodoListSerializer(task, data=data, partial=True)
-        print('!!!!!!!serialzer', serializer)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=HTTP_200_OK)
@@ -139,11 +138,8 @@ class ATodoListTask(TokenReq):
     )
         
     def delete(self, request, task_id):
-        print("!!!!!!!!!!!!!!task ID", task_id)
-
         user = UserProfile.objects.get(user=request.user)
         task = get_object_or_404(TodoList, id = task_id)
-        print("!!!!!!!!!!!!!!task obj", task)
         if task.assigned_host == user:
             task.delete()
             return Response("Task has been deleted", status=HTTP_204_NO_CONTENT)

@@ -16,15 +16,7 @@ import {
   Button,
 } from "@mui/material";
 
-//only hosts have permission to access this page (profile.hosted_events(eventID == eventID))
-//FEATURES:
-// DONE - view volunteer volApplications
-// DONE - functionality to add/remove volunteer roles
-// DONE - accept/reject volunteer applications
-// DONE - created volunteer utilities
-// - create todo lists tasks
-//  - assign volunteers to tasks
-// - add other hosts
+
 
 
 export default function AdminPage() {
@@ -62,10 +54,10 @@ export default function AdminPage() {
 
   
  
-  console.log(`admin page -- hosts`, hosts)
-  console.log('adminpage - approved volunteers', approvedVolunteers)
+  // console.log(`admin page -- hosts`, hosts)
+  // console.log('adminpage - approved volunteers', approvedVolunteers)
   // console.log(`admin- roles`, roles);
-  // console.log("admin- eventDetails", eventDetails);
+  console.log("admin- eventDetails", eventDetails);
 
 
   return (
