@@ -18,27 +18,56 @@ import {
   ListItemSecondaryAction,
   IconButton,
   TextField,
+  Modal,
+  Box,
   Button,
+  Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import SettingsIcon from "@mui/icons-material/Settings";
+import AddIcon from "@mui/icons-material/Add"
 
 function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
   const [tasks, setTasks] = useState([]); //arr of objs {id <task id>, assigned_host, task, completed<boolean>}
   const { userProfileData } = useOutletContext();
   const [newTask, setNewTask] = useState("");
   const [allParticipants, setAllParticipants] = useState([]);
+  const [selectedTask, setSelectedTask] = useState({});
+  //modal open/close <assign someone todo item & delete todo item>
+  const [openModal, setOpenModal] = useState(false);
+  const handleopenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+
+  const handleSettingsButtonClick = (aTask) => {
+    handleopenModal();
+    setSelectedTask(aTask);
+    console.log("a Task",aTask)
+  }
 
   useEffect(() => {
     getTodos();
   }, [eventID]);
 
   useEffect(() => {
-    setAllParticipants([...hosts, ...approvedVolunteers]);
+    let uniqueParticipants = createAllParticipants();
+    setAllParticipants(uniqueParticipants);
   }, [approvedVolunteers, hosts]);
 
+  //helper function that uses a Set to remove duplicate participants based on user_id
+  function createAllParticipants() {
+    let combinedParticipants = [...hosts, ...approvedVolunteers];
+    const uniqueParticipants = Array.from(
+      new Set(combinedParticipants.map((participant) => participant.user_id))
+    ).map((user_id) =>
+      combinedParticipants.find(
+        (participant) => participant.user_id === user_id
+      )
+    );
+    return uniqueParticipants;
+  }
 
   const getNameFromId = (id) => {
     return allParticipants.find((participant) => participant.user_id === id)
@@ -48,9 +77,8 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
   //get all todos for an event
   const getTodos = async () => {
     let data = await getAllTodos(eventID);
-
-    console.log("data: ", data);
     setTasks(data);
+    console.log('all todos!! tasks--', tasks)
   };
 
   //create a new todo
@@ -64,12 +92,15 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
     }
   };
 
-  //update todo
+  //update todo -- assigned user or completed
   const updateTheTodo = async (taskID, assignedHost, completed) => {
-    let response = await updateTodo(eventID, taskID, assignedHost, !completed);
+      console.log("update the todo funct --", taskID, assignedHost, completed);
+
+    let response = await updateTodo(eventID, taskID, assignedHost, completed);
     if (response) {
-      console.log("todo updated :)");
       getTodos();
+      console.log("todo updated --all tasks --", tasks);
+
     } else {
       console.log("todo could not be updated");
     }
@@ -79,12 +110,12 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
   const deleteTheTodo = async (taskID) => {
     let response = await deleteATodo(eventID, taskID);
     if (response) {
-      console.log("todo deleted :)");
       getTodos();
     } else {
       console.log("todo could not be deleted");
     }
   };
+    // console.log("allParticipants--", allParticipants);
 
   return (
     <Card style={{ marginTop: "2vw" }}>
@@ -95,25 +126,26 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
             <ListItem key={task.id} dense button>
               <ListItemText
                 primary={task.task}
-                secondary={allParticipants.length ? getNameFromId(task.assigned_host) : ""}
+                secondary={
+                  allParticipants.length
+                    ? getNameFromId(task.assigned_host)
+                    : ""
+                }
                 style={{
                   textDecoration: task.completed ? "line-through" : "none",
                 }}
               />
               {showAddToDo && (
                 <ListItemSecondaryAction>
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => deleteTheTodo(task.id)}
-                  >
-                    <DeleteIcon />
+                  <IconButton onClick={() => handleSettingsButtonClick(task)}>
+                    <SettingsIcon />
                   </IconButton>
+
                   <IconButton
                     edge="end"
                     aria-label="toggle"
                     onClick={() =>
-                      updateTheTodo(task.id, task.assigned_host, task.completed)
+                      updateTheTodo(task.id, task.assigned_host, !task.completed)
                     }
                   >
                     {task.completed ? (
@@ -149,6 +181,59 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
           </>
         )}
       </CardContent>
+
+      {/* !!!  Modal opens to confirm searched user is correct user  !!! */}
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography>
+            Delete this todo item?
+            <IconButton
+              edge="end"
+              aria-label="delete"
+              onClick={() => deleteTheTodo(selectedTask.id)}
+            >
+              <DeleteIcon />
+            </IconButton>{" "}
+          </Typography>
+          <List>
+            Assign to a different participant:
+            {allParticipants && allParticipants.length
+              ? allParticipants.map((participant, index) => (
+                  <ListItem key={index}>
+                    {participant.display_name}
+                    <IconButton
+                      onClick={() =>
+                        updateTheTodo(
+                          selectedTask.id,
+                          participant.user_id,
+                          false
+                        )
+                      }
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  </ListItem>
+                ))
+              : null}
+          </List>
+        </Box>
+      </Modal>
     </Card>
   );
 }

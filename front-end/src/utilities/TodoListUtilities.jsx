@@ -4,6 +4,7 @@ import { api } from "../utilities";
 export const getAllTodos = async (eventID) => {
   const response = await api.get(`events/${eventID}/todo/`);
   let todos = response.data;
+  console.log('utilities --todos', todos)
   return todos;
 };
 

@@ -27,7 +27,8 @@ class TodoListView(TokenReq):
     
     def get(self, request, event_id):
         user = UserProfile.objects.get(user=request.user)
-        todo_list = TodoList.objects.filter(assigned_host=user)
+        # todo_list = TodoList.objects.filter(assigned_host=user)
+        todo_list = TodoList.objects.filter(event_tasks = event_id)
         serializer = TodoListSerializer(todo_list, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
     
@@ -99,14 +100,14 @@ class ATodoListTask(TokenReq):
         user = UserProfile.objects.get(user=request.user)
         event = get_object_or_404(Event, pk=event_id , hosts=user)
         task = get_object_or_404(TodoList, pk=task_id)
-        if task.assigned_host == user:
-            serializer = TodoListSerializer(task, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=HTTP_200_OK)
-            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-        else:
-            return Response("You are not the assigned host of this task", status=HTTP_400_BAD_REQUEST)
+        # if task.assigned_host == user:
+        serializer = TodoListSerializer(task, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=HTTP_200_OK)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        # else:
+        #     return Response("You are not the assigned host of this task", status=HTTP_400_BAD_REQUEST)
         
     @swagger_auto_schema(
         operation_summary="Delete a task assigned to Host. The user's Profile object is used to filter the TodoList objects by the assigned_host field. The task is deleted.",

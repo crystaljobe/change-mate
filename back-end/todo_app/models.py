@@ -9,5 +9,6 @@ class TodoList(models.Model):
     completed = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    ##event_tasks - related from events model
 
    
