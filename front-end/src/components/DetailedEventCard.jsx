@@ -201,7 +201,6 @@ function DetailedEventCard({
 					</ListGroup.Item>
 
 					<ListGroup.Item className="mb-2">
-						
 						<strong> Event Activity: </strong>
 						<ul>
 							<li>
@@ -211,7 +210,7 @@ function DetailedEventCard({
 							</li>
 
 							<li>
-								{volunteer_roles.length === 0 ? (
+								{volunteer_roles.length < 1 ? (
 									null
 								) : (<Card.Text>{volunteersNeededMessage()}</Card.Text>)}
 							</li>
