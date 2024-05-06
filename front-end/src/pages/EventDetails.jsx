@@ -110,7 +110,7 @@ export default function EventDetails() {
 							<VolunteerApplication
 								show={show}
 								handleClose={handleClose}
-								eventID={eventID}
+								eventDetails={eventDetails}
 							/>
 							</div>
 							) 

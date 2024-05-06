@@ -217,3 +217,9 @@ export const getEventTasks = async (eventID) => {
   let eventTasks = response.data;
   return eventTasks;
 }
+
+export const postVolunteerApplication = async (roleID, applicationData) => {
+  const response = await api.post(`volunteer_applications/${roleID}/`, applicationData);
+  let application = response.data;
+  return application;
+}
