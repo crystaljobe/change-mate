@@ -157,7 +157,7 @@ export default function Homepage() {
 						<h4>Find Events</h4>
 						<p style={{ marginTop:"1rem"}}>Search for events based on your interests, location, and availability.</p>
 						<Button className="d-flex justify-self-center" component={Link} 
-						to="/signup" sx={{color:"#6840DF", fontSize:"1rem"}}>Look for Events!</Button>
+						to="/events" sx={{color:"#6840DF", fontSize:"1rem"}}>Look for Events!</Button>
 					</Col>
 					<Col>
 						<h4>Get Involved</h4>

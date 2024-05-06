@@ -75,8 +75,8 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
 
     return (
         <Container fluid className="mt-5">
-            <Row className="justify-content-center mt-4 mb-4">
-                <Col xs={12} style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '10px 0' }}>
+            <Row className="justify-content-center mt-4">
+                <Col xs={12} style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '10px 0', flexWrap:'wrap'}}>
                     {/* Proximity Dropdown Filter */}
                     <DropdownButton id="proximity-dropdown" title="Filter by Proximity" variant="secondary">
                         {proximityOptions.map(option => (
@@ -145,7 +145,7 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
                 </Col>
             </Row>
             <Row>
-                <Button variant='danger' onClick={(e) => handleFilterReset(e)}>Reset Filters</Button>
+                <Button variant='link'  onClick={(e) => handleFilterReset(e)}>Reset Filters</Button>
             </Row>
         </Container>
     );
