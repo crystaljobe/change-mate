@@ -102,12 +102,6 @@ class EventAdminSerializer(serializers.ModelSerializer):
         else:
             return None
         
-    #will be boolean if there are volunteer roles or not
-    def get_volunteer_roles(self, obj):
-        if obj.volunteer_roles:
-            return True
-        else:
-            return None
 
     # get list of volunteers that have been assigned  
     def get_volunteers(self, obj):
@@ -259,7 +253,6 @@ class EventDetailsSerializer(serializers.ModelSerializer):
         return obj.users_attending.count()
 
     def get_lat(self, obj):
-
         return obj.coordinates[1] if obj.coordinates else None
     
     def get_lon(self, obj):
