@@ -25,30 +25,54 @@ export default function AdminPage() {
   const [volunteerApplications, setVolunteerApplications] = useState([]);
   const [showMenu, setShowMenu] = useState(true);
   const [open, setOpen] = useState(false);
+  const [isAllowed, setIsAllowed] = useState(false);
+  const [userValidated, setUserValidated] = useState(false);
   const [hosts, setHosts] = useState([]); //array of userProfile instances that are 'collaborators' {display_name, profile_picture, user_id}
   const { userProfileData } = useOutletContext(); //obj that contains {id, display_name, image, user_events[{arr of event Objs that user is a collaborator/host of}]}
   let { eventID } = useParams();
   const navigate = useNavigate()
   const showAddToDo = true;
+  // console.log('userProfileData', userProfileData)
 
-  const isUserAllowed = () => {
-    const userID = userProfileData.id
-    const isAllowed = false
-
-    for (const host of hosts) {
-      if (host.user_id == userID)
-        isAllowed = true
+  const isUserAllowed = (userID) => {
+    if (Array.isArray(hosts) && hosts.length > 0 && typeof userID !== 'undefined') {
+      for (const host of hosts) {
+        if (host && host.user_id && host.user_id === userID) {
+          setIsAllowed(true);
+          console.log('isallowed')
+          setUserValidated(true);
+          return; // Exit the loop once user is found
+        }
+      }
+      // If user is not found among hosts, set validation state
+      console.log('notallowed')
+      setUserValidated(true);
+      return;
     }
-    
-    if (!isAllowed) {
-      navigate(`/event/${eventID}`)
-    }
-  }
+  };
 
   useEffect(() => {
-    isUserAllowed();
-  }, [hosts]);
+    isUserAllowed(userProfileData.id);
+  }, [userProfileData]);
+
+  const handleAllow =  () => {
+    console.log('userValidated', userValidated)
+    console.log('isAllowed', isAllowed)
+    if (userValidated === true) {
+      console.log('userValidated', userValidated)
+      if (isAllowed === false) {
+        console.log('NOT AUTHORIZED')
+        navigate(`/event/${eventID}`)
+      } else {
+        console.log('AUTHORIZED')
+      }
+      
+    } 
+  }
   
+  useEffect(() => {
+    handleAllow();
+  }, [userValidated]);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
