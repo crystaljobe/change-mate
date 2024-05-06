@@ -16,15 +16,7 @@ import {
   Button,
 } from "@mui/material";
 
-//only hosts have permission to access this page (profile.hosted_events(eventID == eventID))
-//FEATURES:
-// DONE - view volunteer volApplications
-// DONE - functionality to add/remove volunteer roles
-// DONE - accept/reject volunteer applications
-// DONE - created volunteer utilities
-// - create todo lists tasks
-//  - assign volunteers to tasks
-// - add other hosts
+
 
 
 export default function AdminPage() {
@@ -42,10 +34,6 @@ export default function AdminPage() {
   const getEvent = async () => {
     const eventDetails = await getAdminEventDetails(eventID);
     setEventDetails(eventDetails);
-  console.log("admin- eventDetails", eventDetails);
-
-  console.log("admin- eventDetails", eventDetails);
-
     const hostArr = eventDetails.hosts;
     const approvedVols = eventDetails.volunteers;
     const volApplications = eventDetails.applicants; //arr of obj {id <role.id>, role, [applicants] < arr of objs {application_id, user_id, applicant_id, display_name, profile_picture}> }
@@ -66,9 +54,11 @@ export default function AdminPage() {
 
   
  
-  console.log(`admin page -- hosts`, hosts)
+  // console.log(`admin page -- hosts`, hosts)
   // console.log('adminpage - approved volunteers', approvedVolunteers)
   // console.log(`admin- roles`, roles);
+  console.log("admin- eventDetails", eventDetails);
+
 
   return (
     <Container fluid className="event-collab-container">
@@ -100,7 +90,7 @@ export default function AdminPage() {
           </Row>
         </Col>
         <Col md={4} className="todo-participant-col">
-          <TodoList showAddToDo={showAddToDo} />
+          <TodoList hosts={hosts} approvedVolunteers={approvedVolunteers} showAddToDo={showAddToDo} eventID={eventID} />
           <Row>
             <HostsManager eventID={eventID} hosts={hosts} getEvent={getEvent} />
           </Row>

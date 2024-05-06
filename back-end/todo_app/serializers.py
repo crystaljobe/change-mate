@@ -9,8 +9,7 @@ class TodoListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = TodoList
-        fields = ['id','assigned_host', 'task',  'completed', 'timestamp']
+        fields = ['id','assigned_host', 'task', 'completed', 'event', 'timestamp']
         read_only_fields = ['timestamp']
         
-        
-      
+   
