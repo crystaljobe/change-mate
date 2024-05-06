@@ -116,23 +116,32 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
     }
   };
 
+  const styles = {
+		cardCSS: {
+			maxWidth: "800px",
+			margin: "24px",
+      width: "100%",
+      maxHeight: "1300px",
+		},
+	};
   return (
-    <Card style={{ marginTop: "2vw" }}>
-      <CardHeader title="To-Do List" />
+    <Card className="cardCSS d-flex justify-self-end" style={styles.cardCSS}>
+      <h2>To-Do List</h2>
+      <hr/>
       <CardContent>
         <List>
           {tasks.map((task) => (
-            <ListItem key={task.id} dense button>
-              <ListItemText
-                primary={task.task}
-                secondary={
-                  allParticipants.length
-                    ? getNameFromId(task.assigned_host)
+            <ListItem style={{ marginLeft: 0 }} key={task.id} dense>
+              <ListItemText 
+                primary={<span className="card-body">{task.task}</span>}
+                secondary={allParticipants.length
+                    ? <span className="card-body">{getNameFromId(task.assigned_host)}</span>
                     : ""
                 }
                 style={{
-                  textDecoration: task.completed ? "line-through" : "none",
+                  textDecoration: task.completed ? "line-through" : "none"
                 }}
+                
               />
               {showAddToDo && (
                 <ListItemSecondaryAction>

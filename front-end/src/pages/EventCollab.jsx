@@ -86,7 +86,7 @@ function EventCollab() {
             className="todo-partipants-col d-flex justify-content-end"
           >
             {eventDetails.hosts && (
-              <TodoList showAddToDo={showAddToDo} eventDetails={eventDetails} />
+              <TodoList showAddToDo={showAddToDo} approvedVolunteers={[]} eventID={eventID} hosts={eventDetails.hosts}/>
             )}
           </Col>
         ) : <Box position="relative" >
