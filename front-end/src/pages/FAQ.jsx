@@ -50,29 +50,6 @@ export default function FAQ() {
 				<p style={{ marginTop:"1rem"}}>Signing up is quick and easy! Just click on the 'Sign Up' button on the homepage and fill in your details. Once you've completed the registration process, you'll be ready to start using our app and making a difference!</p>
 				<div style={{ height: '5rem'}}></div>
 				<div style={{ display: 'flex', justifyContent: 'center', marginBottom: '7rem'}}>
-					<Button 
-						component={Link} 
-						to="/signup"
-						style={{
-							marginRight: "px",
-							paddingLeft: "3rem",
-							paddingRight: "3rem",
-						}}
-						size="large"
-						variant="outlined"
-						sx={{
-							fontSize: "1.25rem",
-							borderColor: "primary.dark", // Default border color
-							color: "black",
-							border: "2px solid",
-							fontWeight: "bold",
-							"&:hover": {
-								backgroundColor: "secondary.dark",
-								color: "white",
-							},
-						}}>
-						Make a Difference Today!
-					</Button>
 				</div>
 			</Container>
 
