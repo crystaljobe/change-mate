@@ -163,11 +163,11 @@ function DiscussionForum({eventDetails, postType}) {
                                     style={{
                                         borderLeft: "2px solid #6840DF",
                                         height:"3rem"}}>
-                                        {post.user.image ?
+                                        {reply.user.image ?
                                         <Avatar 
                                         className='align-self-center pt-0'
-                                        alt={post.user.display_name}
-                                        src={post.user.image} 
+                                        alt={reply.user.display_name}
+                                        src={reply.user.image} 
                                         sx={{ width: 33, height: 33 }} /> : 
                                         <Avatar> <PersonIcon /> </Avatar>
                                         }
