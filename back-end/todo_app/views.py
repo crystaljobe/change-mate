@@ -37,15 +37,16 @@ class TodoListView(TokenReq):
         responses={201: TodoListSerializer}
     ) 
     def post(self, request, event_id):
-        user = UserProfile.objects.get(user=request.user.id)
-        event = get_object_or_404(Event, pk=event_id , hosts=user)
+        user_id = request.user.id
+        user = UserProfile.objects.get(user=user_id)
+        event = get_object_or_404(Event, pk=event_id)
         if user not in event.hosts.all():
             return Response("You are not a host of this event", status=HTTP_400_BAD_REQUEST)
         else:
             user = UserProfile.objects.get(user=request.user.user_profile.id)
         data = request.data.copy()
         data['event'] = event_id
-        data['assigned_host'] = user.id
+        data['assigned_host'] = user_id
         data['task'] = data.get('task')
         data['completed'] = False
         serializer = TodoListSerializer(data=data)

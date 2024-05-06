@@ -54,8 +54,6 @@ urlpatterns = [
     path("api/v1/interests/", include("interest_app.urls")),
     path("api/v1/todo/", include("todo_app.urls")),
     path("api/v1/countries/", include("countries_app.urls")),
-    path("api/v1/states/", include("states_app.urls")),
-    path("api/v1/cities/", include("cities_app.urls")),
     path("api/v1/icons/", include("noun_app.urls")),
     path("api/v1/timezones/", get_timezones, name="timezones"),
     path("swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"),
