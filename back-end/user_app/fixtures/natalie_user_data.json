@@ -1,0 +1,56 @@
+[
+{
+  "model": "user_app.appuser",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$720000$nZWqNfpoA9OFsdneifJ0b3$fjISgIpJAFlzi8XKR6CgRHf/Om7bABzUfECBkyBEFmo=",
+    "last_login": "2024-05-03T21:15:08.760Z",
+    "is_superuser": false,
+    "username": "rs@cp.com",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-05-01T18:39:24.413Z",
+    "email": "rs@cp.com",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user_app.appuser",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$720000$8aZdFuOALL39VaVPHxuuKN$16/TS+iA8UfXdXKe7OGK2CuMtSCEQqXhzeBFGegPNIU=",
+    "last_login": "2024-05-06T14:36:28.788Z",
+    "is_superuser": false,
+    "username": "as@cp.com",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-05-02T14:19:49.639Z",
+    "email": "as@cp.com",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user_app.appuser",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$720000$Pqc0wSV2yUfw8JdcJ6Hp7X$lwuIo9EwOyIi/LoZ919mGIOTTy1hOTpehUvBHmImEYs=",
+    "last_login": "2024-05-05T17:17:23.681Z",
+    "is_superuser": false,
+    "username": "bs@cp.com",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-05-05T17:17:23.146Z",
+    "email": "bs@cp.com",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
