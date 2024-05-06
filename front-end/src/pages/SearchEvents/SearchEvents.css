@@ -17,4 +17,5 @@
     display: flex !important; /* Ensures flex display mode for centering */
     align-items: center !important; /* Center alignment of the icon vertically */
     justify-content: center !important; /* Center alignment of the icon horizontally */
+
 }

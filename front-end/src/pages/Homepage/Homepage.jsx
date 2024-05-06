@@ -8,17 +8,17 @@ import homeBanner from "/src/assets/home-banner.png";
 export default function Homepage() {
 	return (
 		<>
-			<Container fluid style={{ marginTop: "8rem" }} >
-				<Row>
-					<Col md={4} lg={4} sm={12} className="text-end" style={{ paddingTop: "2px"}}>
+			<Container fluid style={{ marginTop: "4rem" }} >
+				<Row className="d-flex justify-content-center">
+					<Col md={4} lg={4} sm={12} className="text-center" style={{ paddingTop: "2px"}}>
 						<Image
 							src={LlamaImg}
 							rounded
-							style={{ height: "19rem", width: "19rem", marginTop: "8px", filter: "drop-shadow(gray -1rem 2rem 10px)" }}
+							style={{ height: "19rem", width: "19rem", marginTop: "17px", filter: "drop-shadow(gray -1rem 2rem 10px)" }}
 						/>
 					</Col>
 
-					<Col lg={6} md={8} sm={12} className="text-center" style={{ paddingTop: "6px"}}>
+					<Col lg={6} md={8} sm={12} className="text-center mt-4" style={{ paddingTop: "6px"}}>
 						<Row>
 							<h1 className="homepage-header-text">
 								Join our vibrant platform to effortlessly organize impactful
@@ -26,14 +26,12 @@ export default function Homepage() {
 								<span style={{ fontStyle:"italic" }}>all in one place!</span>
 							</h1>
 						</Row>
-						<br />
 						<Row className="text-center">
 							<h4
 								className="homepage-subtext">
 								Sign up to make impactful connections today!
 							</h4>
 						</Row>
-						{/* <br /> */}
 						<Row className="text-center">
 							<Col className="mt-2">
 								<Button 
@@ -87,7 +85,7 @@ export default function Homepage() {
 			</Container>
 
 			{/* Scroll Chevrons */}
-			<div style={{ height: '20rem', display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
+			<div style={{ height: '15rem', display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
 				<img style={{ height: '5rem'}} src="src/assets/scroll-chevrons.png" alt="scroll to learn more" />
 			</div>
 			<div style={{ height: '8rem'}}></div>

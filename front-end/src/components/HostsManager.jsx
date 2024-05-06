@@ -104,11 +104,11 @@ function HostsManager({ eventID, hosts, getEvent }) {
 
   return (
     <>
-      <div style={{ marginTop: "2vw" }} className="cardCSS d-flex justify-self-end tri-column-cardCSS">
-        <Accordion defaultExpanded={true} >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} className="d-flex justify-content-center">
-            <h3>Current Hosts</h3>
-            <br/>
+      <div className="flex-column" style={{padding:"24px", minWidth:"300px", maxWidth:"100%"}}>
+        <Accordion defaultExpanded={true}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} >
+            <h2 style={{paddingLeft:"30%"}}>Current Hosts</h2>
+            <hr />
           </AccordionSummary>
           <AccordionDetails>
             {/* !!! lists all hosts w/ trash icon to delete hosts !!! */}
@@ -118,7 +118,7 @@ function HostsManager({ eventID, hosts, getEvent }) {
                   <ListItemAvatar>
                     <Avatar key={host.user_id} src={host.profile_picture}> </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary={host.display_name} />
+                  <ListItemText primary={<span className="card-body">{host.display_name}</span>} />
                   <IconButton
                     edge="start"
                     aria-label="delete"
@@ -163,7 +163,7 @@ function HostsManager({ eventID, hosts, getEvent }) {
         <Accordion defaultExpanded={false}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             {/* !!!  opens search field to add a host !!! */}
-            <Typography>Add Hosts</Typography>
+            <h4>Add Hosts</h4>
           </AccordionSummary>
           <AccordionDetails>
             <List>
@@ -181,7 +181,11 @@ function HostsManager({ eventID, hosts, getEvent }) {
                   label="enter a user's email"
                   variant="standard"
                   value={hostSearchInput}
+                  sx={{ width: '100%', fontSize: '1.5rem' }}
                   onChange={(e) => setHostSearchInput(e.target.value)}
+                  inputProps={{
+                                style: { fontSize: '1.2rem' } // Adjust the font size as needed
+                              }}
                 />
                 <IconButton onClick={handleSearchHost}>
                   <AddIcon />

@@ -81,12 +81,18 @@ nav {
   flex-direction: column;
 }
 
+.toDo-cardCSS {
+  max-width: 800px;
+  min-width: 300px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
 .tri-column-cardCSS {
   max-width: 800px;
   min-width: 300px;
   width: 100%;
-  margin: 24px;
-  padding: 24px;
   max-height: 1300px;
 }
 

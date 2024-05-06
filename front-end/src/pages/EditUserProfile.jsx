@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
+import { Container, Row, Col, Button, Form, Card, InputGroup, FormControl } from 'react-bootstrap';
 import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
 import {
   getUserProfile,
@@ -19,16 +19,16 @@ export default function EditUserProfile({ user }) {
   const [displayName, setDisplayName] = useState([]);
 
   // Set userLocation to/from backend; data format is a json string object
-  const [userLocation, setUserLocation] = useState(''); 
+  const [userLocation, setUserLocation] = useState('');
   const [userLocationCoords, setUserLocationCoords] = useState([])
   // console.log(userLocation, userLocationCoords)
 
   const [profileImage, setProfileImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
-  
+
   // create var navigate for navigating
   const navigate = useNavigate();
-   console.log(userLocationCoords)
+  console.log(userLocationCoords)
 
   // get interest categories using utility funct to set options available
   const userInterestCategories = async () => {
@@ -58,7 +58,7 @@ export default function EditUserProfile({ user }) {
       userInterestsIDs,
       displayName,
       userLocation,
-      profileImage, 
+      profileImage,
       userLocationCoords
     );
     if (responseStatus) {
@@ -98,93 +98,65 @@ export default function EditUserProfile({ user }) {
 
   return (
     <Container>
-      <br />
-      <Row className="space justify-content-md-center">
-        <Col md="auto">
-          <h2>Edit Profile:</h2>
-        </Col>
-      </Row>
-      
-      <Row className="space justify-content-md-center">
-        <Col></Col>
-        <Col className="text-center">
-          <Form onSubmit={handleSubmit}>
-           
-            <Form.Group className="mb-3" controlId="display_name">
-              <Form.Label>
-                Display Name:
-                <input
-                  type="text"
-                  size={40}
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                />
-              </Form.Label>
-            </Form.Group>
+      <Row className="justify-content-md-center mt-4 mb-3">
+        <Col md={8}>
+          <Card>
+            <Card.Body>
+              <Card.Title>Edit Your Profile</Card.Title>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="display_name">
+                  <Form.Label><i className="bi bi-person-fill"></i> Display Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter your display name"
+                    value={displayName}
+                    onChange={e => setDisplayName(e.target.value)}
+                  />
+                </Form.Group>
 
-            <Row className="mb-3" style={{ justifyContent: "center" }}>
-										<LocationSearchMap
-											setCoords={setUserLocationCoords}
-											setAddress={setUserLocation}
-										/>
-						</Row>
+                <Form.Group className="mb-3" controlId="location">
+                  <Form.Label><i className="bi bi-geo-alt-fill"></i> Location</Form.Label>
+                  <LocationSearchMap
+                    setCoords={setUserLocationCoords}
+                    setAddress={setUserLocation}
+                  />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="interests">
-              <Form.Label>
-                Select your areas of interest (control click to select many):
-                <select
-                  multiple={true}
-                  size={6}
-                  value={userInterests}
-                  onChange={(e) => {
-                    const options = [...e.target.selectedOptions];
-                    const values = options.map((option) => {
-                      return option.value;
-                    });
-					const ids = options.map((option) => {
-                      return parseInt(option.id);
-                    });
-                    setUserInterests(values)
-					setUserInterestsIDs(ids);
-                  }}
-                >
-                  {interestCategories &&
-                    interestCategories.map((category) => (
-                      <option
-                        key={category.id}
-                        id={category.id}
-                        value={category.category}
-                      >
+                <Form.Group className="mb-3" controlId="interests">
+                  <Form.Label><i className="bi bi-bookmark-star-fill"></i> Interests</Form.Label>
+                  <Form.Control as="select" multiple value={userInterests} onChange={(e) => {
+                    const selectedOptions = Array.from(e.target.selectedOptions);
+                    const values = selectedOptions.map(option => option.value);
+                    const ids = selectedOptions.map(option => parseInt(option.getAttribute('data-key')));
+
+                    setUserInterests(values);
+                    setUserInterestsIDs(ids);
+                  }}>
+                    {interestCategories.map((category, index) => (
+                      <option key={index} data-key={category.id} value={category.category}>
                         {category.category}
                       </option>
                     ))}
-                </select>
-              </Form.Label>
-            </Form.Group>
+                  </Form.Control>
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="profileImage">
-              <Form.Label>Profile Image:</Form.Label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-              {/*  This sets the location of the image preview on the screen/form*/}
-              {imagePreview && (
-                <img
-                  src={imagePreview}
-                  alt="Profile Preview"
-                  style={{ width: "100%", marginTop: "10px" }}
-                />
-              )}
-            </Form.Group>
+                <Form.Group className="mb-3" controlId="profileImage">
+                  <Form.Label><i className="bi bi-image-fill"></i> Profile Image</Form.Label>
+                  <InputGroup>
+                    <FormControl type="file" accept="image/*" onChange={handleImageChange} />
+                    {imagePreview && (
+                      <img src={imagePreview} alt="Profile Preview" className="img-fluid mt-3" />
+                    )}
+                  </InputGroup>
+                </Form.Group>
 
-            <Button variant="info" type="submit">
-              Submit changes
-            </Button>
-          </Form>
+                <Button variant="primary" type="submit">
+                  Submit Changes
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
         </Col>
-        <Col></Col>
       </Row>
     </Container>
   );

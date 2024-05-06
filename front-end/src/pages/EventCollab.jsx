@@ -22,6 +22,7 @@ function EventCollab() {
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
+  console.log(eventDetails)
 
   useEffect(() => {
     const handleResize = () => {
@@ -109,8 +110,8 @@ function EventCollab() {
       </Row>
         {!showMenu && <Box
         position= "fixed"
-        bottom="0"
-        right="0"// Adjust the position based on the drawer state
+        top="40%"
+        right="0"
         margin="0"
         display="flex"
         alignItems="center"

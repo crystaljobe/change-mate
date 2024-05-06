@@ -102,7 +102,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     const handleResize = () => {
-      // Hide the todo list if the screen width is less than or equal to a certain threshold
+      // Hide the todo list & host manager if the screen width is less than or equal to a certain threshold
       if (window.innerWidth <= 1400) {
         setOpen(false)
         setShowMenu(false);
@@ -133,9 +133,17 @@ export default function AdminPage() {
   return (
     <Container fluid className="event-collab-container">
       <Row className="gx-5">
-        <Col sm={12} md={12} lg={4} xl={showMenu ? 3 : 4} className="event-details-col">
-        {eventDetails.hosts && <DetailedEventCard {...eventDetails}>
-                  </DetailedEventCard>}
+        {/* !!EVENT DETAILS card & button !! */}
+        <Col
+          sm={12}
+          md={12}
+          lg={4}
+          xl={showMenu ? 3 : 4}
+          className="event-details-col"
+        >
+          {eventDetails.hosts && (
+            <DetailedEventCard {...eventDetails}></DetailedEventCard>
+          )}
           <Button
             size="large"
             style={{ margin: "5%" }}
@@ -147,11 +155,15 @@ export default function AdminPage() {
             Edit Event Details
           </Button>
         </Col>
-        <Col sm={12}
+
+        {/* !!VOLUNTEER MANAGER !! */}
+        <Col
+          sm={12}
           md={12}
           lg={7}
           xl={showMenu ? 5 : 6}
-           className="discussion-forum-col">
+          className="discussion-forum-col"
+        >
           <Row>
             <VolunteerManager
               approvedVolunteers={approvedVolunteers}
@@ -163,65 +175,93 @@ export default function AdminPage() {
             />
           </Row>
         </Col>
-        <Col sm={12}
-            md={0}
-            lg={3}
-            xl={3} className="todo-participant-col">
-          
+
+        {/* !!TODO LIST & HOST MANAGER !! */}
+        <Col sm={12} md={0} lg={3} xl={3} className="todo-participant-col">
           {showMenu ? (
-          <Col
-            className="todo-partipants-col d-flex justify-content-end"
-          >
-            {eventDetails.hosts && (<Col><Row>
-          <TodoList setShowMenu={setShowMenu} hosts={hosts} approvedVolunteers={approvedVolunteers} showAddToDo={showAddToDo} eventID={eventID} />
-          </Row>
-          <Row>
-            <HostsManager eventID={eventID} hosts={hosts} getEvent={getEvent} />
-          </Row></Col>
-            )}
-          </Col>
-        ) : <Box position="relative" >
-            <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-                <IconButton 
-                style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                }}
-                onClick={toggleDrawer(false)}>
-                    <CloseIcon />
-                 </IconButton>
-                {<Col><Row>
-          <TodoList setShowMenu={setShowMenu} hosts={hosts} approvedVolunteers={approvedVolunteers} showAddToDo={showAddToDo} eventID={eventID} />
-          </Row>
-          <Row>
-            <HostsManager eventID={eventID} hosts={hosts} getEvent={getEvent} />
-          </Row></Col>}
-            </Drawer>
-        </Box>}
+            <Col className="todo-partipants-col d-flex justify-content-end">
+              {eventDetails.hosts && (
+                <Col>
+                  <Row>
+                    <TodoList
+                      setShowMenu={setShowMenu}
+                      hosts={hosts}
+                      approvedVolunteers={approvedVolunteers}
+                      showAddToDo={showAddToDo}
+                      eventID={eventID}
+                    />
+                  </Row>
+                  <Row>
+                    <HostsManager
+                      eventID={eventID}
+                      hosts={hosts}
+                      getEvent={getEvent}
+                    />
+                  </Row>
+                </Col>
+              )}
+            </Col>
+          ) : (
+            <Box position="relative">
+              <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+                <IconButton
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                  }}
+                  onClick={toggleDrawer(false)}
+                >
+                  <CloseIcon />
+                </IconButton>
+                {
+                  <Col>
+                    <Row>
+                      <TodoList
+                        setShowMenu={setShowMenu}
+                        hosts={hosts}
+                        approvedVolunteers={approvedVolunteers}
+                        showAddToDo={showAddToDo}
+                        eventID={eventID}
+                      />
+                    </Row>
+                    <Row>
+                      <HostsManager
+                        eventID={eventID}
+                        hosts={hosts}
+                        getEvent={getEvent}
+                      />
+                    </Row>
+                  </Col>
+                }
+              </Drawer>
+            </Box>
+          )}
         </Col>
       </Row>
-      {!showMenu && <Box
-        position= "fixed"
-        right="1%"
-        top="40%"
-        margin="0"
-        display="flex"
-        alignItems="center"
+      {!showMenu && (
+        <Box
+          position="fixed"
+          right="1%"
+          top="40%"
+          margin="0"
+          display="flex"
+          alignItems="center"
         >
-            <Button
+          <Button
             variant="outlined"
             margin="0"
             style={{
-            transform: 'rotate(-90deg)',
-            transformOrigin: 'bottom right',
+              transform: "rotate(-90deg)",
+              transformOrigin: "bottom right",
             }}
             onClick={toggleDrawer(!open)}
-            >
-            To-Do List
+          >
+            To-Do List & Hosts
             <ExpandLessIcon />
-            </Button>
-        </Box>}
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 }

@@ -110,11 +110,11 @@ function VolunteerManager({
    };
 
   return (
-    <div style={{ marginTop: "2vw" }}>
+    <div className="cardCSS pt-0">
       <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Pending Volunteer Applications</Typography>
-        </AccordionSummary>
+          <h2 style={{paddingLeft:"20%"}}>Pending Volunteer Applications</h2>
+          </AccordionSummary>
         <AccordionDetails>
           {/* pending volunteer applications/applicants  */}
           <List>
@@ -151,7 +151,7 @@ function VolunteerManager({
 
       <Accordion style={{ marginTop: "1vh" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Assigned Volunteer Roles</Typography>
+        <h2 style={{paddingLeft:"25%"}}>Assigned Volunteer Roles</h2>
         </AccordionSummary>
         <AccordionDetails>
           <TextField
@@ -187,7 +187,7 @@ function VolunteerManager({
                   >
                     <DeleteIcon />
                   </IconButton>
-                  <Typography sx={{ flexGrow: 1 }}>{role}</Typography>
+                  <span className="card-body">{role}</span>
                 </AccordionSummary>
 
                 {/* APPROVED VOLUNTEERS  an arr of obj {id<applicant id>, role, user_id, display_name, profile_picture}*/}
@@ -232,42 +232,42 @@ function VolunteerManager({
             p: 4,
           }}
         >
-          <Typography id="modal-modal-title" variant="h6">
+          <Typography className="modal-header" id="modal-modal-title" variant="h6">
             Application
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography className="modal-header" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Email: ${selectedVolunteerApplication.email}`
               : ""}
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Phone Number: ${selectedVolunteerApplication.phone_number}`
               : ""}
           </Typography>
 
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Preferred Contact Method: ${selectedVolunteerApplication.preferred_contact_method}`
               : ""}
           </Typography>
 
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Availability: ${selectedVolunteerApplication.availability}`
               : ""}
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Previously Volunteered: ${selectedVolunteerApplication.return_volunteer}`
               : ""}
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Interested because: ${selectedVolunteerApplication.volunteer_interest}`
               : ""}
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Relevant experience: ${selectedVolunteerApplication.volunteer_experience}`
               : ""}

@@ -12,7 +12,7 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   // console.log(userProfileData)
-
+  
 
 
 
@@ -59,7 +59,7 @@ function App() {
 
   return (
     <>
-      <MyNavbar setUserProfileData={setUserProfileData} user={ user } setUser={ setUser } displayName={userProfileData.display_name}/>
+      <MyNavbar setUserProfileData={setUserProfileData} user={ user } setUser={ setUser } userImg={userProfileData.image}/>
       <Outlet context={{ user, setUser, userProfileData, setUserProfileData }} />
     </>
   )
