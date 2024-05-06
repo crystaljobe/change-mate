@@ -1,0 +1,41 @@
+[
+{
+  "model": "post_app.post",
+  "pk": 1,
+  "fields": {
+    "event": 1,
+    "post_orgin": "Collaborators Page",
+    "user": 2,
+    "timestamp": "2024-05-06T18:58:41.304Z",
+    "context": "wow i dont think i actually want to clean up dog feces",
+    "likes": 0,
+    "dislikes": 0
+  }
+},
+{
+  "model": "post_app.post",
+  "pk": 2,
+  "fields": {
+    "event": 1,
+    "post_orgin": "Collaborators Page",
+    "user": 2,
+    "timestamp": "2024-05-06T18:59:37.494Z",
+    "context": "please mates, don't forget the items on the todo list, they are super important!",
+    "likes": 0,
+    "dislikes": 0
+  }
+},
+{
+  "model": "post_app.post",
+  "pk": 3,
+  "fields": {
+    "event": 1,
+    "post_orgin": "Collaborators Page",
+    "user": 2,
+    "timestamp": "2024-05-06T19:00:41.635Z",
+    "context": "it's going to be hot outside that day so we dress accordingly and bring a hat & spf",
+    "likes": 0,
+    "dislikes": 0
+  }
+}
+]

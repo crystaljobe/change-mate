@@ -1,0 +1,32 @@
+[
+{
+  "model": "post_app.comment",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "timestamp": "2024-05-06T18:59:00.457Z",
+    "content": "too late! you're THE HOST!",
+    "post": 1
+  }
+},
+{
+  "model": "post_app.comment",
+  "pk": 2,
+  "fields": {
+    "user": 3,
+    "timestamp": "2024-05-06T19:06:53.052Z",
+    "content": "uhh spf doesnt really do well on fur... but hats are a good idea!",
+    "post": 3
+  }
+},
+{
+  "model": "post_app.comment",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "timestamp": "2024-05-06T19:07:21.803Z",
+    "content": "dont worry, i'll bring the coffee! ICED coffee!",
+    "post": 2
+  }
+}
+]
