@@ -149,12 +149,7 @@ export const timeZoneAbbreviations = [
   "Pacific/Niue",
 ];
 
-//need to delete & will need to update volunteer application api call view volunteer roles for specific event
-export const volunteerRoles = async (eventID) => {
-  const response = await api.get(`events/${eventID}/volunteers/`);
-  let rolesArr = response.data;
-  return rolesArr;
-};
+
 
 //admin page - event details GET request
 export const getAdminEventDetails = async (eventID) => {

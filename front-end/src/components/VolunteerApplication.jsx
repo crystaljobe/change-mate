@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { volunteerRoles, postVolunteerApplication } from "../utilities/EventUtilities";
+import { postVolunteerApplication } from "../utilities/EventUtilities";
 
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";

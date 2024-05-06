@@ -1,0 +1,57 @@
+[
+{
+  "model": "user_app.appuser",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$720000$WOTSBQBaWE98T9RecHHwzW$KO8wGeKfWCUO2u6sL3+Mwwq4GC+25mkymNrPSmrx8IU=",
+    "last_login": "2024-04-19T19:52:39.025Z",
+    "is_superuser": false,
+    "username": "crystal@gmail.com",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-04-16T02:33:22.252Z",
+    "email": "crystal@gmail.com",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user_app.appuser",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$720000$i5n9G6sctg14XWEBKdXhp1$nz8SmOZBRLjQYeZ+ZY073tjTlbveE/EusYbP5/+S1R8=",
+    "last_login": "2024-04-18T12:04:56.249Z",
+    "is_superuser": false,
+    "username": "penelopeperson@gmail.com",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-04-16T22:55:16.985Z",
+    "email": "penelopeperson@gmail.com",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+
+{
+  "model": "user_app.appuser",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$720000$JLwIE2Gnm2fgwBxAUeFSkk$CVo0xwup8vtpKxpNDZWSWfgsJPpbLmzKmm4npcWReLU=",
+    "last_login": "2024-04-17T05:20:55.718Z",
+    "is_superuser": false,
+    "username": "johnsmith@aol.com",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-04-17T05:20:55.369Z",
+    "email": "johnsmith@aol.com",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
