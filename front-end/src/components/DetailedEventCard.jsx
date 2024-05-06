@@ -210,7 +210,7 @@ function DetailedEventCard({
 							</li>
 
 							<li>
-								{volunteer_roles.length < 1 ? (
+								{volunteer_roles && volunteer_roles.length === 0 ? (
 									null
 								) : (<Card.Text>{volunteersNeededMessage()}</Card.Text>)}
 							</li>
