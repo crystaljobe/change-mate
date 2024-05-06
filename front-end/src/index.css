@@ -46,6 +46,19 @@ h3 {
   font-style: normal;
 }
 
+h5 {
+  font-size: min(max(16px, 1.2vw), 25px);
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.modal-header {
+  font-size: min(max(16px, 1.2vw), 25px);
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
 .card-body {
   font-size: min(max(16px, 1vw), 22px);
   font-family: "Poppins", sans-serif;

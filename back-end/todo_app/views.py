@@ -9,7 +9,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .serializers import TodoList, TodoListSerializer
+from .serializers import TodoList, TodoListSerializer, GetTodoListSerializer
 from event_app.models import Event, UserProfile
 from drf_yasg.utils import swagger_auto_schema
 
@@ -21,12 +21,12 @@ class TodoListView(TokenReq):
     @swagger_auto_schema(
         operation_summary="Get all tasks for Event",
         operation_description="Get all tasks created for an Event.",
-        responses={200: TodoListSerializer}
+        responses={200: GetTodoListSerializer}
         )
     def get(self, request, event_id):
         user = UserProfile.objects.get(user=request.user)
         todo_list = TodoList.objects.filter(event=event_id)
-        serializer = TodoListSerializer(todo_list, many=True)
+        serializer = GetTodoListSerializer(todo_list, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
     
     
@@ -42,13 +42,12 @@ class TodoListView(TokenReq):
         event = get_object_or_404(Event, pk=event_id)
         if user not in event.hosts.all():
             return Response("You are not a host of this event", status=HTTP_400_BAD_REQUEST)
-        else:
-            user = UserProfile.objects.get(user=request.user.user_profile.id)
         data = request.data.copy()
         data['event'] = event_id
         data['assigned_host'] = user_id
         data['task'] = data.get('task')
         data['completed'] = False
+        print(data)
         serializer = TodoListSerializer(data=data)
         if serializer.is_valid():
             serializer.save()

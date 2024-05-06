@@ -80,7 +80,6 @@ export default function Homepage() {
 									}}>
 									Login
 								</Button>
-								
 							</Col>
 						</Row>
 					</Col>

@@ -177,15 +177,30 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
               onChange={(e) => setNewTask(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && createTodo()}
             />
+            <div className="d-flex justify-content-center">
             <Button
               startIcon={<AddCircleOutlineIcon />}
-              onClick={createTodo}
-              color="primary"
-              variant="contained"
-              style={{ marginTop: 8 }}
-            >
+              style={{
+										marginTop: "20px",
+										paddingLeft: "2rem",
+										paddingRight: "2rem",
+									}}
+									size="large"
+									variant="outlined"
+									sx={{
+										borderColor: "primary.dark", // Default border color
+										color: "black",
+										fontWeight: "bold",
+										border: "2px solid",
+										"&:hover": {
+											backgroundColor: "secondary.dark",
+                      borderColor: "secondary.dark",
+											color: "white",
+										},
+									}}>
               Add Task
             </Button>
+            </div>
           </>
         )}
       </CardContent>
@@ -209,18 +224,18 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
             p: 4,
           }}
         >
-          <Typography>
-            Delete this todo item?
+          <Typography className="d-flex flex-nowrap">
+            <span className="modal-header">Delete this todo item?</span>
             <IconButton
               edge="end"
               aria-label="delete"
               onClick={() => deleteTheTodo(selectedTask.id)}
             >
               <DeleteIcon />
-            </IconButton>{" "}
+            </IconButton>
           </Typography>
           <List>
-            Assign to a different participant:
+          <span className="modal-header">Assign to a different participant:</span>
             {allParticipants && allParticipants.length
               ? allParticipants.map((participant, index) => (
                   <ListItem key={index}>
