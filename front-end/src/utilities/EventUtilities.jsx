@@ -62,8 +62,10 @@ export const postEventDetails = async (
   }
 };
 
-export const setUserAttending = async (eventID, RSVPStatus) => {
-    let response = await api.put(`events/${eventID}/`);
+export const setUserAttending = async (eventID, rsvp) => {
+    let response = await api.put(`events/${eventID}/`, {
+      "rsvp": rsvp
+    })
         if (response.status === 200) {
             return true;
         } else {
