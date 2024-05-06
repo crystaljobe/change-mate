@@ -113,7 +113,7 @@ export default function EventDetails() {
 											Attend
 										</Dropdown.Item>
 									) : null}
-									 <Dropdown.Divider />
+									<Dropdown.Divider />
 									{eventDetails.hosts &&
 									eventDetails.volunteer_roles.length > 0 ? (
 										<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleShow}>
@@ -153,8 +153,8 @@ export default function EventDetails() {
 							</Card>
 						)}
 					</Row>
-					<Row>
-						{/* if event needs volunteers */}
+					{/* <Row>
+						
 						{eventDetails.hosts && eventDetails.volunteer_roles.length > 0  
 						?  (
 							<div className="mt-3">
@@ -167,8 +167,9 @@ export default function EventDetails() {
 							</div>
 							) 
 						: null }
-
 					</Row>
+					*/}
+
 				</Col>
 			</Row>
 		</Container>

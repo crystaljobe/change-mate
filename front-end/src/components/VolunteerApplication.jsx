@@ -37,6 +37,7 @@ function VolunteerApplication({ show, handleClose, eventDetails }) {
     getVolunteerRoles();
   }, [eventDetails]);
 
+
   // Handles submitting the application
   const handleSubmit = async () => {
     // Loops through roles and submits an application for each role

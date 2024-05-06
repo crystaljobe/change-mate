@@ -19,6 +19,7 @@ function EventCollab() {
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
+  console.log(eventDetails)
 
   useEffect(() => {
     const handleResize = () => {

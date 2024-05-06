@@ -121,7 +121,7 @@ function TodoList({ showAddToDo, hosts, approvedVolunteers, setShowMenu }) {
 
 
   return (
-    <Card className="cardCSS d-flex justify-self-end tri-column-cardCSS">
+    <Card className="cardCSS">
       <h2>To-Do List</h2>
       <hr/>
       <CardContent>

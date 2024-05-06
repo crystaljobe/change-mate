@@ -1,8 +1,11 @@
 import { getiCalEventDetails } from "../utilities/EventUtilities";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-export default function ICalButton({eventID}) {
+export default function ICalButton() {
 	const [iCal, setICal] = useState([])
+	let { eventID } = useParams();
+
 
 	const fetchiCal = async () => {
 		const details = await getiCalEventDetails(eventID);
