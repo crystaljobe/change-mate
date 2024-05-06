@@ -119,14 +119,6 @@ function TodoList({ showAddToDo, hosts, approvedVolunteers, setShowMenu }) {
     }
   };
 
-  const styles = {
-		cardCSS: {
-			maxWidth: "800px",
-			margin: "24px",
-      width: "100%",
-      maxHeight: "1300px",
-		},
-	};
 
   return (
     <Card className="cardCSS d-flex justify-self-end tri-column-cardCSS">
