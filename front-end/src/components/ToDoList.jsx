@@ -5,7 +5,7 @@ import {
   updateTodo,
   deleteATodo,
 } from "../utilities/TodoListUtilities";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 
 //styling imports
 import {
@@ -30,7 +30,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddIcon from "@mui/icons-material/Add"
 
-function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
+
+function TodoList({ showAddToDo, hosts, approvedVolunteers }) {
   const [tasks, setTasks] = useState([]); //arr of objs {id <task id>, assigned_host, task, completed<boolean>}
   const { userProfileData } = useOutletContext();
   const [newTask, setNewTask] = useState("");
@@ -40,6 +41,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
   const [openModal, setOpenModal] = useState(false);
   const handleopenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+  const { eventID } = useParams();
 
   const handleSettingsButtonClick = (aTask) => {
     handleopenModal();
@@ -58,7 +60,8 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
 
   //helper function that uses a Set to remove duplicate participants based on user_id
   function createAllParticipants() {
-    let combinedParticipants = [...hosts, ...approvedVolunteers];
+    if(hosts)
+    {let combinedParticipants = [...hosts, ...approvedVolunteers];
     const uniqueParticipants = Array.from(
       new Set(combinedParticipants.map((participant) => participant.user_id))
     ).map((user_id) =>
@@ -66,7 +69,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
         (participant) => participant.user_id === user_id
       )
     );
-    return uniqueParticipants;
+    return uniqueParticipants;}
   }
 
   const getNameFromId = (id) => {
@@ -82,8 +85,8 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
   };
 
   //create a new todo
-  const createTodo = async (assignedHost) => {
-    let response = await postTodo(eventID, userProfileData.id, newTask);
+  const createTodo = async () => {
+    let response = await postTodo(eventID, newTask);
     if (response) {
       getTodos();
       setNewTask("");
@@ -124,6 +127,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
       maxHeight: "1300px",
 		},
 	};
+
   return (
     <Card className="cardCSS d-flex justify-self-end" style={styles.cardCSS}>
       <h2>To-Do List</h2>
@@ -134,10 +138,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
             <ListItem style={{ marginLeft: 0 }} key={task.id} dense>
               <ListItemText 
                 primary={<span className="card-body">{task.task}</span>}
-                secondary={allParticipants.length
-                    ? <span className="card-body">{getNameFromId(task.assigned_host)}</span>
-                    : ""
-                }
+                secondary={<span className="card-body">{task.assigned_host["display_name"]}</span>}
                 style={{
                   textDecoration: task.completed ? "line-through" : "none"
                 }}
@@ -153,7 +154,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
                     edge="end"
                     aria-label="toggle"
                     onClick={() =>
-                      updateTheTodo(task.id, task.assigned_host, !task.completed)
+                      updateTheTodo(task.id, task.assigned_host['id'], !task.completed)
                     }
                   >
                     {task.completed ? (
@@ -180,6 +181,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
             <div className="d-flex justify-content-center">
             <Button
               startIcon={<AddCircleOutlineIcon />}
+              onClick={createTodo}
               style={{
 										marginTop: "20px",
 										paddingLeft: "2rem",
@@ -206,7 +208,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
       </CardContent>
 
       {/* !!!  Modal opens to confirm searched user is correct user  !!! */}
-      <Modal
+     <Modal
         open={openModal}
         onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
@@ -246,8 +248,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
                           selectedTask.id,
                           participant.user_id,
                           false
-                        )
-                      }
+                        )}
                     >
                       <AddIcon />
                     </IconButton>
