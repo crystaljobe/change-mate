@@ -56,6 +56,7 @@ export default function MyNavbar({ user, setUser, userImg, setUserProfileData })
 					alt="ChangeMate Logo"
 				/>
 			</Navbar.Brand>
+			
 
 				<Nav align="end">
 					{/* if user doesn't exist display log in and sign up options */}
@@ -79,8 +80,10 @@ export default function MyNavbar({ user, setUser, userImg, setUserProfileData })
 						<Dropdown.Menu align="end">
                                 <NavDropdown.Item as={Link} to="/profile">Profile</NavDropdown.Item>
                                 <NavDropdown.Item as={Link} to="/editprofile">Update Profile</NavDropdown.Item>
+								<NavDropdown.Item as={Link} to={"/FAQ"}>FAQ</NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={() => handleUserLogout()}>Log Out</NavDropdown.Item>
+								
                         </Dropdown.Menu>
 						</Dropdown>
 

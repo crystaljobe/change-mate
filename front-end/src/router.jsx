@@ -12,6 +12,7 @@ import SearchEvents from './pages/SearchEvents/SearchEvents';
 import EventDirections from './pages/EventDirections';
 import UserProfile from './pages/UserProfile';
 import AdminPage from './pages/AdminPage';
+import FAQ from './pages/FAQ';
 
 import { userConfirmation } from './utilities';
 import EventCollab from './pages/EventCollab';
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/:eventID", 
         element: <AdminPage />,
+      },
+      {
+        path: "/FAQ", 
+        element: <FAQ />,
       },
     ],
     errorElement: <ErrorPage />,
