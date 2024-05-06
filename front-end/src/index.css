@@ -81,6 +81,15 @@ nav {
   flex-direction: column;
 }
 
+.tri-column-cardCSS {
+  max-width: 800px;
+  min-width: 300px;
+  width: 100%;
+  margin: 24px;
+  padding: 24px;
+  max-height: 1300px;
+}
+
 .detailed-event-card.card {
   margin: 10px;
 }

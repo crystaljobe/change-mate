@@ -31,7 +31,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import AddIcon from "@mui/icons-material/Add"
 
 
-function TodoList({ showAddToDo, hosts, approvedVolunteers }) {
+function TodoList({ showAddToDo, hosts, approvedVolunteers, setShowMenu }) {
   const [tasks, setTasks] = useState([]); //arr of objs {id <task id>, assigned_host, task, completed<boolean>}
   const { userProfileData } = useOutletContext();
   const [newTask, setNewTask] = useState("");
@@ -129,7 +129,7 @@ function TodoList({ showAddToDo, hosts, approvedVolunteers }) {
 	};
 
   return (
-    <Card className="cardCSS d-flex justify-self-end" style={styles.cardCSS}>
+    <Card className="cardCSS d-flex justify-self-end tri-column-cardCSS">
       <h2>To-Do List</h2>
       <hr/>
       <CardContent>
@@ -137,6 +137,7 @@ function TodoList({ showAddToDo, hosts, approvedVolunteers }) {
           {tasks.map((task) => (
             <ListItem style={{ marginLeft: 0 }} key={task.id} dense>
               <ListItemText 
+              //TODO: create more space between the task and the assigned host so that the button icons don't overlap with the text
                 primary={<span className="card-body">{task.task}</span>}
                 secondary={<span className="card-body">{task.assigned_host["display_name"]}</span>}
                 style={{

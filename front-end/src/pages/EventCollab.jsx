@@ -86,7 +86,7 @@ function EventCollab() {
             className="todo-partipants-col d-flex justify-content-end"
           >
             {eventDetails.hosts && (
-              <TodoList showAddToDo={showAddToDo} approvedVolunteers={[]} eventID={eventID} hosts={null}/>
+              <TodoList setShowMenu={setShowMenu} showAddToDo={showAddToDo} approvedVolunteers={[]} hosts={null}/>
             )}
           </Col>
         ) : <Box position="relative" >
@@ -100,12 +100,11 @@ function EventCollab() {
                 onClick={toggleDrawer(false)}>
                     <CloseIcon />
                  </IconButton>
-                {<TodoList showAddToDo={showAddToDo} eventDetails={eventDetails} />}
+                {<TodoList setShowMenu={setShowMenu} showAddToDo={showAddToDo} approvedVolunteers={[]} hosts={null} />}
             </Drawer>
         </Box>}
       </Row>
         {!showMenu && <Box
-        height="100vh"
         position= "fixed"
         bottom="0"
         right="0"// Adjust the position based on the drawer state

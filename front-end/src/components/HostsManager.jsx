@@ -104,10 +104,11 @@ function HostsManager({ eventID, hosts, getEvent }) {
 
   return (
     <>
-      <div style={{ marginTop: "2vw" }}>
-        <Accordion defaultExpanded={true}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>Current Hosts</Typography>
+      <div style={{ marginTop: "2vw" }} className="cardCSS d-flex justify-self-end tri-column-cardCSS">
+        <Accordion defaultExpanded={true} >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} className="d-flex justify-content-center">
+            <h3>Current Hosts</h3>
+            <br/>
           </AccordionSummary>
           <AccordionDetails>
             {/* !!! lists all hosts w/ trash icon to delete hosts !!! */}
