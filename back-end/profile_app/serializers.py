@@ -28,4 +28,4 @@ class BasicUserDataSerializer(serializers.ModelSerializer):
 class UserProfileSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['id', 'display_name', 'image', 'email']
+        fields = ['id', 'display_name', 'image']
