@@ -74,7 +74,6 @@ function VolunteerApplication({ show, handleClose, eventDetails }) {
       setRolesSelected([...rolesSelected, roleID]);
     }
   }
-  console.log('VOLUNTEER - user', user.user)
 
   return (
     <>
