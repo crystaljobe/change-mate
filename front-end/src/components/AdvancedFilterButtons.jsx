@@ -5,7 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { getInterestCategories } from '../utilities/InterestCategoriesUtilities';
 import { startOfWeek, endOfWeek } from 'date-fns';
 
-const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelectedEndDate, setDistance}) => {
+const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelectedEndDate, setDistance, handleSubmit, selectedCategory, selectedEndDate, selectedStartDate, distance}) => {
     const [interestCategories, setInterestCategories] = useState([]);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [startDate, setStartDate] = useState(new Date()); 
@@ -70,8 +70,11 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
         setSelectedCategory('')
         setSelectedStartDate('')
         setSelectedEndDate('')
-        setDistance(100)
+        setDistance(25)
     }
+    useEffect(() => {
+        handleSubmit()
+    }, [selectedCategory, selectedStartDate, selectedEndDate, distance])
 
     return (
         <Container fluid className="mt-5">
@@ -80,7 +83,7 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
                     {/* Proximity Dropdown Filter */}
                     <DropdownButton id="proximity-dropdown" title="Filter by Proximity" variant="secondary">
                         {proximityOptions.map(option => (
-                            <Dropdown.Item key={option} as="button" onClick={() => setDistance(parseInt(option))}>
+                            <Dropdown.Item key={option} as="button" onClick={() => {setDistance(parseInt(option))}}>
                                 {option} miles
                             </Dropdown.Item>
                         ))}

@@ -44,7 +44,7 @@ function EventCard({ ...event }) {
     }
 
     return (
-        <Card style={{ width: '30rem' }}>
+        <Card style={{ width: '100%', maxWidth:"400px", minWidth:"150px"}}>
              <Card.Img style={{ height: '250px', wigth: '100%', objectFit: 'cover' }} variant="top" src={event.event_photo ? event.event_photo : defaultImage} />
             <Card.Body>
                 <Card.Title>{event.title}</Card.Title>
