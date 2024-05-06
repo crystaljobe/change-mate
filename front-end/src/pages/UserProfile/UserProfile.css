@@ -1,0 +1,37 @@
+.carousel-control-prev, .carousel-control-next {
+    width: 30px; /* Adjust width of the clickable area */
+    height: 30px; /* Adjust height of the clickable area */
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-image: none; /* Ensure this is set to none */
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .carousel-control-prev-icon::before,
+  .carousel-control-next-icon::before {
+    content: '◀'; /* Use custom characters or icons */
+    font-size: 24px;
+    color: black;
+  }
+  
+  .carousel-control-next-icon::before {
+    content: '▶'; /* Use custom characters or icons */
+  }
+  
+  /* Additional adjustments to ensure controls do not overlap other elements */
+  .carousel-control-prev {
+    left: 0;
+  }
+  
+  .carousel-control-next {
+    right: 0;
+  }
+  
