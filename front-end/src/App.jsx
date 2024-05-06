@@ -34,22 +34,23 @@ function App() {
 
   fetchUserProfile();
 
-  let nullUserUrls = ["/login", "/signup", "/"] // should redirect to homepage if logged in
+  let nullUserUrls = ["/login", "/signup"] // should redirect to profile if logged in
+  let allowNonUserUrls = ["/login", "/signup", "/", "/events"] // should allow if not logged in
 
     // check if current url is one that might need to redirect
-    let isAllowed = nullUserUrls.includes(location.pathname)
-    console.log('isallowed ', isAllowed)
+    let isNullUserUrl = nullUserUrls.includes(location.pathname)
+    let isAllownonUserUrl = allowNonUserUrls.includes(location.pathname);
 
-    // redirect to homepage when
+
+    // redirect to profile page when
     // logged user tries to go to signup, etc
-    if(user && isAllowed) {
-      console.log('redirect to homepage')
-      navigate("/")
+    if(user && isNullUserUrl) {
+      navigate("/profile")
     }
 
-    // not logged in user tries to go anywhere BUT signup or login
+    // not logged in user tries to go anywhere BUT signup, login, home or events
     // we redirect because the user needs to log in before they do anything else
-    else if (!user && !isAllowed){
+    else if (!user && !isAllownonUserUrl){
       navigate("/")
     }
 

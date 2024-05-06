@@ -27,7 +27,7 @@ from django.db.models.functions import Sqrt
 
 
 # views for all events
-class EventsView(TokenReq):
+class EventsView(APIView):
     '''
     Access all events
     '''
