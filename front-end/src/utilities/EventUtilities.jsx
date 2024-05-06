@@ -115,6 +115,7 @@ export const deleteEvent = async (eventID, event) => {
 export const getiCalEventDetails = async (eventID) => {
   const response = await api.get(`events/${eventID}/iCal/`);
   let eventDetails = response.data;
+  console.log(eventDetails)
   return eventDetails;
 };
 

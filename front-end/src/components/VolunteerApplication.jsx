@@ -22,20 +22,13 @@ function VolunteerApplication({ show, handleClose, eventID }) {
   const [roles, setRoles] = useState([]);
   const { user } = useOutletContext();
 
-  //setting roles array by making api call for specific event
-  const getVolunteerRoles = async () => {
-    let rolesArr = await volunteerRoles(eventID); //{id, assigned_volunteers, role, num_volunteers_needed, event}
-    setRoles(rolesArr);
-  };
 
   useEffect(() => {
     setEmail(user.user);
   }, [user])
 
 
-  useEffect(() => {
-    getVolunteerRoles();
-  }, [eventID]);
+
 
   //TODO - incorporate actual application API call & uncomment submit code
   const handleSubmit = async () => {

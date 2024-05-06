@@ -284,10 +284,10 @@ function SearchEvents() {
                     ) : (
                         <Carousel interval={null} indicators={false} prevLabel="" nextLabel="" className="px-5">
                             {additionalGroupedEvents.map((chunk, index) => (
-                                <Carousel.Item key={index} >
+                                <Carousel.Item key={index}>
                                     <div className="d-flex flex-nowrap overflow-hidden">
                                         {chunk.map((event, idx) => (
-                                            <div key={idx} className="ms-3">
+                                            <div key={idx} className="ms-4">
                                                 <EventCard {...event} />
                                             </div>
                                         ))}
