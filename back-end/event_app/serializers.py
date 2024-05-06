@@ -249,10 +249,11 @@ class EventCardSerializer(serializers.ModelSerializer):
     startDate = serializers.SerializerMethodField()
     endDate = serializers.SerializerMethodField()
     category = InterestCategorySerializer()
+    volunteer_spots_remaining = serializers.SerializerMethodField()
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startDate', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'event_photo', 'category', 'location']
+        fields = ['id', 'title', 'event_start', 'event_end', 'startDate', 'endDate', 'time_zone','volunteer_spots_remaining','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address', 'event_photo', 'category', 'location']
 
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
@@ -262,8 +263,17 @@ class EventCardSerializer(serializers.ModelSerializer):
     def get_endDate(self, obj):
         return obj.event_end.strftime('%m/%d/%Y')
 
-    
-
+    # get the number of volunteers needed for event
+    def get_volunteer_spots_remaining(self, obj):
+        if obj.volunteer_roles:
+            volunteers_needed = obj.volunteer_roles.aggregate(num_volunteers_needed=Sum('num_volunteers_needed'))['num_volunteers_needed']
+            if volunteers_needed is None:
+                return None
+            volunteer_roles = obj.volunteer_roles.all()
+            volunteers_assigned = sum(role.applications.filter(application_status=True).count() for role in volunteer_roles)
+            return volunteers_needed - volunteers_assigned
+        else:
+            return None
 
 
 
