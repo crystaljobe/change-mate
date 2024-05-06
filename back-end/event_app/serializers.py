@@ -28,10 +28,12 @@ class EventAdminSerializer(serializers.ModelSerializer):
     volunteer_spots_remaining = serializers.SerializerMethodField()
     lat = serializers.SerializerMethodField()
     lon = serializers.SerializerMethodField()
+    #will be boolean if there are volunteer roles or not
+    volunteer_roles = serializers.SerializerMethodField()
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'applicants', 'volunteers', 'hosts', 'event_photo', 'lat', 'lon', 'attendees_needed', 'num_users_attending', 'volunteer_spots_remaining' ]
+        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'applicants', 'volunteers', 'hosts', 'event_photo', 'lat', 'lon', 'attendees_needed', 'num_users_attending', 'volunteer_spots_remaining', 'volunteer_roles' ]
 
     def get_lat(self, obj):
         return obj.coordinates[0] if obj.coordinates else None
@@ -99,6 +101,13 @@ class EventAdminSerializer(serializers.ModelSerializer):
             return applicants  # Return the list of volunteers
         else:
             return None
+        
+    #will be boolean if there are volunteer roles or not
+    def get_volunteer_roles(self, obj):
+        if obj.volunteer_roles:
+            return True
+        else:
+            return None
 
     # get list of volunteers that have been assigned  
     def get_volunteers(self, obj):
@@ -118,6 +127,13 @@ class EventAdminSerializer(serializers.ModelSerializer):
             return volunteers  # Return the list of volunteers
         else:
             return None
+    
+    #will be boolean if there are volunteer roles or not
+    def get_volunteer_roles(self, obj):
+        if obj.volunteer_roles:
+            return True
+        else:
+            return None
         
 
 class EventCollaborationSerializer(serializers.ModelSerializer):
@@ -131,10 +147,13 @@ class EventCollaborationSerializer(serializers.ModelSerializer):
     hosts = serializers.SerializerMethodField()
     category = InterestCategorySerializer()
     volunteers = serializers.SerializerMethodField()
+    #will be boolean if there are volunteer roles or not
+    volunteer_roles = serializers.SerializerMethodField()
+
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category',  'attendees_needed', 'num_users_attending', 'volunteer_spots_remaining', 'volunteers','hosts','event_photo' ]
+        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category',  'attendees_needed', 'num_users_attending', 'volunteer_spots_remaining', 'volunteers','hosts','event_photo', 'volunteer_roles' ]
 
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
@@ -191,6 +210,13 @@ class EventCollaborationSerializer(serializers.ModelSerializer):
                     }
                     volunteers.append(volunteer)
             return volunteers  # Return the list of volunteers
+        else:
+            return None
+        
+    #will be boolean if there are volunteer roles or not
+    def get_volunteer_roles(self, obj):
+        if obj.volunteer_roles:
+            return True
         else:
             return None
 
