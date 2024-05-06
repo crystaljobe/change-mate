@@ -1,6 +1,4 @@
-import { Card, Button, Row, Col, Image } from 'react-bootstrap';
-import { Link } from "react-router-dom";
-import DefaultProfileImg from "/src/assets/Default-Profile.png";
+import { Card, Row, Col } from 'react-bootstrap';
 import Avatar from '@mui/material/Avatar';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
