@@ -160,7 +160,7 @@ export default function AdminPage() {
       </Row>
       {!showMenu && <Box
         position= "fixed"
-        right="1%"
+        right="0"
         top="40%"
         margin="0"
         display="flex"
