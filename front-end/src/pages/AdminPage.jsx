@@ -1,4 +1,4 @@
-import { useParams, Link, useOutletContext } from "react-router-dom";
+import { useParams, Link, useOutletContext, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   getAdminEventDetails,
@@ -28,7 +28,26 @@ export default function AdminPage() {
   const [hosts, setHosts] = useState([]); //array of userProfile instances that are 'collaborators' {display_name, profile_picture, user_id}
   const { userProfileData } = useOutletContext(); //obj that contains {id, display_name, image, user_events[{arr of event Objs that user is a collaborator/host of}]}
   let { eventID } = useParams();
+  const navigate = useNavigate()
   const showAddToDo = true;
+
+  const isUserAllowed = () => {
+    const userID = userProfileData.id
+    const isAllowed = false
+
+    for (const host of hosts) {
+      if (host.user_id == userID)
+        isAllowed = true
+    }
+    
+    if (!isAllowed) {
+      navigate(`/event/${eventID}`)
+    }
+  }
+
+  useEffect(() => {
+    isUserAllowed();
+  }, [hosts]);
   
 
   const toggleDrawer = (newOpen) => () => {

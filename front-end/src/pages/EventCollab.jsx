@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import { getEventDetails } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
@@ -10,11 +10,14 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import CloseIcon from '@mui/icons-material/Close';
 
 function EventCollab() {
+  const { userProfileData } = useOutletContext();
   const [eventDetails, setEventDetails] = useState({});
   const { eventID } = useParams();
   const collabPost = "collaborators";
   const [showMenu, setShowMenu] = useState(true);
   const [open, setOpen] = React.useState(false);
+
+  console.log('userProfileData', userProfileData)
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
