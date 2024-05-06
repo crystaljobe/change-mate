@@ -175,7 +175,7 @@ function SearchEvents() {
                 <div className="container-fluid mt-5">
                     <div className="row">
                         <div className="col-md-10 mx-auto">
-                        <Form onSubmit={handleSubmit} className="shadow p-3 mb-5 rounded" style={{backgroundColor:"#93eeef", boxShadow:""}}>
+                        <Form onSubmit={handleSubmit} className="shadow p-3 mb-5 rounded" style={{backgroundColor:"#93eeef", filter: "drop-shadow(#22054c -1rem 1rem 10px)"}}>
     <Container>
         <Row className="justify-content-center"> {/* Center the content horizontally */}
             <Col xs={12} md={4}>
@@ -203,8 +203,9 @@ function SearchEvents() {
             </Col>
         </Row>
         <Row className="justify-content-center mt-3"> {/* Center the button horizontally */}
-            <Col xs={12} md={2}>
+            <Col xs={9} md={4}>
                 <Button
+                    className="text-center"
                     type="submit"
                     style={{
                         width: "100%", // Make the button full width
