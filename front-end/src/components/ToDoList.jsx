@@ -5,7 +5,7 @@ import {
   updateTodo,
   deleteATodo,
 } from "../utilities/TodoListUtilities";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 
 //styling imports
 import {
@@ -30,7 +30,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddIcon from "@mui/icons-material/Add"
 
-function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
+
+function TodoList({ showAddToDo, hosts, approvedVolunteers, setShowMenu }) {
   const [tasks, setTasks] = useState([]); //arr of objs {id <task id>, assigned_host, task, completed<boolean>}
   const { userProfileData } = useOutletContext();
   const [newTask, setNewTask] = useState("");
@@ -40,6 +41,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
   const [openModal, setOpenModal] = useState(false);
   const handleopenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+  const { eventID } = useParams();
 
   const handleSettingsButtonClick = (aTask) => {
     handleopenModal();
@@ -58,7 +60,8 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
 
   //helper function that uses a Set to remove duplicate participants based on user_id
   function createAllParticipants() {
-    let combinedParticipants = [...hosts, ...approvedVolunteers];
+    if(hosts)
+    {let combinedParticipants = [...hosts, ...approvedVolunteers];
     const uniqueParticipants = Array.from(
       new Set(combinedParticipants.map((participant) => participant.user_id))
     ).map((user_id) =>
@@ -66,7 +69,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
         (participant) => participant.user_id === user_id
       )
     );
-    return uniqueParticipants;
+    return uniqueParticipants;}
   }
 
   const getNameFromId = (id) => {
@@ -82,8 +85,8 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
   };
 
   //create a new todo
-  const createTodo = async (assignedHost) => {
-    let response = await postTodo(eventID, userProfileData.id, newTask);
+  const createTodo = async () => {
+    let response = await postTodo(eventID, newTask);
     if (response) {
       getTodos();
       setNewTask("");
@@ -116,23 +119,23 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
     }
   };
 
+
   return (
-    <Card style={{ marginTop: "2vw" }}>
-      <CardHeader title="To-Do List" />
+    <Card className="cardCSS d-flex justify-self-end tri-column-cardCSS">
+      <h2>To-Do List</h2>
+      <hr/>
       <CardContent>
         <List>
           {tasks.map((task) => (
-            <ListItem key={task.id} dense button>
-              <ListItemText
-                primary={task.task}
-                secondary={
-                  allParticipants.length
-                    ? getNameFromId(task.assigned_host)
-                    : ""
-                }
+            <ListItem style={{ marginLeft: 0 }} key={task.id} dense>
+              <ListItemText 
+              //TODO: create more space between the task and the assigned host so that the button icons don't overlap with the text
+                primary={<span className="card-body">{task.task}</span>}
+                secondary={<span className="card-body">{task.assigned_host["display_name"]}</span>}
                 style={{
-                  textDecoration: task.completed ? "line-through" : "none",
+                  textDecoration: task.completed ? "line-through" : "none"
                 }}
+                
               />
               {showAddToDo && (
                 <ListItemSecondaryAction>
@@ -144,7 +147,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
                     edge="end"
                     aria-label="toggle"
                     onClick={() =>
-                      updateTheTodo(task.id, task.assigned_host, !task.completed)
+                      updateTheTodo(task.id, task.assigned_host['id'], !task.completed)
                     }
                   >
                     {task.completed ? (
@@ -168,21 +171,37 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
               onChange={(e) => setNewTask(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && createTodo()}
             />
+            <div className="d-flex justify-content-center">
             <Button
               startIcon={<AddCircleOutlineIcon />}
               onClick={createTodo}
-              color="primary"
-              variant="contained"
-              style={{ marginTop: 8 }}
-            >
+              style={{
+										marginTop: "20px",
+										paddingLeft: "2rem",
+										paddingRight: "2rem",
+									}}
+									size="large"
+									variant="outlined"
+									sx={{
+										borderColor: "primary.dark", // Default border color
+										color: "black",
+										fontWeight: "bold",
+										border: "2px solid",
+										"&:hover": {
+											backgroundColor: "secondary.dark",
+                      borderColor: "secondary.dark",
+											color: "white",
+										},
+									}}>
               Add Task
             </Button>
+            </div>
           </>
         )}
       </CardContent>
 
       {/* !!!  Modal opens to confirm searched user is correct user  !!! */}
-      <Modal
+     <Modal
         open={openModal}
         onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
@@ -200,18 +219,18 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
             p: 4,
           }}
         >
-          <Typography>
-            Delete this todo item?
+          <Typography className="d-flex flex-nowrap">
+            <span className="modal-header">Delete this todo item?</span>
             <IconButton
               edge="end"
               aria-label="delete"
               onClick={() => deleteTheTodo(selectedTask.id)}
             >
               <DeleteIcon />
-            </IconButton>{" "}
+            </IconButton>
           </Typography>
           <List>
-            Assign to a different participant:
+          <span className="modal-header">Assign to a different participant:</span>
             {allParticipants && allParticipants.length
               ? allParticipants.map((participant, index) => (
                   <ListItem key={index}>
@@ -222,8 +241,7 @@ function TodoList({ showAddToDo, eventID, hosts, approvedVolunteers }) {
                           selectedTask.id,
                           participant.user_id,
                           false
-                        )
-                      }
+                        )}
                     >
                       <AddIcon />
                     </IconButton>

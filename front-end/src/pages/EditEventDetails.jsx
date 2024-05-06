@@ -116,7 +116,7 @@ export default function EditEventDetails() {
     );
     // if response status === true navigate user back to their profile
     if (responseStatus) {
-      navigate('/profile');
+      navigate(`/admin/${eventID}`);
     }
   };
 
@@ -124,7 +124,7 @@ export default function EditEventDetails() {
   const handleDelete = async () => {
     const responseStatus = await deleteEvent(eventID);
     if (responseStatus) {
-      navigate('/profile');
+      navigate(`/admin/${eventID}`);
     }
   };
 

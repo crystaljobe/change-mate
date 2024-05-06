@@ -46,6 +46,19 @@ h3 {
   font-style: normal;
 }
 
+h5 {
+  font-size: min(max(16px, 1.2vw), 25px);
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.modal-header {
+  font-size: min(max(16px, 1.2vw), 25px);
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
 .card-body {
   font-size: min(max(16px, 1vw), 22px);
   font-family: "Poppins", sans-serif;
@@ -66,6 +79,15 @@ nav {
   padding: 24px;
   display: flex;
   flex-direction: column;
+}
+
+.tri-column-cardCSS {
+  max-width: 800px;
+  min-width: 300px;
+  width: 100%;
+  margin: 24px;
+  padding: 24px;
+  max-height: 1300px;
 }
 
 .detailed-event-card.card {
@@ -234,8 +256,9 @@ nav {
   text-align: center;
 }
 
-.dropdown-content a:hover {
-  background-color: #bce0fc34;
+.dropdown-hover:hover {
+  background-color: #982dda; /* Light grey background on hover */
+  color: #ffffff; 
 }
 
 .dropdown-container:hover .dropdown-content {

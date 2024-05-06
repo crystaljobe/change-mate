@@ -11,8 +11,6 @@ import { ListGroup, Card } from "react-bootstrap";
 import ICalButton from "./iCalButton";
 import "add-to-calendar-button";
 
-
-
 function DetailedEventCard({
 	description,
 	title,
@@ -39,7 +37,7 @@ function DetailedEventCard({
 	//styles for card
 	const styles = {
 		cardCSS: {
-			maxWidth: "800px",
+			maxWidth: "650px",
 			margin: "24px",
 		},
 		header: {
@@ -93,21 +91,20 @@ function DetailedEventCard({
 		if (num_users_attending === 0) {
 			return `No attendees at this time.`;
 		} else if (num_users_attending === 1) {
-			return `You have ${num_users_attending} mate attending this event.`;
+			return `${num_users_attending} mate is currently attending this event.`;
 		} else {
-			console.log("You have:", num_users_attending);
-			return `${num_users_attending} mates are attending this event.`;
+			return `${num_users_attending} other mates are attending this event.`;
 		}
 	}
 
 	//conditional for setting # of volunteers needed
 	function volunteersNeededMessage() {
 		if (volunteer_spots_remaining === 0) {
-			return "WAHOOO! All volunteer spots filled!";
+			return "All volunteer spots filled are filled for this event!";
 		} else if (volunteer_spots_remaining === 1) {
-			return `${volunteer_spots_remaining} volunteer role is still waiting to be filled.`;
+			return `${volunteer_spots_remaining} volunteer role is still waiting to be filled for this event.`;
 		} else {
-			return `${volunteer_spots_remaining} volunteer roles still waiting to be filled.`;
+			return `${volunteer_spots_remaining} volunteer roles are still waiting to be filled for this event.`;
 		}
 	}
 
@@ -203,7 +200,6 @@ function DetailedEventCard({
 					</ListGroup.Item>
 
 					<ListGroup.Item className="mb-2">
-						
 						<strong> Event Activity: </strong>
 						<ul>
 							<li>
@@ -213,7 +209,7 @@ function DetailedEventCard({
 							</li>
 
 							<li>
-								{volunteer_roles && volunteer_roles.length === 0 ? (
+								{volunteer_roles ? (
 									null
 								) : (<Card.Text>{volunteersNeededMessage()}</Card.Text>)}
 							</li>

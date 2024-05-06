@@ -62,8 +62,10 @@ export const postEventDetails = async (
   }
 };
 
-export const setUserAttending = async (eventID, RSVPStatus) => {
-    let response = await api.put(`events/${eventID}/`);
+export const setUserAttending = async (eventID, rsvp) => {
+    let response = await api.put(`events/${eventID}/`, {
+      "rsvp": rsvp
+    })
         if (response.status === 200) {
             return true;
         } else {
@@ -147,12 +149,7 @@ export const timeZoneAbbreviations = [
   "Pacific/Niue",
 ];
 
-//need to delete & will need to update volunteer application api call view volunteer roles for specific event
-export const volunteerRoles = async (eventID) => {
-  const response = await api.get(`events/${eventID}/volunteers/`);
-  let rolesArr = response.data;
-  return rolesArr;
-};
+
 
 //admin page - event details GET request
 export const getAdminEventDetails = async (eventID) => {
@@ -216,4 +213,10 @@ export const getEventTasks = async (eventID) => {
   const response = await api.get(`todo/${eventID}`);
   let eventTasks = response.data;
   return eventTasks;
+}
+
+export const postVolunteerApplication = async (roleID, applicationData) => {
+  const response = await api.post(`volunteer_applications/${roleID}/`, applicationData);
+  let application = response.data;
+  return application;
 }
