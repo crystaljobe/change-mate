@@ -15,11 +15,14 @@ import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerApplication from "../components/VolunteerApplication";
 import StaticMap from "../components/EventDetailsStaticMap";
+
 export default function EventDetails() {
 	let { eventID } = useParams();
 	const { userProfileData } = useOutletContext();
 	const [eventDetails, setEventDetails] = useState({});
 	const [rsvp, setRSVP] = useState(true);
+	// console.log(userProfileData)
+	// console.log("rsvp status:", rsvp)
 
 	//consolidated useEffects on page and only recall api if event id changes
 	useEffect(() => {
@@ -37,18 +40,16 @@ export default function EventDetails() {
 	}, [eventID]); // Make sure to include eventID and userProfileData in the dependencies array
 
 	useEffect(() => {
-		if (userProfileData && eventDetails) {
-			const isAttending =
-				userProfileData.events_attending &&
-				userProfileData.events_attending.filter(
-					(event) => event.id === eventID
-				);
-			setRSVP(isAttending);
+		if (userProfileData.events_attending && eventDetails.id) {
+			const isAttending = userProfileData.events_attending.some((event) => event.id === eventDetails.id);
+			setRSVP(!isAttending);
+			// console.log("is attending", isAttending)
 		}
-	}, [userProfileData, eventDetails, eventID]);
+	}, [userProfileData.events_attending, eventDetails, eventID]);
 
 	// onClick function for RSVP button to handle put request to add user as attending
 	const handleRSVP = async () => {
+		console.log("put:", rsvp)
 		const response = await setUserAttending(eventID, rsvp);
 		setRSVP(!rsvp);
 		if (response) {
@@ -106,7 +107,7 @@ export default function EventDetails() {
 								</Card.Text>
 							</Card.Body>
 							<Card.Footer>
-								<DropdownButton title="Count me in!" align="center" id="dropdown-basic-button" >
+								<DropdownButton title="Count me in!" id="dropdown-basic-button" >
 									{eventDetails.attendees_needed && rsvp ? (
 										<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleRSVP}>
 											Attend

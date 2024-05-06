@@ -93,7 +93,6 @@ function DetailedEventCard({
 		} else if (num_users_attending === 1) {
 			return `${num_users_attending} mate is currently attending this event.`;
 		} else {
-			console.log("You have:", num_users_attending);
 			return `${num_users_attending} other mates are attending this event.`;
 		}
 	}
@@ -210,7 +209,7 @@ function DetailedEventCard({
 							</li>
 
 							<li>
-								{volunteer_roles && volunteer_roles.length === 0 ? (
+								{volunteer_roles.length === 0 ? (
 									null
 								) : (<Card.Text>{volunteersNeededMessage()}</Card.Text>)}
 							</li>
