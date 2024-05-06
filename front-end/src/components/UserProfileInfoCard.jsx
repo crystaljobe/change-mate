@@ -5,13 +5,13 @@ import Avatar from '@mui/material/Avatar';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import FollowTheSignsIcon from '@mui/icons-material/FollowTheSigns';
+import banner from '../assets/profile_banner.webp';
+import defaultImage from '../assets/Default-Profile.png';
 
 export default function UserProfileInfoCard({
   image,
   display_name,
   location,
-  userIntStr,
-  profileIcon,
   badges,
   userEvents,
   eventsAttending,
@@ -23,11 +23,11 @@ export default function UserProfileInfoCard({
   return (
     <Card className="text-center shadow-lg" style={{ width: '100%', overflow: 'hidden', borderRadius: '15px' }}>
       {/* <Card.Header style={{ backgroundColor: '#6840DF', color: '#ffffff', fontSize: '1.25rem' }}>Profile Info</Card.Header> */}
-      <Card.Img variant="top" src={image || profileIcon} style={{ height: '350px', objectFit: 'cover' }} alt={`${display_name}'s photo`} />
+      <Card.Img variant="top" src={banner} style={{ height: '350px', objectFit: 'fluid', objectPosition: "center top" }} alt={`${display_name}'s photo`} />
       <Card.Body style={{ backgroundColor: '#f8f9fa', padding: '20px' }}>
         <Row>
           <Col md={2}>
-          <Avatar  alt={display_name} src={image} sx={{ width: 200, height: 200 }} />
+          <Avatar  alt={display_name} src={image || defaultImage} sx={{ width: 200, height: 200 }} /> 
           </Col>
           <Col md={4} style={{ paddingLeft: '20px' }}> 
             <Card.Title as='h3' style={{ fontWeight: 'bold', color: "#6840DF" }}>
