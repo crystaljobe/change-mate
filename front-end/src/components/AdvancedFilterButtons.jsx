@@ -5,7 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { getInterestCategories } from '../utilities/InterestCategoriesUtilities';
 import { startOfWeek, endOfWeek } from 'date-fns';
 
-const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelectedEndDate, setDistance}) => {
+const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelectedEndDate, setDistance, handleSubmit, selectedCategory, selectedEndDate, selectedStartDate, distance}) => {
     const [interestCategories, setInterestCategories] = useState([]);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [startDate, setStartDate] = useState(new Date()); 
@@ -70,17 +70,20 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
         setSelectedCategory('')
         setSelectedStartDate('')
         setSelectedEndDate('')
-        setDistance(100)
+        setDistance(25)
     }
+    useEffect(() => {
+        handleSubmit()
+    }, [selectedCategory, selectedStartDate, selectedEndDate, distance])
 
     return (
         <Container fluid className="mt-5">
-            <Row className="justify-content-center mt-4 mb-4">
-                <Col xs={12} style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '10px 0' }}>
+            <Row className="justify-content-center mt-4">
+                <Col xs={12} style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '10px 0', flexWrap:'wrap'}}>
                     {/* Proximity Dropdown Filter */}
                     <DropdownButton id="proximity-dropdown" title="Filter by Proximity" variant="secondary">
                         {proximityOptions.map(option => (
-                            <Dropdown.Item key={option} as="button" onClick={() => setDistance(parseInt(option))}>
+                            <Dropdown.Item key={option} as="button" onClick={() => {setDistance(parseInt(option))}}>
                                 {option} miles
                             </Dropdown.Item>
                         ))}
@@ -145,7 +148,7 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
                 </Col>
             </Row>
             <Row>
-                <Button variant='danger' onClick={(e) => handleFilterReset(e)}>Reset Filters</Button>
+                <Button variant='link'  onClick={(e) => handleFilterReset(e)}>Reset Filters</Button>
             </Row>
         </Container>
     );

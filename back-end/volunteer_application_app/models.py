@@ -7,7 +7,7 @@ class VolunteerApplication(models.Model):
     applicant = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="volunteer_events") # user display name and id - automatically set during post request
     email = models.EmailField()
     phone_number = models.CharField(max_length=15)
-    preferred_contact_method = models.CharField(max_length=50)
+    preferred_contact_method = models.CharField(max_length=50, null=True, blank=True)
     availability = models.CharField(max_length=500)
     return_volunteer = models.BooleanField(default=False)
     volunteer_interest = models.TextField()

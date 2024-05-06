@@ -11,7 +11,7 @@ const MapboxGeocoderComponent = ({setCoords}) => {
     const geocoder = new MapboxGeocoder({
       accessToken: "pk.eyJ1IjoiY3J5c3RhbGpvYmUiLCJhIjoiY2x2Y3VkMzFxMG13ZzJrcGY5dDB0bGJvYyJ9.PV_ZgI2EhyhNfcRHmp2OPw",
       types: 'country,region,place,postcode,locality,neighborhood',
-      placeholder: "Location",
+      placeholder: "address, city, state",
     });
 
     // Add geocoder to the specified container
@@ -36,8 +36,8 @@ const MapboxGeocoderComponent = ({setCoords}) => {
   }, []);
 
   return (
-    <div>
-      <div id="geocoder" style={{ minWidth: '100%' }}></div>
+    <div className='geocoder-container'>
+      <div id="geocoder" ></div>
     </div>
   );
 };
