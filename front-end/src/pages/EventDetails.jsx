@@ -153,14 +153,24 @@ export default function EventDetails() {
 							</Card>
 						)}
 					</Row>
-					<Row></Row>
+					<Row>
+						{/* if event needs volunteers */}
+						{eventDetails.hosts && eventDetails.volunteer_roles.length > 0  
+						?  (
+							<div className="mt-3">
+							<Button variant="primary" onClick={handleShow}>Volunteer</Button>
+							<VolunteerApplication
+								show={show}
+								handleClose={handleClose}
+								eventDetails={eventDetails}
+							/>
+							</div>
+							) 
+						: null }
+
+					</Row>
 				</Col>
 			</Row>
-			<VolunteerApplication
-				show={show}
-				handleClose={handleClose}
-				eventID={eventID}
-			/>
 		</Container>
 	);
 }
