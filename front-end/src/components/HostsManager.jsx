@@ -104,7 +104,7 @@ function HostsManager({ eventID, hosts, getEvent }) {
 
   return (
     <>
-      <div className="flex-column" style={{padding:"24px", minWidth:"300px", maxWidth:"800px"}}>
+      <div className="flex-column" style={{padding:"24px", minWidth:"300px", maxWidth:"100%"}}>
         <Accordion defaultExpanded={true}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} >
             <h2 style={{paddingLeft:"30%"}}>Current Hosts</h2>
