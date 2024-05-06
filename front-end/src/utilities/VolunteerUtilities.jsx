@@ -1,9 +1,6 @@
 import { api } from "../utilities";
 
-
-
-
-
+//TODO:POST Volunteer Application 
 
 //admin give decision on volunteer application
 export const putApplicationDecision = async (applicationID, applicationDecision, decisionText) => {
