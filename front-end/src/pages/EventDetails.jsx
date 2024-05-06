@@ -1,4 +1,14 @@
-import { Container, Col, Row, Button, Card } from "react-bootstrap";
+import {
+	Container,
+	Col,
+	Row,
+	Button,
+	Card,
+	CardFooter,
+	Dropdown,
+	DropdownButton,
+} from "react-bootstrap";
+import MUIbutton from "@mui/material/Button";
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
@@ -23,115 +33,133 @@ export default function EventDetails() {
 				console.error(error);
 			}
 		}
-	
 		fetchAllData();
 	}, [eventID]); // Make sure to include eventID and userProfileData in the dependencies array
-	
+
 	useEffect(() => {
 		if (userProfileData && eventDetails) {
-			const isAttending = userProfileData.events_attending && userProfileData.events_attending.filter(event => event.id === eventID);
+			const isAttending =
+				userProfileData.events_attending &&
+				userProfileData.events_attending.filter(
+					(event) => event.id === eventID
+				);
 			setRSVP(isAttending);
 		}
 	}, [userProfileData, eventDetails, eventID]);
 
-	// console.log(userProfileData)
-	// console.log(eventDetails)
-
-
-	//conditional for setting # of users
-	function usersAttendingMessage() {
-		if (num_users_attending === 0) {
-			return;
-		} else if (num_users_attending === 1) {
-			return `${num_users_attending} of your mates is attending this event, would you like to join them at this event?`;
-		} else {
-			return `${num_users_attending} of your mates are attending this event, would you like to join them at this event?`;
-		}
-	}
-
-	//conditional for setting # of volunteers needed
-	function volunteersNeededMessage() {
-		if (volunteer_spots_remaining === 0) {
-			return "All volunteer spots filled!";
-		} else if (volunteer_spots_remaining === 1) {
-			return `This event is needing ${volunteer_spots_remaining} more volunteer. Would you like to volunteer for this event?`;
-		}
-	}
-
-	// Renders button conditionally based on if user is attending event
-	const renderAttendingButton = () => {
-		// if user not attending already return button else disable button
-		if (rsvp){
-			return <Button onClick={handleRSVP}> Attend </Button>
-		} else {
-			return <Button onClick={handleRSVP}> Un-RSVP </Button>
-		}
-	};
 	// onClick function for RSVP button to handle put request to add user as attending
 	const handleRSVP = async () => {
 		const response = await setUserAttending(eventID, rsvp);
-		setRSVP(!rsvp)
+		setRSVP(!rsvp);
 		if (response) {
 			console.log("user rsvp");
 		}
 	};
 
-
 	// application modal
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+
+	function eventOptionsMessage() {
+		if (
+			eventDetails.attendees_needed &&
+			eventDetails.volunteer_roles.length > 0
+		) {
+			return "This event needs attendees and volunteers, how would you like to participate?";
+		} else if (
+			eventDetails.attendees_needed &&
+			eventDetails.volunteer_roles.length < 1
+		) {
+			return "Let the hosts know you'll be attending this event by clicking the button below!";
+		} else if (
+			!eventDetails.attendees_needed &&
+			eventDetails.volunteer_roles.length > 0
+		) {
+			return "This event needs volunteers, to fill out the volunteer form click the button below!";
+		}
+	}
+
 	return (
 		<Container>
 			<Row>
-				<Col md={8} sm={12}>
+				<Col md={8} sm={12} className="d-flex justify-content-center">
 					{eventDetails.hosts && <DetailedEventCard {...eventDetails} />}
 				</Col>
 
 				{/*Map displaying event location with link to google maps*/}
 				<Col md={4} sm={12} className="text-center">
 					<br />
-					{console.log(eventDetails.lat)}
 					{eventDetails.lat && (
-						<Row className="justify-content-center">
-								<StaticMap lat={eventDetails.lat} lng={eventDetails.lon} />
+						<Row className="justify-content-center mt-4">
+							<StaticMap lat={eventDetails.lat} lng={eventDetails.lon} />
 						</Row>
 					)}
-					<Row>
-					<Card className="text-center">
-						<Card.Header>Ready to make a difference?</Card.Header>
-						<Card.Body>
-							<Card.Title>Special title treatment</Card.Title>
-							<Card.Text>
-							With supporting text below as a natural lead-in to additional content.
-							</Card.Text>
-							<Button variant="primary">Go somewhere</Button>
-						</Card.Body>
-						<Card.Footer className="text-muted">2 days ago</Card.Footer>
+
+					<Row className="d-flex justify-content-center">
+						<Card className="mt-5" style={{ width: "22rem" }}>
+							<Card.Header>Event Options</Card.Header>
+							<Card.Body>
+								{/* <Card.Title>Event Options</Card.Title> */}
+								<Card.Text>
+									{eventDetails.volunteer_roles && eventOptionsMessage()}
+								</Card.Text>
+							</Card.Body>
+							<Card.Footer>
+								<DropdownButton title="Count me in!" align="center" id="dropdown-basic-button" >
+									{eventDetails.attendees_needed && rsvp ? (
+										<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleRSVP}>
+											Attend
+										</Dropdown.Item>
+									) : null}
+									 <Dropdown.Divider />
+									{eventDetails.hosts &&
+									eventDetails.volunteer_roles.length > 0 ? (
+										<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleShow}>
+											Volunteer
+										</Dropdown.Item>
+									) : null}
+								</DropdownButton>
+							</Card.Footer>
 						</Card>
 					</Row>
-					<Row>
-						{/* if event needs attendees */}
-						{eventDetails.hosts && !eventDetails.attendees_needed ? null : renderAttendingButton() }
+					<Row className="d-flex justify-content-center">
+						{!rsvp && (
+							<Card
+								className="mt-5 d-flex justify-content-center"
+								style={{ width: "22rem" }}>
+								<Card.Header>RSVP Options</Card.Header>
+								<Card.Body className="d-flex justify-content-center flex-wrap">
+									Things happen, if life gets in the way you can always update
+									your RSVP.
+									<MUIbutton
+										onClick={handleRSVP}
+										className="mt-2"
+										variant="outlined"
+										sx={{
+											borderColor: "primary", // Default border color
+											color: "primary",
+											border: "1px solid",
+											
+											"&:hover": {
+												backgroundColor: "secondary.dark",
+												color: "white",
+											},
+										}}>
+										Un-RSVP
+									</MUIbutton>
+								</Card.Body>
+							</Card>
+						)}
 					</Row>
-					<Row>
-						{/* if event needs volunteers */}
-						{eventDetails.hosts && eventDetails.volunteer_roles.length > 0  
-						?  (
-							<div className="mt-3">
-							<Button variant="primary" onClick={handleShow}>Volunteer</Button>
-							<VolunteerApplication
-								show={show}
-								handleClose={handleClose}
-								eventID={eventID}
-							/>
-							</div>
-							) 
-						: null }
-
-					</Row>
+					<Row></Row>
 				</Col>
 			</Row>
+			<VolunteerApplication
+				show={show}
+				handleClose={handleClose}
+				eventID={eventID}
+			/>
 		</Container>
 	);
 }

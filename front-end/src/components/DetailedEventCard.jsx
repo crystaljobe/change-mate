@@ -37,7 +37,7 @@ function DetailedEventCard({
 	//styles for card
 	const styles = {
 		cardCSS: {
-			maxWidth: "800px",
+			maxWidth: "650px",
 			margin: "24px",
 		},
 		header: {
