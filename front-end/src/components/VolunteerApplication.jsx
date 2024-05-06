@@ -23,12 +23,19 @@ function VolunteerApplication({ show, handleClose, eventDetails }) {
   const { user, userProfileData } = useOutletContext();
   console.log('userProfileData', userProfileData.id)
 
+  // setting roles array by making api call for specific event
+  const getVolunteerRoles = async () => {
+    setRoles(eventDetails.volunteer_roles);
+  };
 
   useEffect(() => {
     setEmail(user.user);
   }, [user])
 
 
+  useEffect(() => {
+    getVolunteerRoles();
+  }, [eventDetails]);
 
 
   // Handles submitting the application
