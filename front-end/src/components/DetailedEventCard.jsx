@@ -188,7 +188,7 @@ function DetailedEventCard({
 								<ListGroup.Item>
 									<MdLocationOn />
 									<Link
-										to={`https://www.google.com/maps?q=${lat},${lon}`}
+										to={`https://www.google.com/maps?q=${lon},${lat}`}
 										target="_blank"
 										rel="noopener noreferrer">
 										{" "}
