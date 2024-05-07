@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Card, Dropdown } from 'react-bootstrap';
 import defaultImage from '../assets/Default-Event.png';
+import DropDownButton from './dropDownButton';
 
 function EventCard({ eventCategory, ...event }) {
     const [date, setDate] = useState('');
@@ -74,12 +75,13 @@ function EventCard({ eventCategory, ...event }) {
                     <Button variant="link" style={{ color: '#6840DF' }} as={Link} to={`/event/${event.id}`}>
                         More Details
                     </Button>
-                    {eventCategory !== 'eventsAttending' && (
+                    {/* {eventCategory !== 'eventsAttending' && (
                         <button onClick={toggleDropdown} style={{ border: 'none', background: 'none', fontSize: '12px', cursor: 'pointer' }}>
                             ⬤⬤⬤
                         </button>
                     )}
-                    {showDropdown && renderDropdown()}
+                    {showDropdown && renderDropdown()} */}
+                {eventCategory !== 'eventsAttending' && eventCategory !== null ? <DropDownButton eventID={event.id} eventCategory={eventCategory}/> : null}
                 </div>
             </Card.Body>
         </Card>
