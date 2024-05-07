@@ -1,4 +1,4 @@
-import { useParams, Link, useOutletContext, useNavigate } from "react-router-dom";
+import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   getAdminEventDetails,
@@ -13,11 +13,8 @@ import { Container, Row, Col, } from "react-bootstrap";
 import { Button, Drawer, Box, IconButton, Fab } from "@mui/material";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import CloseIcon from '@mui/icons-material/Close';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Tooltip from '@mui/material/Tooltip';
 import EditIcon from '@mui/icons-material/Edit';
-
-
 
 
 
@@ -84,11 +81,6 @@ export default function AdminPage() {
     };
   }, []);
   
- 
-  // console.log(`admin page -- hosts`, hosts)
-  // console.log('adminpage - approved volunteers', approvedVolunteers)
-  // console.log(`admin- roles`, roles);
-  console.log("admin- eventDetails", eventDetails);
   const handleEditEvent = () => {
     navigate(`/editevent/${eventID}`);
   }
@@ -139,7 +131,7 @@ export default function AdminPage() {
         </Col>
 
         {/* !!TODO LIST & HOST MANAGER !! */}
-        <Col sm={12} md={0} lg={3} xl={3} className="todo-participant-col">
+        <Col sm={12} md={0} lg={3} xl={4} className="todo-participant-col">
           {showMenu ? (
             <Col className="todo-partipants-col d-flex justify-content-end">
               {eventDetails.hosts && (

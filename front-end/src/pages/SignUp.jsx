@@ -23,7 +23,7 @@ export default function SignUp() {
 		e.preventDefault();
         const userData = await userRegistration(email, password);
 		setUser(userData);
-		navigate("/profile")
+		navigate("/editprofile")
     }
 
 	return (

@@ -1,4 +1,3 @@
-import { useParams, Link, useOutletContext } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { updateHosts } from "../utilities/EventUtilities";
 import { getUserByEmail } from "../utilities/UserProfileUtilities";
@@ -8,13 +7,9 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Alert from "@mui/material/Alert";
 
 import {
   Card,
-  CardHeader,
-  CardContent,
-  Container,
   IconButton,
   TextField,
   Button,
@@ -31,9 +26,7 @@ import {
   Modal,
   Dialog,
   DialogActions,
-  DialogContent,
   DialogTitle,
-  DialogContentText,
 } from "@mui/material";
 
 function HostsManager({ eventID, hosts, getEvent }) {
@@ -104,18 +97,20 @@ function HostsManager({ eventID, hosts, getEvent }) {
   };
 
   return (
-    <div
+    <Card
       id="hostmanager"
       className="flex-column"
       style={{
         padding: "24px",
         minWidth: "300px",
-        maxWidth: "110%",
+        maxWidth: '100%',
+        margin: "50px",
+        flex: "1 1 0%" // Ensures that the component can grow and shrink as needed within the flexbox container
       }}
     >
       <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <h2 style={{ paddingLeft: "30%" }}>Current Hosts</h2>
+          <h2 style={{ width: '100%', textAlign: 'center' }}>Current Hosts</h2>
           <hr />
         </AccordionSummary>
         <AccordionDetails>
@@ -256,7 +251,7 @@ function HostsManager({ eventID, hosts, getEvent }) {
           )}
         </Box>
       </Modal>
-    </div>
+    </Card>
   );
 }
 export default HostsManager;

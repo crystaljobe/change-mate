@@ -134,10 +134,10 @@ function VolunteerManager({
   };
 
   return (
-    <div className="cardCSS pt-0">
+    <div className="cardCSS pt-0" style={{ maxWidth: '100%' }}>
       <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <h2 style={{ paddingLeft: "20%" }}>Pending Volunteer Applications</h2>
+          <h2 style={{ width: '100%', textAlign: 'center' }}>Pending Volunteer Applications</h2>
         </AccordionSummary>
         <AccordionDetails>
           {/* pending volunteer applications/applicants  */}
@@ -173,7 +173,7 @@ function VolunteerManager({
 
       <Accordion style={{ marginTop: "1vh" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <h2 style={{ paddingLeft: "25%" }}>Assigned Volunteer Roles</h2>
+          <h2 style={{ width: '100%', textAlign: 'center' }}>Pending Volunteer Applications</h2>
         </AccordionSummary>
         <AccordionDetails>
           <Row

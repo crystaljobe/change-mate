@@ -123,9 +123,15 @@ function TodoList({ showAddToDo, hosts, approvedVolunteers, setShowMenu }) {
   return (
     <Card
       className="flex-column"
-      style={{ padding: "24px", minWidth: "300px", maxWidth: "800px", margin: "24px" }}
+      style={{
+        padding: "24px",
+        minWidth: "300px",
+        maxWidth: '100%',
+        margin: "50px",
+        flex: "1 1 0%" // Ensures that the component can grow and shrink as needed within the flexbox container
+      }}
     >
-      <h2>To-Do List</h2>
+      <h2 style={{ width: '100%', textAlign: 'center' }}>To-Do List</h2>
       <hr />
       <CardContent>
         <List>
