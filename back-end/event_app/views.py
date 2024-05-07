@@ -57,7 +57,25 @@ class EventsView(APIView):
         set_distance = request.query_params.get('distance')
         
     
-        # case-insensitive partial match for filtering for location
+        # case-insensitive partical match for filtering for keywords in title, description, and category    
+        if general:
+            queryset = queryset.filter(
+                Q(title__icontains=general) |
+                Q(description__icontains=general) |
+                Q(category__category__icontains=general)
+                )
+                # search for events near location
+
+        if coordinates:
+            # split coordinates into lat and lon from array
+            lat, lon = [float(coord) for coord in coordinates.strip("[]").split(",")]
+            queryset = queryset.annotate(
+            distance=Sqrt(
+                (F('coordinates__0') - lat) ** 2.0 +
+                (F('coordinates__1') - lon) ** 2.0
+            )
+        ).filter(distance__lte=set_distance)  
+            
         # event_type search will be exact match
         if event_type:
             queryset = queryset.filter(event_type=event_type)
@@ -72,26 +90,7 @@ class EventsView(APIView):
         #if no end date given search only for dates on start date
         if start_date and not end_date:
             queryset = queryset.filter(event_start__date=start_date)
-         
-        # search for events near location
-        if coordinates:
-            # split coordinates into lat and lon from array
-            lat, lon = [float(coord) for coord in coordinates.strip("[]").split(",")]
-            queryset = queryset.annotate(
-            distance=Sqrt(
-                (F('coordinates__0') - lat) ** 2.0 +
-                (F('coordinates__1') - lon) ** 2.0
-            )
-        ).filter(distance__lte=set_distance)  
-
-           
-        # case-insensitive partical match for filtering for keywords in title, description, and category    
-        if general:
-            queryset = queryset.filter(
-                Q(title__icontains=general) |
-                Q(description__icontains=general) |
-                Q(category__category__icontains=general)
-                )
+              
         
         
         # serialize data and return data and status 200

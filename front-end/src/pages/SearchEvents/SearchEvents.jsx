@@ -288,7 +288,7 @@ function SearchEvents() {
                                     <div className="d-flex flex-nowrap overflow-hidden">
                                         {chunk.map((event, idx) => (
                                             <div key={idx} className="ms-4">
-                                                <EventCard {...event} />
+                                                <EventCard {...event} eventCategory={null} />
                                             </div>
                                         ))}
                                     </div>
@@ -310,7 +310,7 @@ function SearchEvents() {
                                 <div className="d-flex flex-nowrap overflow-hidden">
                                     {chunk.map((event, idx) => (
                                         <div key={idx} className="me-3">
-                                            <EventCard {...event} />
+                                            <EventCard {...event} eventCategory={null} />
                                         </div>
                                     ))}
                                 </div>
