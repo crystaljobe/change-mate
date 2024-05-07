@@ -153,12 +153,11 @@ export default function EventDetails() {
 							</Card>
 						)}
 					</Row>
-					{/* <Row>
+					<Row>
 						
 						{eventDetails.hosts && eventDetails.volunteer_roles.length > 0  
 						?  (
 							<div className="mt-3">
-							<Button variant="primary" onClick={handleShow}>Volunteer</Button>
 							<VolunteerApplication
 								show={show}
 								handleClose={handleClose}
@@ -168,7 +167,7 @@ export default function EventDetails() {
 							) 
 						: null }
 					</Row>
-					*/}
+					
 
 				</Col>
 			</Row>
