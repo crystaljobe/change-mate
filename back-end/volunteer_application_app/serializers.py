@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import VolunteerApplication
 from django.utils.timezone import now
 
+
 class ApplicationSerializer(serializers.ModelSerializer):
     '''Serializer for new volunteer applications'''
 
@@ -41,5 +42,4 @@ class ApplicationViewSerializer(serializers.ModelSerializer):
             'email': obj.applicant.user.email
         }
 
-        
 
