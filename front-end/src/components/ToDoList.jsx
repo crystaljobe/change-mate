@@ -121,21 +121,27 @@ function TodoList({ showAddToDo, hosts, approvedVolunteers, setShowMenu }) {
 
 
   return (
-    <Card className="cardCSS">
+    <Card
+      className="flex-column"
+      style={{ padding: "24px", minWidth: "300px", maxWidth: "800px", margin: "24px" }}
+    >
       <h2>To-Do List</h2>
-      <hr/>
+      <hr />
       <CardContent>
         <List>
           {tasks.map((task) => (
             <ListItem style={{ marginLeft: 0 }} key={task.id} dense>
-              <ListItemText 
-              //TODO: create more space between the task and the assigned host so that the button icons don't overlap with the text
+              <ListItemText
+                //TODO: create more space between the task and the assigned host so that the button icons don't overlap with the text
                 primary={<span className="card-body">{task.task}</span>}
-                secondary={<span className="card-body">{task.assigned_host["display_name"]}</span>}
+                secondary={
+                  <span className="card-body">
+                    {task.assigned_host["display_name"]}
+                  </span>
+                }
                 style={{
-                  textDecoration: task.completed ? "line-through" : "none"
+                  textDecoration: task.completed ? "line-through" : "none",
                 }}
-                
               />
               {showAddToDo && (
                 <ListItemSecondaryAction>
@@ -147,7 +153,11 @@ function TodoList({ showAddToDo, hosts, approvedVolunteers, setShowMenu }) {
                     edge="end"
                     aria-label="toggle"
                     onClick={() =>
-                      updateTheTodo(task.id, task.assigned_host['id'], !task.completed)
+                      updateTheTodo(
+                        task.id,
+                        task.assigned_host["id"],
+                        !task.completed
+                      )
                     }
                   >
                     {task.completed ? (
@@ -172,36 +182,37 @@ function TodoList({ showAddToDo, hosts, approvedVolunteers, setShowMenu }) {
               onKeyPress={(e) => e.key === "Enter" && createTodo()}
             />
             <div className="d-flex justify-content-center">
-            <Button
-              startIcon={<AddCircleOutlineIcon />}
-              onClick={createTodo}
-              style={{
-										marginTop: "20px",
-										paddingLeft: "2rem",
-										paddingRight: "2rem",
-									}}
-									size="large"
-									variant="outlined"
-									sx={{
-										borderColor: "primary.dark", // Default border color
-										color: "black",
-										fontWeight: "bold",
-										border: "2px solid",
-										"&:hover": {
-											backgroundColor: "secondary.dark",
-                      borderColor: "secondary.dark",
-											color: "white",
-										},
-									}}>
-              Add Task
-            </Button>
+              <Button
+                startIcon={<AddCircleOutlineIcon />}
+                onClick={createTodo}
+                style={{
+                  marginTop: "20px",
+                  paddingLeft: "2rem",
+                  paddingRight: "2rem",
+                }}
+                size="large"
+                variant="outlined"
+                sx={{
+                  borderColor: "primary.dark", // Default border color
+                  color: "black",
+                  fontWeight: "bold",
+                  border: "2px solid",
+                  "&:hover": {
+                    backgroundColor: "secondary.dark",
+                    borderColor: "secondary.dark",
+                    color: "white",
+                  },
+                }}
+              >
+                Add Task
+              </Button>
             </div>
           </>
         )}
       </CardContent>
 
       {/* !!!  Modal opens to confirm searched user is correct user  !!! */}
-     <Modal
+      <Modal
         open={openModal}
         onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
@@ -230,7 +241,9 @@ function TodoList({ showAddToDo, hosts, approvedVolunteers, setShowMenu }) {
             </IconButton>
           </Typography>
           <List>
-          <span className="modal-header">Assign to a different participant:</span>
+            <span className="modal-header">
+              Assign to a different participant:
+            </span>
             {allParticipants && allParticipants.length
               ? allParticipants.map((participant, index) => (
                   <ListItem key={index}>
@@ -241,7 +254,8 @@ function TodoList({ showAddToDo, hosts, approvedVolunteers, setShowMenu }) {
                           selectedTask.id,
                           participant.user_id,
                           false
-                        )}
+                        )
+                      }
                     >
                       <AddIcon />
                     </IconButton>

@@ -193,14 +193,14 @@ class EventCollaborationSerializer(serializers.ModelSerializer):
         
     def get_volunteers(self, obj):
         if obj.volunteer_roles:
-            approved_applications = [role.applications.filter(application_status=True) for role in obj.volunteer_roles.all()]
+            approved_applications = [role.applications.filter(application_status="Approved") for role in obj.volunteer_roles.all()]
             volunteers = []
             for application_queryset in approved_applications:  # Iterate over each queryset
                 for application in application_queryset:  # Iterate over each application object in the queryset
                     volunteer = {
-                        "id": application.applicant.id,
+                        "role": application.volunteer_role.role,
+                        "user_id": application.applicant.id,
                         "display_name": application.applicant.display_name,
-                        "profile_picture": application.applicant.image
                     }
                     volunteers.append(volunteer)
             return volunteers  # Return the list of volunteers

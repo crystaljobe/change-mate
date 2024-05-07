@@ -165,9 +165,11 @@ class APostView(TokenReq):
         event = get_object_or_404(Event, pk=event_id)
         post = get_object_or_404(Post, pk=post_id)
         post.delete()
-        all_posts = get_list_or_404(Post, event=event_id, post_orgin="Collaborators Page")
-        ser_posts = ViewEventPostSerializer(all_posts, many=True)
-        return Response(ser_posts.data, status=HTTP_200_OK)
+        all_posts = Post.objects.filter(event=event_id, post_orgin="Collaborators Page")
+        if all_posts:
+            ser_posts = ViewEventPostSerializer(all_posts, many=True)
+            return Response(ser_posts.data, status=HTTP_200_OK)
+        return Response([], status=HTTP_200_OK)
     
     
  
