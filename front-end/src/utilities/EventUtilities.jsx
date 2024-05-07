@@ -165,6 +165,13 @@ export const getAdminEventDetails = async (eventID) => {
   return eventDetails;
 };
 
+// Collaboration page - event details GET request
+export const getCollaborationEventDetails = async (eventID) => {
+  const response = await api.get(`events/collaboration/${eventID}/`);
+  let eventDetails = response.data;
+  return eventDetails;
+};
+
 //adding/removing hosts from admin page
 export const updateHosts = async (eventID, user_id, addremove) => {
   const response = await api.put(`events/${eventID}/`, {

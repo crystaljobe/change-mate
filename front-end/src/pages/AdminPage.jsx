@@ -1,8 +1,6 @@
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  getAdminEventDetails,
-} from "../utilities/EventUtilities";
+import { getAdminEventDetails } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerManager from "../components/VolunteerManager";
 import TodoList from "../components/ToDoList";
@@ -25,12 +23,59 @@ export default function AdminPage() {
   const [volunteerApplications, setVolunteerApplications] = useState([]);
   const [showMenu, setShowMenu] = useState(true);
   const [open, setOpen] = useState(false);
+  const [isAllowed, setIsAllowed] = useState(false);
+  const [userValidated, setUserValidated] = useState(false);
   const [hosts, setHosts] = useState([]); //array of userProfile instances that are 'collaborators' {display_name, profile_picture, user_id}
   const { userProfileData } = useOutletContext(); //obj that contains {id, display_name, image, user_events[{arr of event Objs that user is a collaborator/host of}]}
   let { eventID } = useParams();
+  const navigate = useNavigate()
   const showAddToDo = true;
-  const navigate = useNavigate();
+
+  console.log('eventDetails', eventDetails)
+
+  // Decides if user is allowed or not
+  const isUserAllowed = (userID) => {
+    if (Array.isArray(hosts) && hosts.length > 0 && typeof userID !== 'undefined') {
+
+      // Searches hosts to see if user is a host
+      for (const host of hosts) {
+        if (host && host.user_id && host.user_id === userID) {
+          setIsAllowed(true);
+          console.log('isallowed')
+          setUserValidated(true);
+          return; // Exit the loop once user is found
+        }
+      }
+      // If user is not found among hosts, set validation state
+      console.log('notallowed')
+      setUserValidated(true);
+      return;
+    }
+  };
+
+  useEffect(() => {
+    isUserAllowed(userProfileData.id);
+  }, [userProfileData]);
+
+  // If user is not allowed, redirect to event details page
+  const handleAllow =  () => {
+    console.log('userValidated', userValidated)
+    console.log('isAllowed', isAllowed)
+    if (userValidated === true) {
+      console.log('userValidated', userValidated)
+      if (isAllowed === false) {
+        console.log('NOT AUTHORIZED')
+        navigate(`/event/${eventID}`)
+      } else {
+        console.log('AUTHORIZED')
+      }
+      
+    } 
+  }
   
+  useEffect(() => {
+    handleAllow();
+  }, [userValidated]);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
