@@ -88,7 +88,7 @@ export default function AdminPage() {
 
 
   return (
-    <Container fluid className="event-collab-container">
+    <Container fluid>
       <Row className="gx-5">
         {/* !!EVENT DETAILS card & button !! */}
         <Col
@@ -119,7 +119,7 @@ export default function AdminPage() {
           md={12}
           lg={7}
           xl={showMenu ? 5 : 6}
-          className="discussion-forum-col"
+          className="volunteer-manager-col"
         >
           <Row>
             <VolunteerManager
@@ -148,7 +148,7 @@ export default function AdminPage() {
                       eventID={eventID}
                     />
                   </Row>
-                  <Row>
+                  <Row style={{}}>
                     <HostsManager
                       eventID={eventID}
                       hosts={hosts}
@@ -173,7 +173,7 @@ export default function AdminPage() {
                 </IconButton>
                 {
                   <Col>
-                    <Row>
+                    <Row >
                       <TodoList
                         setShowMenu={setShowMenu}
                         hosts={hosts}
@@ -182,7 +182,7 @@ export default function AdminPage() {
                         eventID={eventID}
                       />
                     </Row>
-                    <Row>
+                    <Row >
                       <HostsManager
                         eventID={eventID}
                         hosts={hosts}

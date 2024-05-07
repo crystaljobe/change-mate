@@ -11,7 +11,7 @@ export const getAllTodos = async (eventID) => {
 //make a new todo for an event 
 export const postTodo = async (eventID, task) => {
   const response = await api.post(`todo/event/${eventID}/`, {
-    task: task,
+    task: task
   });
   if (response.status === 201) {
     return true;
@@ -19,7 +19,7 @@ export const postTodo = async (eventID, task) => {
     console.log("error:", response.data);
     return false;
   }
-}
+};
 
 //update todo 
 export const updateTodo = async (taskID, assignedHost, completed) => {

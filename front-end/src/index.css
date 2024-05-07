@@ -81,6 +81,10 @@ nav {
   flex-direction: column;
 }
 
+#hostmanager{
+  width: 800px
+}
+
 .toDo-cardCSS {
   max-width: 800px;
   min-width: 300px;
