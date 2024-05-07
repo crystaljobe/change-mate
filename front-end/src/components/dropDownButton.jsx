@@ -76,12 +76,12 @@ export default function DropDownButton({eventID, eventCategory}) {
             <MenuItem onClick={() => navigate(`/admin/${eventID}`)}>
                 Admin Page
             </MenuItem>
-            <MenuItem onClick={() => navigate(`/eventCollab/${eventID}`)}>
+            <MenuItem onClick={() => navigate(`/collab/${eventID}`)}>
                 Collaboration Page
             </MenuItem>
             </>
         )}
-        {eventCategory === "volunteerEvents" && <MenuItem onClick={() => navigate(`/eventCollab/${eventID}`)}>
+        {eventCategory === "volunteerEvents" && <MenuItem onClick={() => navigate(`/collab/${eventID}`)}>
           Collaboration Page
         </MenuItem>}
       </Menu>

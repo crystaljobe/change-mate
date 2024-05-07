@@ -5,9 +5,10 @@ import { getCollaborationEventDetails } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import TodoList from "../components/ToDoList";
 import DiscussionForum from "../components/DiscussionForum";
-import { Button, Drawer, Box, IconButton } from "@mui/material";
+import { Button, Drawer, Box, IconButton, Fab, Tooltip } from "@mui/material";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import CloseIcon from '@mui/icons-material/Close';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 function EventCollab() {
   const { userProfileData } = useOutletContext();
@@ -75,7 +76,7 @@ function EventCollab() {
   useEffect(() => {
     const handleResize = () => {
       // Hide the todo list if the screen width is less than or equal to a certain threshold
-      if (window.innerWidth <= 1400) {
+      if (window.innerWidth <= 1500) {
         setOpen(false)
         setShowMenu(false);
       } else {
@@ -112,7 +113,7 @@ function EventCollab() {
     <Container fluid className="event-collab-container">
       <Row className="gx-5">
         {/* conditionally format column widths based on showMenu state */}
-        <Col sm={12} md={12} lg={4} xl={showMenu ? 3 : 4}>
+        <Col sm={12} md={12} lg={4} xl={showMenu ? 3 : 4} >
           {eventDetails.hosts && <DetailedEventCard {...eventDetails} />}
         </Col>
         <Col

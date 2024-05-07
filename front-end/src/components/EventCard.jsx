@@ -52,13 +52,13 @@ function EventCard({ eventCategory, applicationStatus, ...event }) {
             return (
                 <Dropdown.Menu show>
                     <Dropdown.Item onClick={() => navigate(`/admin/${event.id}`)}>Admin Page</Dropdown.Item>
-                    <Dropdown.Item onClick={() => navigate(`/eventCollab/${event.id}`)}>Collaborator Page</Dropdown.Item>
+                    <Dropdown.Item onClick={() => navigate(`/collab/${event.id}`)}>Collaborator Page</Dropdown.Item>
                 </Dropdown.Menu>
             );
         } else if (eventCategory === 'volunteerEvents') {
             return (
                 <Dropdown.Menu show>
-                    <Dropdown.Item onClick={() => navigate(`/eventCollab/${event.id}`)}>Collaborator Page</Dropdown.Item>
+                    <Dropdown.Item onClick={() => navigate(`/collab/${event.id}`)}>Collaborator Page</Dropdown.Item>
                 </Dropdown.Menu>
             );
         }

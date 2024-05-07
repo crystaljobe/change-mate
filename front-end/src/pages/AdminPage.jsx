@@ -5,6 +5,7 @@ import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerManager from "../components/VolunteerManager";
 import TodoList from "../components/ToDoList";
 import HostsManager from "../components/HostsManager";
+import SpeedDialMenu from "../components/SpeedDialMenu";
 
 //styling imports
 import { Container, Row, Col, } from "react-bootstrap";
@@ -142,17 +143,20 @@ export default function AdminPage() {
           className="event-details-col"
           style={{ position: "relative" }}
         >
+          <div style={{ position: "absolute", top: 0, right: 0, zIndex: "1" }}>
+            <SpeedDialMenu />
+          </div>
           {eventDetails.hosts && (
-            <DetailedEventCard {...eventDetails}></DetailedEventCard>
+            <DetailedEventCard {...eventDetails} />
           )} 
-          <Tooltip title="Edit Event">
+          {/* <Tooltip title="Edit Event">
           <Fab 
              onClick={handleEditEvent} 
              size="small" 
              style={{ position: "absolute", top: 0, right: 0, margin:"30px", marginRight:"60px", backgroundColor:"rgba(255, 255, 255, 0.7)", padding:"0" }}>
               <EditIcon alt="Edit Event"/>
             </Fab>
-            </Tooltip>
+            </Tooltip> */}
         </Col>
 
         {/* !!VOLUNTEER MANAGER !! */}
