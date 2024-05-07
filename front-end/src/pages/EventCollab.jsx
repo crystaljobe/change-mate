@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import { getEventDetails } from "../utilities/EventUtilities";
+import { getCollabEventDetails } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import TodoList from "../components/ToDoList";
 import DiscussionForum from "../components/DiscussionForum";
@@ -50,7 +50,7 @@ function EventCollab() {
   }, []);
 
   const getEvent = async () => {
-    const eventDetails = await getEventDetails(eventID);
+    const eventDetails = await getCollabEventDetails(eventID);
     setEventDetails(eventDetails);
     console.log(eventDetails);
   };

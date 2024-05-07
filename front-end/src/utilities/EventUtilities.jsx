@@ -6,6 +6,12 @@ export const getEventDetails = async (eventID) => {
   return eventDetails;
 };
 
+export const getCollabEventDetails = async (eventID) => {
+  const response = await api.get(`events/collaboration/${eventID}`);
+  let eventDetails = response.data;
+  return eventDetails;
+};
+
 // Get events by search parameters
 export const getEventDetailsSearch = async (allData) => {
   // Construct API call with only the parameters that are not empty, null, or undefined
