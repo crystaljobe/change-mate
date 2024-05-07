@@ -169,7 +169,7 @@ class APostView(TokenReq):
         if all_posts:
             ser_posts = ViewEventPostSerializer(all_posts, many=True)
             return Response(ser_posts.data, status=HTTP_200_OK)
-        return Response("No more Posts", status=HTTP_200_OK)
+        return Response([], status=HTTP_200_OK)
     
     
  
