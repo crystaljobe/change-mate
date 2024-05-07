@@ -119,14 +119,14 @@ function DiscussionForum({eventDetails, postType}) {
                                 
                                 <ListItemText
                                     primary={<span className='card-body'>{post.context}</span>}
-                                    secondary={<div>
+                                    secondary={<>
                                     <span className='card-body' >
                                     {`${post.user.display_name} - `} 
                                     </span>
                                     <span className='card-body' style={{fontSize:"1rem"}}>
                                     {new Date(post.timestamp).toLocaleString()}
                                     </span>
-                                    </div>
+                                    </>
                                     }
                                 />
                                 <IconButton onClick={() => setReplyingTo(post.id === replyingTo ? null : post.id)} edge="end" aria-label="reply">
