@@ -15,6 +15,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import CloseIcon from '@mui/icons-material/Close';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Tooltip from '@mui/material/Tooltip';
+import EditIcon from '@mui/icons-material/Edit';
 
 
 
@@ -112,7 +113,7 @@ export default function AdminPage() {
              onClick={handleEditEvent} 
              size="small" 
              style={{ position: "absolute", top: 0, right: 0, margin:"30px", marginRight:"60px", backgroundColor:"rgba(255, 255, 255, 0.7)", padding:"0" }}>
-              <MoreVertIcon alt="Edit Event"/>
+              <EditIcon alt="Edit Event"/>
             </Fab>
             </Tooltip>
         </Col>
