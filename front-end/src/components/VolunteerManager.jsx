@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   createVolunteerRole,
   deleteVolunteerRole,
@@ -60,7 +60,7 @@ function VolunteerManager({
 
   const handleDeleteRole = (role) => {
     const deleteThisRole = volunteerApplications.filter((roleInstance) => roleInstance.role === role)
-    deleteVolRole(deleteThisRole[0].id)
+    deleteVolRole(deleteThisRole[0].role_id)
     setRoles(roles.filter((roleName) => roleName !== role))
   };
 
@@ -89,69 +89,69 @@ function VolunteerManager({
   };
 
   //accept/reject volunteer application
-  const volunteerDecision = async (applicationID, applicationDecision) => {
+  const volunteerDecision = async (applicationID, applicationDecision, decisionText) => {
     try {
-      await putApplicationDecision(applicationID, applicationDecision);
+      console.log("volunteer decision put request", applicationID, applicationDecision)
+      await putApplicationDecision(applicationID, applicationDecision, decisionText);
+      getEvent();
     } catch (error) {
       console.error("Failed to give application decision", error);
     }
   };
   const handleAccept = () => {
-    const shoulBeTrue = volunteerDecision(selectedApplicant.application_id, true)
+    const shoulBeTrue = volunteerDecision(selectedApplicant.application_id, "Approved", null)
     if (shoulBeTrue){console.log('accepted application successfully')}
     handleCloseModal();
   }
    const handleReject = () => {
-     volunteerDecision(selectedApplicant.application_id, false);
+     volunteerDecision(selectedApplicant.application_id, "Denied", null);
     if (shoulBeTrue){console.log('rejected application successfully')}
      handleCloseModal();
    };
 
   return (
-    <div>
-      <Accordion>
+    <div className="cardCSS pt-0">
+      <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Pending Volunteer Applications</Typography>
-        </AccordionSummary>
+          <h2 style={{paddingLeft:"20%"}}>Pending Volunteer Applications</h2>
+          </AccordionSummary>
         <AccordionDetails>
-          {/* volunteer applications/applicants  */}
+          {/* pending volunteer applications/applicants  */}
           <List>
             {volunteerApplications.map((volRoleInstance, index) => (
-              // <Accordion>
-              //   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              //     <AccordionDetails>
-              <List key={index}>
-                {/* {volRoleInstance.role} */}
-                {volRoleInstance.applicants &&
-                  volRoleInstance.applicants.map((applicant, index) => (
-                    <ListItem
-                      key={index}
-                      button
-                      onClick={() => handleOpenModal(applicant)}
-                    >
-                      <ListItemAvatar key={applicant.user_id}>
-                        <Avatar key={applicant.user_id}>
-                          {applicant.profile_picture}
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={applicant.display_name}
-                        secondary={`Applying for: ${volRoleInstance.role}`}
-                      />
-                    </ListItem>
-                  ))}
-              </List>
-              //     </AccordionDetails>
-              //   </AccordionSummary>
-              // </Accordion>
+              // <List key={index}>
+              <React.Fragment key={volRoleInstance.role}>
+                {volRoleInstance.applications &&
+                  volRoleInstance.applications.map(
+                    (applicant, index) =>
+                      applicant.application_status === "Pending" && (
+                        <ListItem
+                          key={`${volRoleInstance.role}-${applicant.user_id}`}
+                          button
+                          onClick={() => handleOpenModal(applicant)}
+                        >
+                          <ListItemAvatar>
+                            <Avatar
+                              src={applicant.profile_picture}
+                            ></Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={applicant.display_name}
+                            secondary={`Applying for: ${volRoleInstance.role}`}
+                          />
+                        </ListItem>
+                      )
+                  )}
+              </React.Fragment>
+              // </List>
             ))}
           </List>
         </AccordionDetails>
       </Accordion>
 
-      <Accordion>
+      <Accordion style={{ marginTop: "1vh" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Assigned Volunteer Roles</Typography>
+        <h2 style={{paddingLeft:"25%"}}>Assigned Volunteer Roles</h2>
         </AccordionSummary>
         <AccordionDetails>
           <TextField
@@ -174,7 +174,7 @@ function VolunteerManager({
           {/* roles = arr of string role names */}
           {roles &&
             roles.map((role, index) => (
-              <Accordion key={index}>
+              <Accordion key={role}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <IconButton
                     edge="start"
@@ -187,24 +187,27 @@ function VolunteerManager({
                   >
                     <DeleteIcon />
                   </IconButton>
-                  <Typography sx={{ flexGrow: 1 }}>{role}</Typography>
+                  <span className="card-body">{role}</span>
                 </AccordionSummary>
 
                 {/* APPROVED VOLUNTEERS  an arr of obj {id<applicant id>, role, user_id, display_name, profile_picture}*/}
                 <AccordionDetails>
                   <List>
-                    {approvedVolunteers.map((volunteer) => (
-                      <ListItem
-                        key={volunteer.user_id}
-                        button
-                        onClick={() => handleOpenModal(volunteer)}
-                      >
-                        <ListItemAvatar>
-                          <Avatar>{volunteer.profile_picture}</Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary={volunteer.display_name} />
-                      </ListItem>
-                    ))}
+                    {approvedVolunteers.map(
+                      (volunteer, index) =>
+                        volunteer.role === role && (
+                          <ListItem
+                            key={index}
+                            button
+                            onClick={() => handleOpenModal(volunteer)}
+                          >
+                            <ListItemAvatar>
+                              <Avatar src={volunteer.profile_picture}> </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary={volunteer.display_name} />
+                          </ListItem>
+                        )
+                    )}
                   </List>
                 </AccordionDetails>
               </Accordion>
@@ -229,42 +232,42 @@ function VolunteerManager({
             p: 4,
           }}
         >
-          <Typography id="modal-modal-title" variant="h6">
+          <Typography className="modal-header" id="modal-modal-title" variant="h6">
             Application
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography className="modal-header" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Email: ${selectedVolunteerApplication.email}`
               : ""}
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Phone Number: ${selectedVolunteerApplication.phone_number}`
               : ""}
           </Typography>
 
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Preferred Contact Method: ${selectedVolunteerApplication.preferred_contact_method}`
               : ""}
           </Typography>
 
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Availability: ${selectedVolunteerApplication.availability}`
               : ""}
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Previously Volunteered: ${selectedVolunteerApplication.return_volunteer}`
               : ""}
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Interested because: ${selectedVolunteerApplication.volunteer_interest}`
               : ""}
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
             {selectedApplicant
               ? `Relevant experience: ${selectedVolunteerApplication.volunteer_experience}`
               : ""}

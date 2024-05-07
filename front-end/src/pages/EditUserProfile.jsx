@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
+import { Container, Row, Col, Button, Form, Card, InputGroup, FormControl } from 'react-bootstrap';
 import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
 import {
   getUserProfile,
   putUserProfile,
 } from "../utilities/UserProfileUtilities";
-import { getCountries, getStates, getCities } from "../utilities/CountryStateCityUtilities";
+import LocationSearchMap from "../components/LocationSearchMap";
+
+
 
 export default function EditUserProfile({ user }) {
   // set interest cats for selection options
@@ -15,52 +17,18 @@ export default function EditUserProfile({ user }) {
   const [userInterests, setUserInterests] = useState([]);
   const [userInterestsIDs, setUserInterestsIDs] = useState([]);
   const [displayName, setDisplayName] = useState([]);
+
   // Set userLocation to/from backend; data format is a json string object
   const [userLocation, setUserLocation] = useState('');
-  // Set userLocationData reformatted from userLocation as an array of objects for data manipulation
-  const [userLocationData, setUserLocationData] = useState([]);
+  const [userLocationCoords, setUserLocationCoords] = useState([])
+  // console.log(userLocation, userLocationCoords)
+
   const [profileImage, setProfileImage] = useState("");
   const [imagePreview, setImagePreview] = useState("");
-  // Next three set api data for auto-populated suggestions
-  const [apiCountries, setApiCountries] = useState([]);
-  const [apiStates, setApiStates] = useState([]);
-  const [apiCities, setApiCities] = useState([]);
-  // Next three set location data from form to be used in formatting and setting the userLocation
-  const [countryAdd, setCountryAdd] = useState("");
-  const [stateAdd, setStateAdd] = useState("");
-  const [cityAdd, setCityAdd] = useState("");
+
   // create var navigate for navigating
   const navigate = useNavigate();
-
-  // Fetches countries and sets them to apiCountries
-  const fetchCountries = async () => {
-    const countries = await getCountries()
-    setApiCountries(countries)
-  }
-
-  // Fetches states and sets them to apiStates
-  const fetchStates = async () => {
-    const states = await getStates(countryAdd)
-    setApiStates(states)
-  }
-
-  useEffect(() => {
-    if (countryAdd) {
-      fetchStates();
-    }
-  }, [countryAdd]);
-
-  // Fetches CITIES and sets them to apiCities
-  const fetchCities = async () => {
-    const cities = await getCities(stateAdd[0])
-    setApiCities(cities)
-  }
-
-  useEffect(() => {
-    if (stateAdd) {
-      fetchCities();
-    }
-  }, [stateAdd]);
+  console.log(userLocationCoords)
 
   // get interest categories using utility funct to set options available
   const userInterestCategories = async () => {
@@ -73,7 +41,8 @@ export default function EditUserProfile({ user }) {
   const userProfile = async () => {
     const userProfileData = await getUserProfile(user);
     // set data
-    setUserLocation([userProfileData.location]);
+    setUserLocation(userProfileData.location);
+    setUserLocationCoords(userProfile.coordinates);
     setDisplayName(userProfileData.display_name);
     // map through interests to set the current interests
     setUserInterests(userProfileData.interests.map((cat) => cat.category));
@@ -81,7 +50,7 @@ export default function EditUserProfile({ user }) {
     setProfileImage(userProfileData.profileImage); // Set the profile image data for possible re-upload
   };
 
-  // console.log(userInterestsIDs)
+
   // upon form submit call utility function to set new user data
   const updateUserProfile = async () => {
     const responseStatus = await putUserProfile(
@@ -89,29 +58,15 @@ export default function EditUserProfile({ user }) {
       userInterestsIDs,
       displayName,
       userLocation,
-      profileImage
+      profileImage,
+      userLocationCoords
     );
     if (responseStatus) {
       navigate("/profile");
     }
   };
 
-  // Handles adding a location to the user's profile
-  const handleAddLocation = () => {
-    // Create a location string from form values
-    const location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
-            
-    // Sets the userLocation to the new string of locations
-    setUserLocation([...userLocation, location])  
-  }
 
-  // Handles removing a location from the user's profile
-  const handleRemoveLocation = (l) => {
-    // Filter through userLocationData to remove the specified location
-    const filteredLocations = userLocation.filter((location) => location !== l)
-    // Sets the userLocation to the new json string of locations
-    setUserLocation(filteredLocations) 
-  };
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -136,165 +91,72 @@ export default function EditUserProfile({ user }) {
 
   // useEffect to call upon page render
   useEffect(() => {
-    fetchCountries()
-    userInterestCategories();
     userProfile();
+    userInterestCategories();
   }, []);
 
 
   return (
     <Container>
-      <br />
-      <Row className="space justify-content-md-center">
-        <Col md="auto">
-          <h2>Edit Profile:</h2>
-        </Col>
-      </Row>
-      
-      <Row className="space justify-content-md-center">
-        <Col></Col>
-        <Col className="text-center">
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formLocationSearch">
-              <Form.Label>
-                Country
-                <br />
-                <input
-                  name="country"
-                  placeholder="Country"
-                  type="text"
-                  list="countries-list" // Use the list attribute to associate with the datalist
-                  size={40}
-                  onChange={(e) => setCountryAdd(e.target.value)}
-                />
-                {/* Create a datalist with options from apiCountries */}
-                <datalist id="countries-list">
-                  {apiCountries.map((country, index) => (
-                    <option key={index} value={country.name} />
-                  ))}
-                </datalist>
-              </Form.Label>
-              <Form.Label>
-                Region/State
-                <br />
-                <input
-                  name="state"
-                  placeholder=" Region/State"
-                  type="text"
-                  list="states-list" // Use the list attribute to associate with the datalist
-                  size={40}
-                  value={stateAdd[1]} // Display only the state name
-                  onChange={(e) => {
-                    const selectedState = apiStates.find(state => state.name === e.target.value);
-                    setStateAdd(selectedState ? [selectedState.id, selectedState.name] : []);
-                  }}
-                />
-                {/* Create a datalist with options from apiStates */}
-                <datalist id="states-list">
-                  {apiStates.map((state, index) => (
-                    <option key={index} value={state.name} />
-                  ))}
-                </datalist>
-              </Form.Label>
-              <Form.Label>
-                City
-                <br />
-                <input
-                  name="city"
-                  placeholder="City"
-                  type="text"
-                  list="cities-list" // Use the list attribute to associate with the datalist
-                  size={40}
-                  onChange={(e) => setCityAdd(e.target.value)}
-                />
-                {/* Create a datalist with options from apiCities */}
-                <datalist id="cities-list">
-                  {apiCities.map((city, index) => (
-                    <option key={index} value={city.name} />
-                  ))}
-                </datalist>
-              </Form.Label>
-              {userLocation.length === 0 ?
-                  <p style={{fontStyle:'italic'}}>No locations set</p> :
-                  userLocation.map((l, k) => (
-                      <div key={k}>
-                          <Button id={k} size="sm" variant="danger" onClick={(e) => handleRemoveLocation(l)}>{l}</Button>
-                      </div>
-                  ))
-              }
-              <br />
-              <Button variant="info" onClick={() => handleAddLocation()}> 
-              Add Location
-            </Button>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="display_name">
-              <Form.Label>
-                Display Name:
-                <input
-                  type="text"
-                  size={40}
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                />
-              </Form.Label>
-            </Form.Group>
+      <Row className="justify-content-md-center mt-4 mb-3">
+        <Col md={8}>
+          <Card>
+            <Card.Body>
+              <Card.Title>Edit Your Profile</Card.Title>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="display_name">
+                  <Form.Label><i className="bi bi-person-fill"></i> Display Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter your display name"
+                    value={displayName}
+                    onChange={e => setDisplayName(e.target.value)}
+                  />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="interests">
-              <Form.Label>
-                Select your areas of interest (control click to select many):
-                <select
-                  multiple={true}
-                  size={6}
-                  value={userInterests}
-                  onChange={(e) => {
-                    const options = [...e.target.selectedOptions];
-                    const values = options.map((option) => {
-                      return option.value;
-                    });
-					const ids = options.map((option) => {
-                      return parseInt(option.id);
-                    });
-                    setUserInterests(values)
-					setUserInterestsIDs(ids);
-                  }}
-                >
-                  {interestCategories &&
-                    interestCategories.map((category) => (
-                      <option
-                        key={category.id}
-                        id={category.id}
-                        value={category.category}
-                      >
+                <Form.Group className="mb-3" controlId="location">
+                  <Form.Label><i className="bi bi-geo-alt-fill"></i> Location</Form.Label>
+                  <LocationSearchMap
+                    setCoords={setUserLocationCoords}
+                    setAddress={setUserLocation}
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="interests">
+                  <Form.Label><i className="bi bi-bookmark-star-fill"></i> Interests</Form.Label>
+                  <Form.Control as="select" multiple value={userInterests} onChange={(e) => {
+                    const selectedOptions = Array.from(e.target.selectedOptions);
+                    const values = selectedOptions.map(option => option.value);
+                    const ids = selectedOptions.map(option => parseInt(option.getAttribute('data-key')));
+
+                    setUserInterests(values);
+                    setUserInterestsIDs(ids);
+                  }}>
+                    {interestCategories.map((category, index) => (
+                      <option key={index} data-key={category.id} value={category.category}>
                         {category.category}
                       </option>
                     ))}
-                </select>
-              </Form.Label>
-            </Form.Group>
+                  </Form.Control>
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="profileImage">
-              <Form.Label>Profile Image:</Form.Label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-              {/*  This sets the location of the image preview on the screen/form*/}
-              {imagePreview && (
-                <img
-                  src={imagePreview}
-                  alt="Profile Preview"
-                  style={{ width: "100%", marginTop: "10px" }}
-                />
-              )}
-            </Form.Group>
+                <Form.Group className="mb-3" controlId="profileImage">
+                  <Form.Label><i className="bi bi-image-fill"></i> Profile Image</Form.Label>
+                  <InputGroup>
+                    <FormControl type="file" accept="image/*" onChange={handleImageChange} />
+                    {imagePreview && (
+                      <img src={imagePreview} alt="Profile Preview" className="img-fluid mt-3" />
+                    )}
+                  </InputGroup>
+                </Form.Group>
 
-            <Button variant="info" type="submit">
-              Submit changes
-            </Button>
-          </Form>
+                <Button variant="primary" type="submit">
+                  Submit Changes
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
         </Col>
-        <Col></Col>
       </Row>
     </Container>
   );

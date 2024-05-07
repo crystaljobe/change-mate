@@ -47,12 +47,11 @@ INSTALLED_APPS = [
     'interest_app',
     'volunteer_roles_app',
     'volunteer_application_app',
-    'cities_app',
-    'states_app',
     'noun_app',
     'countries_app',
     'drf_yasg',
-    'post_app'
+    'post_app',
+    'todo_app',
 ] 
 
 MIDDLEWARE = [

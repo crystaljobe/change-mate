@@ -4,7 +4,6 @@ import { Container, Button } from 'react-bootstrap';
 import EventForm from '../components/EventForm';
 import { postEventDetails, timeZoneAbbreviations } from '../utilities/EventUtilities';
 import { getInterestCategories } from '../utilities/InterestCategoriesUtilities';
-import { getCountries, getStates, getCities } from '../utilities/CountryStateCityUtilities';
 
 export default function CreateEvent() {
   const navigate = useNavigate();
@@ -35,14 +34,6 @@ export default function CreateEvent() {
   const [photoPreview, setPhotoPreview] = useState('');
   // Set userLocation to/from backend; data format is a json string object
   const [location, setLocation] = useState('');
-  // Next three set api data for auto-populated suggestions
-  const [apiCountries, setApiCountries] = useState([]);
-  const [apiStates, setApiStates] = useState([]);
-  const [apiCities, setApiCities] = useState([]);
-  // Next three set location data from form to be used in formatting and setting the userLocation
-  const [countryAdd, setCountryAdd] = useState("");
-  const [stateAdd, setStateAdd] = useState("");
-  const [cityAdd, setCityAdd] = useState("");
   // eventCoordinates = "latitude, longitude"
   const [eventCoordinates, setEventCoordinates] = useState('');
   // boolean-volunteers needed? yes === true if no  === false 
@@ -51,45 +42,12 @@ export default function CreateEvent() {
   const [attendeesNeeded, setAttendeesNeeded] = useState(false)
 
 
-
-  // Fetches countries and sets them to apiCountries
-  const fetchCountries = async () => {
-    const countries = await getCountries()
-    setApiCountries(countries)
-  }
-
-  // Fetches states and sets them to apiStates
-  const fetchStates = async () => {
-    const states = await getStates(countryAdd)
-    setApiStates(states)
-  }
-
-  useEffect(() => {
-    if (countryAdd) {
-      fetchStates();
-    }
-  }, [countryAdd]);
-
-  // Fetches CITIES and sets them to apiCities
-  const fetchCities = async () => {
-    const cities = await getCities(stateAdd[0])
-    setApiCities(cities)
-  }
-
-  useEffect(() => {
-    if (stateAdd) {
-      fetchCities();
-    }
-  }, [stateAdd]);
-
-
   useEffect(() => {
     const fetchCategories = async () => {
       const categories = await getInterestCategories();
       setInterestCategories(categories);
     };
     fetchCategories();
-    fetchCountries()
   }, []);
 
   const handleImageChange = (event) => {
@@ -104,19 +62,6 @@ export default function CreateEvent() {
     }
   };
 
-  const handleAddLocation = () => {
-    // Create a location string from form values
-    const location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
-      
-    // Sets the userLocation to the new string of locations
-    setLocation(location)  
-  }
-
-  // Handles removing a location from the user's profile
-  const handleRemoveLocation = () => {
-    // Sets the userLocation to an empty string
-    setLocation('') 
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -182,18 +127,6 @@ export default function CreateEvent() {
 
         timeZoneAbbreviations={timeZoneAbbreviations}
         handleSubmit={handleSubmit}
-
-        // Added passing these values and functions for location features
-        apiCountries={apiCountries}
-        apiStates={apiStates}
-        apiCities={apiCities}
-        stateAdd={stateAdd}
-        location={location}
-        setCountryAdd={setCountryAdd}
-        setStateAdd={setStateAdd}
-        setCityAdd={setCityAdd}
-        handleAddLocation={handleAddLocation}
-        handleRemoveLocation={handleRemoveLocation}
       />
       <Button variant="primary" size="lg" style={{paddingLeft: "28px", paddingRight: "28px"}} onClick={handleSubmit}>Create Event</Button>
     </Container>

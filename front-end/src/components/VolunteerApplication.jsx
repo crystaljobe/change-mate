@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { volunteerRoles } from "../utilities/EventUtilities";
+import { postVolunteerApplication } from "../utilities/EventUtilities";
 
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -9,7 +9,7 @@ import { resolvePath, useOutletContext } from "react-router-dom";
 
 //name, email, phone, best time to contact, have you volunteered with this organization/person before, why would you like to volunteer for this event, what skills/experience do you have? which role are you interested in?
 
-function VolunteerApplication({ show, handleClose, eventID }) {
+function VolunteerApplication({ show, handleClose, eventDetails }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNum, setPhoneNum] = useState("");
@@ -20,12 +20,12 @@ function VolunteerApplication({ show, handleClose, eventID }) {
   const [rolesSelected, setRolesSelected] = useState([]);
 
   const [roles, setRoles] = useState([]);
-  const { user } = useOutletContext();
+  const { user, userProfileData } = useOutletContext();
+  console.log('userProfileData', userProfileData.id)
 
-  //setting roles array by making api call for specific event
+  // setting roles array by making api call for specific event
   const getVolunteerRoles = async () => {
-    let rolesArr = await volunteerRoles(eventID); //{id, assigned_volunteers, role, num_volunteers_needed, event}
-    setRoles(rolesArr);
+    setRoles(eventDetails.volunteer_roles);
   };
 
   useEffect(() => {
@@ -35,27 +35,32 @@ function VolunteerApplication({ show, handleClose, eventID }) {
 
   useEffect(() => {
     getVolunteerRoles();
-  }, [eventID]);
+  }, [eventDetails]);
 
-  //TODO - incorporate actual application API call & uncomment submit code
+
+  // Handles submitting the application
   const handleSubmit = async () => {
-    handleClose();
-    // try{
-    //   await postApplication(
-    //     name,
-    //     email,
-    //     phoneNum,
-    //     contactTime,
-    //     repeatVolunteer,
-    //     whyWantToVol,
-    //     skillsDescript,
-    //    rolesSelected
-    //   );
-    // alert("Your application has been submitted!");
-    // window.location.reload();
-    // } catch (error) {
-    //   console.log('Failed application submission', error);
-    // }
+    // Loops through roles and submits an application for each role
+    try{
+      for (const role of rolesSelected) {
+        const applicationData = {
+          'email': email,
+          'phone_number': phoneNum,
+          'availability': contactTime,
+          'return_volunteer': repeatVolunteer,
+          'volunteer_interest': whyWantToVol,
+          'volunteer_experience': skillsDescript,
+          'volunteer_role': role
+        }
+    
+        await postVolunteerApplication(role, applicationData)
+      }
+      
+      alert("Your application has been submitted!");
+      window.location.reload();
+    } catch (error) {
+      console.log('Failed application submission', error);
+    }
   };
 
   //handles checkbox selecting/deselecting, updates rolesSelected state accordingly
@@ -70,7 +75,6 @@ function VolunteerApplication({ show, handleClose, eventID }) {
       setRolesSelected([...rolesSelected, roleID]);
     }
   }
-  console.log('VOLUNTEER - user', user.user)
 
   return (
     <>

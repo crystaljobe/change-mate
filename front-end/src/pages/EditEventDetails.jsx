@@ -4,7 +4,7 @@ import { Container, Button } from 'react-bootstrap';
 import EventForm from '../components/EventForm';
 import { getEventDetails, updateEventDetails, deleteEvent, timeZoneAbbreviations } from '../utilities/EventUtilities';
 import { getInterestCategories } from '../utilities/InterestCategoriesUtilities';
-import { getCountries, getStates, getCities } from '../utilities/CountryStateCityUtilities';
+
 
 export default function EditEventDetails() {
   // cucial for page to render the specific event 
@@ -38,58 +38,13 @@ export default function EditEventDetails() {
   const [photoPreview, setPhotoPreview] = useState('');
   // Set userLocation to/from backend; data format is a json string object
   const [location, setLocation] = useState('');
-  // Next three set api data for auto-populated suggestions
-  const [apiCountries, setApiCountries] = useState([]);
-  const [apiStates, setApiStates] = useState([]);
-  const [apiCities, setApiCities] = useState([]);
-  // Next three set location data from form to be used in formatting and setting the userLocation
-  const [countryAdd, setCountryAdd] = useState("");
-  const [stateAdd, setStateAdd] = useState("");
-  const [cityAdd, setCityAdd] = useState("");
   // eventCoordinates = "latitude, longitude" for static map functionality
   const [eventCoordinates, setEventCoordinates] = useState('');
   // boolean-volunteers needed? yes === true if no  === false 
   const [volunteersNeeded, setVolunteersNeeded] = useState(false)
   // boolean-attendees needed? yes === true if no  === false 
   const [attendeesNeeded, setAttendeesNeeded] = useState(false)
-
-
-
-  // Fetches countries and sets them to apiCountries
-  const fetchCountries = async () => {
-    const countries = await getCountries()
-    setApiCountries(countries)
-  }
-
-  useEffect(() => {
-    fetchCountries();
-  }, []);
-
-  // Fetches states and sets them to apiStates
-  const fetchStates = async () => {
-    const states = await getStates(countryAdd)
-    setApiStates(states)
-  }
-
-  useEffect(() => {
-    if (countryAdd) {
-      fetchStates();
-    }
-  }, [countryAdd]);
-
-  // Fetches CITIES and sets them to apiCities
-  const fetchCities = async () => {
-    const cities = await getCities(stateAdd[0])
-    setApiCities(cities)
-  }
-
-  useEffect(() => {
-    if (stateAdd) {
-      fetchCities();
-    }
-  }, [stateAdd]);
-
-
+  console.log(location, eventCoordinates, eventVenueAddress)
 
   // use effect to grab event details and set all useStates  
   useEffect(() => {
@@ -139,20 +94,6 @@ export default function EditEventDetails() {
     }
   };
 
-  const handleAddLocation = () => {
-    // Create a location string from form values
-    const location = `${countryAdd}, ${stateAdd[1]}, ${cityAdd}`
-            
-    // Sets the userLocation to the new string of locations
-    setLocation(location) 
-  }
-
-  // Handles removing a location from the user's profile
-  const handleRemoveLocation = () => {
-    // Sets the userLocation to an empty string
-    setLocation('') 
-  };
-
   // handle form submit to send put request 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -175,7 +116,7 @@ export default function EditEventDetails() {
     );
     // if response status === true navigate user back to their profile
     if (responseStatus) {
-      navigate('/profile');
+      navigate(`/admin/${eventID}`);
     }
   };
 
@@ -183,7 +124,7 @@ export default function EditEventDetails() {
   const handleDelete = async () => {
     const responseStatus = await deleteEvent(eventID);
     if (responseStatus) {
-      navigate('/profile');
+      navigate(`/admin/${eventID}`);
     }
   };
 
@@ -229,18 +170,6 @@ export default function EditEventDetails() {
         timeZoneAbbreviations={timeZoneAbbreviations}
         handleSubmit={handleSubmit}
         handleDelete={handleDelete}
-
-        // Added passing these values and functions for location features
-        apiCountries={apiCountries}
-        apiStates={apiStates}
-        apiCities={apiCities}
-        stateAdd={stateAdd}
-        location={location}
-        setCountryAdd={setCountryAdd}
-        setStateAdd={setStateAdd}
-        setCityAdd={setCityAdd}
-        handleAddLocation={handleAddLocation}
-        handleRemoveLocation={handleRemoveLocation}
       />
     <div className='text-center' style={{marginTop: "8px", marginBottom: "20px"}}>
     <Button variant="success" size="lg" style={{marginRight: "40px", paddingLeft: "28px", paddingRight: "28px"}} onClick={handleSubmit}>Save Changes</Button>

@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Container from "react-bootstrap/Container";
 import { userRegistration } from "../utilities/UserUtilities";
+
+//material UI imports
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 
 export default function SignUp() {
 	const [email, setEmail] = useState("");
@@ -21,66 +27,73 @@ export default function SignUp() {
     }
 
 	return (
-		<>
-			<Container fluid>
-				<Row>
-					<Col sm> </Col>
-					<Col sm style={{ textAlign: "center" }}>
-						{" "}<h2>Sign Up</h2>{" "}
-					</Col>
-					<Col sm> </Col>
-				</Row>
-			</Container>
+    <>
+      <Container component="main" maxWidth="xs">
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign Up
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSignUp}
+            noValidate
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+            />
 
-			<Form onSubmit={handleSignUp}>
-				<Container fluid>
-					<Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
-						<Col sm={2} />
-						<Form.Label column sm={2} style={{ textAlign: "end" }}>
-							Email:
-						</Form.Label>
-						<Col sm={4}>
-							<Form.Control
-								type="email"
-								placeholder="Email address"
-								onChange={(e) => setEmail(e.target.value)}
-								value={email}
-							/>
-						</Col>
-						<Col sm={4} />
-					</Form.Group>
-
-					<Form.Group
-						as={Row}
-						className="mb-3"
-						controlId="formHorizontalPassword">
-						<Col sm={2} />
-						<Form.Label column sm={2} style={{ textAlign: "end" }}>
-							Password:
-						</Form.Label>
-						<Col sm={4}>
-							<Form.Control
-								type="password"
-								placeholder="Password"
-								onChange={(e) => setPassword(e.target.value)}
-								value={password}
-							/>
-						</Col>
-						<Col sm={4} />
-					</Form.Group>
-	
-					<Row>
-						<Col sm> </Col>
-						<Col sm style={{ textAlign: "center" }}>
-							<Button variant="primary" type="submit">
-								Submit
-							</Button>
-						</Col>
-						<Col sm> </Col>
-					</Row>
-					
-				</Container>
-			</Form>
-		</>
-	);
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={handleSignUp}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item>
+                <Link href="/login" variant="body2">
+                  {" Already have an account? Sign in"}
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+      </Container>
+    </>
+  );
 }
+

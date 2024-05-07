@@ -23,41 +23,56 @@ export const getEventDetailsSearch = async (allData) => {
   return response.data;
 };
 
-
-export const postEventDetails = async (title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink, location, eventCoordinates, attendeesNeeded) => {
-    let response = await api.post("events/", {
-        "title" : title,
-        "event_start" : eventStart,
-        "event_end" : eventEnd,
-        "time_zone" : timeZone,
-        "event_type" : eventType,
-        "event_venue" : eventVenue,
-        "event_venue_address" : eventVenueAddress,
-        "description" : description,
-        "category" : category,
-        "event_photo" : eventPhoto,  // Set up as a base64 for the backend 
-		"virtual_event_link": virtualEventLink || null,
-        "location": location || null,
-        "coordinates": eventCoordinates || null,
-        "attendees_needed": attendeesNeeded
-    });
-    if (response.status === 201) {
-        return true;
-    } else {
-        console.log("error:", response.data);
-    }
-};
-
-export const setUserAttending = async (eventID, usersAttending) => {
-  let response = await api.put(`events/${eventID}/`, {
-    users_attending: usersAttending,
+export const postEventDetails = async (
+  title,
+  eventStart,
+  eventEnd,
+  timeZone,
+  eventType,
+  eventVenue,
+  eventVenueAddress,
+  description,
+  category,
+  eventPhoto,
+  virtualEventLink,
+  location,
+  eventCoordinates,
+  attendeesNeeded
+) => {
+  let response = await api.post("events/", {
+    title: title,
+    event_start: eventStart,
+    event_end: eventEnd,
+    time_zone: timeZone,
+    event_type: eventType,
+    event_venue: eventVenue,
+    event_venue_address: eventVenueAddress,
+    description: description,
+    category: category,
+    event_photo: eventPhoto, // Set up as a base64 for the backend
+    virtual_event_link: virtualEventLink || null,
+    location: location || null,
+    coordinates: eventCoordinates || null,
+    attendees_needed: attendeesNeeded,
   });
-  if (response.status === 200) {
+  if (response.status === 201) {
     return true;
   } else {
     console.log("error:", response.data);
   }
 };
+
+export const setUserAttending = async (eventID, rsvp) => {
+    let response = await api.put(`events/${eventID}/`, {
+      "rsvp": rsvp
+    })
+        if (response.status === 200) {
+            return true;
+        } else {
+            console.log("error:", response.data, "status:", response.status);
+            return false;
+        }
+}
 
 // wrapped in a try catch and additional console.logs for better error handling
 export const updateEventDetails = async (eventID, title, eventStart, eventEnd, timeZone, eventType, eventVenue, eventVenueAddress, description, category, eventPhoto, virtualEventLink, location, eventCoordinates, attendeesNeeded) => {
@@ -78,13 +93,10 @@ export const updateEventDetails = async (eventID, title, eventStart, eventEnd, t
             "coordinates": eventCoordinates || null, //to satisfy backend requirements
             "attendees_needed": attendeesNeeded,
         });
+        // console.log(response.status);
         if (response.status === 200) {
             return true;
-        } else {
-            console.log("Error Status:", response.status);
-            console.log("Error Data:", response.data);
-            return false;
-        }
+        };
     } catch (error) {
         console.error("Exception when updating event details:", error);
         return false;
@@ -103,6 +115,7 @@ export const deleteEvent = async (eventID, event) => {
 export const getiCalEventDetails = async (eventID) => {
   const response = await api.get(`events/${eventID}/iCal/`);
   let eventDetails = response.data;
+  console.log(eventDetails)
   return eventDetails;
 };
 
@@ -137,12 +150,6 @@ export const timeZoneAbbreviations = [
   "Pacific/Niue",
 ];
 
-//need to delete & will need to update volunteer application api call view volunteer roles for specific event
-export const volunteerRoles = async (eventID) => {
-  const response = await api.get(`events/${eventID}/volunteers/`);
-  let rolesArr = response.data;
-  return rolesArr;
-};
 
 
 //admin page - event details GET request
@@ -152,4 +159,65 @@ export const getAdminEventDetails = async (eventID) => {
   return eventDetails;
 };
 
+//adding/removing hosts from admin page
+export const updateHosts = async (eventID, user_id, addremove) => {
+  const response = await api.put(`events/${eventID}/`, {
+    "hosts": user_id,
+    "host_invite": addremove
+  });
+  console.log("utility funct", user_id, addremove, eventID)
+  if (response.status === 200) {
+    return true;
+  }
+  console.log("Cannot add hosts:", response.status);
+  return false;
+};
 
+export const getEventPosts = async (eventID, postType) => {
+  // console.log(eventID)
+  const response = await api.get(`events/${eventID}/posts/${postType}/`);
+  let eventPosts = response.data;
+  return eventPosts;
+}
+
+export const postEventPosts = async (eventID, postType, newPostData) => {
+  const response = await api.post(`events/${eventID}/posts/${postType}/`, newPostData);
+  let eventPosts = response.data;
+  console.log("RETURN DATA", eventPosts)
+  return eventPosts;
+}
+
+export const postPostComment = async (eventID, postId, newCommentData) => {
+  const response = await api.post(`events/${eventID}/posts/${postId}/comments/`, newCommentData);
+  let postComments = response.data;
+  console.log("RETURN DATA", postComments)
+  return postComments;
+}
+
+export const deletePostComment = async (eventID, replyId) => {
+  const response = await api.delete(`events/${eventID}/posts/comment/${replyId}/`);
+  console.log(response)
+  let postComments = response.data;
+  console.log("RETURN DATA", postComments)
+  return postComments;
+}
+
+export const deleteEventPost = async (eventID, postId) => {
+  const response = await api.delete(`events/${eventID}/posts/${postId}/`);
+  let postComments = response.data;
+  console.log("RETURN DATA", postComments)
+  return postComments;
+}
+
+export const getEventTasks = async (eventID) => {
+  // console.log(eventID)
+  const response = await api.get(`todo/${eventID}`);
+  let eventTasks = response.data;
+  return eventTasks;
+}
+
+export const postVolunteerApplication = async (roleID, applicationData) => {
+  const response = await api.post(`volunteer_applications/${roleID}/`, applicationData);
+  let application = response.data;
+  return application;
+}

@@ -5,6 +5,7 @@ from interest_app.models import InterestCategory
 from django.contrib.postgres.fields import ArrayField
 from decimal import Decimal
 
+
 # Create your models here.
 class Event(models.Model):
     title = models.CharField(max_length=50)
@@ -40,3 +41,4 @@ class Event(models.Model):
     location = models.CharField(max_length=100, blank=True, null=True)
     coordinates = ArrayField(models.FloatField(null=True, blank =True), null=True, blank=True)
     # volunteer_roles - related from volunteer roles model
+    # to_do_list - related from to do list model

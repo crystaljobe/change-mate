@@ -1,5 +1,5 @@
 import { useParams, Link, useOutletContext } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getAdminEventDetails,
 } from "../utilities/EventUtilities";
@@ -10,35 +10,30 @@ import HostsManager from "../components/HostsManager";
 
 //styling imports
 import { Container, Row, Col, } from "react-bootstrap";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import AddIcon from "@mui/icons-material/Add";
-import {
-  Button,
-} from "@mui/material";
+import { Button, Drawer, Box, IconButton } from "@mui/material";
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 
-//only hosts have permission to access this page (profile.hosted_events(eventID == eventID))
-//FEATURES:
-// DONE - view volunteer volApplications
-// DONE - functionality to add/remove volunteer roles
-// DONE - accept/reject volunteer applications
-// DONE - created volunteer utilities
-// - create todo lists tasks
-//  - assign volunteers to tasks
-// - add other hosts
 
 
-function AdminPage() {
+export default function AdminPage() {
   const [eventDetails, setEventDetails] = useState({});
   const [roles, setRoles] = useState([]);
   const [approvedVolunteers, setApprovedVolunteers] = useState([]);
   const [volunteerApplications, setVolunteerApplications] = useState([]);
-
+  const [showMenu, setShowMenu] = useState(true);
+  const [open, setOpen] = useState(false);
   const [hosts, setHosts] = useState([]); //array of userProfile instances that are 'collaborators' {display_name, profile_picture, user_id}
   const { userProfileData } = useOutletContext(); //obj that contains {id, display_name, image, user_events[{arr of event Objs that user is a collaborator/host of}]}
   let { eventID } = useParams();
   const showAddToDo = true;
+  
+
+  const toggleDrawer = (newOpen) => () => {
+    setOpen(newOpen);
+  };
 
   //get event details - set Hosts, Approved Vols., Vol. applications
   const getEvent = async () => {
@@ -62,18 +57,50 @@ function AdminPage() {
     getEvent();
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      // Hide the todo list & host manager if the screen width is less than or equal to a certain threshold
+      if (window.innerWidth <= 1400) {
+        setOpen(false)
+        setShowMenu(false);
+      } else {
+        setShowMenu(true);
+      }
+    };
+
+    // Add event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Call the resize handler initially
+    handleResize();
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   
  
   // console.log(`admin page -- hosts`, hosts)
-  console.log(`admin- eventDetails`, eventDetails)
-  console.log('adminpage - approved volunteers', approvedVolunteers)
+  // console.log('adminpage - approved volunteers', approvedVolunteers)
   // console.log(`admin- roles`, roles);
+  console.log("admin- eventDetails", eventDetails);
+
 
   return (
     <Container fluid className="event-collab-container">
       <Row className="gx-5">
-        <Col md={4} className="event-details-col">
-          <DetailedEventCard eventDetails={eventDetails} />
+        {/* !!EVENT DETAILS card & button !! */}
+        <Col
+          sm={12}
+          md={12}
+          lg={4}
+          xl={showMenu ? 3 : 4}
+          className="event-details-col"
+        >
+          {eventDetails.hosts && (
+            <DetailedEventCard {...eventDetails}></DetailedEventCard>
+          )}
           <Button
             size="large"
             style={{ margin: "5%" }}
@@ -85,7 +112,15 @@ function AdminPage() {
             Edit Event Details
           </Button>
         </Col>
-        <Col md={4} className="discussion-forum-col">
+
+        {/* !!VOLUNTEER MANAGER !! */}
+        <Col
+          sm={12}
+          md={12}
+          lg={7}
+          xl={showMenu ? 5 : 6}
+          className="discussion-forum-col"
+        >
           <Row>
             <VolunteerManager
               approvedVolunteers={approvedVolunteers}
@@ -97,15 +132,95 @@ function AdminPage() {
             />
           </Row>
         </Col>
-        <Col md={4} className="todo-participant-col">
-          <TodoList showAddToDo={showAddToDo} />
-          <Row>
-            <HostsManager />
-          </Row>
+
+        {/* !!TODO LIST & HOST MANAGER !! */}
+        <Col sm={12} md={0} lg={3} xl={3} className="todo-participant-col">
+          {showMenu ? (
+            <Col className="todo-partipants-col d-flex justify-content-end">
+              {eventDetails.hosts && (
+                <Col>
+                  <Row>
+                    <TodoList
+                      setShowMenu={setShowMenu}
+                      hosts={hosts}
+                      approvedVolunteers={approvedVolunteers}
+                      showAddToDo={showAddToDo}
+                      eventID={eventID}
+                    />
+                  </Row>
+                  <Row>
+                    <HostsManager
+                      eventID={eventID}
+                      hosts={hosts}
+                      getEvent={getEvent}
+                    />
+                  </Row>
+                </Col>
+              )}
+            </Col>
+          ) : (
+            <Box position="relative">
+              <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+                <IconButton
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                  }}
+                  onClick={toggleDrawer(false)}
+                >
+                  <CloseIcon />
+                </IconButton>
+                {
+                  <Col>
+                    <Row>
+                      <TodoList
+                        setShowMenu={setShowMenu}
+                        hosts={hosts}
+                        approvedVolunteers={approvedVolunteers}
+                        showAddToDo={showAddToDo}
+                        eventID={eventID}
+                      />
+                    </Row>
+                    <Row>
+                      <HostsManager
+                        eventID={eventID}
+                        hosts={hosts}
+                        getEvent={getEvent}
+                      />
+                    </Row>
+                  </Col>
+                }
+              </Drawer>
+            </Box>
+          )}
         </Col>
       </Row>
+      {!showMenu && (
+        <Box
+          position="fixed"
+          right="1%"
+          top="40%"
+          margin="0"
+          display="flex"
+          alignItems="center"
+        >
+          <Button
+            variant="outlined"
+            margin="0"
+            style={{
+              transform: "rotate(-90deg)",
+              transformOrigin: "bottom right",
+            }}
+            onClick={toggleDrawer(!open)}
+          >
+            To-Do List & Hosts
+            <ExpandLessIcon />
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 }
 
-export default AdminPage;
+

@@ -6,16 +6,17 @@ export const getUserProfile = async(user) => {
     return userProfileData;
 }
 
-export const putUserProfile = async (user, userInterests, displayName, userLocation, profileImage) => {
-    
+export const putUserProfile = async (user, userInterests, displayName, userLocation, profileImage, userLocationCoords) => {
 
     let response = await api.put("userprofile/edit_profile/", {
         interests: userInterests,
         display_name: displayName,
         location: userLocation,
-        image: profileImage
+        image: profileImage,
+        coordinates: userLocationCoords
     });
     if (response.status === 200) {
+        console.log(response.data)
         return true;
     } else {
         console.log("error:", response.data);
@@ -27,3 +28,15 @@ export const getUserDisplayName = async(user) => {
     let userDisplayName = response.data;
     return userDisplayName;
 }
+
+//search for a user by email
+export const getUserByEmail = async(email) => {
+  const response = await api.get(`userprofile/search/${email}/`);
+  if (response.status === 200) {
+    let profileData = response.data;
+    return profileData;
+  } else {
+    console.log("error:", response.data);
+    return null
+  }
+};
