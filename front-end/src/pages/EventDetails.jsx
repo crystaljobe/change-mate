@@ -81,6 +81,46 @@ export default function EventDetails() {
 		}
 	}
 
+	// Conditional rendering of Count Me In Button
+	const renderCountMeIn = () => {
+
+		// If event needs volunteers and attendees
+		if (eventDetails.attendees_needed && rsvp && eventDetails.hosts && eventDetails.volunteer_roles.length > 0) {
+			return (
+				<DropdownButton title="Count me in!" id="dropdown-basic-button" >
+					<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleRSVP}>
+						Attend
+					</Dropdown.Item>
+					{/* The divider is the reason the whole button needs to be conditionally rendered; We only need the divider if both options are rendered */}
+					<Dropdown.Divider />
+					<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleShow}>
+						Volunteer
+					</Dropdown.Item>
+				</DropdownButton>
+			);
+		// If event only needs attendees
+		} else if (eventDetails.attendees_needed && rsvp) {
+			return (
+				<DropdownButton title="Count me in!" id="dropdown-basic-button" >
+					<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleRSVP}>
+						Attend
+					</Dropdown.Item>
+				</DropdownButton>
+			);
+		// If event only needs volunteers
+		} else if (eventDetails.hosts && eventDetails.volunteer_roles.length > 0) {
+			return (
+				<DropdownButton title="Count me in!" id="dropdown-basic-button" >
+					<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleShow}>
+						Volunteer
+					</Dropdown.Item>
+				</DropdownButton>
+			);
+		} else {
+			return null; // Return null if no conditions are met
+		}
+	};
+
 	return (
 		<Container>
 			<Row>
@@ -107,20 +147,7 @@ export default function EventDetails() {
 								</Card.Text>
 							</Card.Body>
 							<Card.Footer>
-								<DropdownButton title="Count me in!" id="dropdown-basic-button" >
-									{eventDetails.attendees_needed && rsvp ? (
-										<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleRSVP}>
-											Attend
-										</Dropdown.Item>
-									) : null}
-									<Dropdown.Divider />
-									{eventDetails.hosts &&
-									eventDetails.volunteer_roles.length > 0 ? (
-										<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleShow}>
-											Volunteer
-										</Dropdown.Item>
-									) : null}
-								</DropdownButton>
+								{eventDetails && renderCountMeIn()}
 							</Card.Footer>
 						</Card>
 					</Row>
