@@ -72,7 +72,7 @@ export default function UserProfile() {
             <Carousel interval={null} indicators={false} prevLabel="" nextLabel="" className="px-5">
               {userProfileData.volunteer_events.length === 0 ? (
                 <Carousel.Item>
-                  <h3 style={{ fontStyle: "italic" }}>
+                  <h3 className="text-center" style={{ fontStyle: "italic" }}>
                     Doesn't look like you're volunteering at any events yet.
                   </h3>
                 </Carousel.Item>
@@ -100,7 +100,7 @@ export default function UserProfile() {
             <Carousel interval={null} indicators={false} prevLabel="" nextLabel="" className="px-5">
               {userProfileData.events_attending.length === 0 ? (
                 <Carousel.Item>
-                  <h3 style={{ fontStyle: "italic" }}>
+                  <h3 className="text-center" style={{ fontStyle: "italic" }}>
                     Doesn't look like you've RSVP'd to any events yet.
                   </h3>
                 </Carousel.Item>
