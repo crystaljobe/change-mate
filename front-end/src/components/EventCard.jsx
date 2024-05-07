@@ -4,7 +4,7 @@ import { Button, Card, Dropdown } from 'react-bootstrap';
 import defaultImage from '../assets/Default-Event.png';
 import DropDownButton from './dropDownButton';
 
-function EventCard({ eventCategory, ...event }) {
+function EventCard({ eventCategory, applicationStatus, ...event }) {
     const [date, setDate] = useState('');
     const [dateRange, setDateRange] = useState('');
     const [showDropdown, setShowDropdown] = useState(false);
@@ -68,7 +68,7 @@ function EventCard({ eventCategory, ...event }) {
         <Card style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
             <Card.Img variant="top" src={event.event_photo || defaultImage} style={{ height: '250px', objectFit: 'cover' }} />
             <Card.Body style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <Card.Title>{event.title}</Card.Title>
+                <Card.Title>{event.title}{applicationStatus && ` : ${applicationStatus}`}</Card.Title>
                 {renderDates()}
                 {renderLocation()}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>

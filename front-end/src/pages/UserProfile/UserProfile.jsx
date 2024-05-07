@@ -47,7 +47,7 @@ export default function UserProfile() {
             <Carousel interval={null} indicators={false} prevLabel="" nextLabel="" className="px-5">
               {userProfileData.user_events.length === 0 ? (
                 <Carousel.Item>
-                  <h3 style={{ fontStyle: "italic" }}>
+                  <h3 className="text-center" style={{ fontStyle: "italic" }}>
                     Doesn't look like you have any events you're collaborating on at this time
                   </h3>
                 </Carousel.Item>
@@ -84,9 +84,12 @@ export default function UserProfile() {
                 }, []).map((eventGroup, idx) => (
                   <Carousel.Item key={idx}>
                     <div className="d-flex justify-content-around">
-                      {eventGroup.map(event => (
-                        <EventCard key={event.id} eventCategory="volunteerEvents" {...event} />
-                      ))}
+                      {eventGroup.map(application => {
+                        const event = application.event;
+                        return (
+                          <EventCard key={application.id} eventCategory="volunteerEvents" {...event} applicationStatus={application.application_status} />
+                        );
+                      })}
                     </div>
                   </Carousel.Item>
                 ))
