@@ -36,10 +36,10 @@ class EventAdminSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'applicants', 'volunteers', 'hosts', 'event_photo', 'lat', 'lon', 'attendees_needed', 'num_users_attending', 'volunteer_spots_remaining', 'volunteer_roles' ]
 
     def get_lat(self, obj):
-        return obj.coordinates[0] if obj.coordinates else None
+        return obj.coordinates[1] if obj.coordinates else None
     
     def get_lon(self, obj):
-        return obj.coordinates[1] if obj.coordinates else None
+        return obj.coordinates[0] if obj.coordinates else None
     
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
@@ -171,10 +171,10 @@ class EventCollaborationSerializer(serializers.ModelSerializer):
 
     def get_lat(self, obj):
 
-        return obj.coordinates[0] if obj.coordinates else None
+        return obj.coordinates[1] if obj.coordinates else None
     
     def get_lon(self, obj):
-        return obj.coordinates[1] if obj.coordinates else None
+        return obj.coordinates[0] if obj.coordinates else None
     
     # give list of user id, profile picture, and display name
     def get_hosts(self, obj):

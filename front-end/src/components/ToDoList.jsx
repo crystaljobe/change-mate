@@ -128,6 +128,7 @@ function TodoList({ showAddToDo, hosts, approvedVolunteers, setShowMenu }) {
         minWidth: "300px",
         maxWidth: '100%',
         margin: "50px",
+        marginTop: "24px",
         flex: "1 1 0%" // Ensures that the component can grow and shrink as needed within the flexbox container
       }}
     >
