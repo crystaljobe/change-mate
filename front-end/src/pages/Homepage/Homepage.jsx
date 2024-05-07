@@ -8,9 +8,9 @@ import homeBanner from "/src/assets/home-banner.png";
 export default function Homepage() {
 	return (
 		<>
-			<Container fluid style={{ marginTop: "4rem" }} >
+			<Container style={{ marginTop: "4rem" }} >
 				<Row className="d-flex justify-content-center">
-					<Col md={4} lg={4} sm={12} className="text-center" style={{ paddingTop: "2px"}}>
+					<Col md={3} lg={3} sm={12} className="text-center" style={{ paddingTop: "2px"}}>
 						<Image
 							src={LlamaImg}
 							rounded
@@ -18,8 +18,8 @@ export default function Homepage() {
 						/>
 					</Col>
 
-					<Col lg={6} md={8} sm={12} className="text-center mt-4" style={{ paddingTop: "6px"}}>
-						<Row>
+					<Col lg={9} md={9} sm={12} className="text-center mt-4" style={{ paddingTop: "6px"}}>
+						<Row className="mt-4">
 							<h1 className="homepage-header-text">
 								Join our vibrant platform to effortlessly organize impactful
 								events, collaborate for social change, and secure donations{" "} 
