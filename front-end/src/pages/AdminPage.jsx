@@ -1,9 +1,6 @@
 import { useParams, Link, useOutletContext, useNavigate } from "react-router-dom";
-import { useParams, Link, useOutletContext, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  getAdminEventDetails,
-} from "../utilities/EventUtilities";
+import { getAdminEventDetails } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerManager from "../components/VolunteerManager";
 import TodoList from "../components/ToDoList";
@@ -36,10 +33,14 @@ export default function AdminPage() {
   let { eventID } = useParams();
   const navigate = useNavigate()
   const showAddToDo = true;
-  // console.log('userProfileData', userProfileData)
 
+  console.log('eventDetails', eventDetails)
+
+  // Decides if user is allowed or not
   const isUserAllowed = (userID) => {
     if (Array.isArray(hosts) && hosts.length > 0 && typeof userID !== 'undefined') {
+
+      // Searches hosts to see if user is a host
       for (const host of hosts) {
         if (host && host.user_id && host.user_id === userID) {
           setIsAllowed(true);
@@ -59,6 +60,7 @@ export default function AdminPage() {
     isUserAllowed(userProfileData.id);
   }, [userProfileData]);
 
+  // If user is not allowed, redirect to event details page
   const handleAllow =  () => {
     console.log('userValidated', userValidated)
     console.log('isAllowed', isAllowed)

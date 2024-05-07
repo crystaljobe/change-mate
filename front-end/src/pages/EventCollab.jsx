@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useOutletContext } from "react-router-dom";
+import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import { getCollabEventDetails } from "../utilities/EventUtilities";
+import { getCollaborationEventDetails } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import TodoList from "../components/ToDoList";
 import DiscussionForum from "../components/DiscussionForum";
@@ -16,8 +16,56 @@ function EventCollab() {
   const collabPost = "collaborators";
   const [showMenu, setShowMenu] = useState(true);
   const [open, setOpen] = React.useState(false);
+  const [isAllowed, setIsAllowed] = useState(false);
+  const [userValidated, setUserValidated] = useState(false);
+  const navigate = useNavigate()
 
-  console.log('userProfileData', userProfileData)
+  // Decides if user is allowed or not
+  const isUserAllowed = (userID) => {
+    if (Array.isArray(eventDetails.hosts) && eventDetails.hosts.length > 0 && Array.isArray(eventDetails.volunteers) && eventDetails.volunteers.length > 0 && typeof userID !== 'undefined') {
+
+      // Searches hosts to see if user is a host
+      for (const host of eventDetails.hosts) {
+        if (host && host.user_id && host.user_id === userID) {
+          setIsAllowed(true);
+          setUserValidated(true);
+          return; // Exit the loop once user is found
+        }
+      }
+
+      // Searches volunteers to see if user is a volunteers
+      for (const volunteer of eventDetails.volunteers) {
+        if (volunteer && volunteer.user_id && volunteer.user_id === userID) {
+          setIsAllowed(true);
+          setUserValidated(true);
+          return; // Exit the loop once user is found
+        }
+      }
+      // If user is not found among hosts, set validation state
+      setUserValidated(true);
+      return;
+    }
+  };
+
+  useEffect(() => {
+    isUserAllowed(userProfileData.id);
+  }, [userProfileData]);
+
+  // If user is not allowed, redirect to event details page
+  const handleAllow =  () => {
+    if (userValidated === true) {
+      console.log('userValidated', userValidated)
+      if (isAllowed === false) {
+        navigate(`/event/${eventID}`)
+      } else {
+        console.log('AUTHORIZED')
+      }
+    } 
+  }
+  
+  useEffect(() => {
+    handleAllow();
+  }, [userValidated]);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -53,7 +101,7 @@ function EventCollab() {
   }, []);
 
   const getEvent = async () => {
-    const eventDetails = await getCollabEventDetails(eventID);
+    const eventDetails = await getCollaborationEventDetails(eventID);
     setEventDetails(eventDetails);
     console.log(eventDetails);
   };
