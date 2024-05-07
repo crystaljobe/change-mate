@@ -22,7 +22,7 @@ function EventCollab() {
 
   // Decides if user is allowed or not
   const isUserAllowed = (userID) => {
-    if (Array.isArray(eventDetails.hosts) && eventDetails.hosts.length > 0 && Array.isArray(eventDetails.volunteers) && eventDetails.volunteers.length > 0 && typeof userID !== 'undefined') {
+    if (Array.isArray(eventDetails.hosts) && eventDetails.hosts.length > 0 && Array.isArray(eventDetails.volunteers) && typeof userID !== 'undefined') {
 
       // Searches hosts to see if user is a host
       for (const host of eventDetails.hosts) {
