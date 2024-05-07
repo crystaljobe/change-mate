@@ -70,11 +70,52 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
         setSelectedCategory('')
         setSelectedStartDate('')
         setSelectedEndDate('')
-        setDistance(25)
+        setDistance(200)
     }
     useEffect(() => {
         handleSubmit()
     }, [selectedCategory, selectedStartDate, selectedEndDate, distance])
+
+    const renderDistanceSelected = () => {
+        if (distance) {
+            if (distance < 200) {
+                return <Button onClick={() => removeSingleFilter('distance')} variant='link'>{`Remove ${distance} Mile Radius  X`}</Button>
+            }
+        } else {
+            return null
+        }
+    }
+
+    const renderCategorySelected = () => {
+        if (selectedCategory && selectedCategory.length > 0) {
+            return <Button onClick={() => removeSingleFilter('category')} variant='link'>{`Remove ${selectedCategory}  X`}</Button>
+        } else {
+            return null
+        }
+    }
+
+    const renderDateSelected = () => {
+        if (selectedStartDate && selectedStartDate.length > 0 && selectedEndDate && selectedEndDate.length > 0) {
+            if (selectedStartDate === selectedEndDate) {
+                return <Button onClick={() => removeSingleFilter('date')} variant='link'>{`Remove ${selectedStartDate}  X`}</Button>
+            } else {
+                return <Button onClick={() => removeSingleFilter('date')} variant='link'>{`Remove ${selectedStartDate} thru ${selectedEndDate}  X`}</Button>
+            }
+        } else {
+            return null
+        }
+    }
+
+    const removeSingleFilter = (filterType) => {
+        if (filterType == 'distance') {
+            setDistance(200)
+        } else if (filterType == 'category') {
+            setSelectedCategory('')
+        } else if (filterType == 'date') {
+            setSelectedStartDate('')
+        setSelectedEndDate('')
+        }
+    }
 
     return (
         <Container fluid className="mt-5">
@@ -145,6 +186,13 @@ const DropdownComponent = ({setSelectedCategory, setSelectedStartDate, setSelect
                             }}>Update</Button>
                         </Form>
                     )}
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={12} style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '10px 0', flexWrap:'wrap'}}>
+                    {renderDistanceSelected()}
+                    {renderCategorySelected()}
+                    {renderDateSelected()}
                 </Col>
             </Row>
             <Row>
