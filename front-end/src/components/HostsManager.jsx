@@ -66,8 +66,8 @@ function HostsManager({ eventID, hosts, getEvent }) {
     handleopenModal();
   };
 
-  const handleAddHost = (userID) => {
-    let shouldBeTrue = updateHost(userID, "add");
+  const handleAddHost = async (userID) => {
+    let shouldBeTrue = await updateHost(userID, "add");
     if (shouldBeTrue) {
       console.log("added host successfully");
       getEvent();
@@ -78,9 +78,9 @@ function HostsManager({ eventID, hosts, getEvent }) {
     }
   };
 
-  const handleDeleteHost = (event, userID) => {
+  const handleDeleteHost = async (event, userID) => {
     handleDialogClose(event);
-    let shouldBeTrue = updateHost(userID, "remove");
+    let shouldBeTrue = await updateHost(userID, "remove");
     if (shouldBeTrue) {
       console.log("host removed successfully");
       getEvent();
