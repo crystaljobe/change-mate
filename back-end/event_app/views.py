@@ -28,7 +28,7 @@ from changemate_proj.utilities import ImageUploader
 
 
 # views for all events
-class EventsView(TokenReq):
+class EventsView(APIView):
     '''
     Access all events
     '''
@@ -55,10 +55,28 @@ class EventsView(TokenReq):
         end_date = request.query_params.get('end_date')
         general = request.query_params.get('keyword')
         coordinates = request.query_params.get('coordinates')
-        distance = request.query_params.get('distance')
+        set_distance = request.query_params.get('distance')
         
     
-        # case-insensitive partial match for filtering for location
+        # case-insensitive partical match for filtering for keywords in title, description, and category    
+        if general:
+            queryset = queryset.filter(
+                Q(title__icontains=general) |
+                Q(description__icontains=general) |
+                Q(category__category__icontains=general)
+                )
+                # search for events near location
+
+        if coordinates:
+            # split coordinates into lat and lon from array
+            lat, lon = [float(coord) for coord in coordinates.strip("[]").split(",")]
+            queryset = queryset.annotate(
+            distance=Sqrt(
+                (F('coordinates__0') - lat) ** 2.0 +
+                (F('coordinates__1') - lon) ** 2.0
+            )
+        ).filter(distance__lte=set_distance)  
+            
         # event_type search will be exact match
         if event_type:
             queryset = queryset.filter(event_type=event_type)
@@ -73,26 +91,7 @@ class EventsView(TokenReq):
         #if no end date given search only for dates on start date
         if start_date and not end_date:
             queryset = queryset.filter(event_start__date=start_date)
-         
-        # search for events near location
-        if coordinates:
-            # split coordinates into lat and lon from array
-            lat, lon = [float(coord) for coord in coordinates.strip("[]").split(",")]
-            queryset = queryset.annotate(
-            distance=Sqrt(
-                (F('coordinates__0') - lat) ** 2.0 +
-                (F('coordinates__1') - lon) ** 2.0
-            )
-        ).filter(distance__lte=distance)  
-
-           
-        # case-insensitive partical match for filtering for keywords in title, description, and category    
-        if general:
-            queryset = queryset.filter(
-                Q(title__icontains=general) |
-                Q(description__icontains=general) |
-                Q(category__category__icontains=general)
-                )
+              
         
         
         # serialize data and return data and status 200
@@ -254,11 +253,11 @@ class AnEvent(APIView):
         # Checks if RSVP is present in body
         if 'rsvp' in data:
             # Checks if RSVP is yes or no
-            if data['rsvp'] == "yes":
+            if data['rsvp'] == True:
                 # Adds user to events attending
                 event.users_attending.add(user_data)
                 data.pop('rsvp')
-            elif data['rsvp'] == "no":
+            elif data['rsvp'] == False:
                 # Removes user from events attending
                 event.users_attending.remove(user_data)
                 data.pop('rsvp')

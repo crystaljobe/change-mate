@@ -10,8 +10,9 @@ import EditUserProfile from './pages/EditUserProfile';
 import EventDetails from './pages/EventDetails';
 import SearchEvents from './pages/SearchEvents/SearchEvents';
 import EventDirections from './pages/EventDirections';
-import UserProfile from './pages/UserProfile';
+import UserProfile from './pages/UserProfile/UserProfile';
 import AdminPage from './pages/AdminPage';
+import FAQ from './pages/FAQ';
 
 import { userConfirmation } from './utilities';
 import EventCollab from './pages/EventCollab';
@@ -63,12 +64,16 @@ const router = createBrowserRouter([
         element: <SearchEvents />,
       },
       {
-        path: "/eventCollab/:eventID",
+        path: "/collab/:eventID",
         element: <EventCollab />,
       },
       {
         path: "/admin/:eventID", 
         element: <AdminPage />,
+      },
+      {
+        path: "/FAQ", 
+        element: <FAQ />,
       },
     ],
     errorElement: <ErrorPage />,

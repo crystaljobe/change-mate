@@ -1,21 +1,20 @@
 import { api } from "../utilities";
 
-
-
-
-
+//TODO:POST Volunteer Application 
 
 //admin give decision on volunteer application
 export const putApplicationDecision = async (applicationID, applicationDecision, decisionText) => {
   const response = await api.put(
     `volunteer_applications/decision/${applicationID}/`,
     {
-      application_status: applicationDecision,
+      "application_status": applicationDecision,
       "decision_text": decisionText,
     }
   );
+    console.log("putApplicationDecision utilities page", response.data);
+
   if (response.status === 200) {
-    return true;
+    return response.data
   } else {
     console.log("error:", response.data);
   }

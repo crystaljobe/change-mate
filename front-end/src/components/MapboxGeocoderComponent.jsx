@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
-const MapboxGeocoderComponent = () => {
+const MapboxGeocoderComponent = ({setCoords}) => {
     const [inputLocation, setInputLocation] = useState("")
     console.log(inputLocation)
   useEffect(() => {
     // Initialize Mapbox Geocoder
+    // if (geocoder.current) return;
     const geocoder = new MapboxGeocoder({
       accessToken: "pk.eyJ1IjoiY3J5c3RhbGpvYmUiLCJhIjoiY2x2Y3VkMzFxMG13ZzJrcGY5dDB0bGJvYyJ9.PV_ZgI2EhyhNfcRHmp2OPw",
       types: 'country,region,place,postcode,locality,neighborhood',
-      placeholder: "Location",
+      placeholder: "address, city, state",
+      limit: 3,
     });
 
     // Add geocoder to the specified container
@@ -18,7 +20,7 @@ const MapboxGeocoderComponent = () => {
 
     // Add geocoder result to container
     geocoder.on("result", (e) => {
-        setInputLocation(e.result.geometry.coordinates);
+        setCoords(e.result.geometry.coordinates);
         console.log(e.result)
     });
 
@@ -27,12 +29,16 @@ const MapboxGeocoderComponent = () => {
       result = '';
     });
 
+    return () => {
+      geocoder.onRemove();
+  };
+
 
   }, []);
 
   return (
-    <div>
-      <div id="geocoder" style={{ margin: '20px', minWidth: '100%' }}></div>
+    <div className='geocoder-container'>
+      <div id="geocoder" ></div>
     </div>
   );
 };

@@ -46,7 +46,7 @@
         "model": "interest_app.InterestCategory",
         "pk": 7,
         "fields": {
-            "category":"Disaster Release"
+            "category":"Disaster Relief"
         }
     },
     {
@@ -88,7 +88,7 @@
         "model": "interest_app.InterestCategory",
         "pk": 13,
         "fields": {
-            "category":"Health, Wellnes, & Care"
+            "category":"Health, Wellness, & Care"
         }
     },
     {

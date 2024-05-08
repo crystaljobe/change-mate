@@ -1,0 +1,42 @@
+[
+{
+  "model": "post_app.comment",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "timestamp": "2024-05-07T20:29:58.502Z",
+    "content": "actually maybe 8????",
+    "post": 1
+  }
+},
+{
+  "model": "post_app.comment",
+  "pk": 2,
+  "fields": {
+    "user": 3,
+    "timestamp": "2024-05-07T20:34:08.173Z",
+    "content": "...i've always liked rachel ray better o.O",
+    "post": 2
+  }
+},
+{
+  "model": "post_app.comment",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "timestamp": "2024-05-07T20:34:17.956Z",
+    "content": "you are right about that tho",
+    "post": 3
+  }
+},
+{
+  "model": "post_app.comment",
+  "pk": 4,
+  "fields": {
+    "user": 3,
+    "timestamp": "2024-05-07T20:34:37.878Z",
+    "content": "because i thought of it first",
+    "post": 5
+  }
+}
+]

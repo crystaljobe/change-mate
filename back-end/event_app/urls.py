@@ -9,7 +9,5 @@ urlpatterns = [
     path("admin/<int:event_id>/", AdminDetails.as_view(), name="an_event"),
     path("<int:event_id>/iCal/", ICalEvent.as_view(), name="iCal_event"),
     path("<int:event_id>/volunteers/", include('volunteer_roles_app.urls')),
-    path("<int:event_id>/posts/", include('post_app.urls')),
-    path('<int:event_id>/todo/', include('todo_app.urls')),
-  
+    path("<int:event_id>/posts/", include('post_app.urls')),  
 ]

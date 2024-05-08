@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   createVolunteerRole,
   deleteVolunteerRole,
@@ -24,6 +24,9 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+
+import { Container, Row, Col } from "react-bootstrap";
 
 function VolunteerManager({
   roles,
@@ -31,19 +34,19 @@ function VolunteerManager({
   approvedVolunteers,
   volunteerApplications,
   eventID,
-  getEvent
+  getEvent,
 }) {
- 
   const [openModal, setOpenModal] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [newRole, setNewRole] = useState("");
-  const [numVolunteersNeeded, setnumVolunteersNeeded] = useState("")
-  const [selectedVolunteerApplication, setSelectedVolunteerApplication] = useState({})
+  const [numVolunteersNeeded, setnumVolunteersNeeded] = useState("");
+  const [selectedVolunteerApplication, setSelectedVolunteerApplication] =
+    useState({});
 
   const handleOpenModal = (applicant) => {
     setSelectedApplicant(applicant);
     setOpenModal(true);
-    getVolApplication(applicant.application_id)
+    getVolApplication(applicant.application_id);
   };
 
   const handleCloseModal = () => {
@@ -59,9 +62,11 @@ function VolunteerManager({
   };
 
   const handleDeleteRole = (role) => {
-    const deleteThisRole = volunteerApplications.filter((roleInstance) => roleInstance.role === role)
-    deleteVolRole(deleteThisRole[0].id)
-    setRoles(roles.filter((roleName) => roleName !== role))
+    const deleteThisRole = volunteerApplications.filter(
+      (roleInstance) => roleInstance.role === role
+    );
+    deleteVolRole(deleteThisRole[0].role_id);
+    setRoles(roles.filter((roleName) => roleName !== role));
   };
 
   //sends post request creating a volunteer role
@@ -73,109 +78,165 @@ function VolunteerManager({
     } catch (error) {
       console.error("Failed to create a new volunteer role", error);
     }
-
   };
 
   //need to pass in roleID ---> delete a volunteer role
   const deleteVolRole = async (roleID) => {
     const responseStatus = await deleteVolunteerRole(eventID, roleID);
-    console.log('delete role - response status', responseStatus)
+    console.log("delete role - response status", responseStatus);
   };
 
   //view/get a volunteer application
   const getVolApplication = async (applicationID) => {
     const applicationDetails = await getVolunteerApplication(applicationID);
-    setSelectedVolunteerApplication(applicationDetails)
+    setSelectedVolunteerApplication(applicationDetails);
   };
 
   //accept/reject volunteer application
-  const volunteerDecision = async (applicationID, applicationDecision, decisionText) => {
+  const volunteerDecision = async (
+    applicationID,
+    applicationDecision,
+    decisionText
+  ) => {
     try {
-      await putApplicationDecision(applicationID, applicationDecision, decisionText);
+      console.log(
+        "volunteer decision put request",
+        applicationID,
+        applicationDecision
+      );
+      await putApplicationDecision(
+        applicationID,
+        applicationDecision,
+        decisionText
+      );
+      getEvent();
     } catch (error) {
       console.error("Failed to give application decision", error);
     }
   };
   const handleAccept = () => {
-    const shoulBeTrue = volunteerDecision(selectedApplicant.application_id, "Approved", null)
-    if (shoulBeTrue){console.log('accepted application successfully')}
+    const shoulBeTrue = volunteerDecision(
+      selectedApplicant.application_id,
+      "Approved",
+      null
+    );
+    if (shoulBeTrue) {
+      console.log("accepted application successfully");
+    }
     handleCloseModal();
-  }
-   const handleReject = () => {
-     volunteerDecision(selectedApplicant.application_id, "Denied", null);
-    if (shoulBeTrue){console.log('rejected application successfully')}
-     handleCloseModal();
-   };
+  };
+  const handleReject = () => {
+    volunteerDecision(selectedApplicant.application_id, "Denied", null);
+    if (shoulBeTrue) {
+      console.log("rejected application successfully");
+    }
+    handleCloseModal();
+  };
 
   return (
-    <div>
-      <Accordion>
+    <div className="cardCSS pt-0" style={{ maxWidth: '100%' }}>
+      <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Pending Volunteer Applications</Typography>
+          <h2 style={{ width: '100%', textAlign: 'center' }}>Pending Volunteer Applications</h2>
         </AccordionSummary>
         <AccordionDetails>
-          {/* volunteer applications/applicants   */}
+          {/* pending volunteer applications/applicants  */}
           <List>
             {volunteerApplications.map((volRoleInstance, index) => (
-              // <Accordion>
-              //   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              //     <AccordionDetails>
-              <List key={index}>
-                {/* {volRoleInstance.role} */}
+              // <List key={index}>
+              <React.Fragment key={volRoleInstance.role}>
                 {volRoleInstance.applications &&
-                  volRoleInstance.applications.map((applicant, index) => (
-                    applicant.application_status && 
-                    <ListItem
-                      key={index}
-                      button
-                      onClick={() => handleOpenModal(applicant)}
-                    >
-                      <ListItemAvatar key={applicant.user_id}>
-                        <Avatar key={applicant.user_id}>
-                          {applicant.profile_picture}
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={applicant.display_name}
-                        secondary={`Applying for: ${volRoleInstance.role}`}
-                      />
-                    </ListItem> 
-                  ))}
-              </List>
-              //     </AccordionDetails>
-              //   </AccordionSummary>
-              // </Accordion>
+                  volRoleInstance.applications.map(
+                    (applicant, index) =>
+                      applicant.application_status === "Pending" && (
+                        <ListItem
+                          key={`${volRoleInstance.role}-${applicant.user_id}`}
+                          button
+                          onClick={() => handleOpenModal(applicant)}
+                        >
+                          <ListItemAvatar>
+                            <Avatar src={applicant.profile_picture}></Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={applicant.display_name}
+                            secondary={`Applying for: ${volRoleInstance.role}`}
+                          />
+                        </ListItem>
+                      )
+                  )}
+              </React.Fragment>
+              // </List>
             ))}
           </List>
         </AccordionDetails>
       </Accordion>
 
-      <Accordion>
+      <Accordion style={{ marginTop: "1vh" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Assigned Volunteer Roles</Typography>
+          <h2 style={{ width: '100%', textAlign: 'center' }}>Volunteers</h2>
         </AccordionSummary>
         <AccordionDetails>
-          <TextField
-            label="New Role"
-            variant="outlined"
-            fullWidth
-            value={newRole}
-            onChange={(e) => setNewRole(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleAddRole()}
-          />
-          <TextField
-            label="Number of volunteers needed"
-            variant="outlined"
-            fullWidth
-            value={numVolunteersNeeded}
-            onChange={(e) => setnumVolunteersNeeded(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleAddRole()}
-          />
-
+          <Row
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              marginBottom: "1vh",
+            }}
+          >
+            <Col style={{ flex: "75%" }}>
+              <TextField
+                label="New Role"
+                variant="outlined"
+                fullWidth
+                value={newRole}
+                onChange={(e) => setNewRole(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleAddRole()}
+              />
+              <TextField
+                label="Number of volunteers needed"
+                variant="outlined"
+                fullWidth
+                value={numVolunteersNeeded}
+                onChange={(e) => setnumVolunteersNeeded(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleAddRole()}
+              />
+            </Col>
+            <Col
+              style={{
+                flex: "20%",
+              }}
+            >
+              <Button
+                onClick={handleAddRole}
+                startIcon={<AddCircleOutlineIcon />}
+                style={{
+                  marginTop: "20px",
+                  paddingLeft: "2rem",
+                  paddingRight: "2rem",
+                }}
+                size="large"
+                variant="outlined"
+                sx={{
+                  borderColor: "primary.dark", // Default border color
+                  color: "black",
+                  fontWeight: "bold",
+                  border: "2px solid",
+                  "&:hover": {
+                    backgroundColor: "secondary.dark",
+                    borderColor: "secondary.dark",
+                    color: "white",
+                  },
+                }}
+              >
+                Add
+              </Button>
+            </Col>
+          </Row>
           {/* roles = arr of string role names */}
           {roles &&
             roles.map((role, index) => (
-              <Accordion key={index}>
+              <Accordion key={role}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <IconButton
                     edge="start"
@@ -188,24 +249,27 @@ function VolunteerManager({
                   >
                     <DeleteIcon />
                   </IconButton>
-                  <Typography sx={{ flexGrow: 1 }}>{role}</Typography>
+                  <span className="card-body">{role}</span>
                 </AccordionSummary>
 
                 {/* APPROVED VOLUNTEERS  an arr of obj {id<applicant id>, role, user_id, display_name, profile_picture}*/}
                 <AccordionDetails>
                   <List>
-                    {approvedVolunteers.map((volunteer) => (
-                      <ListItem
-                        key={volunteer.user_id}
-                        button
-                        onClick={() => handleOpenModal(volunteer)}
-                      >
-                        <ListItemAvatar>
-                          <Avatar>{volunteer.profile_picture}</Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary={volunteer.display_name} />
-                      </ListItem>
-                    ))}
+                    {approvedVolunteers.map(
+                      (volunteer, index) =>
+                        volunteer.role === role && (
+                          <ListItem
+                            key={index}
+                            button
+                            onClick={() => handleOpenModal(volunteer)}
+                          >
+                            <ListItemAvatar>
+                              <Avatar src={volunteer.profile_picture}> </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary={volunteer.display_name} />
+                          </ListItem>
+                        )
+                    )}
                   </List>
                 </AccordionDetails>
               </Accordion>
@@ -230,42 +294,74 @@ function VolunteerManager({
             p: 4,
           }}
         >
-          <Typography id="modal-modal-title" variant="h6">
+          <Typography
+            className="modal-header"
+            id="modal-modal-title"
+            variant="h6"
+          >
             Application
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="modal-header"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Email: ${selectedVolunteerApplication.email}`
               : ""}
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="card-body"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Phone Number: ${selectedVolunteerApplication.phone_number}`
               : ""}
           </Typography>
 
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="card-body"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Preferred Contact Method: ${selectedVolunteerApplication.preferred_contact_method}`
               : ""}
           </Typography>
 
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="card-body"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Availability: ${selectedVolunteerApplication.availability}`
               : ""}
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="card-body"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Previously Volunteered: ${selectedVolunteerApplication.return_volunteer}`
               : ""}
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="card-body"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Interested because: ${selectedVolunteerApplication.volunteer_interest}`
               : ""}
           </Typography>
-          <Typography id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="card-body"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Relevant experience: ${selectedVolunteerApplication.volunteer_experience}`
               : ""}

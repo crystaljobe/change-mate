@@ -1,0 +1,67 @@
+[
+{
+  "model": "post_app.post",
+  "pk": 1,
+  "fields": {
+    "event": 6,
+    "post_orgin": "Collaborators Page",
+    "user": 2,
+    "timestamp": "2024-05-07T20:29:45.285Z",
+    "context": "oh i think we are going to move this event to 9:30 pm",
+    "likes": 0,
+    "dislikes": 0
+  }
+},
+{
+  "model": "post_app.post",
+  "pk": 2,
+  "fields": {
+    "event": 5,
+    "post_orgin": "Collaborators Page",
+    "user": 2,
+    "timestamp": "2024-05-07T20:30:24.485Z",
+    "context": "if we are lucky we will get gordon ramsey to come!!",
+    "likes": 0,
+    "dislikes": 0
+  }
+},
+{
+  "model": "post_app.post",
+  "pk": 3,
+  "fields": {
+    "event": 5,
+    "post_orgin": "Collaborators Page",
+    "user": 2,
+    "timestamp": "2024-05-07T20:30:32.700Z",
+    "context": "i cant wait to eat this food tho",
+    "likes": 0,
+    "dislikes": 0
+  }
+},
+{
+  "model": "post_app.post",
+  "pk": 4,
+  "fields": {
+    "event": 3,
+    "post_orgin": "Collaborators Page",
+    "user": 2,
+    "timestamp": "2024-05-07T20:30:47.705Z",
+    "context": "WOWOWOWOWOWOWOWOW",
+    "likes": 0,
+    "dislikes": 0
+  }
+},
+{
+  "model": "post_app.post",
+  "pk": 5,
+  "fields": {
+    "event": 3,
+    "post_orgin": "Collaborators Page",
+    "user": 2,
+    "timestamp": "2024-05-07T20:31:00.359Z",
+    "context": "why didnt i think of this earlier?? this is going to be so fun",
+    "likes": 0,
+    "dislikes": 0
+  }
+}
+]

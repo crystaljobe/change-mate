@@ -1,0 +1,365 @@
+[
+{
+  "model": "todo_app.todolist",
+  "pk": 1,
+  "fields": {
+    "event": 1,
+    "task": "bring water",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:43:15.389Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 2,
+  "fields": {
+    "event": 1,
+    "task": "bring mini flags",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:43:47.262Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 3,
+  "fields": {
+    "event": 1,
+    "task": "bring money",
+    "assigned_host": 2,
+    "completed": false,
+    "timestamp": "2024-05-07T19:44:10.394Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 4,
+  "fields": {
+    "event": 9,
+    "task": "book venue",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:46:17.968Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 5,
+  "fields": {
+    "event": 9,
+    "task": "hire artists",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:46:26.292Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 6,
+  "fields": {
+    "event": 9,
+    "task": "obtain permits",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:46:32.783Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 7,
+  "fields": {
+    "event": 9,
+    "task": "coordinate with vendors",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:46:41.179Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 8,
+  "fields": {
+    "event": 2,
+    "task": "Secure Permits and Insurance",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:48:18.596Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 9,
+  "fields": {
+    "event": 2,
+    "task": "Reach Out to Farmers and Vendors",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:48:25.030Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 10,
+  "fields": {
+    "event": 2,
+    "task": "Vendor Agreement Forms",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:48:31.978Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 11,
+  "fields": {
+    "event": 10,
+    "task": "Reserve the Park",
+    "assigned_host": 3,
+    "completed": false,
+    "timestamp": "2024-05-07T19:49:23.750Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 12,
+  "fields": {
+    "event": 10,
+    "task": "Plan Activities",
+    "assigned_host": 2,
+    "completed": false,
+    "timestamp": "2024-05-07T19:49:29.300Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 13,
+  "fields": {
+    "event": 10,
+    "task": "Engage Local Vendors",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:49:40.241Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 14,
+  "fields": {
+    "event": 11,
+    "task": "drink",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:51:24.205Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 15,
+  "fields": {
+    "event": 11,
+    "task": "drive",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:51:27.429Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 16,
+  "fields": {
+    "event": 8,
+    "task": "buy ingredients",
+    "assigned_host": 2,
+    "completed": false,
+    "timestamp": "2024-05-07T19:56:20.103Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 17,
+  "fields": {
+    "event": 8,
+    "task": "raise awareness",
+    "assigned_host": 3,
+    "completed": false,
+    "timestamp": "2024-05-07T19:56:30.000Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 18,
+  "fields": {
+    "event": 8,
+    "task": "throw out garbage",
+    "assigned_host": 2,
+    "completed": false,
+    "timestamp": "2024-05-07T19:56:51.189Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 19,
+  "fields": {
+    "event": 7,
+    "task": "Pay the celebrity chefs",
+    "assigned_host": 2,
+    "completed": false,
+    "timestamp": "2024-05-07T19:57:21.805Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 20,
+  "fields": {
+    "event": 7,
+    "task": "call Gordon Ramsey",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T19:57:31.358Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 21,
+  "fields": {
+    "event": 6,
+    "task": "buy chips",
+    "assigned_host": 2,
+    "completed": false,
+    "timestamp": "2024-05-07T20:00:23.142Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 22,
+  "fields": {
+    "event": 6,
+    "task": "buy meats",
+    "assigned_host": 2,
+    "completed": false,
+    "timestamp": "2024-05-07T20:00:26.836Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 23,
+  "fields": {
+    "event": 6,
+    "task": "recruit volunteers",
+    "assigned_host": 2,
+    "completed": false,
+    "timestamp": "2024-05-07T20:00:34.358Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 24,
+  "fields": {
+    "event": 5,
+    "task": "get chefs",
+    "assigned_host": 3,
+    "completed": false,
+    "timestamp": "2024-05-07T20:01:25.399Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 25,
+  "fields": {
+    "event": 5,
+    "task": "buy food",
+    "assigned_host": 3,
+    "completed": false,
+    "timestamp": "2024-05-07T20:01:29.798Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 26,
+  "fields": {
+    "event": 5,
+    "task": "organize location",
+    "assigned_host": 3,
+    "completed": false,
+    "timestamp": "2024-05-07T20:01:35.517Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 27,
+  "fields": {
+    "event": 4,
+    "task": "buy water",
+    "assigned_host": 1,
+    "completed": false,
+    "timestamp": "2024-05-07T20:03:21.604Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 28,
+  "fields": {
+    "event": 4,
+    "task": "get snacks",
+    "assigned_host": 3,
+    "completed": false,
+    "timestamp": "2024-05-07T20:03:27.299Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 29,
+  "fields": {
+    "event": 4,
+    "task": "venue & course planning",
+    "assigned_host": 2,
+    "completed": false,
+    "timestamp": "2024-05-07T20:03:33.621Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 30,
+  "fields": {
+    "event": 3,
+    "task": "engage sponsors",
+    "assigned_host": 3,
+    "completed": false,
+    "timestamp": "2024-05-07T20:03:58.214Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 31,
+  "fields": {
+    "event": 3,
+    "task": "buy glow sticks",
+    "assigned_host": 2,
+    "completed": false,
+    "timestamp": "2024-05-07T20:04:37.160Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 32,
+  "fields": {
+    "event": 3,
+    "task": "get DJ",
+    "assigned_host": 3,
+    "completed": false,
+    "timestamp": "2024-05-07T20:04:43.200Z"
+  }
+},
+{
+  "model": "todo_app.todolist",
+  "pk": 33,
+  "fields": {
+    "event": 3,
+    "task": "plan safety measures",
+    "assigned_host": 2,
+    "completed": false,
+    "timestamp": "2024-05-07T20:05:00.947Z"
+  }
+}
+]

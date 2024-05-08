@@ -2,16 +2,16 @@ import {
 	Container,
 	Col,
 	Row,
-	ListGroup,
-	Card,
 	Button,
-	ListGroupItem,
+	Card,
+	CardFooter,
+	Dropdown,
+	DropdownButton,
 } from "react-bootstrap";
+import MUIbutton from "@mui/material/Button";
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
-import "add-to-calendar-button";
 import { getEventDetails, setUserAttending } from "../utilities/EventUtilities";
-import { getiCalEventDetails } from "../utilities/EventUtilities";
 import DetailedEventCard from "../components/DetailedEventCard";
 import VolunteerApplication from "../components/VolunteerApplication";
 import StaticMap from "../components/EventDetailsStaticMap";
@@ -19,66 +19,42 @@ import StaticMap from "../components/EventDetailsStaticMap";
 export default function EventDetails() {
 	let { eventID } = useParams();
 	const { userProfileData } = useOutletContext();
-	const [iCalDetails, setiCalDetails] = useState([]);
 	const [eventDetails, setEventDetails] = useState({});
+	const [rsvp, setRSVP] = useState(true);
+	// console.log(userProfileData)
+	// console.log("rsvp status:", rsvp)
 
 	//consolidated useEffects on page and only recall api if event id changes
 	useEffect(() => {
-		//only fetch data once
-		if (!eventDetails.hosts) {
-			async function fetchAllData() {
-				try {
-					//get and set event details and iCal details
-					const event = await getEventDetails(eventID);
-					const iCal = await getiCalEventDetails(eventID);
-					setEventDetails(event);
-					setiCalDetails(iCal);
-					// console.log("fetching and setting")
-				} catch (error) {
-					console.error(error);
-				}
+		async function fetchAllData() {
+			try {
+				const event = await getEventDetails(eventID);
+				setEventDetails(event);
+				// Fetching userProfileData if not already available
+				// Assuming userProfileData is also fetched asynchronously
+			} catch (error) {
+				console.error(error);
 			}
-			fetchAllData();
 		}
-	}, [eventID]);
+		fetchAllData();
+	}, [eventID]); // Make sure to include eventID and userProfileData in the dependencies array
+
+	useEffect(() => {
+		if (userProfileData.events_attending && eventDetails.id) {
+			const isAttending = userProfileData.events_attending.some((event) => event.id === eventDetails.id);
+			setRSVP(!isAttending);
+			// console.log("is attending", isAttending)
+		}
+	}, [userProfileData.events_attending, eventDetails, eventID]);
 
 	// onClick function for RSVP button to handle put request to add user as attending
 	const handleRSVP = async () => {
-		const rsvp = await setUserAttending(eventID);
-		if (rsvp) {
+		console.log("put:", rsvp)
+		const response = await setUserAttending(eventID, rsvp);
+		setRSVP(!rsvp);
+		if (response) {
 			console.log("user rsvp");
 		}
-	};
- //still working on this piece 
- 
-	// Checks the events that the user is attending for id match with the eventID for this page
-	// const isUserAttending = () => {
-	//   // Checks if eventsAttending has data
-	//   if(eventsAttending) {
-	//     // Loops through the events
-	//     for (const event of eventsAttending) {
-	//       // Makes comparison between the page's eventID and the user's event.id
-	//       if (eventID == event.id) {
-	//         // If match user is RSVPed
-	//         return true
-	//       }
-	//     }
-	//   } else {
-	//     return false
-	//   }
-	// };
-
-	// Renders button conditionally based on if user is attending event
-	const renderAttendingButton = () => {
-		// Sets attending to true or false based on function call
-		const attending = true;
-
-		//converted from button into a-tags for dropdown item
-		return attending ? (
-			<a>Attending</a>
-		) : (
-			<a onClick={handleRSVP}>Attend This Event</a>
-		);
 	};
 
 	// application modal
@@ -86,84 +62,140 @@ export default function EventDetails() {
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
 
+	function eventOptionsMessage() {
+		if (
+			eventDetails.attendees_needed &&
+			eventDetails.volunteer_roles.length > 0
+		) {
+			return "This event needs attendees and volunteers, how would you like to participate?";
+		} else if (
+			eventDetails.attendees_needed &&
+			eventDetails.volunteer_roles.length < 1
+		) {
+			return "Let the hosts know you'll be attending this event by clicking the button below!";
+		} else if (
+			!eventDetails.attendees_needed &&
+			eventDetails.volunteer_roles.length > 0
+		) {
+			return "This event needs volunteers, to fill out the volunteer form click the button below!";
+		}
+	}
+
+	// Conditional rendering of Count Me In Button
+	const renderCountMeIn = () => {
+
+		// If event needs volunteers and attendees
+		if (eventDetails.attendees_needed && rsvp && eventDetails.hosts && eventDetails.volunteer_roles.length > 0) {
+			return (
+				<DropdownButton title="Count me in!" id="dropdown-basic-button" >
+					<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleRSVP}>
+						Attend
+					</Dropdown.Item>
+					{/* The divider is the reason the whole button needs to be conditionally rendered; We only need the divider if both options are rendered */}
+					<Dropdown.Divider />
+					<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleShow}>
+						Volunteer
+					</Dropdown.Item>
+				</DropdownButton>
+			);
+		// If event only needs attendees
+		} else if (eventDetails.attendees_needed && rsvp) {
+			return (
+				<DropdownButton title="Count me in!" id="dropdown-basic-button" >
+					<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleRSVP}>
+						Attend
+					</Dropdown.Item>
+				</DropdownButton>
+			);
+		// If event only needs volunteers
+		} else if (eventDetails.hosts && eventDetails.volunteer_roles.length > 0) {
+			return (
+				<DropdownButton title="Count me in!" id="dropdown-basic-button" >
+					<Dropdown.Item as="button" className="text-center dropdown-hover" onClick={handleShow}>
+						Volunteer
+					</Dropdown.Item>
+				</DropdownButton>
+			);
+		} else {
+			return null; // Return null if no conditions are met
+		}
+	};
+
 	return (
 		<Container>
 			<Row>
-				<Col md={8} sm={12}>
-					{console.log(eventDetails)}
-
-					{eventDetails.hosts && (
-						<DetailedEventCard {...eventDetails}></DetailedEventCard>
-					)}
-          <Link
-								to={`/eventCollab/${eventID}`}
-								className="btn btn-primary mr-2">
-								Let's Collaborate!
-							</Link>
-							<Link to="/eventadmin" className="btn btn-primary">
-								Admin Time!
-							</Link>
-
-					<div className="dropdown-container">
-						<button className="dropdown-button">Count me in!</button>
-						<div className="dropdown-content">
-							{/* TODO: add conditonal rendering for volunteer option if event is accepting volunteers */}
-							{/* added volunteer application modal as a component */}
-							<a onClick={handleShow}>Volunteer</a>
-                <VolunteerApplication
-                  show={show}
-                  handleClose={handleClose}
-                  eventID={eventID}
-                />
-
-							{/* if event needs attendees */}
-							{eventDetails.attendees_needed ? renderAttendingButton() : null}
-
-							
-						</div>
-					</div>
+				<Col md={8} sm={12} className="d-flex justify-content-center">
+					{eventDetails.hosts && <DetailedEventCard {...eventDetails} />}
 				</Col>
 
-				{/*Map displaying event location */}
+				{/*Map displaying event location with link to google maps*/}
 				<Col md={4} sm={12} className="text-center">
 					<br />
-					{eventDetails.event_type === "In-person" && (
-						<Row className="justify-content-center">
-							{eventDetails.lat && (
-								<StaticMap lat={eventDetails.lat} lng={eventDetails.lon} />
-							)}
-
-							<Link to="/eventdirections">
-								<button
-									className="button-gradient text-center"
-									variant="info"
-									style={{ width: "90vw", maxWidth: "300px" }}>
-									Get Event Directions
-								</button>
-							</Link>
+					{eventDetails.lat && (
+						<Row className="justify-content-center mt-4">
+							<StaticMap lat={eventDetails.lat} lng={eventDetails.lon} />
 						</Row>
 					)}
 
-					{/* add to calendar button */}
-					{iCalDetails.description && (
-						<add-to-calendar-button
-							style={{ height: "50px" }}
-							size="5"
-							label="Add to Calendar"
-							options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-							name={iCalDetails.title}
-							location={
-								eventDetails.event_type === "Virtual"
-									? eventDetails.virtual_event_link
-									: `${eventDetails.event_venue} - ${eventDetails.event_venue_address}`
-							}
-							startDate={iCalDetails.startDate}
-							endDate={iCalDetails.endDate}
-							startTime={iCalDetails.startTime}
-							endTime={iCalDetails.endTime}
-							timeZone={iCalDetails.time_zone}
-							description={iCalDetails.description}></add-to-calendar-button>
-					)}
+					<Row className="d-flex justify-content-center">
+						<Card className="mt-5" style={{ width: "22rem" }}>
+							<Card.Header>Event Options</Card.Header>
+							<Card.Body>
+								{/* <Card.Title>Event Options</Card.Title> */}
+								<Card.Text>
+									{eventDetails.volunteer_roles && eventOptionsMessage()}
+								</Card.Text>
+							</Card.Body>
+							<Card.Footer>
+								{eventDetails && renderCountMeIn()}
+							</Card.Footer>
+						</Card>
+					</Row>
+					<Row className="d-flex justify-content-center">
+						{!rsvp && (
+							<Card
+								className="mt-5 d-flex justify-content-center"
+								style={{ width: "22rem" }}>
+								<Card.Header>RSVP Options</Card.Header>
+								<Card.Body className="d-flex justify-content-center flex-wrap">
+									Things happen, if life gets in the way you can always update
+									your RSVP.
+									<MUIbutton
+										onClick={handleRSVP}
+										className="mt-2"
+										variant="outlined"
+										sx={{
+											borderColor: "primary", // Default border color
+											color: "primary",
+											border: "1px solid",
+											
+											"&:hover": {
+												backgroundColor: "secondary.dark",
+												color: "white",
+											},
+										}}>
+										Un-RSVP
+									</MUIbutton>
+								</Card.Body>
+							</Card>
+						)}
+					</Row>
+					<Row>
+						
+						{eventDetails.hosts && eventDetails.volunteer_roles.length > 0  
+						?  (
+							<div className="mt-3">
+							<VolunteerApplication
+								show={show}
+								handleClose={handleClose}
+								eventDetails={eventDetails}
+							/>
+							</div>
+							) 
+						: null }
+					</Row>
+					
+
 				</Col>
 			</Row>
 		</Container>
