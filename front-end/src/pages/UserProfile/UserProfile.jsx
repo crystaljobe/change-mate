@@ -59,7 +59,12 @@ export default function UserProfile() {
 
   // const popularGroupedEvents = chunkArray(eventsPopular, 3);
   // const volunteerGroupedEvents = chunkArray(eventsVolNeed, cardsPerPage);
-  // const additionalGroupedEvents = chunkArray(eventsAdditional, cardsPerPage);
+  const eventsAttending = () => {
+    if (userProfileData.events_attending.length === 0) {
+      return [];
+    }
+    return chunkArray(eventsAdditional, cardsPerPage)
+  };
 
 
   const toggleCalendarVisibility = () => {
@@ -143,11 +148,9 @@ export default function UserProfile() {
             <h1 style={{ color: "#6840DF", textAlign: 'center' }}>Attending Events</h1>
             <Carousel interval={null} indicators={false} prevLabel="" nextLabel="" className="px-5">
               {userProfileData.events_attending.length === 0 ? (
-                <Carousel.Item>
                   <h3 className="text-center" style={{ fontStyle: "italic" }}>
                     Doesn't look like you've RSVP'd to any events yet.
                   </h3>
-                </Carousel.Item>
               ) : (
                 userProfileData.events_attending.reduce((result, value, index, array) => {
                   if (index % 2 === 0)
@@ -164,6 +167,24 @@ export default function UserProfile() {
                 ))
               )}
             </Carousel>
+
+            {userProfileData.events_attending.length === 0 ? (
+                  <h3 className="text-muted text-center">Doesn't look like you've RSVP'd to any events yet.</h3>
+              ) : (
+                  <Carousel interval={null} indicators={false} prevLabel="" nextLabel="" className="px-5">
+                      {eventsAttending.map((chunk, index) => (
+                          <Carousel.Item key={index}>
+                              <div className="d-flex flex-nowrap overflow-hidden">
+                                  {chunk.map((event, idx) => (
+                                      <div key={idx} className="ms-4">
+                                          <EventCard {...event} eventCategory={null} />
+                                      </div>
+                                  ))}
+                              </div>
+                          </Carousel.Item>
+                      ))}
+                  </Carousel>
+              )}
           </Col>
 
           {/* Calendar Column */}
