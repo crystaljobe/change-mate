@@ -61,47 +61,23 @@ function EventCard({ eventCategory, applicationStatus, ...event }) {
         }
     };
 
-    const toggleDropdown = () => setShowDropdown(!showDropdown);
-
-    const renderDropdown = () => {
-        if (eventCategory === 'userEvents') {
-            return (
-                <Dropdown.Menu show>
-                    <Dropdown.Item onClick={() => navigate(`/admin/${event.id}`)}>Admin Page</Dropdown.Item>
-                    <Dropdown.Item onClick={() => navigate(`/collab/${event.id}`)}>Collaborator Page</Dropdown.Item>
-                </Dropdown.Menu>
-            );
-        } else if (eventCategory === 'volunteerEvents') {
-            return (
-                <Dropdown.Menu show>
-                    <Dropdown.Item onClick={() => navigate(`/collab/${event.id}`)}>Collaborator Page</Dropdown.Item>
-                </Dropdown.Menu>
-            );
-        }
-    };
 
     // Conditional Styling for image display based on src
 	const imageStyle = event.event_photo ? styles.image : styles.icon;
     //style={{ width: '100%', display: 'flex', flexDirection: 'column' }}
     return (
-        <Card style={{ width: '18rem' }}>
+        <Card style={{ width: '18rem', height: "30rem" }}>
             <Card.Img variant="top" src={event.event_photo || defaultImage} style={imageStyle} />
             <Card.Body style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <Card.Title>{event.title}{applicationStatus && ` : ${applicationStatus}`}</Card.Title>
                 {renderDates()}
                 {renderLocation()}
-                <Card.Footer style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
                     <Button variant="link" style={{ color: '#6840DF' }} as={Link} to={`/event/${event.id}`}>
                         More Details
                     </Button>
-                    {/* {eventCategory !== 'eventsAttending' && (
-                        <button onClick={toggleDropdown} style={{ border: 'none', background: 'none', fontSize: '12px', cursor: 'pointer' }}>
-                            ⬤⬤⬤
-                        </button>
-                    )}
-                    {showDropdown && renderDropdown()} */}
                 {eventCategory !== 'eventsAttending' && eventCategory !== null ? <DropDownButton eventID={event.id} eventCategory={eventCategory}/> : null}
-                </Card.Footer>
+                </div>
             </Card.Body>
         </Card>
     );
