@@ -8,7 +8,7 @@ import DiscussionForum from "../components/DiscussionForum";
 import { Button, Drawer, Box, IconButton, Fab, Tooltip } from "@mui/material";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import CloseIcon from '@mui/icons-material/Close';
-import SettingsIcon from '@mui/icons-material/Settings';
+import SpeedDialMenu from "../components/SpeedDialMenu";
 
 function EventCollab() {
   const { userProfileData } = useOutletContext();
@@ -107,13 +107,24 @@ function EventCollab() {
     console.log(eventDetails);
   };
   const showAddToDo = false;
+  
+  const isUserHost = () => {
+    if (!eventDetails.hosts || !userProfileData) {
+      return false;
+    }
+    return eventDetails.hosts.some(host => host.user_id === userProfileData.id);
+  }
 
+  console.log(isUserHost)
 
   return (
     <Container fluid className="event-collab-container">
       <Row className="gx-5">
         {/* conditionally format column widths based on showMenu state */}
-        <Col sm={12} md={12} lg={4} xl={showMenu ? 3 : 4} >
+        <Col sm={12} md={12} lg={4} xl={showMenu ? 3 : 4} style={{ position: "relative" }} >
+          {isUserHost() && <div style={{ position: "absolute", top: 0, right: 0, zIndex: "1" }}>
+            <SpeedDialMenu />
+          </div>}
           {eventDetails.hosts && <DetailedEventCard {...eventDetails} />}
         </Col>
         <Col
