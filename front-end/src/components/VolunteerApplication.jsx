@@ -38,6 +38,16 @@ function VolunteerApplication({ show, handleClose, eventDetails }) {
   }, [eventDetails]);
 
 
+  //handles toggling of return volunteer radio buttons to ensure only one is clicked at a time
+  function handleReturnVolunteer () {
+     if (repeatVolunteer === "no") {
+       setRepeatVolunteer("yes");
+     } else {
+       setRepeatVolunteer("no");
+     }
+  }
+
+
   // Handles submitting the application
   const handleSubmit = async () => {
     // Loops through roles and submits an application for each role
@@ -134,13 +144,15 @@ function VolunteerApplication({ show, handleClose, eventDetails }) {
                 inline
                 label="yes"
                 type="radio"
-                onClick={(e) => setRepeatVolunteer("yes")}
+                checked={repeatVolunteer === "yes"}
+                onClick={handleReturnVolunteer}
               />
               <Form.Check
                 inline
                 label="no"
                 type="radio"
-                onClick={(e) => setRepeatVolunteer("no")}
+                onClick={handleReturnVolunteer}
+                checked={repeatVolunteer === "no"}
               />
             </Form.Group>
 

@@ -173,7 +173,7 @@ function VolunteerManager({
 
       <Accordion style={{ marginTop: "1vh" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <h2 style={{ width: '100%', textAlign: 'center' }}>Pending Volunteer Applications</h2>
+          <h2 style={{ width: '100%', textAlign: 'center' }}>Volunteers</h2>
         </AccordionSummary>
         <AccordionDetails>
           <Row
