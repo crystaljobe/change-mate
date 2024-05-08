@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'post_app',
     'todo_app',
+    'storages',
 ] 
 
 MIDDLEWARE = [
@@ -159,3 +160,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user_app.AppUser'
 
+
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = env.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env.get('AWS_SECRET_ACCESS_KEY')
+# Depending on the AWS account used, you might also need to declare AWS_SESSION_TOKEN as an environment variable
+
+AWS_STORAGE_BUCKET_NAME = env.get('AWS_STORAGE_BUCKET_NAME')

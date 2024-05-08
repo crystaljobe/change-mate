@@ -23,6 +23,7 @@ from drf_yasg import openapi
 from django.db.models import Q
 from django.db.models import F
 from django.db.models.functions import Sqrt
+from changemate_proj.utilities import ImageUploader
 
 
 
@@ -109,6 +110,8 @@ class EventsView(APIView):
 
         category_id = data["category"]
         category = InterestCategory.objects.get(id = category_id)
+
+       
         try:
             new_event = Event.objects.create(
                 title = data['title'],
@@ -118,7 +121,7 @@ class EventsView(APIView):
                 event_type = data['event_type'],
                 event_venue = data['event_venue'],
                 event_venue_address = data['event_venue_address'],
-                event_photo = data['event_photo'],
+                event_photo = "",
                 description = data['description'],
                 category = category,
                 virtual_event_link = data['virtual_event_link'],
@@ -130,6 +133,15 @@ class EventsView(APIView):
             # set request user as host
             host = UserProfile.objects.get(user=request.user)
             new_event.hosts.set([host])
+
+             # pulls image from request data and uploads to S3
+            event_photo = data['event_photo']
+            try:
+                response = ImageUploader.upload_image(id=new_event.id, image=event_photo, picture_type='event')
+                new_event.event_photo = response
+                print("Image uploaded successfully", response)
+            except Exception as e:
+                return Response(str(e), status=HTTP_400_BAD_REQUEST)
 
             new_event.full_clean()
             new_event.save()
@@ -249,6 +261,17 @@ class AnEvent(APIView):
                 # Removes user from events attending
                 event.users_attending.remove(user_data)
                 data.pop('rsvp')
+
+        
+        # Checks if image is present in body
+        if 'image' in data:
+            event_photo = data['event_photo']
+            try:
+                response = ImageUploader.upload_image(id=event.id, image=event_photo, picture_type='event')
+                data["event_photo"] = response
+                print("Image uploaded successfully", response)
+            except Exception as e:
+                return Response(str(e), status=HTTP_400_BAD_REQUEST)
         
         # validate data and save
         updated_event = EventSerializer(event, data=data, partial=True)

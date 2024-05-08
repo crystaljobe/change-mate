@@ -35,7 +35,7 @@ export default function MyNavbar({ user, setUser, userImg, setUserProfileData })
 			}}
 			style={{  alignItems: "start"}}
 		>
-			<img src={userImg || DefaultUserImg} alt="User Profile Image" style={{ width: 40, height: 40, borderRadius: '50%', marginLeft: 8 }} />
+			<img src={userImg || DefaultUserImg} alt="User Profile Image" style={{ width: 45, height: 45, borderRadius: '50%', marginLeft: 8 }} />
 			{children}
 		</a>
 	));

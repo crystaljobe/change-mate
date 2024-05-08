@@ -1,0 +1,461 @@
+[
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 1,
+  "fields": {
+    "event": 1,
+    "role": "set up",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 2,
+  "fields": {
+    "event": 1,
+    "role": "break down",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 3,
+  "fields": {
+    "event": 1,
+    "role": "alumni booth",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 4,
+  "fields": {
+    "event": 1,
+    "role": "clean up",
+    "num_volunteers_needed": 3
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 5,
+  "fields": {
+    "event": 9,
+    "role": "volunteer organizer",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 6,
+  "fields": {
+    "event": 9,
+    "role": "set up",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 7,
+  "fields": {
+    "event": 9,
+    "role": "tear down crew",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 8,
+  "fields": {
+    "event": 9,
+    "role": "security",
+    "num_volunteers_needed": 3
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 9,
+  "fields": {
+    "event": 2,
+    "role": "set up",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 10,
+  "fields": {
+    "event": 2,
+    "role": "tear down",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 11,
+  "fields": {
+    "event": 2,
+    "role": "Advertisers",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 12,
+  "fields": {
+    "event": 10,
+    "role": "Decorating committee",
+    "num_volunteers_needed": 3
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 13,
+  "fields": {
+    "event": 10,
+    "role": "Emergency Plan team",
+    "num_volunteers_needed": 4
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 14,
+  "fields": {
+    "event": 10,
+    "role": "Waste Management",
+    "num_volunteers_needed": 6
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 15,
+  "fields": {
+    "event": 11,
+    "role": "distract police",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 16,
+  "fields": {
+    "event": 11,
+    "role": "beer haul",
+    "num_volunteers_needed": 3
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 17,
+  "fields": {
+    "event": 8,
+    "role": "Zoom Hosts Responsibilities",
+    "num_volunteers_needed": 1
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 18,
+  "fields": {
+    "event": 8,
+    "role": "Put together Baking Baskets",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 19,
+  "fields": {
+    "event": 8,
+    "role": "Deliver Baking Baskets",
+    "num_volunteers_needed": 4
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 20,
+  "fields": {
+    "event": 7,
+    "role": "Recipe Card Creation team",
+    "num_volunteers_needed": 3
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 21,
+  "fields": {
+    "event": 7,
+    "role": "Zoom responsibilities",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 22,
+  "fields": {
+    "event": 7,
+    "role": "buy ingredients",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 23,
+  "fields": {
+    "event": 6,
+    "role": "man the grill",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 24,
+  "fields": {
+    "event": 6,
+    "role": "event coordinator",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 25,
+  "fields": {
+    "event": 6,
+    "role": "logistics manager",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 26,
+  "fields": {
+    "event": 5,
+    "role": "back of house crew",
+    "num_volunteers_needed": 4
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 27,
+  "fields": {
+    "event": 5,
+    "role": "front of house crew",
+    "num_volunteers_needed": 4
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 28,
+  "fields": {
+    "event": 5,
+    "role": "clean up",
+    "num_volunteers_needed": 3
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 29,
+  "fields": {
+    "event": 5,
+    "role": "trash duty",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 30,
+  "fields": {
+    "event": 4,
+    "role": "race director",
+    "num_volunteers_needed": 1
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 31,
+  "fields": {
+    "event": 4,
+    "role": "registration coordinator",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 32,
+  "fields": {
+    "event": 4,
+    "role": "timing & results coordinator",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 33,
+  "fields": {
+    "event": 4,
+    "role": "water boy",
+    "num_volunteers_needed": 1
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 34,
+  "fields": {
+    "event": 3,
+    "role": "safety & medical team",
+    "num_volunteers_needed": 3
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 35,
+  "fields": {
+    "event": 3,
+    "role": "sponsorship coordinator",
+    "num_volunteers_needed": 3
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 36,
+  "fields": {
+    "event": 3,
+    "role": "volunteer coordinator",
+    "num_volunteers_needed": 3
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 37,
+  "fields": {
+    "event": 3,
+    "role": "cleanup crew",
+    "num_volunteers_needed": 3
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 38,
+  "fields": {
+    "event": 22,
+    "role": "Rally Check-In",
+    "num_volunteers_needed": 5
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 39,
+  "fields": {
+    "event": 22,
+    "role": "Rally Information",
+    "num_volunteers_needed": 5
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 40,
+  "fields": {
+    "event": 22,
+    "role": "Refreshments Stand",
+    "num_volunteers_needed": 6
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 41,
+  "fields": {
+    "event": 13,
+    "role": "Trash Pick Up",
+    "num_volunteers_needed": 20
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 42,
+  "fields": {
+    "event": 13,
+    "role": "Garbage Bag Collection",
+    "num_volunteers_needed": 5
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 43,
+  "fields": {
+    "event": 12,
+    "role": "Litter Pick Up",
+    "num_volunteers_needed": 10
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 44,
+  "fields": {
+    "event": 12,
+    "role": "Bag Collection",
+    "num_volunteers_needed": 5
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 45,
+  "fields": {
+    "event": 14,
+    "role": "Welcoming Crew",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 46,
+  "fields": {
+    "event": 14,
+    "role": "General guest assistance",
+    "num_volunteers_needed": 5
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 47,
+  "fields": {
+    "event": 14,
+    "role": "Serve Refreshments",
+    "num_volunteers_needed": 3
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 48,
+  "fields": {
+    "event": 20,
+    "role": "Sign in table greeters",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 49,
+  "fields": {
+    "event": 20,
+    "role": "Support Roles",
+    "num_volunteers_needed": 8
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 50,
+  "fields": {
+    "event": 20,
+    "role": "Resources table",
+    "num_volunteers_needed": 2
+  }
+},
+{
+  "model": "volunteer_roles_app.volunteerrole",
+  "pk": 51,
+  "fields": {
+    "event": 17,
+    "role": "Agriculture Experts",
+    "num_volunteers_needed": 5
+  }
+}
+]
