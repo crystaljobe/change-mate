@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import NavDropdown from 'react-bootstrap/Dropdown';
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -11,6 +11,7 @@ import DefaultUserImg from "/src/assets/Default-Profile.png";
 import { userLogout } from "../utilities/UserUtilities";
 import  { forwardRef } from "react";
 
+
 export default function MyNavbar({ user, setUser, userImg, setUserProfileData }) {
 	const navigate = useNavigate();
 	const handleUserLogout = async () => {
@@ -22,6 +23,7 @@ export default function MyNavbar({ user, setUser, userImg, setUserProfileData })
 			
 		}
 	};
+	const { eventID } = useParams();
 	// custom drop down toggle for user profile image 
 	const CustomToggle = forwardRef(({ children, onClick }, ref) => (
 		<a
@@ -38,7 +40,7 @@ export default function MyNavbar({ user, setUser, userImg, setUserProfileData })
 		</a>
 	));
 
-
+	CustomToggle.displayName = "CustomToggle";
 	return (
 		<Navbar
 			className=".bg-body-secondary"
@@ -72,11 +74,11 @@ export default function MyNavbar({ user, setUser, userImg, setUserProfileData })
 					: 
 						
 					(<>
-						<Nav.Link eventKey="3" as={Link} to={"/createevent"} style={{marginTop: "2px"}}>Create Event</Nav.Link>
 						<Nav.Link eventKey="4" as={Link} to={"/events"} style={{marginTop: "2px"}}>Search</Nav.Link>
+						<Nav.Link eventKey="3" as={Link} to={"/createevent"} style={{marginTop: "2px"}}>Create Event</Nav.Link>
 						
 						<Dropdown>
-                                <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components"> </Dropdown.Toggle>
+                                <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components"></Dropdown.Toggle>
 						<Dropdown.Menu align="end">
                                 <NavDropdown.Item as={Link} to="/profile">Profile</NavDropdown.Item>
                                 <NavDropdown.Item as={Link} to="/editprofile">Update Profile</NavDropdown.Item>
