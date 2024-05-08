@@ -21,6 +21,7 @@ export default function EventDetails() {
 	const { userProfileData } = useOutletContext();
 	const [eventDetails, setEventDetails] = useState({});
 	const [rsvp, setRSVP] = useState(true);
+
 	// console.log(userProfileData)
 	// console.log("rsvp status:", rsvp)
 
@@ -81,6 +82,8 @@ export default function EventDetails() {
 		}
 	}
 
+
+
 	// Conditional rendering of Count Me In Button
 	const renderCountMeIn = () => {
 
@@ -120,6 +123,8 @@ export default function EventDetails() {
 			return null; // Return null if no conditions are met
 		}
 	};
+
+
 
 	return (
 		<Container>
@@ -182,8 +187,7 @@ export default function EventDetails() {
 					</Row>
 					<Row>
 						
-						{eventDetails.hosts && eventDetails.volunteer_roles.length > 0  
-						?  (
+						{eventDetails.volunteer_roles && (
 							<div className="mt-3">
 							<VolunteerApplication
 								show={show}
@@ -191,8 +195,7 @@ export default function EventDetails() {
 								eventDetails={eventDetails}
 							/>
 							</div>
-							) 
-						: null }
+							)}
 					</Row>
 					
 
