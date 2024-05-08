@@ -5,6 +5,22 @@ import defaultImage from '../assets/Default-Event.png';
 import DropDownButton from './dropDownButton';
 
 function EventCard({ eventCategory, applicationStatus, ...event }) {
+    const styles = {
+		icon: {
+			width: "10vw",
+            height: "150px",
+			display: "block",
+            marginTop: "25px",
+            marginBottom: "25px",
+            marginLeft: "15px",
+            marginRight: "5px"
+		},
+		image: {
+			height: '200px', 
+            // objectFit: 'cover' 
+		},
+	};
+
     const [date, setDate] = useState('');
     const [dateRange, setDateRange] = useState('');
     const [showDropdown, setShowDropdown] = useState(false);
@@ -64,14 +80,17 @@ function EventCard({ eventCategory, applicationStatus, ...event }) {
         }
     };
 
+    // Conditional Styling for image display based on src
+	const imageStyle = event.event_photo ? styles.image : styles.icon;
+    //style={{ width: '100%', display: 'flex', flexDirection: 'column' }}
     return (
-        <Card style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-            <Card.Img variant="top" src={event.event_photo || defaultImage} style={{ height: '250px', objectFit: 'cover' }} />
+        <Card style={{ width: '18rem' }}>
+            <Card.Img variant="top" src={event.event_photo || defaultImage} style={imageStyle} />
             <Card.Body style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <Card.Title>{event.title}{applicationStatus && ` : ${applicationStatus}`}</Card.Title>
                 {renderDates()}
                 {renderLocation()}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                <Card.Footer style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
                     <Button variant="link" style={{ color: '#6840DF' }} as={Link} to={`/event/${event.id}`}>
                         More Details
                     </Button>
@@ -82,7 +101,7 @@ function EventCard({ eventCategory, applicationStatus, ...event }) {
                     )}
                     {showDropdown && renderDropdown()} */}
                 {eventCategory !== 'eventsAttending' && eventCategory !== null ? <DropDownButton eventID={event.id} eventCategory={eventCategory}/> : null}
-                </div>
+                </Card.Footer>
             </Card.Body>
         </Card>
     );
