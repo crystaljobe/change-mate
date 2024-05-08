@@ -55,7 +55,7 @@ class EditUserProfile(APIView):
         
         if profile_pic:
             try:
-                response = ImageUploader.upload_image(id=user.id, image=profile_pic, folder="profile_pictures")
+                response = ImageUploader.upload_image(id=user.id, image=profile_pic, picture_type="profile")
                 data["image"] = response
                 print("Image uploaded successfully", response)
             except Exception as e:

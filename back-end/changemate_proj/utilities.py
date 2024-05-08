@@ -11,16 +11,16 @@ session = boto3.Session(
 class ImageUploader:
     '''Utility class to upload images to S3 bucket'''
     @staticmethod
-    def upload_image(id, image, folder):
+    def upload_image(id, image, picture_type):
         '''
         Upload an image to S3 bucket and return the URL of the image
         param user_id: ID of the user
         param image: base64 encoded image
         return: URL of the image'''
-        if folder == 'profile_photos':
-            filename = f'{folder}/{id}_profile_picture.jpeg'
-        elif folder == 'event_photos':
-            filename = f'{folder}/{id}_event_picture.jpeg'
+        # if folder == 'profile_photos':
+        #     filename = f'{folder}/{id}_profile_picture.jpeg'
+        # elif folder == 'event_photos':
+        filename = f'{picture_type}_photos/{id}_{picture_type}_picture.jpeg'
         imagedata = image
 
         # Decode the base64-encoded image data into bytes

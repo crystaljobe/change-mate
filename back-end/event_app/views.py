@@ -137,7 +137,7 @@ class EventsView(APIView):
              # pulls image from request data and uploads to S3
             event_photo = data['event_photo']
             try:
-                response = ImageUploader.upload_image(id=new_event.id, image=event_photo, folder='event_photos')
+                response = ImageUploader.upload_image(id=new_event.id, image=event_photo, picture_type='event')
                 new_event.event_photo = response
                 print("Image uploaded successfully", response)
             except Exception as e:
@@ -267,7 +267,7 @@ class AnEvent(APIView):
         if 'image' in data:
             event_photo = data['event_photo']
             try:
-                response = ImageUploader.upload_image(id=event.id, image=event_photo, folder='event_photos')
+                response = ImageUploader.upload_image(id=event.id, image=event_photo, picture_type='event')
                 data["event_photo"] = response
                 print("Image uploaded successfully", response)
             except Exception as e:
