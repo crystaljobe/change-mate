@@ -17,7 +17,10 @@ class ImageUploader:
         param user_id: ID of the user
         param image: base64 encoded image
         return: URL of the image'''
-        filename = f'{folder}/{id}_profile_picture.jpeg'
+        if folder == 'profile_photos':
+            filename = f'{folder}/{id}_profile_picture.jpeg'
+        elif folder == 'event_photos':
+            filename = f'{folder}/{id}_event_picture.jpeg'
         imagedata = image
 
         # Decode the base64-encoded image data into bytes
