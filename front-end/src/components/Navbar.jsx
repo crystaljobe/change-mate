@@ -49,7 +49,7 @@ export default function MyNavbar({ user, setUser, userImg, setUserProfileData })
 			collapseOnSelect
 			>
 			<Container fluid> 
-			<Navbar.Brand as={Link} to={"/events"} style={{paddingLeft:"6px"}}>
+			<Navbar.Brand as={Link} to={"/profile"} style={{paddingLeft:"6px"}}>
 				<img
 					src={ChangeMateLogo}
 					width="80"
