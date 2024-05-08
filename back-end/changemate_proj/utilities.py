@@ -37,4 +37,4 @@ class ImageUploader:
             s3_url = f"https://{env.get('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com/{filename}"
             return s3_url
         except Exception as e:
-            raise Exception("Failed to upload image to s3")
+            raise Exception(str(e), "Failed to upload image to s3")
