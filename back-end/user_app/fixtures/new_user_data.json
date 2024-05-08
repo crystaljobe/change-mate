@@ -55,7 +55,7 @@
 },
 {
   "model": "user_app.appuser",
-  "pk": 6,
+  "pk": 4,
   "fields": {
     "password": "pbkdf2_sha256$720000$cGrneYey0K0zo94MrQjpR0$5Vh2sbwDtkR/FKjOSQltcb4A4Shs7EcDxmFb0k0XSN0=",
     "last_login": "2024-05-08T05:32:56.181Z",
@@ -73,25 +73,7 @@
 },
 {
   "model": "user_app.appuser",
-  "pk": 7,
-  "fields": {
-    "password": "pbkdf2_sha256$720000$YBd1wQCGWqX6x9GwzPzfYF$Y3FFXqv2IrChkneAP5eFHiln1r2kSob08aBa5nCecy4=",
-    "last_login": "2024-05-08T05:21:57.377Z",
-    "is_superuser": true,
-    "username": "crystaljobe29@gmail.com",
-    "first_name": "",
-    "last_name": "",
-    "is_staff": true,
-    "is_active": true,
-    "date_joined": "2024-05-08T05:21:41.418Z",
-    "email": "crystaljobe29@gmail.com",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "user_app.appuser",
-  "pk": 8,
+  "pk": 5,
   "fields": {
     "password": "pbkdf2_sha256$720000$x4aUHBPyS8oJC2dajea5DG$/YedO4+0vEerlWVbZKlHADLKxuUL63VEEObeFsBcyHA=",
     "last_login": "2024-05-08T06:20:54.471Z",
@@ -103,6 +85,24 @@
     "is_active": true,
     "date_joined": "2024-05-08T06:20:54.123Z",
     "email": "anita@cp.com",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user_app.appuser",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$720000$5WU9X88GN6fqhkJeShrYV1$wDlX7FjVr/mTVwjaWugIsuyYhbf+8TUTbDFdDZgXOJ4=",
+    "last_login": "2024-05-08T13:44:59.237Z",
+    "is_superuser": false,
+    "username": "max@cp.com",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-05-08T13:44:58.893Z",
+    "email": "max@cp.com",
     "groups": [],
     "user_permissions": []
   }
