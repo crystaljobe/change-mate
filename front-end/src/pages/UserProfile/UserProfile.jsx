@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Carousel } from 'react-bootstrap';
 import FullCalendar from '@fullcalendar/react'; // Import the FullCalendar component
 import dayGridPlugin from '@fullcalendar/daygrid'; // Plugin to display the calendar in a day grid view
@@ -15,6 +15,52 @@ export default function UserProfile() {
   // State variables to hold various user and events related data
   const [badges, setBadges] = useState({})
   const [isCalendarVisible, setIsCalendarVisible] = useState(true); // State to toggle calendar visibility
+  const [cardsPerPage, setCardsPerPage] = useState(4);
+
+  useEffect(() => {
+      const updateCardsPerPage = () => {
+          const screenWidth = window.innerWidth;
+          if (screenWidth >= 3000) {
+              setCardsPerPage(8);
+          } else if (screenWidth >= 2700) {
+              setCardsPerPage(7);
+          } else if (screenWidth >= 2300) {
+              setCardsPerPage(6);
+          } else if (screenWidth >= 2000) {
+              setCardsPerPage(5);
+          } else if (screenWidth >= 1700) {
+              setCardsPerPage(4);
+          } else if (screenWidth >= 1400) {
+              setCardsPerPage(3);
+          }else if (screenWidth >= 992) {
+              setCardsPerPage(3);
+          } else if (screenWidth >= 768) {
+              setCardsPerPage(2);
+          } else {
+              setCardsPerPage(1);
+          }
+      };
+
+      updateCardsPerPage();
+      window.addEventListener('resize', updateCardsPerPage);
+      return () => {
+          window.removeEventListener('resize', updateCardsPerPage);
+      };
+  }, []);
+
+  // Chunks results of popular events, volunteer events and additional events into groups of three for rendering
+  function chunkArray(array, chunkSize) {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+        chunks.push(array.slice(i, i + chunkSize));
+    }
+    return chunks;
+  }
+
+  // const popularGroupedEvents = chunkArray(eventsPopular, 3);
+  // const volunteerGroupedEvents = chunkArray(eventsVolNeed, cardsPerPage);
+  // const additionalGroupedEvents = chunkArray(eventsAdditional, cardsPerPage);
+
 
   const toggleCalendarVisibility = () => {
     setIsCalendarVisible(!isCalendarVisible);
@@ -46,11 +92,9 @@ export default function UserProfile() {
             <h1 style={{ color: "#6840DF", textAlign: 'center' }}>Hosted Events</h1>
             <Carousel interval={null} indicators={false} prevLabel="" nextLabel="" className="px-5">
               {userProfileData.user_events.length === 0 ? (
-                <Carousel.Item>
                   <h3 className="text-center" style={{ fontStyle: "italic" }}>
                     Doesn't look like you have any events you're collaborating on at this time
                   </h3>
-                </Carousel.Item>
               ) : (
                 userProfileData.user_events.reduce((result, value, index, array) => {
                   if (index % 2 === 0)
