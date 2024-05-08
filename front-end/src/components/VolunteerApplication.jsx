@@ -101,7 +101,7 @@ function VolunteerApplication({ show, handleClose, eventDetails }) {
                 type="email"
                 placeholder="123@email.com"
                 autoFocus
-                value={email.length ? email : email}
+                value={email ? email : email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Form.Group>
