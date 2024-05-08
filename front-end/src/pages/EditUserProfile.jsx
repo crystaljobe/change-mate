@@ -56,13 +56,15 @@ export default function EditUserProfile({ user }) {
   // upon form submit call utility function to set new user data
   
   const updateUserProfile = async () => {
+    const upload_data = {
+      interests: userInterestsIDs,
+      display_name: displayName,
+      location: userLocation,
+      image: profileImage,
+      coordinates: userLocationCoords,
+    };
     const responseStatus = await putUserProfile(
-      user,
-      userInterestsIDs,
-      displayName,
-      userLocation,
-      profileImage,
-      userLocationCoords
+      upload_data
     );
     if (responseStatus) {
       setUserProfileData(responseStatus);

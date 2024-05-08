@@ -51,8 +51,8 @@ class EditUserProfile(APIView):
         interests_ids = data.pop('interests', [])  
         
         # pull the profile picture from data body
-        profile_pic = data['image']
         
+        profile_pic = data.get('image')
         if profile_pic:
             try:
                 response = ImageUploader.upload_image(id=user.id, image=profile_pic, picture_type="profile")
