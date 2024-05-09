@@ -4,8 +4,8 @@ import base64
 import io
 
 session = boto3.Session(
-    aws_access_key_id=env.get('AWS_ACCESS_KEY_ID'),
-    aws_secret_access_key=env.get('AWS_SECRET_ACCESS_KEY')
+    S3_access_key_id=env.get('S3_ACCESS_KEY_ID'),
+    S3_secret_access_key=env.get('S3_SECRET_ACCESS_KEY')
 )
 
 class ImageUploader:
@@ -32,9 +32,9 @@ class ImageUploader:
         s3 = session.resource('s3')
         try:
             # Upload the image to S3
-            obj = s3.Object(env.get('AWS_STORAGE_BUCKET_NAME'), filename)
+            obj = s3.Object(env.get('S3_STORAGE_BUCKET_NAME'), filename)
             obj.put(ACL='public-read', Body=image_bytes, ContentType='image/jpeg')
-            s3_url = f"https://{env.get('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com/{filename}"
+            s3_url = f"https://{env.get('S3_STORAGE_BUCKET_NAME')}.s3.amazonaws.com/{filename}"
             return s3_url
         except Exception as e:
             raise Exception(str(e), "Failed to upload image to s3")
