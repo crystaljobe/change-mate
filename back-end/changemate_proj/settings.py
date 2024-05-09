@@ -25,9 +25,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "0.0.0.0"
+]
 
 # Application definition
 
@@ -68,8 +70,8 @@ MIDDLEWARE = [
 
 # We would do this when deploying to prod
 CORS_ALLOWED_ORIGINS = [
-    "https://changem8.com", # domain
-    "https://www.changm8.com", #subdomain
+    "http://changem8.com", # domain
+    "https://changem8.com",
     "http://localhost:5173", #dev server
 ]
 
