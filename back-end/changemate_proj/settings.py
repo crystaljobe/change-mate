@@ -67,14 +67,14 @@ MIDDLEWARE = [
 ]
 
 # We would do this when deploying to prod
-# CORS_ALLOWED_ORIGINS = [
-#     "https://example.com", # domain
-#     "https://sub.example.com", #subdomain
-#     "http://localhost:5173", #dev server
-# ]
+CORS_ALLOWED_ORIGINS = [
+    "https://changem8.com", # domain
+    "https://www.changm8.com", #subdomain
+    "http://localhost:5173", #dev server
+]
 
-# Only do this during dev
-CORS_ALLOW_ALL_ORIGINS = True
+# # Only do this during dev
+# CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'changemate_proj.urls'
 
