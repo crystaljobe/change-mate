@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 export const api = axios.create({
-    baseURL: "https://18.205.226.58/api/v1/",
+    baseURL: "https://changem8.com/api/v1/",
 });
 
 
