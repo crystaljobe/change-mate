@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Form, Card, InputGroup, FormControl } from 'react-bootstrap';
 import { getInterestCategories } from "../utilities/InterestCategoriesUtilities";
@@ -11,6 +11,7 @@ import LocationSearchMap from "../components/LocationSearchMap";
 
 
 export default function EditUserProfile({ user }) {
+  const { userProfileData, setUserProfileData } = useOutletContext();
   // set interest cats for selection options
   const [interestCategories, setInterestCategories] = useState([]);
   // set userProfile interests, display name, and location
@@ -39,29 +40,34 @@ export default function EditUserProfile({ user }) {
 
   // get user profile data for default values using utility funct
   const userProfile = async () => {
-    const userProfileData = await getUserProfile(user);
+    const ProfileData = await getUserProfile(user);
+   
     // set data
-    setUserLocation(userProfileData.location);
+    setUserLocation(ProfileData.location);
     setUserLocationCoords(userProfile.coordinates);
-    setDisplayName(userProfileData.display_name);
+    setDisplayName(ProfileData.display_name);
     // map through interests to set the current interests
-    setUserInterests(userProfileData.interests.map((cat) => cat.category));
-    setImagePreview(userProfileData.profileImage); // Set the image preview to the current profile image
-    setProfileImage(userProfileData.profileImage); // Set the profile image data for possible re-upload
+    setUserInterests(ProfileData.interests.map((cat) => cat.category));
+    setImagePreview(ProfileData.profileImage); // Set the image preview to the current profile image
+    setProfileImage(ProfileData.profileImage); // Set the profile image data for possible re-upload
   };
 
 
   // upon form submit call utility function to set new user data
+  
   const updateUserProfile = async () => {
+    const upload_data = {
+      interests: userInterestsIDs,
+      display_name: displayName,
+      location: userLocation,
+      image: profileImage,
+      coordinates: userLocationCoords,
+    };
     const responseStatus = await putUserProfile(
-      user,
-      userInterestsIDs,
-      displayName,
-      userLocation,
-      profileImage,
-      userLocationCoords
+      upload_data
     );
     if (responseStatus) {
+      setUserProfileData(responseStatus);
       navigate("/profile");
     }
   };
@@ -97,15 +103,16 @@ export default function EditUserProfile({ user }) {
 
 
   return (
-    <Container>
+    <Container fluid>
       <Row className="justify-content-md-center mt-4 mb-3">
-        <Col md={8}>
-          <Card>
+        <Col md={2}></Col>
+        <Col md={8} className="d-flex justify-content-center">
+          <Card >
             <Card.Body>
-              <Card.Title>Edit Your Profile</Card.Title>
+              <Card.Title as="h3" className="text-center mb-3" style={{fontWeight:"bold", color:"#6840DF"}}>Edit Profile</Card.Title>
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="display_name">
-                  <Form.Label><i className="bi bi-person-fill"></i> Display Name</Form.Label>
+                  <Form.Label style={{fontWeight:"bold", fontSize:"18px"}}><i className="bi bi-person-fill"></i> Display Name: </Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Enter your display name"
@@ -115,7 +122,7 @@ export default function EditUserProfile({ user }) {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="location">
-                  <Form.Label><i className="bi bi-geo-alt-fill"></i> Location</Form.Label>
+                  <Form.Label style={{fontWeight:"bold", fontSize:"18px"}}><i className="bi bi-geo-alt-fill"></i> Location: </Form.Label>
                   <LocationSearchMap
                     setCoords={setUserLocationCoords}
                     setAddress={setUserLocation}
@@ -123,14 +130,17 @@ export default function EditUserProfile({ user }) {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="interests">
-                  <Form.Label><i className="bi bi-bookmark-star-fill"></i> Interests</Form.Label>
-                  <Form.Control as="select" multiple value={userInterests} onChange={(e) => {
-                    const selectedOptions = Array.from(e.target.selectedOptions);
-                    const values = selectedOptions.map(option => option.value);
-                    const ids = selectedOptions.map(option => parseInt(option.getAttribute('data-key')));
+                  <Form.Label style={{fontWeight:"bold", fontSize:"18px"}}><i className="bi bi-bookmark-star-fill"></i> Interests: <span style={{fontStyle: "italic", fontWeight:"normal", fontSize:"16px"}}>To select multiple interests hold down ctrl button.</span></Form.Label>
+                  <Form.Control 
+                    as="select" 
+                    multiple value={userInterests} 
+                    onChange={(e) => {
+                      const selectedOptions = Array.from(e.target.selectedOptions);
+                      const values = selectedOptions.map(option => option.value);
+                      const ids = selectedOptions.map(option => parseInt(option.getAttribute('data-key')));
 
-                    setUserInterests(values);
-                    setUserInterestsIDs(ids);
+                      setUserInterests(values);
+                      setUserInterestsIDs(ids);
                   }}>
                     {interestCategories.map((category, index) => (
                       <option key={index} data-key={category.id} value={category.category}>
@@ -141,22 +151,27 @@ export default function EditUserProfile({ user }) {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="profileImage">
-                  <Form.Label><i className="bi bi-image-fill"></i> Profile Image</Form.Label>
-                  <InputGroup>
-                    <FormControl type="file" accept="image/*" onChange={handleImageChange} />
+                  <Form.Label style={{fontWeight:"bold", fontSize:"18px"}}><i className="bi bi-image-fill"></i> Profile Image: </Form.Label>
+                  <InputGroup >
+                    <FormControl 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleImageChange} />
                     {imagePreview && (
                       <img src={imagePreview} alt="Profile Preview" className="img-fluid mt-3" />
                     )}
                   </InputGroup>
                 </Form.Group>
-
+                <div className="text-center">
                 <Button variant="primary" type="submit">
                   Submit Changes
                 </Button>
+                </div>
               </Form>
             </Card.Body>
           </Card>
         </Col>
+        <Col md={2}></Col>
       </Row>
     </Container>
   );

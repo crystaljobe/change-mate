@@ -37,7 +37,7 @@ function DetailedEventCard({
 	//styles for card
 	const styles = {
 		cardCSS: {
-			maxWidth: "650px",
+			maxWidth: "1000px",
 			margin: "24px",
 		},
 		header: {
@@ -188,7 +188,7 @@ function DetailedEventCard({
 								<ListGroup.Item>
 									<MdLocationOn />
 									<Link
-										to={`https://www.google.com/maps?q=${lon},${lat}`}
+										to={`https://www.google.com/maps?q=${lat},${lon}`}
 										target="_blank"
 										rel="noopener noreferrer">
 										{" "}

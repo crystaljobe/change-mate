@@ -81,6 +81,10 @@ nav {
   flex-direction: column;
 }
 
+#hostmanager{
+  width: 800px
+}
+
 .toDo-cardCSS {
   max-width: 800px;
   min-width: 300px;
@@ -151,7 +155,6 @@ nav {
   width: 100px; 
   height: 50px;
 }
-
 
 .geocoder-container {
   width: 100%;
@@ -271,3 +274,13 @@ nav {
   display: block;
 }
 
+.error {
+  border: 1px solid red;
+  color: red;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}

@@ -1,4 +1,3 @@
-import { useParams, Link, useOutletContext } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { updateHosts } from "../utilities/EventUtilities";
 import { getUserByEmail } from "../utilities/UserProfileUtilities";
@@ -8,12 +7,9 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Alert from "@mui/material/Alert";
 
 import {
   Card,
-  CardHeader,
-  CardContent,
   IconButton,
   TextField,
   Button,
@@ -30,9 +26,7 @@ import {
   Modal,
   Dialog,
   DialogActions,
-  DialogContent,
   DialogTitle,
-  DialogContentText,
 } from "@mui/material";
 
 function HostsManager({ eventID, hosts, getEvent }) {
@@ -72,8 +66,8 @@ function HostsManager({ eventID, hosts, getEvent }) {
     handleopenModal();
   };
 
-  const handleAddHost = (userID) => {
-    let shouldBeTrue = updateHost(userID, "add");
+  const handleAddHost = async (userID) => {
+    let shouldBeTrue = await updateHost(userID, "add");
     if (shouldBeTrue) {
       console.log("added host successfully");
       getEvent();
@@ -84,9 +78,9 @@ function HostsManager({ eventID, hosts, getEvent }) {
     }
   };
 
-  const handleDeleteHost = (event, userID) => {
+  const handleDeleteHost = async (event, userID) => {
     handleDialogClose(event);
-    let shouldBeTrue = updateHost(userID, "remove");
+    let shouldBeTrue = await updateHost(userID, "remove");
     if (shouldBeTrue) {
       console.log("host removed successfully");
       getEvent();
@@ -103,149 +97,161 @@ function HostsManager({ eventID, hosts, getEvent }) {
   };
 
   return (
-    <>
-      <div className="flex-column" style={{padding:"24px", minWidth:"300px", maxWidth:"100%"}}>
-        <Accordion defaultExpanded={true}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} >
-            <h2 style={{paddingLeft:"30%"}}>Current Hosts</h2>
-            <hr />
-          </AccordionSummary>
-          <AccordionDetails>
-            {/* !!! lists all hosts w/ trash icon to delete hosts !!! */}
-            <List>
-              {hosts.map((host, index) => (
-                <ListItem key={index}>
+    <Card
+      id="hostmanager"
+      className="flex-column"
+      style={{
+        padding: "24px",
+        minWidth: "300px",
+        maxWidth: '100%',
+        margin: "50px",
+        flex: "1 1 0%" // Ensures that the component can grow and shrink as needed within the flexbox container
+      }}
+    >
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <h2 style={{ width: '100%', textAlign: 'center' }}>Current Hosts</h2>
+          <hr />
+        </AccordionSummary>
+        <AccordionDetails>
+          {/* !!! lists all hosts w/ trash icon to delete hosts !!! */}
+          <List>
+            {hosts.map((host, index) => (
+              <ListItem key={index}>
+                <ListItemAvatar>
+                  <Avatar key={host.user_id} src={host.profile_picture}>
+                    {" "}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <span className="card-body">{host.display_name}</span>
+                  }
+                />
+                <IconButton
+                  edge="start"
+                  aria-label="delete"
+                  onClick={handleClickOpenDialog}
+                  size="small"
+                >
+                  <DeleteIcon />
+
+                  {/* !!! opens a dialog to confirm deletion !!! */}
+                  <Dialog
+                    open={openDialog}
+                    onClose={handleDialogClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {"ARE YOU SURE YOU WANT TO DELETE THIS HOST?"}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleDeleteHost(event, host.user_id);
+                        }}
+                      >
+                        Yes
+                      </Button>
+                      <Button
+                        onClick={(event) => handleDialogClose(event)}
+                        autoFocus
+                      >
+                        No
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </IconButton>
+              </ListItem>
+            ))}
+          </List>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={false}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          {/* !!!  opens search field to add a host !!! */}
+          <h4>Add Hosts</h4>
+        </AccordionSummary>
+        <AccordionDetails>
+          <List>
+            <Box
+              sx={{ display: "flex", alignItems: "flex-end" }}
+              component="form"
+              noValidate
+              autoComplete="off"
+            >
+              <AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />
+              <TextField
+                id="input-with-sx"
+                label="enter a user's email"
+                variant="standard"
+                value={hostSearchInput}
+                sx={{ width: "100%", fontSize: "1.5rem" }}
+                onChange={(e) => setHostSearchInput(e.target.value)}
+                inputProps={{
+                  style: { fontSize: "1.2rem" }, // Adjust the font size as needed
+                }}
+              />
+              <IconButton onClick={handleSearchHost}>
+                <AddIcon />
+              </IconButton>
+            </Box>
+          </List>
+        </AccordionDetails>
+      </Accordion>
+
+      {/* !!!  Modal opens to confirm searched user is correct user  !!! */}
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          {Object.keys(newHost).length ? (
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              User Found:
+              <List>
+                <ListItem>
+                  {" "}
                   <ListItemAvatar>
-                    <Avatar key={host.user_id} src={host.profile_picture}> </Avatar>
+                    <Avatar src={newHost.image}> </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary={<span className="card-body">{host.display_name}</span>} />
+                  <ListItemText>{newHost.display_name}</ListItemText>
                   <IconButton
                     edge="start"
                     aria-label="delete"
-                    onClick={handleClickOpenDialog}
+                    onClick={() => handleAddHost(newHost.id)}
                     size="small"
                   >
-                    <DeleteIcon />
-
-                    {/* !!! opens a dialog to confirm deletion !!! */}
-                    <Dialog
-                      open={openDialog}
-                      onClose={handleDialogClose}
-                      aria-labelledby="alert-dialog-title"
-                      aria-describedby="alert-dialog-description"
-                    >
-                      <DialogTitle id="alert-dialog-title">
-                        {"ARE YOU SURE YOU WANT TO DELETE THIS HOST?"}
-                      </DialogTitle>
-                      <DialogActions>
-                        <Button
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handleDeleteHost(event, host.user_id);
-                          }}
-                        >
-                          Yes
-                        </Button>
-                        <Button
-                          onClick={(event) => handleDialogClose(event)}
-                          autoFocus
-                        >
-                          No
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
+                    <AddIcon />
                   </IconButton>
                 </ListItem>
-              ))}
-            </List>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion defaultExpanded={false}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            {/* !!!  opens search field to add a host !!! */}
-            <h4>Add Hosts</h4>
-          </AccordionSummary>
-          <AccordionDetails>
-            <List>
-              <Box
-                sx={{ display: "flex", alignItems: "flex-end" }}
-                component="form"
-                noValidate
-                autoComplete="off"
-              >
-                <AccountCircle
-                  sx={{ color: "action.active", mr: 1, my: 0.5 }}
-                />
-                <TextField
-                  id="input-with-sx"
-                  label="enter a user's email"
-                  variant="standard"
-                  value={hostSearchInput}
-                  sx={{ width: '100%', fontSize: '1.5rem' }}
-                  onChange={(e) => setHostSearchInput(e.target.value)}
-                  inputProps={{
-                                style: { fontSize: '1.2rem' } // Adjust the font size as needed
-                              }}
-                />
-                <IconButton onClick={handleSearchHost}>
-                  <AddIcon />
-                </IconButton>
-              </Box>
-            </List>
-          </AccordionDetails>
-        </Accordion>
-
-        {/* !!!  Modal opens to confirm searched user is correct user  !!! */}
-        <Modal
-          open={openModal}
-          onClose={handleCloseModal}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              bgcolor: "background.paper",
-              boxShadow: 24,
-              p: 4,
-            }}
-          >
-            {Object.keys(newHost).length ? (
+              </List>
+            </Typography>
+          ) : (
+            <>
               <Typography id="modal-modal-title" variant="h6" component="h2">
-                User Found:
-                <List>
-                  <ListItem>
-                    {" "}
-                    <ListItemAvatar>
-                      <Avatar src={newHost.image}> </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText>{newHost.display_name}</ListItemText>
-                    <IconButton
-                      edge="start"
-                      aria-label="delete"
-                      onClick={() => handleAddHost(newHost.id)}
-                      size="small"
-                    >
-                      <AddIcon />
-                    </IconButton>
-                  </ListItem>
-                </List>
+                No user with that email, try again.
               </Typography>
-            ) : (
-              <>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  No user with that email, try again.
-                </Typography>
-              </>
-            )}
-          </Box>
-        </Modal>
-      </div>
-    </>
+            </>
+          )}
+        </Box>
+      </Modal>
+    </Card>
   );
 }
 export default HostsManager;

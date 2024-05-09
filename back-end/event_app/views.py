@@ -23,6 +23,7 @@ from drf_yasg import openapi
 from django.db.models import Q
 from django.db.models import F
 from django.db.models.functions import Sqrt
+from changemate_proj.utilities import ImageUploader
 
 
 
@@ -57,7 +58,25 @@ class EventsView(APIView):
         set_distance = request.query_params.get('distance')
         
     
-        # case-insensitive partial match for filtering for location
+        # case-insensitive partical match for filtering for keywords in title, description, and category    
+        if general:
+            queryset = queryset.filter(
+                Q(title__icontains=general) |
+                Q(description__icontains=general) |
+                Q(category__category__icontains=general)
+                )
+                # search for events near location
+
+        if coordinates:
+            # split coordinates into lat and lon from array
+            lat, lon = [float(coord) for coord in coordinates.strip("[]").split(",")]
+            queryset = queryset.annotate(
+            distance=Sqrt(
+                (F('coordinates__0') - lat) ** 2.0 +
+                (F('coordinates__1') - lon) ** 2.0
+            )
+        ).filter(distance__lte=set_distance)  
+            
         # event_type search will be exact match
         if event_type:
             queryset = queryset.filter(event_type=event_type)
@@ -72,26 +91,7 @@ class EventsView(APIView):
         #if no end date given search only for dates on start date
         if start_date and not end_date:
             queryset = queryset.filter(event_start__date=start_date)
-         
-        # search for events near location
-        if coordinates:
-            # split coordinates into lat and lon from array
-            lat, lon = [float(coord) for coord in coordinates.strip("[]").split(",")]
-            queryset = queryset.annotate(
-            distance=Sqrt(
-                (F('coordinates__0') - lat) ** 2.0 +
-                (F('coordinates__1') - lon) ** 2.0
-            )
-        ).filter(distance__lte=set_distance)  
-
-           
-        # case-insensitive partical match for filtering for keywords in title, description, and category    
-        if general:
-            queryset = queryset.filter(
-                Q(title__icontains=general) |
-                Q(description__icontains=general) |
-                Q(category__category__icontains=general)
-                )
+              
         
         
         # serialize data and return data and status 200
@@ -110,6 +110,8 @@ class EventsView(APIView):
 
         category_id = data["category"]
         category = InterestCategory.objects.get(id = category_id)
+
+       
         try:
             new_event = Event.objects.create(
                 title = data['title'],
@@ -119,7 +121,7 @@ class EventsView(APIView):
                 event_type = data['event_type'],
                 event_venue = data['event_venue'],
                 event_venue_address = data['event_venue_address'],
-                event_photo = data['event_photo'],
+                event_photo = "",
                 description = data['description'],
                 category = category,
                 virtual_event_link = data['virtual_event_link'],
@@ -131,6 +133,15 @@ class EventsView(APIView):
             # set request user as host
             host = UserProfile.objects.get(user=request.user)
             new_event.hosts.set([host])
+
+             # pulls image from request data and uploads to S3
+            event_photo = data['event_photo']
+            try:
+                response = ImageUploader.upload_image(id=new_event.id, image=event_photo, picture_type='event')
+                new_event.event_photo = response
+                print("Image uploaded successfully", response)
+            except Exception as e:
+                return Response(str(e), status=HTTP_400_BAD_REQUEST)
 
             new_event.full_clean()
             new_event.save()
@@ -250,6 +261,17 @@ class AnEvent(APIView):
                 # Removes user from events attending
                 event.users_attending.remove(user_data)
                 data.pop('rsvp')
+
+        
+        # Checks if image is present in body
+        if 'image' in data:
+            event_photo = data['event_photo']
+            try:
+                response = ImageUploader.upload_image(id=event.id, image=event_photo, picture_type='event')
+                data["event_photo"] = response
+                print("Image uploaded successfully", response)
+            except Exception as e:
+                return Response(str(e), status=HTTP_400_BAD_REQUEST)
         
         # validate data and save
         updated_event = EventSerializer(event, data=data, partial=True)

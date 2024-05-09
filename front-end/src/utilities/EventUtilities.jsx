@@ -6,6 +6,12 @@ export const getEventDetails = async (eventID) => {
   return eventDetails;
 };
 
+export const getCollabEventDetails = async (eventID) => {
+  const response = await api.get(`events/collaboration/${eventID}`);
+  let eventDetails = response.data;
+  return eventDetails;
+};
+
 // Get events by search parameters
 export const getEventDetailsSearch = async (allData) => {
   // Construct API call with only the parameters that are not empty, null, or undefined
@@ -155,6 +161,13 @@ export const timeZoneAbbreviations = [
 //admin page - event details GET request
 export const getAdminEventDetails = async (eventID) => {
   const response = await api.get(`events/admin/${eventID}/`);
+  let eventDetails = response.data;
+  return eventDetails;
+};
+
+// Collaboration page - event details GET request
+export const getCollaborationEventDetails = async (eventID) => {
+  const response = await api.get(`events/collaboration/${eventID}/`);
   let eventDetails = response.data;
   return eventDetails;
 };

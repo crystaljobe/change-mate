@@ -36,10 +36,10 @@ class EventAdminSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category', 'applicants', 'volunteers', 'hosts', 'event_photo', 'lat', 'lon', 'attendees_needed', 'num_users_attending', 'volunteer_spots_remaining', 'volunteer_roles' ]
 
     def get_lat(self, obj):
-        return obj.coordinates[0] if obj.coordinates else None
+        return obj.coordinates[1] if obj.coordinates else None
     
     def get_lon(self, obj):
-        return obj.coordinates[1] if obj.coordinates else None
+        return obj.coordinates[0] if obj.coordinates else None
     
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
@@ -143,11 +143,13 @@ class EventCollaborationSerializer(serializers.ModelSerializer):
     volunteers = serializers.SerializerMethodField()
     #will be boolean if there are volunteer roles or not
     volunteer_roles = serializers.SerializerMethodField()
+    lat = serializers.SerializerMethodField()
+    lon = serializers.SerializerMethodField()
 
 
     class Meta: 
         model = Event
-        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category',  'attendees_needed', 'num_users_attending', 'volunteer_spots_remaining', 'volunteers','hosts','event_photo', 'volunteer_roles' ]
+        fields = ['id', 'title', 'event_start', 'event_end', 'startTime', 'startDate', 'endTime', 'endDate', 'time_zone','event_type', 'virtual_event_link', 'event_venue', 'event_venue_address','location', 'description', 'category',  'attendees_needed', 'num_users_attending', 'volunteer_spots_remaining', 'volunteers','hosts','event_photo', 'volunteer_roles', 'lat', 'lon' ]
 
     # convert date from YYYY-MM-DD to MM/DD/YYYY
     def get_startDate(self, obj):
@@ -171,10 +173,10 @@ class EventCollaborationSerializer(serializers.ModelSerializer):
 
     def get_lat(self, obj):
 
-        return obj.coordinates[0] if obj.coordinates else None
+        return obj.coordinates[1] if obj.coordinates else None
     
     def get_lon(self, obj):
-        return obj.coordinates[1] if obj.coordinates else None
+        return obj.coordinates[0] if obj.coordinates else None
     
     # give list of user id, profile picture, and display name
     def get_hosts(self, obj):
@@ -193,14 +195,14 @@ class EventCollaborationSerializer(serializers.ModelSerializer):
         
     def get_volunteers(self, obj):
         if obj.volunteer_roles:
-            approved_applications = [role.applications.filter(application_status=True) for role in obj.volunteer_roles.all()]
+            approved_applications = [role.applications.filter(application_status="Approved") for role in obj.volunteer_roles.all()]
             volunteers = []
             for application_queryset in approved_applications:  # Iterate over each queryset
                 for application in application_queryset:  # Iterate over each application object in the queryset
                     volunteer = {
-                        "id": application.applicant.id,
+                        "role": application.volunteer_role.role,
+                        "user_id": application.applicant.id,
                         "display_name": application.applicant.display_name,
-                        "profile_picture": application.applicant.image
                     }
                     volunteers.append(volunteer)
             return volunteers  # Return the list of volunteers

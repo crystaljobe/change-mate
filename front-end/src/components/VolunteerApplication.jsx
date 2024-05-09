@@ -4,8 +4,7 @@ import { postVolunteerApplication } from "../utilities/EventUtilities";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import EventDetails from "../pages/EventDetails";
-import { resolvePath, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 //name, email, phone, best time to contact, have you volunteered with this organization/person before, why would you like to volunteer for this event, what skills/experience do you have? which role are you interested in?
 
@@ -36,6 +35,16 @@ function VolunteerApplication({ show, handleClose, eventDetails }) {
   useEffect(() => {
     getVolunteerRoles();
   }, [eventDetails]);
+
+
+  //handles toggling of return volunteer radio buttons to ensure only one is clicked at a time
+  function handleReturnVolunteer () {
+     if (repeatVolunteer === "no") {
+       setRepeatVolunteer("yes");
+     } else {
+       setRepeatVolunteer("no");
+     }
+  }
 
 
   // Handles submitting the application
@@ -101,7 +110,7 @@ function VolunteerApplication({ show, handleClose, eventDetails }) {
                 type="email"
                 placeholder="123@email.com"
                 autoFocus
-                value={email.length ? email : email}
+                value={email ? email : email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Form.Group>
@@ -134,13 +143,15 @@ function VolunteerApplication({ show, handleClose, eventDetails }) {
                 inline
                 label="yes"
                 type="radio"
-                onClick={(e) => setRepeatVolunteer("yes")}
+                checked={repeatVolunteer === "yes"}
+                onClick={handleReturnVolunteer}
               />
               <Form.Check
                 inline
                 label="no"
                 type="radio"
-                onClick={(e) => setRepeatVolunteer("no")}
+                onClick={handleReturnVolunteer}
+                checked={repeatVolunteer === "no"}
               />
             </Form.Group>
 

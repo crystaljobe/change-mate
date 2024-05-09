@@ -24,6 +24,9 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+
+import { Container, Row, Col } from "react-bootstrap";
 
 function VolunteerManager({
   roles,
@@ -31,19 +34,19 @@ function VolunteerManager({
   approvedVolunteers,
   volunteerApplications,
   eventID,
-  getEvent
+  getEvent,
 }) {
- 
   const [openModal, setOpenModal] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [newRole, setNewRole] = useState("");
-  const [numVolunteersNeeded, setnumVolunteersNeeded] = useState("")
-  const [selectedVolunteerApplication, setSelectedVolunteerApplication] = useState({})
+  const [numVolunteersNeeded, setnumVolunteersNeeded] = useState("");
+  const [selectedVolunteerApplication, setSelectedVolunteerApplication] =
+    useState({});
 
   const handleOpenModal = (applicant) => {
     setSelectedApplicant(applicant);
     setOpenModal(true);
-    getVolApplication(applicant.application_id)
+    getVolApplication(applicant.application_id);
   };
 
   const handleCloseModal = () => {
@@ -59,9 +62,11 @@ function VolunteerManager({
   };
 
   const handleDeleteRole = (role) => {
-    const deleteThisRole = volunteerApplications.filter((roleInstance) => roleInstance.role === role)
-    deleteVolRole(deleteThisRole[0].role_id)
-    setRoles(roles.filter((roleName) => roleName !== role))
+    const deleteThisRole = volunteerApplications.filter(
+      (roleInstance) => roleInstance.role === role
+    );
+    deleteVolRole(deleteThisRole[0].role_id);
+    setRoles(roles.filter((roleName) => roleName !== role));
   };
 
   //sends post request creating a volunteer role
@@ -73,48 +78,67 @@ function VolunteerManager({
     } catch (error) {
       console.error("Failed to create a new volunteer role", error);
     }
-
   };
 
   //need to pass in roleID ---> delete a volunteer role
   const deleteVolRole = async (roleID) => {
     const responseStatus = await deleteVolunteerRole(eventID, roleID);
-    console.log('delete role - response status', responseStatus)
+    console.log("delete role - response status", responseStatus);
   };
 
   //view/get a volunteer application
   const getVolApplication = async (applicationID) => {
     const applicationDetails = await getVolunteerApplication(applicationID);
-    setSelectedVolunteerApplication(applicationDetails)
+    setSelectedVolunteerApplication(applicationDetails);
   };
 
   //accept/reject volunteer application
-  const volunteerDecision = async (applicationID, applicationDecision, decisionText) => {
+  const volunteerDecision = async (
+    applicationID,
+    applicationDecision,
+    decisionText
+  ) => {
     try {
-      console.log("volunteer decision put request", applicationID, applicationDecision)
-      await putApplicationDecision(applicationID, applicationDecision, decisionText);
+      console.log(
+        "volunteer decision put request",
+        applicationID,
+        applicationDecision
+      );
+      await putApplicationDecision(
+        applicationID,
+        applicationDecision,
+        decisionText
+      );
       getEvent();
     } catch (error) {
       console.error("Failed to give application decision", error);
     }
   };
   const handleAccept = () => {
-    const shoulBeTrue = volunteerDecision(selectedApplicant.application_id, "Approved", null)
-    if (shoulBeTrue){console.log('accepted application successfully')}
+    const shoulBeTrue = volunteerDecision(
+      selectedApplicant.application_id,
+      "Approved",
+      null
+    );
+    if (shoulBeTrue) {
+      console.log("accepted application successfully");
+    }
     handleCloseModal();
-  }
-   const handleReject = () => {
-     volunteerDecision(selectedApplicant.application_id, "Denied", null);
-    if (shoulBeTrue){console.log('rejected application successfully')}
-     handleCloseModal();
-   };
+  };
+  const handleReject = () => {
+    volunteerDecision(selectedApplicant.application_id, "Denied", null);
+    if (shoulBeTrue) {
+      console.log("rejected application successfully");
+    }
+    handleCloseModal();
+  };
 
   return (
-    <div className="cardCSS pt-0">
+    <div className="cardCSS pt-0" style={{ maxWidth: '100%' }}>
       <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <h2 style={{paddingLeft:"20%"}}>Pending Volunteer Applications</h2>
-          </AccordionSummary>
+          <h2 style={{ width: '100%', textAlign: 'center' }}>Pending Volunteer Applications</h2>
+        </AccordionSummary>
         <AccordionDetails>
           {/* pending volunteer applications/applicants  */}
           <List>
@@ -131,9 +155,7 @@ function VolunteerManager({
                           onClick={() => handleOpenModal(applicant)}
                         >
                           <ListItemAvatar>
-                            <Avatar
-                              src={applicant.profile_picture}
-                            ></Avatar>
+                            <Avatar src={applicant.profile_picture}></Avatar>
                           </ListItemAvatar>
                           <ListItemText
                             primary={applicant.display_name}
@@ -151,26 +173,66 @@ function VolunteerManager({
 
       <Accordion style={{ marginTop: "1vh" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <h2 style={{paddingLeft:"25%"}}>Assigned Volunteer Roles</h2>
+          <h2 style={{ width: '100%', textAlign: 'center' }}>Volunteers</h2>
         </AccordionSummary>
         <AccordionDetails>
-          <TextField
-            label="New Role"
-            variant="outlined"
-            fullWidth
-            value={newRole}
-            onChange={(e) => setNewRole(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleAddRole()}
-          />
-          <TextField
-            label="Number of volunteers needed"
-            variant="outlined"
-            fullWidth
-            value={numVolunteersNeeded}
-            onChange={(e) => setnumVolunteersNeeded(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleAddRole()}
-          />
-
+          <Row
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              marginBottom: "1vh",
+            }}
+          >
+            <Col style={{ flex: "75%" }}>
+              <TextField
+                label="New Role"
+                variant="outlined"
+                fullWidth
+                value={newRole}
+                onChange={(e) => setNewRole(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleAddRole()}
+              />
+              <TextField
+                label="Number of volunteers needed"
+                variant="outlined"
+                fullWidth
+                value={numVolunteersNeeded}
+                onChange={(e) => setnumVolunteersNeeded(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleAddRole()}
+              />
+            </Col>
+            <Col
+              style={{
+                flex: "20%",
+              }}
+            >
+              <Button
+                onClick={handleAddRole}
+                startIcon={<AddCircleOutlineIcon />}
+                style={{
+                  marginTop: "20px",
+                  paddingLeft: "2rem",
+                  paddingRight: "2rem",
+                }}
+                size="large"
+                variant="outlined"
+                sx={{
+                  borderColor: "primary.dark", // Default border color
+                  color: "black",
+                  fontWeight: "bold",
+                  border: "2px solid",
+                  "&:hover": {
+                    backgroundColor: "secondary.dark",
+                    borderColor: "secondary.dark",
+                    color: "white",
+                  },
+                }}
+              >
+                Add
+              </Button>
+            </Col>
+          </Row>
           {/* roles = arr of string role names */}
           {roles &&
             roles.map((role, index) => (
@@ -232,42 +294,74 @@ function VolunteerManager({
             p: 4,
           }}
         >
-          <Typography className="modal-header" id="modal-modal-title" variant="h6">
+          <Typography
+            className="modal-header"
+            id="modal-modal-title"
+            variant="h6"
+          >
             Application
           </Typography>
-          <Typography className="modal-header" id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="modal-header"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Email: ${selectedVolunteerApplication.email}`
               : ""}
           </Typography>
-          <Typography className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="card-body"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Phone Number: ${selectedVolunteerApplication.phone_number}`
               : ""}
           </Typography>
 
-          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="card-body"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Preferred Contact Method: ${selectedVolunteerApplication.preferred_contact_method}`
               : ""}
           </Typography>
 
-          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="card-body"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Availability: ${selectedVolunteerApplication.availability}`
               : ""}
           </Typography>
-          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="card-body"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Previously Volunteered: ${selectedVolunteerApplication.return_volunteer}`
               : ""}
           </Typography>
-          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="card-body"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Interested because: ${selectedVolunteerApplication.volunteer_interest}`
               : ""}
           </Typography>
-          <Typography  className="card-body" id="volunteer-application-details" sx={{ mt: 2 }}>
+          <Typography
+            className="card-body"
+            id="volunteer-application-details"
+            sx={{ mt: 2 }}
+          >
             {selectedApplicant
               ? `Relevant experience: ${selectedVolunteerApplication.volunteer_experience}`
               : ""}

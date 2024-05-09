@@ -23,7 +23,7 @@ export default function SignUp() {
 		e.preventDefault();
         const userData = await userRegistration(email, password);
 		setUser(userData);
-		navigate("/profile")
+		navigate("/editprofile")
     }
 
 	return (
@@ -81,7 +81,7 @@ export default function SignUp() {
               sx={{ mt: 3, mb: 2 }}
               onClick={handleSignUp}
             >
-              Sign In
+              Sign Up
             </Button>
             <Grid container>
               <Grid item>

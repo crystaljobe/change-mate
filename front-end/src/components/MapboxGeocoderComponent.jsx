@@ -12,6 +12,7 @@ const MapboxGeocoderComponent = ({setCoords}) => {
       accessToken: "pk.eyJ1IjoiY3J5c3RhbGpvYmUiLCJhIjoiY2x2Y3VkMzFxMG13ZzJrcGY5dDB0bGJvYyJ9.PV_ZgI2EhyhNfcRHmp2OPw",
       types: 'country,region,place,postcode,locality,neighborhood',
       placeholder: "address, city, state",
+      limit: 3,
     });
 
     // Add geocoder to the specified container

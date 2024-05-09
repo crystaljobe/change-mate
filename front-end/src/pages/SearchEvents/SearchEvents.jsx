@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import {  Form, InputGroup, Container, Row, Col, Carousel } from 'react-bootstrap';
+import { Form, InputGroup, Container, Row, Col, Carousel } from 'react-bootstrap';
 import { Button } from '@mui/material'
 import './SearchEvents.css';
 import EventCard from "../../components/EventCard";
@@ -30,7 +30,7 @@ function SearchEvents() {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedStartDate, setSelectedStartDate] = useState('');
     const [selectedEndDate, setSelectedEndDate] = useState('');
-    
+
     // Categories for sorting search results into
     const [eventsPopular, setEventsPopular] = useState([]);
     // TODO: once we have a spot on our events to indicate whether volunteers are needed, we can add functionality to sort searchEvents into searchEventsVolNeed
@@ -53,7 +53,7 @@ function SearchEvents() {
                 setCardsPerPage(4);
             } else if (screenWidth >= 1400) {
                 setCardsPerPage(3);
-            }else if (screenWidth >= 992) {
+            } else if (screenWidth >= 992) {
                 setCardsPerPage(3);
             } else if (screenWidth >= 768) {
                 setCardsPerPage(2);
@@ -80,12 +80,12 @@ function SearchEvents() {
 
     // Gets events on render for events local to the user
     const getLocalEvents = async () => {
-        if (userCoordinates && userCoordinates.length > 0){
+        if (userCoordinates && userCoordinates.length > 0) {
             const allData = {
                 "coordinates": userCoordinates,
-                "distance": distance/60
+                "distance": distance / 60
             }
-            
+
             // Calls the getEventDetailsSearch function from EventUtilities to get the events that match the user's location
             getEventDetailsSearch(allData)
                 .then((response) => {
@@ -97,7 +97,7 @@ function SearchEvents() {
     useEffect(() => {
         getLocalEvents()
     }, [userCoordinates]);
-    
+
     // Handles searching for events
     const handleSubmit = async (e) => {
         if (e) {
@@ -105,12 +105,12 @@ function SearchEvents() {
         }
         // Creates an object with all the search parameters
         const allData = {
-            "type": searchEventType, 
+            "type": searchEventType,
             "coordinates": searchCoordinates,
-            "distance": distance/60,
+            "distance": distance / 60,
             "keyword": searchTerm,
-            "start_date": selectedStartDate, 
-            "end_date": selectedEndDate, 
+            "start_date": selectedStartDate,
+            "end_date": selectedEndDate,
             "category": selectedCategory
         }
 
@@ -191,18 +191,18 @@ function SearchEvents() {
 
     //     // Apply filters to searchEvents based on category, start date, and end date
     //     const filteredEventsData = searchEvents.filter(event => matchesFilterCriteria(event));
-        
+
     //     // Set the filtered events
     //     setFilteredEvents(filteredEventsData);
     // }, [selectedCategory, selectedStartDate, selectedEndDate]);
 
-      // useEffect(() => {
+    // useEffect(() => {
     //     sortPopularEvents(filteredEvents)
     //     sortVolunteerEvents(filteredEvents)
     // }, [filteredEvents]);
 
-    
-    
+
+
     return (
         <div className="search-events p-4">
             <div className="search-events-background">
@@ -210,72 +210,72 @@ function SearchEvents() {
                 <div className="container-fluid mt-5">
                     <div className="row">
                         <div className="col-md-10 mx-auto">
-                        <Form onSubmit={handleSubmit} className="shadow p-3 mb-5 rounded" style={{backgroundColor:"#93eeef", filter: "drop-shadow(#22054c -1rem 1rem 10px)"}}>
-    <Container>
-        <Row className="justify-content-center"> {/* Center the content horizontally */}
-            <Col xs={12} md={4}>
-                <InputGroup>
-                    <InputGroup.Text>Search Events</InputGroup.Text>
-                    <Form.Control placeholder="Search" aria-label="Keyword search" onChange={(e) => setSearchTerm(e.target.value)} />
-                </InputGroup>
-            </Col>
-            <Col xs={12} md={4}>
-                <InputGroup className="d-flex flex-nowrap">
-                    <InputGroup.Text>Location</InputGroup.Text>
-                    <MapboxGeocoderComponent
-                        setCoords={setSearchCoordinates}
-                    />
-                </InputGroup>
-            </Col>
-            <Col xs={12} md={4}>
-                <InputGroup>
-                    <InputGroup.Text>Type</InputGroup.Text>
-                    <Form.Select onChange={(e) => setSearchEventType(e.target.value)} defaultValue="In-person" >
-                        <option value="In-person">In-Person</option>
-                        <option value="Virtual">Virtual</option>
-                    </Form.Select>
-                </InputGroup>
-            </Col>
-        </Row>
-        <Row className="justify-content-center mt-3"> {/* Center the button horizontally */}
-            <Col xs={9} md={4}>
-                <Button
-                    className="text-center"
-                    type="submit"
-                    style={{
-                        width: "100%", // Make the button full width
-                        paddingLeft: "0",
-                        paddingRight: "0",
-                    }}
-                    size="small"
-                    sx={{
-                        borderColor: "primary.dark", // Default border color
-                        backgroundColor: "white",
-                        color: "black",
-                        border: "2px solid",
-                        fontWeight: "bold",
-                        "&:hover": {
-                            backgroundColor: "secondary.dark",
-                            color: "white",
-                        },
-                    }}>
-                    Search Events
-                </Button>
-            </Col>
-        </Row>
-    </Container>
-</Form>
+                            <Form onSubmit={handleSubmit} className="shadow p-3 mb-5 rounded" style={{ backgroundColor: "#93eeef", filter: "drop-shadow(#22054c -1rem 1rem 10px)" }}>
+                                <Container>
+                                    <Row className="justify-content-center"> {/* Center the content horizontally */}
+                                        <Col xs={12} md={4}>
+                                            <InputGroup>
+                                                <InputGroup.Text>Search Events</InputGroup.Text>
+                                                <Form.Control placeholder="Search" aria-label="Keyword search" onChange={(e) => setSearchTerm(e.target.value)} />
+                                            </InputGroup>
+                                        </Col>
+                                        <Col xs={12} md={4}>
+                                            <InputGroup className="d-flex flex-nowrap">
+                                                <InputGroup.Text>Location</InputGroup.Text>
+                                                <MapboxGeocoderComponent
+                                                    setCoords={setSearchCoordinates}
+                                                />
+                                            </InputGroup>
+                                        </Col>
+                                        <Col xs={12} md={4}>
+                                            <InputGroup>
+                                                <InputGroup.Text>Type</InputGroup.Text>
+                                                <Form.Select onChange={(e) => setSearchEventType(e.target.value)} defaultValue="In-person" >
+                                                    <option value="In-person">In-Person</option>
+                                                    <option value="Virtual">Virtual</option>
+                                                </Form.Select>
+                                            </InputGroup>
+                                        </Col>
+                                    </Row>
+                                    <Row className="justify-content-center mt-3"> {/* Center the button horizontally */}
+                                        <Col xs={9} md={4}>
+                                            <Button
+                                                className="text-center"
+                                                type="submit"
+                                                style={{
+                                                    width: "100%", // Make the button full width
+                                                    paddingLeft: "0",
+                                                    paddingRight: "0",
+                                                }}
+                                                size="small"
+                                                sx={{
+                                                    borderColor: "primary.dark", // Default border color
+                                                    backgroundColor: "white",
+                                                    color: "black",
+                                                    border: "2px solid",
+                                                    fontWeight: "bold",
+                                                    "&:hover": {
+                                                        backgroundColor: "secondary.dark",
+                                                        color: "white",
+                                                    },
+                                                }}>
+                                                Search Events
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            </Form>
                         </div>
                     </div>
                 </div>
             </div>
-                                
+
             {/* Conditionally render component W/ searchSubmitted and pass query setSelectedCategory for subquery*/}
-            {searchSubmitted && <DropdownComponent distance={distance} selectedStartDate={selectedStartDate} selectedEndDate={selectedEndDate} selectedCategory={selectedCategory} handleSubmit={handleSubmit} setSelectedCategory={setSelectedCategory} setSelectedStartDate={setSelectedStartDate} setSelectedEndDate={setSelectedEndDate} setDistance={setDistance} />} 
+            {searchSubmitted && <DropdownComponent distance={distance} selectedStartDate={selectedStartDate} selectedEndDate={selectedEndDate} selectedCategory={selectedCategory} handleSubmit={handleSubmit} setSelectedCategory={setSelectedCategory} setSelectedStartDate={setSelectedStartDate} setSelectedEndDate={setSelectedEndDate} setDistance={setDistance} />}
 
 
-            <div className="search-events p-4">                
-                
+            <div className="search-events p-4">
+
                 {/* Events with Carousel */}
                 <Container fluid className="mt-5">
                     <h1 className="text-center">Events</h1>
@@ -285,10 +285,10 @@ function SearchEvents() {
                         <Carousel interval={null} indicators={false} prevLabel="" nextLabel="" className="px-5">
                             {additionalGroupedEvents.map((chunk, index) => (
                                 <Carousel.Item key={index}>
-                                    <div className="d-flex flex-nowrap overflow-hidden">
+                                    <div className="d-flex justify-content-around">
                                         {chunk.map((event, idx) => (
                                             <div key={idx} className="ms-4">
-                                                <EventCard {...event} />
+                                                <EventCard {...event} eventCategory={null} />
                                             </div>
                                         ))}
                                     </div>
@@ -300,25 +300,25 @@ function SearchEvents() {
 
                 {/* Volunteer Events with Carousel */}
                 <Container fluid className="mt-5">
-                <h1 className="text-center">Events Looking for Volunteers</h1>
-                {eventsVolNeed.length === 0 ? (
-                    <p className="text-muted text-center">No events needing volunteers found.</p>
-                ) : (
-                    <Carousel interval={null} indicators={false} prevLabel="" nextLabel="" className="px-5">
-                        {volunteerGroupedEvents.map((chunk, index) => (
-                            <Carousel.Item key={index}>
-                                <div className="d-flex flex-nowrap overflow-hidden">
-                                    {chunk.map((event, idx) => (
-                                        <div key={idx} className="me-3">
-                                            <EventCard {...event} />
-                                        </div>
-                                    ))}
-                                </div>
-                            </Carousel.Item>
-                        ))}
-                    </Carousel>
-                )}
-            </Container>
+                    <h1 className="text-center">Events Looking for Volunteers</h1>
+                    {eventsVolNeed.length === 0 ? (
+                        <p className="text-muted text-center">No events needing volunteers found.</p>
+                    ) : (
+                        <Carousel interval={null} indicators={false} prevLabel="" nextLabel="" className="px-5">
+                            {volunteerGroupedEvents.map((chunk, index) => (
+                                <Carousel.Item key={index}>
+                                    <div className="d-flex justify-content-around">
+                                        {chunk.map((event, idx) => (
+                                            <div key={idx} className="ms-4">
+                                                <EventCard {...event} eventCategory={null} />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </Carousel.Item>
+                            ))}
+                        </Carousel>
+                    )}
+                </Container>
             </div>
         </div>
     );
