@@ -14,19 +14,19 @@ class UserProfile(models.Model):
     interests = models.ManyToManyField(
         InterestCategory,
         related_name="user_profiles",
+        blank=True,
         )
     display_name = models.CharField(
         max_length=40,
         null=True,
+        blank=True,
         )
     image = models.TextField(
         null=True,
-        max_length=10000000
-        )
-    location = models.TextField(
-        null=True,
+        max_length=10000000,
         blank=True,
         )
+    location = models.CharField( max_length=1000, null=True, blank=True)
     coordinates = ArrayField(models.FloatField(null=True, blank =True), null=True, blank=True)
     # events_attending - relation from events: users_attending
     # user_events - relation from events: collaborators

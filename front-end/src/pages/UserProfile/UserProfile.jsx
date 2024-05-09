@@ -126,7 +126,6 @@ export default function UserProfile() {
                 show={isCalendarVisible}
                 onHide={toggleCalendarVisibility}
                 size="xl"
-                dialogClassName="custom-modal-size"
               >
                 {" "}
                 {/* Use show prop to toggle modal visibility */}
@@ -134,6 +133,10 @@ export default function UserProfile() {
                   <Modal.Title>Calendar</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                  <div
+                    className="calendar-container"
+                    style={{ maxWidth: "800px", margin: "auto" }}
+                  >
                     <FullCalendar
                       plugins={[dayGridPlugin]}
                       initialView="dayGridMonth"
@@ -143,6 +146,7 @@ export default function UserProfile() {
                         end: event.event_end,
                       }))}
                     />
+                  </div>
                 </Modal.Body>
               </Modal>
             )}
