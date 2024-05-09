@@ -21,8 +21,8 @@ export default function Homepage() {
 					<Col lg={9} md={9} sm={12} className="text-center mt-4" style={{ paddingTop: "6px"}}>
 						<Row className="mt-4">
 							<h1 className="homepage-header-text">
-								Join our vibrant platform to effortlessly organize impactful
-								events, collaborate for social change, and secure donations{" "} 
+							Join our dynamic platform to seamlessly discover and participate in social impact events, 
+							organize meaningful initiatives, and collaborate with others to drive social change{" "} 
 								<span style={{ fontStyle:"italic" }}>all in one place!</span>
 							</h1>
 						</Row>
