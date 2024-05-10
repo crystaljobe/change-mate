@@ -17,7 +17,7 @@ from user_app.serializers import AppUser
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from changemate_proj.utilities import ImageUploader
+# from changemate_proj.utilities import ImageUploader
 
 # User Profile views
 class CurrentUserProfile(TokenReq):
@@ -52,14 +52,14 @@ class EditUserProfile(APIView):
         
         # pull the profile picture from data body
         
-        profile_pic = data.get('image')
-        if profile_pic:
-            try:
-                response = ImageUploader.upload_image(id=user.id, image=profile_pic, picture_type="profile")
-                data["image"] = response
-                print("Image uploaded successfully", response)
-            except Exception as e:
-                return Response(str(e), status=HTTP_400_BAD_REQUEST)
+        # profile_pic = data.get('image')
+        # if profile_pic:
+        #     try:
+        #         response = ImageUploader.upload_image(id=user.id, image=profile_pic, picture_type="profile")
+        #         data["image"] = response
+        #         print("Image uploaded successfully", response)
+        #     except Exception as e:
+        #         return Response(str(e), status=HTTP_400_BAD_REQUEST)
             
         edit_profile = UserProfileSerializer(instance=user_profile, data=data, partial=True)
         if edit_profile.is_valid():
