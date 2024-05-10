@@ -2,6 +2,7 @@ import { Container, Row, Col, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import LlamaImg from "/src/assets/llama-homepage.png";
+import ChevronImg from "/src/assets/scroll-chevrons.png";
 import './Homepage.css';
 import homeBanner from "/src/assets/home-banner.png";
 
@@ -86,7 +87,7 @@ export default function Homepage() {
 
 			{/* Scroll Chevrons */}
 			<div style={{ height: '15rem', display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
-				<img style={{ height: '5rem'}} src="src/assets/scroll-chevrons.png" alt="scroll to learn more" />
+				<img style={{ height: '5rem'}} src={ChevronImg} alt="scroll to learn more" />
 			</div>
 			<div style={{ height: '8rem'}}></div>
 			{/* Why should the user sign up? */}
