@@ -1,5 +1,5 @@
 
-# ChangeMate: Social Impact App
+# [Change Mate](http://changem8.com): Social Impact App
 
 <p align="center">
   <img src="https://github.com/crystaljobe/change-mate/assets/142848456/21d9921e-e639-4be2-8dbb-d7d6200a4b45" alt="image">
